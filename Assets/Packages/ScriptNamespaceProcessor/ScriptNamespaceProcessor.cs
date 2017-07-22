@@ -38,7 +38,7 @@ namespace ScriptNamespaceProcessor
             File.WriteAllText(_path, fileContent);
 
             // Notifiy unity it needs to reimport the modified file.
-            AssetDatabase.Refresh();
+            AssetDatabase.Refresh(ImportAssetOptions.Default);
         }
 
         /// <summary>
