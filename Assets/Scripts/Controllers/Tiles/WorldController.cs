@@ -39,7 +39,15 @@ namespace Controllers.Tiles
             {
                 for(var y = 0; y < World.Instance.Height; y++)
                 {
-                    World.Instance.Tiles[x, y] = new Tile(x, y);
+                    World.Instance.Tiles[x, y] = new Tile(x, y)
+                    {
+                        SpriteData = new TileSpriteData
+                        {
+                            IsSpriteInTileset = true,
+                            SpriteName = "tileset_grass_",
+                            SpriteResourceLocation = "Sprites/Game/Tiles/tileset_grass_tiles"
+                        }
+                    };
                 }
             }
 

@@ -39,8 +39,6 @@ namespace Models.World
         {
             X = _x;
             Y = _y;
-
-            SpriteData = new TileSpriteData();
         }
 
         /// <summary>
