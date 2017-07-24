@@ -21,10 +21,11 @@ namespace Models.World
         /// <param name="_height"></param>
         public static void CreateWorld(int _width = 200, int _height = 200)
         {
-            Instance = new World();
-
-            Instance.Width = _width;
-            Instance.Height = _height;
+            Instance = new World
+            {
+                Width = _width,
+                Height = _height
+            };
 
             Instance.Tiles = new Tile[Instance.Width, Instance.Height];
         }

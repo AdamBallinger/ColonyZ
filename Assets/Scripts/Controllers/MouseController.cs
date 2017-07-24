@@ -96,7 +96,7 @@ namespace Controllers
 
         private void ProcessSelectedTile(Tile _tile)
         {
-            _tile.Type = _tile.Type == TileType.Grass ? TileType.Stone : TileType.Grass;
+            
         }
 	}
 }
