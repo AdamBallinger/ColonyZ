@@ -6,7 +6,7 @@ namespace Controllers.Tiles
     /// <summary>
     /// Sprite controller for handling settings the sprite for structures placed on tiles such as walls.
     /// </summary>
-	public class TileStructureSpriteControlle : TileSpriteController 
+	public class TileStructureSpriteController : TileSpriteController 
 	{
 	    public override Sprite GetSprite(Tile _tile)
 	    {
