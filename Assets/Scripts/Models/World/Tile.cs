@@ -8,7 +8,29 @@ namespace Models.World
         public int X { get; }
         public int Y { get; }
 
-        public TileType Type { get; set; } = TileType.Grass;
+        /// <summary>
+        /// The current tile type of this tile.
+        /// </summary>
+        public TileType Type
+        {
+            get { return type; }
+            set
+            {
+                oldType = Type;
+                type = value;
+
+                if (oldType != type)
+                    onTileTypeChanged?.Invoke(this);
+            }
+        }
+
+        /// <summary>
+        /// Tile Sprite Data containing information on the sprite for this tile type.
+        /// </summary>
+        public TileSpriteData SpriteData { get; set; }
+
+        private TileType type;
+        private TileType oldType;
 
         private Action<Tile> onTileChanged;
         private Action<Tile> onTileTypeChanged;
@@ -17,6 +39,8 @@ namespace Models.World
         {
             X = _x;
             Y = _y;
+
+            SpriteData = new TileSpriteData();
         }
 
         /// <summary>
@@ -35,24 +59,6 @@ namespace Models.World
         public void RegisterTileTypeChangedCallback(Action<Tile> _callback)
         {
             onTileTypeChanged += _callback;
-        }
-
-        /// <summary>
-        /// Unregisters a callback function for when a tile is changed.
-        /// </summary>
-        /// <param name="_callback"></param>
-        public void UnregisterTileChangedCallback(Action<Tile> _callback)
-        {
-            onTileChanged -= _callback;
-        }
-
-        /// <summary>
-        /// Unregisters a callback function for when a tiles type is changed.
-        /// </summary>
-        /// <param name="_callback"></param>
-        public void UnregisterTileTypeChangedCallback(Action<Tile> _callback)
-        {
-            onTileTypeChanged -= _callback;
         }
     }
 }
