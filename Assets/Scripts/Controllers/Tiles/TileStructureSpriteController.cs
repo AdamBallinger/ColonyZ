@@ -10,7 +10,23 @@ namespace Controllers.Tiles
 	{
 	    public override Sprite GetSprite(Tile _tile)
 	    {
-	        throw new System.NotImplementedException();
+	        var tileStructure = _tile.InstalledStructure;
+
+            if(tileStructure != null)
+            {
+                var structureSpriteData = tileStructure.SpriteData;
+
+                if(tileStructure.Type.Equals(TileStructureType.Wall))
+                {
+                    var bitmaskValue = 0;
+
+
+
+                    return GetSpriteFromCache(structureSpriteData.SpriteName + bitmaskValue);
+                }
+            }
+
+	        return null;
 	    }
 	}
 }

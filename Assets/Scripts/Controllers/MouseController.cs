@@ -96,7 +96,19 @@ namespace Controllers
 
         private void ProcessSelectedTile(Tile _tile)
         {
-            
+            if(_tile.InstalledStructure == null)
+            {
+                _tile.InstallStructure(new TileStructure(1, 1, TileStructureType.Wall, new TileSpriteData
+                {
+                    IsTileSet = true,
+                    SpriteName = "tileset_walls_",
+                    SpriteResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
+                }));
+            }
+            else
+            {
+                _tile.UninstallStructure();
+            }
         }
 	}
 }

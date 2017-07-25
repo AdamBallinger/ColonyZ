@@ -29,6 +29,11 @@ namespace Models.World
         /// </summary>
         public TileSpriteData SpriteData { get; set; }
 
+        /// <summary>
+        /// Installed tile structure for this tile.
+        /// </summary>
+        public TileStructure InstalledStructure { get; private set; }
+
         private TileType type;
         private TileType oldType;
 
@@ -39,6 +44,31 @@ namespace Models.World
         {
             X = _x;
             Y = _y;
+        }
+
+        public void InstallStructure(TileStructure _structure)
+        {
+            if(InstalledStructure != null)
+            {
+                return;
+            }
+
+            InstalledStructure = _structure;
+            InstalledStructure.OriginTile = this; // TODO: Fix this as this wont work in future for objects that are multi-tile.
+
+            onTileChanged?.Invoke(this);
+        }
+
+        public void UninstallStructure()
+        {
+            if(InstalledStructure == null)
+            {
+                return;
+            }
+
+            InstalledStructure = null;
+
+            onTileChanged?.Invoke(this);
         }
 
         /// <summary>

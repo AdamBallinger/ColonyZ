@@ -5,6 +5,6 @@ namespace Models.World
 	    public string SpriteName { get; set; }
         public string SpriteResourceLocation { get; set; }
 
-        public bool IsSpriteInTileset { get; set; }
+        public bool IsTileSet { get; set; }
 	}
 }

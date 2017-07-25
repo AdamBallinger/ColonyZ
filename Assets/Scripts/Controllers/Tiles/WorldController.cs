@@ -14,8 +14,10 @@ namespace Controllers.Tiles
 	    public string tileSortingLayerName = "Tiles";
 
 	    private Dictionary<Tile, GameObject> tileGameObjectMap;
+	    private Dictionary<Tile, GameObject> tileStructureGameObjectMap;
 
 	    private TileTypeSpriteController tileTypeSpritesController;
+	    private TileStructureSpriteController tileStructureSpriteController;
 
 	    private Transform _transform;
 
@@ -24,7 +26,11 @@ namespace Controllers.Tiles
 		    Instance = this;
 		    Instance._transform = Instance.transform;
 
-		    Instance.tileTypeSpritesController = GetComponent<TileTypeSpriteController>();
+            Instance.tileGameObjectMap = new Dictionary<Tile, GameObject>();
+            Instance.tileStructureGameObjectMap = new Dictionary<Tile, GameObject>();
+
+            Instance.tileTypeSpritesController = gameObject.AddComponent<TileTypeSpriteController>();
+		    Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
 
 		    NewWorld();
 		}
@@ -32,8 +38,6 @@ namespace Controllers.Tiles
         private void NewWorld()
         {
             World.CreateWorld();
-
-            tileGameObjectMap = new Dictionary<Tile, GameObject>();
 
             for(var x = 0; x < World.Instance.Width; x++)
             {
@@ -43,7 +47,7 @@ namespace Controllers.Tiles
                     {
                         SpriteData = new TileSpriteData
                         {
-                            IsSpriteInTileset = true,
+                            IsTileSet = true,
                             SpriteName = "tileset_grass_",
                             SpriteResourceLocation = "Sprites/Game/Tiles/tileset_grass_tiles"
                         }
@@ -68,6 +72,7 @@ namespace Controllers.Tiles
 
             foreach (var tile in World.Instance.Tiles)
             {
+                // Create the Tile GameObject.
                 var tile_GO = new GameObject($"Tile: X:{tile.X} Y: {tile.Y}");
                 tile_GO.transform.position = new Vector2(tile.X, tile.Y);
                 tile_GO.transform.SetParent(_transform);
@@ -77,9 +82,20 @@ namespace Controllers.Tiles
                 var tile_sr = tile_GO.AddComponent<SpriteRenderer>();
                 tile_sr.sprite = tileTypeSpritesController.GetSprite(tile);
                 tile_sr.sortingLayerName = tileSortingLayerName;
+                tile_sr.sortingOrder = -10;
 
                 tile.RegisterTileChangedCallback(OnTileChanged);
                 tile.RegisterTileTypeChangedCallback(OnTileTypeChange);
+
+                // Create the Tile Structure GameObject.
+                var tileStructure_GO = new GameObject("Tile Structure");
+                tileStructure_GO.transform.position = new Vector2(tile.X, tile.Y);
+                tileStructure_GO.transform.SetParent(tile_GO.transform);
+
+                var tileStructure_SR = tileStructure_GO.AddComponent<SpriteRenderer>();
+                tileStructure_SR.sortingOrder = -9;
+
+                tileStructureGameObjectMap.Add(tile, tileStructure_GO);
             }
         }
 
@@ -89,7 +105,10 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileChanged(Tile _tile)
         {
-            
+            if(_tile != null)
+            {
+                tileStructureGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(_tile);
+            }        
         }
 
         /// <summary>
