@@ -18,11 +18,10 @@ namespace Controllers.Tiles
 
                 if(tileStructure.Type.Equals(TileStructureType.Wall))
                 {
-                    var bitmaskValue = 0;
+                    var bitmask = TileBitMask.ComputeBitmaskValue(_tile);
+                    var bitMaskIndex = TileBitMask.bitMaskMap[bitmask];
 
-
-
-                    return GetSpriteFromCache(structureSpriteData.SpriteName + bitmaskValue);
+                    return GetSpriteFromCache(structureSpriteData.SpriteName + bitMaskIndex);
                 }
             }
 

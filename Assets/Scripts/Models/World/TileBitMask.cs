@@ -1,7 +1,21 @@
+using System;
 using System.Collections.Generic;
 
 namespace Models.World
 {
+    [Flags]
+    public enum TileCardinals
+    {
+        North_West = 1 << 1,
+        North = 1 << 2,
+        North_East = 1 << 4,
+        West = 1 << 8,
+        East = 1 << 16,
+        South_West = 1 << 32,
+        South = 1 << 64,
+        South_East = 2 << 128
+    }
+
     public class TileBitMask
     {
 
@@ -56,5 +70,60 @@ namespace Models.World
             {0, 47}
         };
 
+        public static int ComputeBitmaskValue(Tile _origin)
+        {
+            var bitmaskValue = 0;
+
+            var tile_NW = World.Instance.GetTileAt(_origin.X - 1, _origin.Y + 1);
+            var tile_N = World.Instance.GetTileAt(_origin.X, _origin.Y + 1);
+            var tile_NE = World.Instance.GetTileAt(_origin.X + 1, _origin.Y + 1);
+            var tile_W = World.Instance.GetTileAt(_origin.X - 1, _origin.Y);
+            var tile_E = World.Instance.GetTileAt(_origin.X + 1, _origin.Y);
+            var tile_SW = World.Instance.GetTileAt(_origin.X - 1, _origin.Y - 1);
+            var tile_S = World.Instance.GetTileAt(_origin.X, _origin.Y - 1);
+            var tile_SE = World.Instance.GetTileAt(_origin.X + 1, _origin.Y - 1);
+
+            if(tile_NW?.InstalledStructure != null && tile_N?.InstalledStructure != null && tile_W?.InstalledStructure != null)
+            {
+                bitmaskValue += 1;
+            }
+            
+            if(tile_N?.InstalledStructure != null)
+            {
+                bitmaskValue += 2;
+            }
+
+            if(tile_NE?.InstalledStructure != null && tile_N?.InstalledStructure != null && tile_E?.InstalledStructure != null)
+            {
+                bitmaskValue += 4;
+            }
+
+            if(tile_W?.InstalledStructure != null)
+            {
+                bitmaskValue += 8;
+            }
+
+            if(tile_E?.InstalledStructure != null)
+            {
+                bitmaskValue += 16;
+            }
+
+            if(tile_SW?.InstalledStructure != null && tile_S?.InstalledStructure != null && tile_W?.InstalledStructure != null)
+            {
+                bitmaskValue += 32;
+            }
+
+            if(tile_S?.InstalledStructure != null)
+            {
+                bitmaskValue += 64;
+            }
+
+            if(tile_SE?.InstalledStructure != null && tile_S?.InstalledStructure != null && tile_E?.InstalledStructure != null)
+            {
+                bitmaskValue += 128;
+            }
+
+            return bitmaskValue;
+        }
     }
 }

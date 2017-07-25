@@ -32,6 +32,13 @@ namespace Controllers.Tiles
             Instance.tileTypeSpritesController = gameObject.AddComponent<TileTypeSpriteController>();
 		    Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
 
+            Instance.tileStructureSpriteController.LoadSpriteDataToCache(new TileSpriteData
+            {
+                IsTileSet = true,
+                SpriteName = "tileset_wood_walls_",
+                SpriteResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
+            });
+
 		    NewWorld();
 		}
 
@@ -93,6 +100,7 @@ namespace Controllers.Tiles
                 tileStructure_GO.transform.SetParent(tile_GO.transform);
 
                 var tileStructure_SR = tileStructure_GO.AddComponent<SpriteRenderer>();
+                tileStructure_SR.sortingLayerName = tileSortingLayerName;
                 tileStructure_SR.sortingOrder = -9;
 
                 tileStructureGameObjectMap.Add(tile, tileStructure_GO);
@@ -109,6 +117,17 @@ namespace Controllers.Tiles
             {
                 tileStructureGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(_tile);
             }        
+        }
+
+        public void UpdateTiles()
+        {
+            foreach(var tile in World.Instance.Tiles)
+            {
+                if (tile != null)
+                {
+                    tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(tile);
+                }
+            }
         }
 
         /// <summary>

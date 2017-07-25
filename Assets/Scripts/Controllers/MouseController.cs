@@ -1,3 +1,4 @@
+using Controllers.Tiles;
 using Models.World;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -98,10 +99,11 @@ namespace Controllers
         {
             if(_tile.InstalledStructure == null)
             {
+                Debug.Log("Installing");
                 _tile.InstallStructure(new TileStructure(1, 1, TileStructureType.Wall, new TileSpriteData
                 {
                     IsTileSet = true,
-                    SpriteName = "tileset_walls_",
+                    SpriteName = "tileset_wood_walls_",
                     SpriteResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
                 }));
             }
