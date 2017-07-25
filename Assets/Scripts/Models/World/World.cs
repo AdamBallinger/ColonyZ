@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Models.World
@@ -54,6 +55,23 @@ namespace Models.World
         public Tile GetTileAt(Vector2 _pos)
         {
             return GetTileAt(Mathf.FloorToInt(_pos.x), Mathf.FloorToInt(_pos.y));
+        }
+
+        public List<Tile> GetTileNeighbours(Tile _tile)
+        {
+            var neighbours = new List<Tile>
+            {
+                Instance.GetTileAt(_tile.X - 1, _tile.Y + 1),
+                Instance.GetTileAt(_tile.X, _tile.Y + 1),
+                Instance.GetTileAt(_tile.X + 1, _tile.Y + 1),
+                Instance.GetTileAt(_tile.X - 1, _tile.Y),
+                Instance.GetTileAt(_tile.X + 1, _tile.Y),
+                Instance.GetTileAt(_tile.X - 1, _tile.Y - 1),
+                Instance.GetTileAt(_tile.X, _tile.Y - 1),
+                Instance.GetTileAt(_tile.X + 1, _tile.Y - 1)
+            };
+
+            return neighbours;
         }
 	}
 }

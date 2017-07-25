@@ -116,14 +116,15 @@ namespace Controllers.Tiles
             if(_tile != null)
             {
                 tileStructureGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(_tile);
+                UpdateTileNeighbours(_tile);
             }        
         }
 
-        public void UpdateTiles()
+        private void UpdateTileNeighbours(Tile _tile)
         {
-            foreach(var tile in World.Instance.Tiles)
+            foreach(var tile in World.Instance.GetTileNeighbours(_tile))
             {
-                if (tile != null)
+                if(tile != null)
                 {
                     tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(tile);
                 }
