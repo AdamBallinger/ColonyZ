@@ -39,6 +39,13 @@ namespace Controllers.Tiles
                 SpriteResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
             });
 
+		    Instance.tileStructureSpriteController.LoadSpriteDataToCache(new TileSpriteData
+		    {
+                IsTileSet = true,
+                SpriteName = "tileset_steel_walls_",
+                SpriteResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
+		    });
+
 		    NewWorld();
         }
 
