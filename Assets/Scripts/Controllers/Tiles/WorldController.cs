@@ -40,7 +40,7 @@ namespace Controllers.Tiles
             });
 
 		    NewWorld();
-		}
+        }
 
         private void NewWorld()
         {

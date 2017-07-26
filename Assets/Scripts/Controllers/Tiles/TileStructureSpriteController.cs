@@ -23,6 +23,9 @@ namespace Controllers.Tiles
 
                     return GetSpriteFromCache(structureSpriteData.SpriteName + bitMaskIndex);
                 }
+
+                // TODO: Standard object sprite fetching.
+                
             }
 
 	        return null;

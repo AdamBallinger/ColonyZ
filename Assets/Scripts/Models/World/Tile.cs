@@ -1,5 +1,3 @@
-using System;
-
 namespace Models.World
 {
     public class Tile
