@@ -47,11 +47,11 @@ namespace Controllers.Tiles
 		    });
 
 		    NewWorld();
-        }
+		}
 
         private void NewWorld()
         {
-            World.CreateWorld();
+            World.CreateWorld(worldWidth, worldHeight);
 
             for(var x = 0; x < World.Instance.Width; x++)
             {
@@ -62,7 +62,7 @@ namespace Controllers.Tiles
                         SpriteData = new TileSpriteData
                         {
                             IsTileSet = true,
-                            SpriteName = "tileset_grass_",
+                            SpriteName = "tileset_grass_tiles_0",
                             SpriteResourceLocation = "Sprites/Game/Tiles/tileset_grass_tiles"
                         }
                     };
