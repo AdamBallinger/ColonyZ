@@ -10,7 +10,7 @@ namespace Controllers.Tiles
 	{
 	    public override Sprite GetSprite(Tile _tile)
 	    {
-	        return GetSpriteFromCache(_tile.SpriteData);
+	        return GetSpriteFromCache(_tile.SpriteData.SpriteName);
 	    }
 	}
 }

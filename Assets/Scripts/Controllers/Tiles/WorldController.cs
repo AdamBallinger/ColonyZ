@@ -32,19 +32,9 @@ namespace Controllers.Tiles
             Instance.tileTypeSpritesController = gameObject.AddComponent<TileTypeSpriteController>();
 		    Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
 
-            Instance.tileStructureSpriteController.LoadSpriteDataToCache(new TileSpriteData
-            {
-                IsTileSet = true,
-                SpriteName = "tileset_wood_walls_",
-                SpriteResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
-            });
-
-		    Instance.tileStructureSpriteController.LoadSpriteDataToCache(new TileSpriteData
-		    {
-                IsTileSet = true,
-                SpriteName = "tileset_steel_walls_",
-                SpriteResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
-		    });
+            TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_wood_walls");
+            TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_steel_walls");
+            TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_grass_tiles");
 
 		    NewWorld();
 		}

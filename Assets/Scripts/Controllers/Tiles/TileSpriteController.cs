@@ -9,7 +9,7 @@ namespace Controllers.Tiles
     /// </summary>
 	public abstract class TileSpriteController : MonoBehaviour
     {
-        protected Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
+        protected static Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
 
         /// <summary>
         /// Get the sprite for a specific tile.
@@ -17,64 +17,6 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         /// <returns></returns>
 	    public abstract Sprite GetSprite(Tile _tile);
-
-        public void LoadSpriteDataToCache(TileSpriteData _data)
-        {
-            if(_data.IsTileSet)
-            {
-                var tileset = Resources.LoadAll<Sprite>(_data.SpriteResourceLocation);
-
-                foreach(var tile in tileset)
-                {
-                    AddSpriteToCache(tile, tile.name);
-                }
-            }
-            else
-            {
-                var sprite = Resources.Load<Sprite>(_data.SpriteResourceLocation);
-
-                if(sprite != null)
-                {
-                    AddSpriteToCache(sprite, _data.SpriteName);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets a given sprite name from the sprite cache for this sprite controller. If the sprite isn't present in the cache, then
-        /// the attempt to load it from resources if it exists, and place it inside the cache.
-        /// </summary>
-        /// <param name="_data"></param>
-        /// <returns></returns>
-        protected Sprite GetSpriteFromCache(TileSpriteData _data)
-        {
-            if (spriteCache.ContainsKey(_data.SpriteName))
-            {
-                return spriteCache[_data.SpriteName];
-            }
-
-            if (_data.IsTileSet)
-            {
-                var tileset = Resources.LoadAll<Sprite>(_data.SpriteResourceLocation);
-                foreach (var sprite in tileset)
-                {
-                    if (sprite.name == _data.SpriteName)
-                    {
-                        AddSpriteToCache(sprite, _data.SpriteName);
-                        return sprite;
-                    }
-                }
-            }
-            else
-            {
-                var sprite = Resources.Load<Sprite>(_data.SpriteResourceLocation);
-                AddSpriteToCache(sprite, _data.SpriteName);
-                return sprite;
-            }
-
-            // return null if failed to load resource somehow (tileset).
-            return null;
-        }
 
         /// <summary>
         /// Gets a given sprite from the sprite cache. If the sprite doesn't exist this function will NOT try load it from resources,
@@ -87,22 +29,40 @@ namespace Controllers.Tiles
             return spriteCache.ContainsKey(_spriteName) ? spriteCache[_spriteName] : null;
         }
 
-        private void AddSpriteToCache(Sprite _sprite, string _key)
+        /// <summary>
+        /// Loads the given sprite at the given path to the sprite cache for the sprite controllers.
+        /// </summary>
+        /// <param name="_spritePath"></param>
+        public static void LoadSprite(string _spritePath)
         {
-            if(_sprite == null)
+            var sprite = Resources.Load<Sprite>(_spritePath);
+
+            if(sprite == null)
             {
-                Debug.LogError($"[{GetType().Name}] Trying to add null sprite to sprite cache using sprite name: '{_key}'. No resource " +
-                               "exists with this sprite name");
+                Debug.LogError($"[TileSpriteController.LoadSprite] Failed to load sprite at path: {_spritePath}");
                 return;
             }
 
-            if (!spriteCache.ContainsKey(_key))
+            spriteCache.Add(sprite.name, sprite);
+        }
+
+        /// <summary>
+        /// Loads the given tileset at the given path to the sprite cache for the sprite controllers.
+        /// </summary>
+        /// <param name="_tileSetPath"></param>
+        public static void LoadTileSet(string _tileSetPath)
+        {
+            var tileset = Resources.LoadAll<Sprite>(_tileSetPath);
+
+            if(tileset == null)
             {
-                spriteCache.Add(_key, _sprite);
+                Debug.LogError($"[TileSpriteController.LoadTileSet] Failed to load tileset at path: {_tileSetPath}");
+                return;
             }
-            else
+
+            foreach(var sprite in tileset)
             {
-                Debug.LogWarning($"[{GetType().Name}] Trying to add duplicate sprite with key: {_key} into sprite cache. This is not allowed.");
+                spriteCache.Add(sprite.name, sprite);
             }
         }
     }
