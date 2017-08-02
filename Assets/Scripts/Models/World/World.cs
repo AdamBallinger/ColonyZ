@@ -71,6 +71,8 @@ namespace Models.World
                 Instance.GetTileAt(_tile.X + 1, _tile.Y - 1)
             };
 
+            neighbours.RemoveAll(tile => tile == null);
+
             return neighbours;
         }
 	}
