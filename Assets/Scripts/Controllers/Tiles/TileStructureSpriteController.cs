@@ -18,10 +18,9 @@ namespace Controllers.Tiles
 
                 if(tileStructure.Type.Equals(TileStructureType.Wall))
                 {
-                    var bitmask = TileBitMask.ComputeBitmaskValue(_tile);
-                    var bitMaskIndex = TileBitMask.bitMaskMap[bitmask];
+                    var bitmask = TileBitMask.ComputeBitmaskValue(_tile, BitmaskEvaluationType.Tile_Structure);
 
-                    return GetSpriteFromCache(structureSpriteData.SpriteName + bitMaskIndex);
+                    return GetSpriteFromCache(structureSpriteData.SpriteName + bitmask);
                 }
 
                 // TODO: Standard object sprite fetching.
