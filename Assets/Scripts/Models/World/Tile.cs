@@ -1,5 +1,5 @@
 using System;
-using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Models.World
 {
@@ -70,6 +70,33 @@ namespace Models.World
             InstalledStructure = null;
 
             onTileChanged?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Returns the tile adjacency cardinal for a given tile against this tile.
+        /// </summary>
+        /// <param name="_tileNeighbour"></param>
+        /// <returns></returns>
+        public TileCardinals GetAdjacentFlag(Tile _tileNeighbour)
+        {
+            if(_tileNeighbour == null || _tileNeighbour == this) return TileCardinals.None;
+
+            var xDist = _tileNeighbour.X - X;
+            var yDist = _tileNeighbour.Y - Y;
+
+            // Tile is too far away to be directly adjacent to this tile.
+            if(Mathf.Abs(xDist) > 1 || Mathf.Abs(yDist) > 1) return TileCardinals.None;
+
+            if(xDist == 0 && yDist == 1) return TileCardinals.North;
+            if(xDist == 1 && yDist == 1) return TileCardinals.North_East;
+            if(xDist == 1 && yDist == 0) return TileCardinals.East;
+            if(xDist == 1 && yDist == -1) return TileCardinals.South_East;
+            if(xDist == 0 && yDist == -1) return TileCardinals.South;
+            if(xDist == -1 && yDist == -1) return TileCardinals.South_West;
+            if(xDist == -1 && yDist == 0) return TileCardinals.West;
+            if(xDist == -1 && yDist == 1) return TileCardinals.North_West;
+
+            return TileCardinals.None;
         }
 
         /// <summary>
