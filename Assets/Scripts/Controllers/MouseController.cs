@@ -50,6 +50,8 @@ namespace Controllers
             if (isDragging)
             {
                 currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+                var dragDist = Vector2.Distance(currentMousePosition, dragStartPosition);
+
                 selectionObjectRenderer.size = dragStartPosition - currentMousePosition;
 
                 // Create drag start and end coordinates. Add 0.5f to compensate for the fact gameobject pivots are in the center
@@ -78,6 +80,13 @@ namespace Controllers
                     isDragging = false;
                     selectionObject.SetActive(false);
 
+                    // Experimental drag threshold as clicking and dragging feels inconsistent sometimes 
+                    if(dragDist <= 0.6f)
+                    {
+                        dragEndX = dragStartX;
+                        dragEndY = dragStartY;
+                    }
+
                     for (var x = dragStartX; x <= dragEndX; x++)
                     {
                         for (var y = dragStartY; y <= dragEndY; y++)
@@ -101,12 +110,12 @@ namespace Controllers
             SpriteResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
         };
 
-        //private TileSpriteData steelWallData = new TileSpriteData
-        //{
-        //    IsTileSet = true,
-        //    SpriteName = "tileset_steel_walls_",
-        //    SpriteResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
-        //};
+        private TileSpriteData steelWallData = new TileSpriteData
+        {
+            IsTileSet = true,
+            SpriteName = "tileset_steel_walls_",
+            SpriteResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
+        };
 
         private void ProcessSelectedTile(Tile _tile)
         {
