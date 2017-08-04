@@ -53,7 +53,7 @@ namespace Controllers.Tiles
                         {
                             IsTileSet = true,
                             SpriteName = "tileset_grass_tiles_0",
-                            SpriteResourceLocation = "Sprites/Game/Tiles/tileset_grass_tiles"
+                            ResourceLocation = "Sprites/Game/Tiles/tileset_grass_tiles"
                         }
                     };
                 }

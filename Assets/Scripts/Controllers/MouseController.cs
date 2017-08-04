@@ -107,14 +107,14 @@ namespace Controllers
         {
             IsTileSet = true,
             SpriteName = "tileset_wood_walls_",
-            SpriteResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
+            ResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
         };
 
         //private TileSpriteData steelWallData = new TileSpriteData
         //{
         //    IsTileSet = true,
         //    SpriteName = "tileset_steel_walls_",
-        //    SpriteResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
+        //    ResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
         //};
 
         private void ProcessSelectedTile(Tile _tile)
