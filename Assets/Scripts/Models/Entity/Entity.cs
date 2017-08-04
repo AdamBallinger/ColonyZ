@@ -15,21 +15,23 @@ namespace Models.Entity
         /// </summary>
         public float Y { get; }
 
-        /// <summary>
-        /// The current tile the pivot of the entity is placed within.
-        /// </summary>
-        public Tile CurrentTile { get; }
+	    /// <summary>
+	    /// The current tile the pivot of the entity is placed within.
+	    /// </summary>
+	    public Tile CurrentTile
+	    {
+	        get { return World.World.Instance.GetTileAt((int)X, (int)Y); }
+	    }
 
         /// <summary>
         /// Sprite data for this entity.
         /// </summary>
         public EntitySpriteData SpriteData { get; set; }
 
-        protected Entity(Tile _tile)
+        protected Entity(int _x, int _y)
         {
-            X = _tile.X;
-            Y = _tile.Y;
-            CurrentTile = _tile;
+            X = _x;
+            Y = _y;
         }
 	}
 }
