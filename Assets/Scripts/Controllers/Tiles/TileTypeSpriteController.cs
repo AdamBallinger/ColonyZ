@@ -10,6 +10,8 @@ namespace Controllers.Tiles
 	{
 	    public override Sprite GetSprite(Tile _tile)
 	    {
+            // TODO: When multiple types exist, such as dirt and stone, load the correct transitions when needed
+            // using TileBitMask.
 	        return GetSpriteFromCache(_tile.SpriteData.SpriteName);
 	    }
 	}

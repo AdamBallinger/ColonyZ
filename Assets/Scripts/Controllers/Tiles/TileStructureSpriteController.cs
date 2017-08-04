@@ -16,15 +16,15 @@ namespace Controllers.Tiles
             {
                 var structureSpriteData = tileStructure.SpriteData;
 
-                if(tileStructure.Type.Equals(TileStructureType.Wall))
+                if(tileStructure.Type.Equals(TileStructureType.Multi_Tile))
                 {
                     var bitmask = TileBitMask.ComputeBitmaskValue(_tile, BitmaskEvaluationType.Tile_Structure);
 
                     return GetSpriteFromCache(structureSpriteData.SpriteName + bitmask);
                 }
 
-                // TODO: Standard object sprite fetching.
-                
+                // If not multi-tile, then just return the sprite name inside the structure sprite data.
+                return GetSpriteFromCache(structureSpriteData.SpriteName);
             }
 
 	        return null;

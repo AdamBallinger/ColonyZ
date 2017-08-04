@@ -110,23 +110,23 @@ namespace Controllers
             SpriteResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
         };
 
-        private TileSpriteData steelWallData = new TileSpriteData
-        {
-            IsTileSet = true,
-            SpriteName = "tileset_steel_walls_",
-            SpriteResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
-        };
+        //private TileSpriteData steelWallData = new TileSpriteData
+        //{
+        //    IsTileSet = true,
+        //    SpriteName = "tileset_steel_walls_",
+        //    SpriteResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
+        //};
 
         private void ProcessSelectedTile(Tile _tile)
         {
             if (_tile.InstalledStructure == null)
             {
-                _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Wall, woodWallData));
+                _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile, woodWallData));
             }
             //else if (_tile.InstalledStructure.StructureName.Equals("Wood_Wall"))
             //{
             //    _tile.UninstallStructure();
-            //    _tile.InstallStructure(new TileStructure(1, 1, "Steel_Wall", TileStructureType.Wall, steelWallData));
+            //    _tile.InstallStructure(new TileStructure(1, 1, "Steel_Wall", TileStructureType.Multi_Tile, steelWallData));
             //}
             else
             {
