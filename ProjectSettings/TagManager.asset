@@ -44,7 +44,7 @@ TagManager:
   - name: Tiles
     uniqueID: 2388018155
     locked: 0
-  - name: Characters
+  - name: Entities
     uniqueID: 455860859
     locked: 0
   - name: WorldSpaceUI

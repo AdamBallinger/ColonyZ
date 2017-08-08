@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
+		 _MainTex("Sprite Texture", 2D) = "white" {}
 		 _BlendTex("Blend Texture", 2D) = "black" {}
 		[MaterialToggle] PixelSnap("Pixel Snap", Float) = 0
 	}
@@ -66,12 +66,6 @@
 					half4 b = tex2D(_BlendTex, IN.uv_MainTex);
 					o.rgb = c.rgb;
 					o.a = c.a;
-
-					if(o.a < 1.0)
-					{
-						o.rgb = b.rgb;
-						o.a = b.a;
-					}
 
 					return o;
 				}

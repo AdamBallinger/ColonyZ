@@ -18,12 +18,9 @@ namespace Models.Entity
 	    /// <summary>
 	    /// The current tile the pivot of the entity is placed within.
 	    /// </summary>
-	    public Tile CurrentTile
-	    {
-	        get { return World.World.Instance.GetTileAt((int)X, (int)Y); }
-	    }
+	    public Tile CurrentTile => World.World.Instance.GetTileAt(X, Y);
 
-        /// <summary>
+	    /// <summary>
         /// Sprite data for this entity.
         /// </summary>
         public EntitySpriteData SpriteData { get; set; }
