@@ -1,4 +1,4 @@
-namespace Models.World
+namespace Models.Map
 {
 	public struct TileSpriteData
 	{

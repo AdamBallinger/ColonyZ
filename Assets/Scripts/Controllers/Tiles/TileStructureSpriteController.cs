@@ -1,4 +1,4 @@
-using Models.World;
+using Models.Map;
 using UnityEngine;
 
 namespace Controllers.Tiles

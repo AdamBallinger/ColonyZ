@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Models.World
+namespace Models.Map
 {
     public class Tile
     {
@@ -34,6 +34,8 @@ namespace Models.World
         /// Installed tile structure for this tile.
         /// </summary>
         public TileStructure InstalledStructure { get; private set; }
+
+        public Entity.Entity TileEntity { get; private set; }
 
         private TileType type;
         private TileType oldType;

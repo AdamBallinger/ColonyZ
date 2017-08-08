@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using Models.World;
+using Models.Entity;
+using Models.Map;
 using UnityEngine;
 
 namespace Controllers.Tiles
@@ -15,6 +16,7 @@ namespace Controllers.Tiles
 
 	    private Dictionary<Tile, GameObject> tileGameObjectMap;
 	    private Dictionary<Tile, GameObject> tileStructureGameObjectMap;
+	    private Dictionary<Entity, GameObject> entityGameObjectMap;
 
 	    private TileTypeSpriteController tileTypeSpritesController;
 	    private TileStructureSpriteController tileStructureSpriteController;
@@ -28,6 +30,7 @@ namespace Controllers.Tiles
 
             Instance.tileGameObjectMap = new Dictionary<Tile, GameObject>();
             Instance.tileStructureGameObjectMap = new Dictionary<Tile, GameObject>();
+            Instance.entityGameObjectMap = new Dictionary<Entity, GameObject>();
 
             Instance.tileTypeSpritesController = gameObject.AddComponent<TileTypeSpriteController>();
 		    Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
@@ -104,6 +107,17 @@ namespace Controllers.Tiles
             }
         }
 
+	    private void UpdateTileNeighbours(Tile _tile)
+	    {
+	        foreach (var tile in World.Instance.GetTileNeighbours(_tile))
+	        {
+	            if (tile != null)
+	            {
+	                tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(tile);
+	            }
+	        }
+	    }
+
         /// <summary>
         /// Callback for when a tile has been modified. E.g. a wall removed etc.
         /// </summary>
@@ -117,17 +131,6 @@ namespace Controllers.Tiles
             }        
         }
 
-        private void UpdateTileNeighbours(Tile _tile)
-        {
-            foreach(var tile in World.Instance.GetTileNeighbours(_tile))
-            {
-                if(tile != null)
-                {
-                    tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(tile);
-                }
-            }
-        }
-
         /// <summary>
         /// Callback for when the type of a tile has been changed.
         /// </summary>
@@ -135,6 +138,15 @@ namespace Controllers.Tiles
         public void OnTileTypeChange(Tile _tile)
         {
             tileGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = tileTypeSpritesController.GetSprite(_tile);
+        }
+
+        /// <summary>
+        /// Callback for when a new entity is spawned into the world.
+        /// </summary>
+        /// <param name="_entity"></param>
+        public void OnEntitySpawn(Entity _entity)
+        {
+            
         }
 	}
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Models.World
+namespace Models.Map
 {
     [Flags]
     public enum TileCardinals

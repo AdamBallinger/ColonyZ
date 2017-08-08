@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Models.World
+namespace Models.Map
 {
 	public class World 
 	{

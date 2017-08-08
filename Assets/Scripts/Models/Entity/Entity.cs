@@ -1,5 +1,4 @@
-using System;
-using Models.World;
+using Models.Map;
 
 namespace Models.Entity
 {
@@ -18,12 +17,13 @@ namespace Models.Entity
 	    /// <summary>
 	    /// The current tile the pivot of the entity is placed within.
 	    /// </summary>
-	    public Tile CurrentTile => World.World.Instance.GetTileAt(X, Y);
+	    public Tile CurrentTile => World.Instance.GetTileAt(X, Y);
 
 	    /// <summary>
         /// Sprite data for this entity.
         /// </summary>
         public EntitySpriteData SpriteData { get; set; }
+
 
         protected Entity(int _x, int _y)
         {
