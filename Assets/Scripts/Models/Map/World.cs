@@ -68,6 +68,11 @@ namespace Models.Map
             return GetTileAt(Mathf.FloorToInt(_pos.x), Mathf.FloorToInt(_pos.y));
         }
 
+        /// <summary>
+        /// Returns a list of neighbour tiles for the given tile.
+        /// </summary>
+        /// <param name="_tile"></param>
+        /// <returns></returns>
         public List<Tile> GetTileNeighbours(Tile _tile)
         {
             var neighbours = new List<Tile>
