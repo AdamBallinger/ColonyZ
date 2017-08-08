@@ -17,6 +17,11 @@ namespace Models.Entity
         public float Y { get; protected set; }
 
         /// <summary>
+        /// Current entity health.
+        /// </summary>
+        public int Health { get; private set; }
+
+        /// <summary>
         /// Entity's name.
         /// </summary>
         public string Name { get; set; }
@@ -47,5 +52,17 @@ namespace Models.Entity
             X = Mathf.Clamp(_x, 0, World.Instance.Width - 1);
             Y = Mathf.Clamp(_y, 0, World.Instance.Height - 1);
         }
+
+        public void HealEntity(int _damage)
+        {
+            Health += _damage;
+        }
+
+        public void DamageEntity(int _damage)
+        {
+            Health -= _damage;
+        }
+
+	    public abstract void Update();
 	}
 }
