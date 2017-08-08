@@ -44,11 +44,8 @@ namespace Models.Entity
         /// <param name="_y"></param>
         public void SetPosition(float _x, float _y)
         {
-            X = _x;
-            Y = _y;
-
-            X = Mathf.Clamp(X, 0, World.Instance.Width - 1);
-            Y = Mathf.Clamp(Y, 0, World.Instance.Height - 1);
+            X = Mathf.Clamp(_x, 0, World.Instance.Width - 1);
+            Y = Mathf.Clamp(_y, 0, World.Instance.Height - 1);
         }
 	}
 }
