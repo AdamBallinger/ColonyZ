@@ -112,7 +112,7 @@ namespace Models.Map
             // TODO: Spawn a tile entity and create a callback to the world controller.
             var entity = new TileEntity(_tile.X, _tile.Y);
 
-            //onEntitySpawnCallback?.Invoke(entity);
+            onEntitySpawnCallback?.Invoke(entity);
         }
 
         public void SpawnCharacter(Tile _tile)

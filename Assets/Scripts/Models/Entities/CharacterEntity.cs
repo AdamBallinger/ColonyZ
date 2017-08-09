@@ -1,4 +1,3 @@
-
 namespace Models.Entities
 {
     public class CharacterEntity : Entity
