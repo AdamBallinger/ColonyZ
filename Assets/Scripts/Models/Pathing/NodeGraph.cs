@@ -2,20 +2,31 @@
 
 namespace Models.Pathing
 {
-	public class NodeGraph 
-	{
-        
-        public int Width { get; }
-        public int Height { get; }
+    public class NodeGraph
+    {
+        public static NodeGraph Instance;
 
-        public Node[,] Nodes { get; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
-        public NodeGraph(int _width, int _height)
+        public Node[,] Nodes { get; private set; }
+
+        private NodeGraph() { }
+
+        /// <summary>
+        /// Creates a new instance of the Node Graph.
+        /// </summary>
+        /// <param name="_width"></param>
+        /// <param name="_height"></param>
+        public static void Create(int _width, int _height)
         {
-            Width = _width;
-            Height = _height;
+            Instance = new NodeGraph
+            {
+                Width = _width,
+                Height = _height
+            };
 
-            Nodes = new Node[Width, Height];
+            Instance.Nodes = new Node[Instance.Width, Instance.Height];
         }
 
         /// <summary>
