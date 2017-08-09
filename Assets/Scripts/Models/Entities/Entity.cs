@@ -1,8 +1,7 @@
-using System;
 using Models.Map;
 using UnityEngine;
 
-namespace Models.Entity
+namespace Models.Entities
 {
 	public abstract class Entity 
 	{

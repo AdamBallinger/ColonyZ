@@ -1,54 +1,57 @@
 using System.Collections.Generic;
-using Models.Entity;
+using Models.Entities;
 using Models.Map;
+using UnityEditor;
 using UnityEngine;
 
 namespace Controllers.Tiles
 {
-	public class WorldController : MonoBehaviour 
-	{
+    public class WorldController : MonoBehaviour
+    {
         public static WorldController Instance { get; private set; }
 
-	    public int worldWidth = 100;
-	    public int worldHeight = 100;
+        public int worldWidth = 100;
+        public int worldHeight = 100;
 
-	    public string tileSortingLayerName = "Tiles";
+        public string tileSortingLayerName = "Tiles";
 
-	    private Dictionary<Tile, GameObject> tileGameObjectMap;
-	    private Dictionary<Tile, GameObject> tileStructureGameObjectMap;
-	    private Dictionary<Entity, GameObject> entityGameObjectMap;
+        private Dictionary<Tile, GameObject> tileGameObjectMap;
+        private Dictionary<Tile, GameObject> tileStructureGameObjectMap;
+        private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
 
-	    private TileTypeSpriteController tileTypeSpritesController;
-	    private TileStructureSpriteController tileStructureSpriteController;
+        private TileTypeSpriteController tileTypeSpritesController;
+        private TileStructureSpriteController tileStructureSpriteController;
 
-	    private Transform _transform;
+        private Transform _transform;
 
-		private void Start()
-		{
-		    Instance = this;
-		    Instance._transform = Instance.transform;
+        private void Start()
+        {
+            Instance = this;
+            Instance._transform = Instance.transform;
 
             Instance.tileGameObjectMap = new Dictionary<Tile, GameObject>();
             Instance.tileStructureGameObjectMap = new Dictionary<Tile, GameObject>();
-            Instance.entityGameObjectMap = new Dictionary<Entity, GameObject>();
+            Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
             Instance.tileTypeSpritesController = gameObject.AddComponent<TileTypeSpriteController>();
-		    Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
+            Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
 
             TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_wood_walls");
             TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_steel_walls");
             TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_grass_tiles");
 
-		    NewWorld();
-		}
+            NewWorld();
+        }
 
         private void NewWorld()
         {
             World.CreateWorld(worldWidth, worldHeight);
 
-            for(var x = 0; x < World.Instance.Width; x++)
+            World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
+
+            for (var x = 0; x < World.Instance.Width; x++)
             {
-                for(var y = 0; y < World.Instance.Height; y++)
+                for (var y = 0; y < World.Instance.Height; y++)
                 {
                     World.Instance.Tiles[x, y] = new Tile(x, y)
                     {
@@ -65,13 +68,29 @@ namespace Controllers.Tiles
             GenerateTileGameObjects();
         }
 
+        private void Update()
+        {
+            World.Instance?.Update();
+
+            // TODO: Possibly change this as it could be inefficient for large amounts of characters. For now it will do.
+            foreach(var pair in characterEntityGameObjectMap)
+            {
+                pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
+            }
+
+            if(Input.GetKeyDown(KeyCode.C))
+            {
+                World.Instance.SpawnCharacter(World.Instance.Tiles[3,3]);
+            }
+        }
+
         /// <summary>
         /// Instantiate each gameobject for each world tile.
         /// </summary>
         private void GenerateTileGameObjects()
         {
             // if the world controller object has children then the gameobjects have already been instantiated.
-            if(transform.childCount > 0)
+            if (transform.childCount > 0)
             {
                 Debug.LogWarning("Tried to create world tile gameobjects when they were already instantiated!");
                 return;
@@ -107,16 +126,20 @@ namespace Controllers.Tiles
             }
         }
 
-	    private void UpdateTileNeighbours(Tile _tile)
-	    {
-	        foreach (var tile in World.Instance.GetTileNeighbours(_tile))
-	        {
-	            if (tile != null)
-	            {
-	                tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(tile);
-	            }
-	        }
-	    }
+        /// <summary>
+        /// Forces an update to a tiles surrounding tiles sprites.
+        /// </summary>
+        /// <param name="_tile"></param>
+        private void UpdateTileNeighbourSprites(Tile _tile)
+        {
+            foreach (var tile in World.Instance.GetTileNeighbours(_tile))
+            {
+                if (tile != null)
+                {
+                    tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(tile);
+                }
+            }
+        }
 
         /// <summary>
         /// Callback for when a tile has been modified. E.g. a wall removed etc.
@@ -124,11 +147,11 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileChanged(Tile _tile)
         {
-            if(_tile != null)
+            if (_tile != null)
             {
                 tileStructureGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(_tile);
-                UpdateTileNeighbours(_tile);
-            }        
+                UpdateTileNeighbourSprites(_tile);
+            }
         }
 
         /// <summary>
@@ -146,7 +169,20 @@ namespace Controllers.Tiles
         /// <param name="_entity"></param>
         public void OnEntitySpawn(Entity _entity)
         {
-            
+            if (_entity is CharacterEntity)
+            {
+                var char_GO = Instantiate(Resources.Load<GameObject>("Prefabs/Game/Entity_Character"));
+                char_GO.transform.SetParent(_transform);
+                char_GO.transform.position = new Vector2(_entity.X, _entity.Y);
+
+                // TODO: Set sprites for character GameObject.
+
+                characterEntityGameObjectMap.Add((CharacterEntity)_entity, char_GO);
+            }
+            else if (_entity is TileEntity)
+            {
+                // TODO: Create TileEntity GameObject and add it to a GameObject collection (This is still undecided on how it will be stored).
+            }
         }
-	}
+    }
 }

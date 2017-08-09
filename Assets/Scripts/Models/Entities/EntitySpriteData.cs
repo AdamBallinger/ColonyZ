@@ -1,4 +1,4 @@
-namespace Models.Entity
+namespace Models.Entities
 {
 	public struct EntitySpriteData 
 	{	

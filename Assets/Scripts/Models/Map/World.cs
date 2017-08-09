@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Models.Entities;
 
 namespace Models.Map
 {
@@ -12,6 +14,10 @@ namespace Models.Map
         public int Height { get; private set; }
 
         public Tile[,] Tiles { get; private set; }
+
+	    public List<CharacterEntity> Characters { get; private set; }
+
+	    private Action<Entity> onEntitySpawnCallback;
 
         private World() { }
 
@@ -29,6 +35,15 @@ namespace Models.Map
             };
 
             Instance.Tiles = new Tile[Instance.Width, Instance.Height];
+            Instance.Characters = new List<CharacterEntity>();
+        }
+
+        public void Update()
+        {
+            foreach(var character in Characters)
+            {
+                character.Update();
+            }
         }
 
         /// <summary>
@@ -90,6 +105,31 @@ namespace Models.Map
             neighbours.RemoveAll(tile => tile == null);
 
             return neighbours;
+        }
+
+        public void SpawnTileEntity(Tile _tile)
+        {
+            // TODO: Spawn a tile entity and create a callback to the world controller.
+            var entity = new TileEntity(_tile.X, _tile.Y);
+
+            //onEntitySpawnCallback?.Invoke(entity);
+        }
+
+        public void SpawnCharacter(Tile _tile)
+        {
+            var entity = new CharacterEntity(_tile.X, _tile.Y);
+            Characters.Add(entity);
+
+            onEntitySpawnCallback?.Invoke(entity);
+        }
+
+        /// <summary>
+        /// Registers a callback function invoked when any kind of new entity is spawned into the world.
+        /// </summary>
+        /// <param name="_callback"></param>
+        public void RegisterEntitySpawnCallback(Action<Entity> _callback)
+        {
+            onEntitySpawnCallback += _callback;
         }
 	}
 }

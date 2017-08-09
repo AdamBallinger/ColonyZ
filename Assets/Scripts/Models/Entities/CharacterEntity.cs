@@ -1,10 +1,10 @@
 
-namespace Models.Entity
+namespace Models.Entities
 {
     public class CharacterEntity : Entity
     {
 
-        public float MovementSpeed { get; private set; }
+        public float MovementSpeed { get; protected set; }
 
 	    public CharacterEntity(int _x, int _y) : base(_x, _y)
 	    {
