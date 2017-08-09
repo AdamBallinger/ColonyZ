@@ -65,5 +65,21 @@ namespace Models.Pathing
                 }
             }
         }
+
+        /// <summary>
+        /// Safely get a node at a given X and Y.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <returns></returns>
+        public Node GetNodeAt(int _x, int _y)
+        {
+            if(_x < 0 || _x >= Width - 1 || _y < 0 || _y >= Height - 1)
+            {
+                return null;
+            }
+
+            return Nodes[_x, _y];
+        }
 	}
 }

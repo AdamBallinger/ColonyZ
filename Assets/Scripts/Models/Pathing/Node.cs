@@ -43,7 +43,17 @@ namespace Models.Pathing
         /// </summary>
         public void ComputeNeighbours()
         {
-            
+            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X, Y + 1));
+            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X + 1, Y));
+            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X, Y - 1));
+            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X - 1, Y));
+            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X + 1, Y + 1));
+            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X + 1, Y - 1));
+            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X - 1, Y - 1));
+            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X - 1, Y + 1));
+
+            // Remove any null nodes from list.
+            Neighbours.RemoveAll(node => node == null);
         }
 	}
 }
