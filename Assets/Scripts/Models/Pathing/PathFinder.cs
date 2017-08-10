@@ -195,10 +195,5 @@ namespace Models.Pathing
 
             return 14.0f * dx + 10.0f * (dy - dx);
         }
-
-        private float DistBetween(Node _a, Node _b)
-        {
-            return Vector2.Distance(new Vector2(_a.X, _a.Y), new Vector2(_b.X, _b.Y));
-        }
     }
 }
