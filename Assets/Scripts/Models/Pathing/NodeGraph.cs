@@ -27,6 +27,8 @@ namespace Models.Pathing
             };
 
             Instance.Nodes = new Node[Instance.Width, Instance.Height];
+
+            Instance.BuildFullGraph();
         }
 
         /// <summary>
@@ -42,6 +44,12 @@ namespace Models.Pathing
                     Nodes[x, y] = new Node(x, y, World.Instance.Tiles[x, y].InstalledStructure == null);
                 }
             }
+
+            // Compute node neighbours.
+            foreach(var node in Nodes)
+            {
+                node.ComputeNeighbours();
+            }
         }
 
         /// <summary>
@@ -53,6 +61,7 @@ namespace Models.Pathing
         /// <param name="_size"></param>
         public void BuildPartialGraph(int _x, int _y, int _size)
         {
+            // First rebuild the nodes.
             for(var x = _x - _size / 2; x < _x + _size / 2; x++)
             {
                 if (x < 0 || x > Width) continue;
@@ -62,6 +71,19 @@ namespace Models.Pathing
                     if(y < 0 || y > Height) continue;
 
                     Nodes[x, y] = new Node(x, y, World.Instance.Tiles[x, y].InstalledStructure == null);
+                }
+            }
+
+            // Next compute their neighbours.
+            for (var x = _x - _size / 2; x < _x + _size / 2; x++)
+            {
+                if (x < 0 || x > Width) continue;
+
+                for (var y = _y - _size / 2; y < _y + _size / 2; y++)
+                {
+                    if (y < 0 || y > Height) continue;
+
+                    Nodes[x, y].ComputeNeighbours();
                 }
             }
         }

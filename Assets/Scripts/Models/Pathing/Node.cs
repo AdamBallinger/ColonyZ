@@ -36,6 +36,7 @@ namespace Models.Pathing
             G = 0;
             Pathable = _pathable;
             Parent = null;
+            Neighbours = new List<Node>();
         }
 
         /// <summary>
@@ -43,6 +44,8 @@ namespace Models.Pathing
         /// </summary>
         public void ComputeNeighbours()
         {
+            Neighbours.Clear();
+
             Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X, Y + 1));
             Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X + 1, Y));
             Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X, Y - 1));

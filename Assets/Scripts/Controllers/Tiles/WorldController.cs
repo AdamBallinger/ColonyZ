@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Models.Entities;
 using Models.Map;
+using Models.Pathing;
 using UnityEditor;
 using UnityEngine;
 
@@ -65,6 +66,8 @@ namespace Controllers.Tiles
                 }
             }
 
+            NodeGraph.Create(World.Instance.Width, World.Instance.Height);
+
             GenerateTileGameObjects();
         }
 
@@ -99,7 +102,7 @@ namespace Controllers.Tiles
             foreach (var tile in World.Instance.Tiles)
             {
                 // Create the Tile GameObject.
-                var tile_GO = new GameObject($"Tile: X:{tile.X} Y: {tile.Y}");
+                var tile_GO = new GameObject("Tile");
                 tile_GO.transform.position = new Vector2(tile.X, tile.Y);
                 tile_GO.transform.SetParent(_transform);
 
