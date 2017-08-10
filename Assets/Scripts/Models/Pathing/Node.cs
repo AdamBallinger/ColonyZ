@@ -49,17 +49,44 @@ namespace Models.Pathing
         {
             Neighbours.Clear();
 
-            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X, Y + 1));
-            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X + 1, Y));
-            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X, Y - 1));
-            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X - 1, Y));
-            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X + 1, Y + 1));
-            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X + 1, Y - 1));
-            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X - 1, Y - 1));
-            Neighbours.Add(NodeGraph.Instance?.GetNodeAt(X - 1, Y + 1));
+            var node_N = NodeGraph.Instance?.GetNodeAt(X, Y + 1);
+            var node_E = NodeGraph.Instance?.GetNodeAt(X + 1, Y);
+            var node_S = NodeGraph.Instance?.GetNodeAt(X, Y - 1);
+            var node_W = NodeGraph.Instance?.GetNodeAt(X - 1, Y);
 
-            // Remove any null nodes from list.
+            Neighbours.Add(node_N);
+            Neighbours.Add(node_E);
+            Neighbours.Add(node_S);
+            Neighbours.Add(node_W);
+
+            var node_NE = NodeGraph.Instance?.GetNodeAt(X + 1, Y + 1);
+            var node_SE = NodeGraph.Instance?.GetNodeAt(X + 1, Y - 1);
+            var node_SW = NodeGraph.Instance?.GetNodeAt(X - 1, Y - 1);
+            var node_NW = NodeGraph.Instance?.GetNodeAt(X - 1, Y + 1);
+
+            if(node_N != null && node_N.Pathable || node_E != null && node_E.Pathable)
+            {
+                Neighbours.Add(node_NE);
+            }
+
+            if(node_N != null && node_N.Pathable || node_W != null && node_W.Pathable)
+            {
+                Neighbours.Add(node_NW);
+            }
+
+            if(node_S != null && node_S.Pathable || node_E != null && node_E.Pathable)
+            {
+                Neighbours.Add(node_SE);
+            }
+
+            if (node_S != null && node_S.Pathable || node_W != null && node_W.Pathable)
+            {
+                Neighbours.Add(node_SW);
+            }
+
+            // Remove any null and none pathable nodes from list.
             Neighbours.RemoveAll(node => node == null);
+            Neighbours.RemoveAll(node => !node.Pathable);
         }
 	}
 }
