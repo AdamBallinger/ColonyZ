@@ -74,8 +74,6 @@ namespace Models.Pathing
 
             FoundPath = false;
 
-            ResetNodes();
-
             ClosedList.Clear();
             OpenList.Clear();
 
@@ -164,19 +162,6 @@ namespace Models.Pathing
             list.Reverse();
 
             return list;
-        }
-
-        /// <summary>
-        /// Resets any evaluated node parent and cost values from the last search.
-        /// </summary>
-        private void ResetNodes()
-        {
-            foreach (var node in NodeGraph.Instance.Nodes)
-            {
-                node.Parent = null;
-                node.G = 0;
-                node.H = 0;
-            }
         }
 
         /// <summary>
