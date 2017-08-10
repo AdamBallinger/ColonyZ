@@ -1,18 +1,18 @@
-﻿using System;
-using Models.Map;
+﻿using Models.Map;
+using System;
 
 namespace Models.Pathing
 {
-	public class PathFinder
+    public class PathRequest
 	{
 
         /// <summary>
-        /// The starting Node for the path finder.
+        /// The starting Node for the path request.
         /// </summary>
         private Node Start { get; }
 
         /// <summary>
-        /// The end node the path finder will attempt to generate a path to from start.
+        /// The end node the path request will attempt to generate a path to from start.
         /// </summary>
         private Node End { get; }
 
@@ -22,13 +22,13 @@ namespace Models.Pathing
 	    private Action<Path> onPathCompleteCallback;
 
         /// <summary>
-        /// Create a new pathfinder that will generate a path from start to end and pass it back to the given callback function when
+        /// Create a new path request that will generate a path from start to end and pass it back to the given callback function when
         /// the path has been completed.
         /// </summary>
         /// <param name="_start"></param>
         /// <param name="_end"></param>
         /// <param name="_onCompleteCallback"></param>
-        public PathFinder(Tile _start, Tile _end, Action<Path> _onCompleteCallback)
+        public PathRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback)
         {
             Start = NodeGraph.Instance?.Nodes[_start.X, _start.Y];
             End = NodeGraph.Instance?.Nodes[_end.X, _end.Y];
