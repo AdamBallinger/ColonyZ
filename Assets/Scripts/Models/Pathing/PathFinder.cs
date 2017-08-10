@@ -20,7 +20,7 @@ namespace Models.Pathing
 	    private List<Node> ClosedList { get; set; }
         private List<Node> OpenList { get; set; }
 
-        private Path Path { get; set; }
+	    private volatile Path path;
 
         private bool FoundPath { get; set; }
 
@@ -52,7 +52,7 @@ namespace Models.Pathing
         /// <summary>
         /// Process the next path request in the queue.
         /// </summary>
-        public void ProcessNext()
+        public async void ProcessNext()
         {
             if (RequestQueue.Count == 0 || IsBusy) return;
 
@@ -61,9 +61,11 @@ namespace Models.Pathing
             if(request != null)
             {
                 IsBusy = true;
+                await Task.Run(() => Search(request));
+                request.onPathCompleteCallback.Invoke(path);
                 IsBusy = false;
-                searchThread = new Thread(() => Search(request));
-                searchThread.Start();
+                //searchThread = new Thread(() => Search(request));
+                //searchThread.Start();
             }
         }
 
@@ -95,7 +97,8 @@ namespace Models.Pathing
                 {
                     sw.Stop();
                     FoundPath = true;
-                    _request.onPathCompleteCallback?.Invoke(new Path(Retrace(currentNode), true, sw.ElapsedMilliseconds));
+                    //_request.onPathCompleteCallback?.Invoke(new Path(Retrace(currentNode), true, sw.ElapsedMilliseconds));
+                    path = new Path(Retrace(currentNode), true, sw.ElapsedMilliseconds);
                     break;
                 }
 
@@ -105,15 +108,9 @@ namespace Models.Pathing
 
                     if(!OpenList.Contains(node))
                     {
-                        if(!node.Pathable)
-                        {
-                            ClosedList.Add(node);
-                            continue;
-                        }
-
                         node.Parent = currentNode;
 
-                        node.G = currentNode.G + node.MovementCost + Heuristic(node, currentNode);
+                        node.G = currentNode.G + node.MovementCost + DistBetween(node, currentNode);
                         node.H = Heuristic(node, _request.End);
 
                         OpenList.Add(node);
@@ -123,7 +120,7 @@ namespace Models.Pathing
                         if(node.Parent.G > currentNode.G)
                         {
                             node.Parent = currentNode;
-                            node.G = currentNode.G + node.MovementCost + Heuristic(node, currentNode);
+                            node.G = currentNode.G + node.MovementCost + DistBetween(node, currentNode);
                         }
                     }
                 }
@@ -135,10 +132,11 @@ namespace Models.Pathing
             // If every node was evaluated and the end node wasn't found, then invoke the callback with an invalid empty path.
             if (!FoundPath)
             {
-                _request.onPathCompleteCallback?.Invoke(new Path(null, false, 0.0f));
+                path = new Path(null, false, 0.0f);
+                //_request.onPathCompleteCallback?.Invoke(new Path(null, false, 0.0f));
             }
 
-            searchThread.Abort();
+            //searchThread.Abort();
         }
 
         /// <summary>
@@ -188,14 +186,7 @@ namespace Models.Pathing
         /// </summary>
         private void ResetNodes()
         {
-            foreach(var node in ClosedList)
-            {
-                node.Parent = null;
-                node.G = 0;
-                node.H = 0;
-            }
-
-            foreach(var node in OpenList)
+            foreach(var node in NodeGraph.Instance.Nodes)
             {
                 node.Parent = null;
                 node.G = 0;
@@ -214,7 +205,12 @@ namespace Models.Pathing
             var dx = Mathf.Abs(_node.X - _end.X);
             var dy = Mathf.Abs(_node.Y - _end.Y);
 
-            return (dx + dy) + Mathf.Min(dx, dy);
+            return dx + dy + Mathf.Min(dx, dy);
+        }
+
+        private float DistBetween(Node _a, Node _b)
+        {
+            return Vector2.Distance(new Vector2(_a.X, _a.Y), new Vector2(_b.X, _b.Y));
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Controllers
 
             if(Input.GetKeyDown(KeyCode.Space))
             {
-                new PathRequest(World.Instance.Tiles[0, 0], World.Instance.Tiles[Random.Range(0, 30), Random.Range(0, 30)], OnPath);
+                new PathRequest(World.Instance.Tiles[0, 0], World.Instance.Tiles[Random.Range(0, 150), Random.Range(0, 150)], OnPath);
             }
         }
 
@@ -115,6 +115,7 @@ namespace Controllers
                         dragEndY = dragStartY;
                     }
 
+                    // Process tiles in drag area.
                     for (var x = dragStartX; x <= dragEndX; x++)
                     {
                         for (var y = dragStartY; y <= dragEndY; y++)
@@ -127,6 +128,8 @@ namespace Controllers
                             }
                         }
                     }
+
+                    NodeGraph.Instance.BuildPartialGraph(dragStartX, dragStartY, dragEndX, dragEndY);
                 }
             }
         }
@@ -160,9 +163,6 @@ namespace Controllers
             {
                 _tile.UninstallStructure();
             }
-
-            // TODO: Size of 1 wont work very well for future structures that may span more than a single tile. For now walls are OK.
-            NodeGraph.Instance.BuildPartialGraph(_tile.X, _tile.Y, 10);
         }
 
         private Tile GetTileUnderMouse()
