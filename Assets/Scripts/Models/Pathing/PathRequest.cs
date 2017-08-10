@@ -9,17 +9,17 @@ namespace Models.Pathing
         /// <summary>
         /// The starting Node for the path request.
         /// </summary>
-        private Node Start { get; }
+        public Node Start { get; }
 
         /// <summary>
         /// The end node the path request will attempt to generate a path to from start.
         /// </summary>
-        private Node End { get; }
+        public Node End { get; }
 
         /// <summary>
         /// Callback function invoked when the path has been computed.
         /// </summary>
-	    private Action<Path> onPathCompleteCallback;
+	    public Action<Path> onPathCompleteCallback;
 
         /// <summary>
         /// Create a new path request that will generate a path from start to end and pass it back to the given callback function when
@@ -33,9 +33,17 @@ namespace Models.Pathing
             Start = NodeGraph.Instance?.Nodes[_start.X, _start.Y];
             End = NodeGraph.Instance?.Nodes[_end.X, _end.Y];
 
+            // If the start or end node is not a pathable node, then just ignore this request and return an empty callback.
+            if (!Start.Pathable || !End.Pathable)
+            {
+                _onCompleteCallback?.Invoke(new Path(null, false, 0.0f));
+                return;
+            }
+
             onPathCompleteCallback += _onCompleteCallback;
 
-            // TODO: Threaded path finding with some sort of queue for paths. Only 1 path can be computed at any given time...
+            // TODO: Maybe this should be added to a function to allow control over when the path is queued?
+            PathFinder.Instance?.Queue(this);
         }
 	}
 }

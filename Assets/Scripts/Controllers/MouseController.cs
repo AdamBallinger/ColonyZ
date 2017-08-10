@@ -1,4 +1,5 @@
 using Models.Map;
+using Models.Pathing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -33,6 +34,33 @@ namespace Controllers
         private void Update()
         {
             HandleDragging();
+
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                new PathRequest(World.Instance.Tiles[0, 0], World.Instance.Tiles[Random.Range(0, 30), Random.Range(0, 30)], OnPath);
+            }
+        }
+
+        public LineRenderer ren;
+        private void OnPath(Path _path)
+        {
+            if (!_path.IsValid)
+            {
+                Debug.Log("Invalid path.");
+                return;
+            }
+
+            ren.positionCount = _path.NodePath.Count;
+
+            for (var i = 0; i < _path.NodePath.Count; i++)
+            {
+                ren.SetPosition(i, new Vector3(_path.NodePath[i].X, _path.NodePath[i].Y, 0.0f));
+            }
+        }
+
+        private void OnDestroy()
+        {
+            ren.positionCount = 0;
         }
 
         private void HandleDragging()
@@ -132,6 +160,14 @@ namespace Controllers
             {
                 _tile.UninstallStructure();
             }
+
+            // TODO: Size of 1 wont work very well for future structures that may span more than a single tile. For now walls are OK.
+            NodeGraph.Instance.BuildPartialGraph(_tile.X, _tile.Y, 10);
+        }
+
+        private Tile GetTileUnderMouse()
+        {
+            return World.Instance.GetTileAt(currentMousePosition);
         }
     }
 }

@@ -19,6 +19,8 @@ namespace Models.Pathing
 
 	    public float F => H + G;
 
+	    public float MovementCost { get; }
+
         public bool Pathable { get; }
 
         public Node Parent { get; set; }
@@ -28,12 +30,13 @@ namespace Models.Pathing
         /// </summary>
         public List<Node> Neighbours { get; set; }
 
-        public Node(int _x, int _y, bool _pathable)
+        public Node(int _x, int _y, float __movementCost, bool _pathable)
         {
             X = _x;
             Y = _y;
             H = 0;
             G = 0;
+            MovementCost = __movementCost;
             Pathable = _pathable;
             Parent = null;
             Neighbours = new List<Node>();

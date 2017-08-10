@@ -41,7 +41,8 @@ namespace Models.Pathing
             {
                 for(var y = 0; y < Height; y++)
                 {
-                    Nodes[x, y] = new Node(x, y, World.Instance.Tiles[x, y].InstalledStructure == null);
+                    // TODO: Replace 1.0f with an actual movement cost based on tile. For now 1.0 will do.
+                    Nodes[x, y] = new Node(x, y, 1.0f, World.Instance.Tiles[x, y].InstalledStructure == null);
                 }
             }
 
@@ -70,7 +71,8 @@ namespace Models.Pathing
                 {
                     if(y < 0 || y > Height) continue;
 
-                    Nodes[x, y] = new Node(x, y, World.Instance.Tiles[x, y].InstalledStructure == null);
+                    // TODO: Replace 1.0f with a real movement cost based on tile. 1.0 will do for now.
+                    Nodes[x, y] = new Node(x, y, 1.0f, World.Instance.Tiles[x, y].InstalledStructure == null);
                 }
             }
 

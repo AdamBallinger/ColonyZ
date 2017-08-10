@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Models.Entities;
+using Models.Pathing;
 
 namespace Models.Map
 {
@@ -36,6 +37,7 @@ namespace Models.Map
 
             Instance.Tiles = new Tile[Instance.Width, Instance.Height];
             Instance.Characters = new List<CharacterEntity>();
+            PathFinder.Create();
         }
 
         public void Update()
@@ -44,6 +46,8 @@ namespace Models.Map
             {
                 character.Update();
             }
+
+            PathFinder.Instance?.ProcessNext();
         }
 
         /// <summary>

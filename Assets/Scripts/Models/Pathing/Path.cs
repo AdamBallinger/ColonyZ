@@ -8,10 +8,13 @@ namespace Models.Pathing
 
         public bool IsValid { get; }
 
-		public Path(List<Node> _nodePath, bool _isValid)
+        public float ComputeTime { get; }
+
+		public Path(List<Node> _nodePath, bool _isValid, float _computeTime)
 		{
 		    NodePath = _nodePath;
 		    IsValid = _isValid;
+		    ComputeTime = _computeTime;
 		}
 	}
 }
