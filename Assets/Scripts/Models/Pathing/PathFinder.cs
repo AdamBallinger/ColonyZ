@@ -1,26 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.SymbolStore;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Models.Pathing
 {
-	public class PathFinder
-	{
-	    public static PathFinder Instance { get; private set; }
+    public class PathFinder
+    {
+        public static PathFinder Instance { get; private set; }
 
-	    private Queue<PathRequest> RequestQueue { get; set; }
+        private Queue<PathRequest> RequestQueue { get; set; }
 
-	    private volatile bool IsBusy;
+        private volatile bool IsBusy;
 
-	    private Thread searchThread;
-
-	    private List<Node> ClosedList { get; set; }
+        private HashSet<Node> ClosedList { get; set; }
         private List<Node> OpenList { get; set; }
 
-	    private volatile Path path;
+        private volatile Path path;
 
         private bool FoundPath { get; set; }
 
@@ -35,7 +31,7 @@ namespace Models.Pathing
             {
                 RequestQueue = new Queue<PathRequest>(),
                 IsBusy = false,
-                ClosedList = new List<Node>(),
+                ClosedList = new HashSet<Node>(),
                 OpenList = new List<Node>()
             };
         }
@@ -58,14 +54,12 @@ namespace Models.Pathing
 
             var request = RequestQueue.Dequeue();
 
-            if(request != null)
+            if (request != null)
             {
                 IsBusy = true;
                 await Task.Run(() => Search(request));
                 request.onPathCompleteCallback.Invoke(path);
                 IsBusy = false;
-                //searchThread = new Thread(() => Search(request));
-                //searchThread.Start();
             }
         }
 
@@ -84,59 +78,50 @@ namespace Models.Pathing
 
             ClosedList.Clear();
             OpenList.Clear();
-            
+
             OpenList.Add(_request.Start);
 
             _request.Start.H = Heuristic(_request.Start, _request.End);
 
-            while(OpenList.Count > 0)
+            while (OpenList.Count > 0)
             {
                 var currentNode = GetLowestFCostNode();
 
-                if(currentNode == _request.End)
+                OpenList.Remove(currentNode);
+                ClosedList.Add(currentNode);
+
+                if (currentNode == _request.End)
                 {
                     sw.Stop();
                     FoundPath = true;
-                    //_request.onPathCompleteCallback?.Invoke(new Path(Retrace(currentNode), true, sw.ElapsedMilliseconds));
                     path = new Path(Retrace(currentNode), true, sw.ElapsedMilliseconds);
                     break;
                 }
 
                 foreach(var node in currentNode.Neighbours)
                 {
-                    if(ClosedList.Contains(node)) continue;
+                    if(!node.Pathable || ClosedList.Contains(node))
+                        continue;
 
-                    if(!OpenList.Contains(node))
+                    var movementCostToNeigbour = currentNode.G + Heuristic(currentNode, node) + node.MovementCost;
+
+                    if(movementCostToNeigbour < node.G || !OpenList.Contains(node))
                     {
+                        node.G = movementCostToNeigbour;
+                        node.H = Heuristic(node, _request.End);
                         node.Parent = currentNode;
 
-                        node.G = currentNode.G + node.MovementCost + DistBetween(node, currentNode);
-                        node.H = Heuristic(node, _request.End);
-
-                        OpenList.Add(node);
-                    }
-                    else
-                    {
-                        if(node.Parent.G > currentNode.G)
-                        {
-                            node.Parent = currentNode;
-                            node.G = currentNode.G + node.MovementCost + DistBetween(node, currentNode);
-                        }
+                        if(!OpenList.Contains(node))
+                            OpenList.Add(node);
                     }
                 }
-
-                OpenList.Remove(currentNode);
-                ClosedList.Add(currentNode);
             }
 
             // If every node was evaluated and the end node wasn't found, then invoke the callback with an invalid empty path.
             if (!FoundPath)
             {
                 path = new Path(null, false, 0.0f);
-                //_request.onPathCompleteCallback?.Invoke(new Path(null, false, 0.0f));
             }
-
-            //searchThread.Abort();
         }
 
         /// <summary>
@@ -147,9 +132,9 @@ namespace Models.Pathing
         {
             var cheapestNode = OpenList[0];
 
-            foreach(var node in OpenList)
+            foreach (var node in OpenList)
             {
-                if(node.F < cheapestNode.F && node.Pathable)
+                if (node.F < cheapestNode.F && node.Pathable)
                 {
                     cheapestNode = node;
                 }
@@ -186,7 +171,7 @@ namespace Models.Pathing
         /// </summary>
         private void ResetNodes()
         {
-            foreach(var node in NodeGraph.Instance.Nodes)
+            foreach (var node in NodeGraph.Instance.Nodes)
             {
                 node.Parent = null;
                 node.G = 0;
@@ -194,18 +179,21 @@ namespace Models.Pathing
             }
         }
 
-	    /// <summary>
-	    /// Calculates the Diagonal Distance Heuristic cost for a node.
-	    /// </summary>
-	    /// <param name="_node"></param>
-	    /// <param name="_end"></param>
-	    /// <returns></returns>
-	    private float Heuristic(Node _node, Node _end)
+        /// <summary>
+        /// Calculates the Diagonal Distance Heuristic cost for a node.
+        /// </summary>
+        /// <param name="_node"></param>
+        /// <param name="_end"></param>
+        /// <returns></returns>
+        private float Heuristic(Node _node, Node _end)
         {
             var dx = Mathf.Abs(_node.X - _end.X);
             var dy = Mathf.Abs(_node.Y - _end.Y);
 
-            return dx + dy + Mathf.Min(dx, dy);
+            if (dx > dy)
+                return 14.0f * dy + 10.0f * (dx - dy);
+
+            return 14.0f * dx + 10.0f * (dy - dx);
         }
 
         private float DistBetween(Node _a, Node _b)
