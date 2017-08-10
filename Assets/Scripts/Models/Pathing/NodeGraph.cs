@@ -62,11 +62,11 @@ namespace Models.Pathing
             // First rebuild the nodes.
             for (var x = _startX; x <= _endX; x++)
             {
-                if (x < 0 || x > Width) continue;
+                if (x < 0 || x >= Width) continue;
 
                 for (var y = _startY; y <= _endY; y++)
                 {
-                    if (y < 0 || y > Height) continue;
+                    if (y < 0 || y >= Height) continue;
 
                     // TODO: Replace 1.0f with a real movement cost based on tile. 1.0 will do for now.
                     Nodes[x, y] = new Node(x, y, 1.0f, World.Instance.Tiles[x, y].InstalledStructure == null);
@@ -77,11 +77,11 @@ namespace Models.Pathing
             // list of neighbours.
             for (var x = _startX - _padding; x < _endX + _padding; x++)
             {
-                if (x < 0 || x > Width) continue;
+                if (x < 0 || x >= Width) continue;
 
                 for (var y = _startY - _padding; y < _endY + _padding; y++)
                 {
-                    if (y < 0 || y > Height) continue;
+                    if (y < 0 || y >= Height) continue;
 
                     // Optimisation to ignore neigbour generation for none pathable nodes since they never get
                     // evaluated by the path finder anyway.
@@ -111,7 +111,7 @@ namespace Models.Pathing
         /// <returns></returns>
         public Node GetNodeAt(int _x, int _y)
         {
-            if (_x < 0 || _x >= Width - 1 || _y < 0 || _y >= Height - 1)
+            if (_x < 0 || _x >= Width || _y < 0 || _y >= Height)
             {
                 return null;
             }
