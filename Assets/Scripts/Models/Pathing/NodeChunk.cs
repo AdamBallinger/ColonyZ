@@ -232,12 +232,12 @@ namespace Models.Pathing
                         return false;
                     }
 
-                    cornerUpper = NodeGraph.Instance.GetNodeAt(cornerNodeSelf.X, cornerNodeSelf.Y + 1);
+                    cornerUpper = NodeGraph.Instance.GetNodeAt(cornerNodeSelf.X, cornerNodeSelf.Y - 1);
                     cornerSide = NodeGraph.Instance.GetNodeAt(cornerNodeSelf.X - 1, cornerNodeSelf.Y);
 
                     if (cornerUpper != null && cornerUpper.Pathable || cornerSide != null && cornerSide.Pathable)
                     {
-                        return true;
+                        return true; 
                     }
 
                     return false;

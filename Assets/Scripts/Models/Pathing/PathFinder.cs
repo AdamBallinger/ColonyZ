@@ -89,7 +89,7 @@ namespace Models.Pathing
 
             //var nodesToEvaluate = ChunkSearch(_request);
 
-            //if(nodesToEvaluate == null)
+            //if (nodesToEvaluate == null)
             //{
             //    path = new Path(null, false, 0.0f);
             //    return;
@@ -115,7 +115,7 @@ namespace Models.Pathing
 
                 foreach(var node in currentNode.Neighbours)
                 {
-                    if(!node.Pathable || NodeClosedSet.Contains(node)/* || !nodesToEvaluate.Contains(node)*/)
+                    if(!node.Pathable || NodeClosedSet.Contains(node) /*|| !nodesToEvaluate.Contains(node)*/)
                         continue;
 
                     var movementCostToNeigbour = currentNode.G + Heuristic(currentNode, node) + node.MovementCost;
@@ -161,7 +161,7 @@ namespace Models.Pathing
 
                 if(currentChunk == endChunk)
                 {
-                    UnityEngine.Debug.Log("Found chunk route.");
+                    //UnityEngine.Debug.Log("Found chunk route.");
                     return RetraceChunks(currentChunk);
                 }
 
