@@ -35,9 +35,9 @@ namespace Controllers
         {
             HandleDragging();
 
-            if(Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                new PathRequest(World.Instance.Tiles[0, 0], World.Instance.Tiles[Random.Range(0, 150), Random.Range(0, 150)], OnPath);
+                new PathRequest(World.Instance?.Tiles[0, 0], World.Instance?.Tiles[Random.Range(0, 144), Random.Range(0, 144)], OnPath);
             }
         }
 
@@ -46,9 +46,11 @@ namespace Controllers
         {
             if (!_path.IsValid)
             {
-                Debug.Log("Invalid path.");
+                Debug.Log(_path.ComputeTime < 0.0f ? "Invalid path start and/or end." : "Invalid path.");
                 return;
             }
+
+            Debug.Log($"Path generated in {_path.ComputeTime}ms.");
 
             ren.positionCount = _path.NodePath.Count;
 
@@ -56,11 +58,6 @@ namespace Controllers
             {
                 ren.SetPosition(i, new Vector3(_path.NodePath[i].X, _path.NodePath[i].Y, 0.0f));
             }
-        }
-
-        private void OnDestroy()
-        {
-            ren.positionCount = 0;
         }
 
         private void HandleDragging()
@@ -109,7 +106,7 @@ namespace Controllers
                     selectionObject.SetActive(false);
 
                     // Experimental drag threshold as clicking and dragging feels inconsistent sometimes 
-                    if(dragDist <= 0.6f)
+                    if (dragDist <= 0.6f)
                     {
                         dragEndX = dragStartX;
                         dragEndY = dragStartY;
@@ -129,7 +126,8 @@ namespace Controllers
                         }
                     }
 
-                    NodeGraph.Instance.BuildPartialGraph(dragStartX, dragStartY, dragEndX, dragEndY);
+                    //NodeGraph.Instance.BuildPartialGraph(dragStartX, dragStartY, dragEndX, dragEndY);
+                    NodeGraph.Instance?.BuildFullGraph();
                 }
             }
         }

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Priority_Queue;
 
 namespace Models.Pathing
 {
-	public class Node 
+	public class Node : FastPriorityQueueNode
 	{
         /// <summary>
         /// X position of the Node in the node graph.

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using Priority_Queue;
 using UnityEngine;
 
 namespace Models.Pathing
@@ -9,12 +11,18 @@ namespace Models.Pathing
     {
         public static PathFinder Instance { get; private set; }
 
+        private const float STRAIGHT_MOVEMENT_COST = 10.0f;
+        private const float DIAGONAL_MOVEMENT_COST = 14.0f;
+
         private Queue<PathRequest> RequestQueue { get; set; }
 
         private volatile bool IsBusy;
 
-        private HashSet<Node> ClosedList { get; set; }
-        private List<Node> OpenList { get; set; }
+        private HashSet<NodeChunk> ChunkClosedSet { get; set; }
+        private FastPriorityQueue<NodeChunk> ChunkOpenList { get; set; }
+
+        private HashSet<Node> NodeClosedSet { get; set; }
+        private FastPriorityQueue<Node> NodeOpenList { get; set; }
 
         private volatile Path path;
 
@@ -31,8 +39,10 @@ namespace Models.Pathing
             {
                 RequestQueue = new Queue<PathRequest>(),
                 IsBusy = false,
-                ClosedList = new HashSet<Node>(),
-                OpenList = new List<Node>()
+                ChunkClosedSet = new HashSet<NodeChunk>(),
+                ChunkOpenList = new FastPriorityQueue<NodeChunk>(NodeGraph.Instance.Width / NodeGraph.Instance.ChunkSize * (NodeGraph.Instance.Height / NodeGraph.Instance.ChunkSize)),
+                NodeClosedSet = new HashSet<Node>(),
+                NodeOpenList = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height)
             };
         }
 
@@ -74,19 +84,26 @@ namespace Models.Pathing
 
             FoundPath = false;
 
-            ClosedList.Clear();
-            OpenList.Clear();
+            NodeClosedSet.Clear();
+            NodeOpenList.Clear();
 
-            OpenList.Add(_request.Start);
+            //var nodesToEvaluate = ChunkSearch(_request);
+
+            //if(nodesToEvaluate == null)
+            //{
+            //    path = new Path(null, false, 0.0f);
+            //    return;
+            //}
 
             _request.Start.H = Heuristic(_request.Start, _request.End);
 
-            while (OpenList.Count > 0)
-            {
-                var currentNode = GetLowestFCostNode();
+            NodeOpenList.Enqueue(_request.Start, _request.Start.F);
 
-                OpenList.Remove(currentNode);
-                ClosedList.Add(currentNode);
+            while (NodeOpenList.Count != 0)
+            {
+                var currentNode = NodeOpenList.Dequeue();
+
+                NodeClosedSet.Add(currentNode);
 
                 if (currentNode == _request.End)
                 {
@@ -98,19 +115,21 @@ namespace Models.Pathing
 
                 foreach(var node in currentNode.Neighbours)
                 {
-                    if(!node.Pathable || ClosedList.Contains(node))
+                    if(!node.Pathable || NodeClosedSet.Contains(node)/* || !nodesToEvaluate.Contains(node)*/)
                         continue;
 
                     var movementCostToNeigbour = currentNode.G + Heuristic(currentNode, node) + node.MovementCost;
 
-                    if(movementCostToNeigbour < node.G || !OpenList.Contains(node))
+                    if(movementCostToNeigbour < node.G || !NodeOpenList.Contains(node))
                     {
                         node.G = movementCostToNeigbour;
                         node.H = Heuristic(node, _request.End);
                         node.Parent = currentNode;
 
-                        if(!OpenList.Contains(node))
-                            OpenList.Add(node);
+                        if(!NodeOpenList.Contains(node))
+                            NodeOpenList.Enqueue(node, node.F);
+                        else
+                            NodeOpenList.UpdatePriority(node, node.F);
                     }
                 }
             }
@@ -122,23 +141,68 @@ namespace Models.Pathing
             }
         }
 
-        /// <summary>
-        /// Gets the node with the lowest F cost from the OpenList.
-        /// </summary>
-        /// <returns></returns>
-        private Node GetLowestFCostNode()
+        private List<Node> ChunkSearch(PathRequest _request)
         {
-            var cheapestNode = OpenList[0];
+            ChunkClosedSet.Clear();
+            ChunkOpenList.Clear();
 
-            foreach (var node in OpenList)
+            var startChunk = NodeGraph.Instance.GetChunkInWorld(_request.Start);
+            var endChunk = NodeGraph.Instance.GetChunkInWorld(_request.End);
+
+            startChunk.H = Heuristic(startChunk, endChunk);
+
+            ChunkOpenList.Enqueue(startChunk, startChunk.F);
+
+            while(ChunkOpenList.Count > 0)
             {
-                if (node.F < cheapestNode.F && node.Pathable)
+                var currentChunk = ChunkOpenList.Dequeue();
+
+                ChunkClosedSet.Add(currentChunk);
+
+                if(currentChunk == endChunk)
                 {
-                    cheapestNode = node;
+                    UnityEngine.Debug.Log("Found chunk route.");
+                    return RetraceChunks(currentChunk);
+                }
+
+                var neighbours = currentChunk.GetNeighbours();
+
+                foreach(var chunk in neighbours)
+                {
+                    if (ChunkClosedSet.Contains(chunk))
+                        continue;
+
+                    var movementCostToNeigbour = currentChunk.G + Heuristic(currentChunk, chunk);
+
+                    if (movementCostToNeigbour < chunk.G || !ChunkOpenList.Contains(chunk))
+                    {        
+                        chunk.G = movementCostToNeigbour;
+                        chunk.H = Heuristic(chunk, endChunk);
+                        chunk.Parent = currentChunk;
+
+                        if (!ChunkOpenList.Contains(chunk))
+                            ChunkOpenList.Enqueue(chunk, chunk.F);
+                        else
+                            ChunkOpenList.UpdatePriority(chunk, chunk.F);
+                    }
                 }
             }
 
-            return cheapestNode;
+            UnityEngine.Debug.LogWarning("Failed to find a chunk route.");
+            return null;
+        }
+
+        private List<Node> RetraceChunks(NodeChunk _lastChunk)
+        {
+            var list = _lastChunk.Nodes.Cast<Node>().ToList();
+
+            while (_lastChunk.Parent != null)
+            {
+                list.AddRange(_lastChunk.Parent.Nodes.Cast<Node>().ToList());
+                _lastChunk = _lastChunk.Parent;
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -176,9 +240,20 @@ namespace Models.Pathing
             var dy = Mathf.Abs(_node.Y - _end.Y);
 
             if (dx > dy)
-                return 14.0f * dy + 10.0f * (dx - dy);
+                return DIAGONAL_MOVEMENT_COST * dy + STRAIGHT_MOVEMENT_COST * (dx - dy);
 
-            return 14.0f * dx + 10.0f * (dy - dx);
+            return DIAGONAL_MOVEMENT_COST * dx + STRAIGHT_MOVEMENT_COST * (dy - dx);
+        }
+
+        private float Heuristic(NodeChunk _chunk, NodeChunk _end)
+        {
+            var dx = Mathf.Abs(_chunk.X - _end.X);
+            var dy = Mathf.Abs(_chunk.Y - _end.Y);
+
+            if (dx > dy)
+                return DIAGONAL_MOVEMENT_COST * dy + STRAIGHT_MOVEMENT_COST * (dx - dy);
+
+            return DIAGONAL_MOVEMENT_COST * dx + STRAIGHT_MOVEMENT_COST * (dy - dx);
         }
     }
 }

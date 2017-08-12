@@ -30,13 +30,13 @@ namespace Models.Pathing
         /// <param name="_onCompleteCallback"></param>
         public PathRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback)
         {
-            Start = NodeGraph.Instance?.Nodes[_start.X, _start.Y];
-            End = NodeGraph.Instance?.Nodes[_end.X, _end.Y];
+            Start = NodeGraph.Instance?.GetNodeAt(_start.X, _start.Y);
+            End = NodeGraph.Instance?.GetNodeAt(_end.X, _end.Y);
 
             // If the start or end node is not a pathable node, then just ignore this request and return an empty callback.
             if (!Start.Pathable || !End.Pathable)
             {
-                _onCompleteCallback?.Invoke(new Path(null, false, 0.0f));
+                _onCompleteCallback?.Invoke(new Path(null, false, -1.0f));
                 return;
             }
 

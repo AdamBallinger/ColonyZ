@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Models.Map
 {
     [Flags]
-    public enum TileCardinals
+    public enum Cardinals
     {
         None       = 0,
         North_West = 1 << 0,

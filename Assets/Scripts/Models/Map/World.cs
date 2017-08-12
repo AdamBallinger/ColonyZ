@@ -37,7 +37,6 @@ namespace Models.Map
 
             Instance.Tiles = new Tile[Instance.Width, Instance.Height];
             Instance.Characters = new List<CharacterEntity>();
-            PathFinder.Create();
         }
 
         public void Update()
