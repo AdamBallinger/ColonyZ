@@ -51,7 +51,6 @@ namespace Models.Entities
                 {
                     // TODO: Maybe do something here.
                     path = null;
-                    Debug.Log("Requesting new path.");
                     PathFinder.NewRequest(CurrentTile, World.Instance?.GetRandomTile(), OnPathReceived);
                     return;
                 }
