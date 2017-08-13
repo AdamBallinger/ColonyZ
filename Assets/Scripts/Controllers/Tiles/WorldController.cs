@@ -173,8 +173,7 @@ namespace Controllers.Tiles
         {
             if (_entity is CharacterEntity)
             {
-                var char_GO = Instantiate(Resources.Load<GameObject>("Prefabs/Game/Entity_Character"));
-                char_GO.transform.SetParent(_transform);
+                var char_GO = Instantiate(Resources.Load<GameObject>("Prefabs/Game/Entity_Character"), _transform);
                 char_GO.transform.position = new Vector2(_entity.X, _entity.Y);
 
                 // TODO: Set sprites for character GameObject.

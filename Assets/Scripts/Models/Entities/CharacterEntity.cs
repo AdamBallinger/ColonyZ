@@ -15,6 +15,9 @@ namespace Models.Entities
 
         private float movementPercentage;
         private float distToTravel;
+        private float distThisFrame;
+        private float percentThisFrame;
+        private float overShotAmount;
 
         public CharacterEntity(Tile _tile) : base(_tile)
         {
@@ -33,11 +36,9 @@ namespace Models.Entities
                 return;
             }
 
-            Debug.Log(TileOffset);
-
             // TODO: Change Time.deltaTime to a custom Time tracking class.
-            var distThisFrame = MovementSpeed * nextTile.MovementModifier * Time.deltaTime;
-            var percentThisFrame = distThisFrame / distToTravel;
+            distThisFrame = MovementSpeed * nextTile.MovementModifier * Time.deltaTime;
+            percentThisFrame = distThisFrame / distToTravel;
             movementPercentage += percentThisFrame;
 
             if (movementPercentage >= 1.0f)
@@ -46,12 +47,11 @@ namespace Models.Entities
                 CurrentTile = nextTile;
 
                 // Track how much the character went over its last distance to the current tile to smoothly transition to the next tile in the path.
-                var overShotAmount = Mathf.Clamp01(movementPercentage - 1.0f);
+                overShotAmount = Mathf.Clamp01(movementPercentage - 1.0f);
                 movementPercentage = 0.0f;
 
                 if (HasReachedPathDestination())
                 {
-                    // TODO: Maybe do something here.
                     PathFinished();
                     return;
                 }
@@ -91,11 +91,11 @@ namespace Models.Entities
                 path = _path;
                 path.NodePath.RemoveAt(0);
                 AdvancePath();
+                distToTravel = Mathf.Sqrt(Mathf.Pow(CurrentTile.X - nextTile.X, 2) + Mathf.Pow(CurrentTile.Y - nextTile.Y, 2));
             }
             else
             {
-                path = null;
-                PathFinder.NewRequest(CurrentTile, World.Instance?.GetRandomTile(0, 0, 5, 5), OnPathReceived);
+                PathFinished();
             }
         }
 
@@ -107,7 +107,7 @@ namespace Models.Entities
 
         private bool HasReachedPathDestination()
         {
-            return path?.NodePath.Count == 0 || path.EndNode.X == CurrentTile.X && path.EndNode.Y == CurrentTile.Y ? true : false;
+            return path?.NodePath.Count == 0 || path.EndNode.X == CurrentTile.X && path.EndNode.Y == CurrentTile.Y;
         }
     }
 }
