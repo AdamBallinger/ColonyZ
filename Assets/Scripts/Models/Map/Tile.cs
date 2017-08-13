@@ -17,7 +17,7 @@ namespace Models.Map
         public int X { get; }
         public int Y { get; }
 
-        public float MovementModifier { get; private set; } = 1.0f;
+        public float MovementModifier { get; private set; }
 
         /// <summary>
         /// The current tile type of this tile.
@@ -53,10 +53,18 @@ namespace Models.Map
         private Action<Tile> onTileChanged;
         private Action<Tile> onTileTypeChanged;
 
-        public Tile(int _x, int _y)
+        /// <summary>
+        /// Create a tile at the given x and y with an optional param for movement speed modifer to change the rate in which
+        /// entitys can move across this tile. 1 = normal, 0.5 = half, 2 = double etc.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <param name="_movementModifier"></param>
+        public Tile(int _x, int _y, float _movementModifier = 1.0f)
         {
             X = _x;
             Y = _y;
+            MovementModifier = _movementModifier;
         }
 
         public void InstallStructure(TileStructure _structure)
