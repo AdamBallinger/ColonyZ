@@ -69,7 +69,7 @@ namespace Models.Pathing
         /// </summary>
         /// <param name="_request"></param>
         /// <param name="_priority"></param>
-        public void Queue(PathRequest _request, uint _priority)
+        private void Queue(PathRequest _request, uint _priority)
         {
             RequestQueue.Enqueue(_request, _priority);
         }
