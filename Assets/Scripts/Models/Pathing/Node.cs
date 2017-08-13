@@ -89,5 +89,12 @@ namespace Models.Pathing
             Neighbours.RemoveAll(node => node == null);
             Neighbours.RemoveAll(node => !node.Pathable);
         }
+
+        public void Reset()
+        {
+            Parent = null;
+            G = 0.0f;
+            H = 0.0f;
+        }
 	}
 }

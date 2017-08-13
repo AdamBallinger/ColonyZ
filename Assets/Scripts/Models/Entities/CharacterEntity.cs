@@ -18,8 +18,8 @@ namespace Models.Entities
 
         public CharacterEntity(Tile _tile) : base(_tile)
         {
-            MovementSpeed = 5.0f;
-            PathFinder.NewRequest(CurrentTile, World.Instance?.GetRandomTile(), OnPathReceived);
+            MovementSpeed = 2.0f;
+            PathFinished();
         }
 
         public override void Update()
@@ -32,6 +32,8 @@ namespace Models.Entities
                 // Cant walk through tile yet so wait. Doesn't ever get occur yet however.
                 return;
             }
+
+            Debug.Log(TileOffset);
 
             // TODO: Change Time.deltaTime to a custom Time tracking class.
             var distThisFrame = MovementSpeed * nextTile.MovementModifier * Time.deltaTime;
@@ -50,8 +52,7 @@ namespace Models.Entities
                 if (HasReachedPathDestination())
                 {
                     // TODO: Maybe do something here.
-                    path = null;
-                    PathFinder.NewRequest(CurrentTile, World.Instance?.GetRandomTile(), OnPathReceived);
+                    PathFinished();
                     return;
                 }
 
@@ -67,7 +68,8 @@ namespace Models.Entities
                     case Enterability.None:
                         // Abort because something got in the way like a new structure.
                         // TODO: Possibly recalcualte the path?
-                        path = null;
+                        Debug.Log("Path failed to complete for character.");
+                        PathFinished();
                         return;
                 }
             }
@@ -75,12 +77,25 @@ namespace Models.Entities
             TileOffset = new Vector2((nextTile.X - CurrentTile.X) * movementPercentage, (nextTile.Y - CurrentTile.Y) * movementPercentage);
         }
 
+        private void PathFinished()
+        {
+            path = null;
+            TileOffset = Vector2.zero;
+            PathFinder.NewRequest(CurrentTile, World.Instance?.GetRandomTile(0, 0, 5, 5), OnPathReceived);
+        }
+
         private void OnPathReceived(Path _path)
         {
-            if(_path.IsValid)
+            if (_path.IsValid && _path.NodePath.Count > 1)
             {
                 path = _path;
+                path.NodePath.RemoveAt(0);
                 AdvancePath();
+            }
+            else
+            {
+                path = null;
+                PathFinder.NewRequest(CurrentTile, World.Instance?.GetRandomTile(0, 0, 5, 5), OnPathReceived);
             }
         }
 

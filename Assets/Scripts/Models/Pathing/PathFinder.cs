@@ -159,14 +159,14 @@ namespace Models.Pathing
                 path = new Path(null, false, 0.0f);
             }
 
-            foreach(var chunk in NodeGraph.Instance.Chunks)
+            foreach(var node in NodeClosedSet)
             {
-                foreach(var node in chunk.Nodes)
-                {
-                    node.G = 0.0f;
-                    node.H = 0.0f;
-                    node.Parent = null;
-                }
+                node.Reset();
+            }
+
+            foreach(var node in NodeOpenList)
+            {
+                node.Reset();
             }
         }
 

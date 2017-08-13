@@ -34,7 +34,7 @@ namespace Models.Pathing
             End = NodeGraph.Instance?.GetNodeAt(_end.X, _end.Y);
 
             // If the start or end node is not a pathable node, then just ignore this request and return an empty callback.
-            if (!Start.Pathable || !End.Pathable)
+            if (!End.Pathable)
             {
                 _onCompleteCallback?.Invoke(new Path(null, false, -1.0f));
                 return;
