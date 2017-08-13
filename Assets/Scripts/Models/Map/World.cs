@@ -95,6 +95,25 @@ namespace Models.Map
             return Tiles[UnityEngine.Random.Range(0, Width), UnityEngine.Random.Range(0, Height)];
         }
 
+	    /// <summary>
+	    /// Returns a random world tile with a specified range. The range will be automatically clamped to
+	    /// the bounds of the world.
+	    /// </summary>
+	    /// <param name="_xRangeMin"></param>
+	    /// <param name="_yRangeMin"></param>
+	    /// <param name="_xRangeMax"></param>
+	    /// <param name="_yRangeMax"></param>
+	    /// <returns></returns>
+	    public Tile GetRandomTile(int _xRangeMin, int _yRangeMin, int _xRangeMax, int _yRangeMax)
+        {
+            _xRangeMin = Mathf.Clamp(_xRangeMin, 0, Width);
+            _xRangeMax = Mathf.Clamp(_xRangeMax, 0, Width);
+            _yRangeMin = Mathf.Clamp(_yRangeMin, 0, Height);
+            _yRangeMax = Mathf.Clamp(_yRangeMax, 0, Height);
+
+            return Tiles[UnityEngine.Random.Range(_xRangeMin, _xRangeMax), UnityEngine.Random.Range(_yRangeMin, _yRangeMax)];
+        }
+
         /// <summary>
         /// Returns a list of neighbour tiles for the given tile.
         /// </summary>

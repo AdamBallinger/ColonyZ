@@ -50,18 +50,28 @@ namespace Models.Pathing
             };
         }
 
-        public static void NewRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback)
+        /// <summary>
+        /// Create a new pathfinding request for the PathFinder. The path will be passed back to the onCompleteCallback given.
+        /// An optional parameter for the priority can be given if the path request should be processed with a higher
+        /// priority. Lower priority value = quicker processing of request.
+        /// </summary>
+        /// <param name="_start"></param>
+        /// <param name="_end"></param>
+        /// <param name="_onCompleteCallback"></param>
+        /// <param name="_priority"></param>
+        public static void NewRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback, uint _priority = 10)
         {
-            Instance?.Queue(new PathRequest(_start, _end, _onCompleteCallback));
+            Instance?.Queue(new PathRequest(_start, _end, _onCompleteCallback), _priority);
         }
 
         /// <summary>
         /// Adds a path request to the path finding queue.
         /// </summary>
         /// <param name="_request"></param>
-        public void Queue(PathRequest _request)
+        /// <param name="_priority"></param>
+        public void Queue(PathRequest _request, uint _priority)
         {
-            RequestQueue.Enqueue(_request, 0);
+            RequestQueue.Enqueue(_request, _priority);
         }
 
         /// <summary>

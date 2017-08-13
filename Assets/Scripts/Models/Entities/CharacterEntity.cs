@@ -18,8 +18,8 @@ namespace Models.Entities
 
         public CharacterEntity(Tile _tile) : base(_tile)
         {
-            MovementSpeed = 15.0f;
-            new PathRequest(CurrentTile, World.Instance?.GetRandomTile(), OnPathReceived);
+            MovementSpeed = 5.0f;
+            PathFinder.NewRequest(CurrentTile, World.Instance?.GetRandomTile(), OnPathReceived);
         }
 
         public override void Update()
