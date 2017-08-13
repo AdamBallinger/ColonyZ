@@ -1,13 +1,23 @@
 using System;
+using Models.Entities;
 using UnityEngine;
 
 namespace Models.Map
 {
+    public enum Enterability
+    {
+        Immediate,
+        Delayed,
+        None
+    }
+
     public class Tile
     {
 
         public int X { get; }
         public int Y { get; }
+
+        public float MovementModifier { get; private set; } = 1.0f;
 
         /// <summary>
         /// The current tile type of this tile.
@@ -35,7 +45,7 @@ namespace Models.Map
         /// </summary>
         public TileStructure InstalledStructure { get; private set; }
 
-        public Entities.Entity TileEntity { get; private set; }
+        public Entity TileEntity { get; private set; }
 
         private TileType type;
         private TileType oldType;
@@ -72,6 +82,12 @@ namespace Models.Map
             InstalledStructure = null;
 
             onTileChanged?.Invoke(this);
+        }
+
+        public Enterability GetEnterability()
+        {
+            // TODO: When doors are a thing, return Enterability.Delayed for doors or similar structures.
+            return InstalledStructure == null ? Enterability.Immediate : Enterability.None;
         }
 
         /// <summary>

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Models.Map;
 using Priority_Queue;
 using UnityEngine;
 
@@ -11,22 +13,24 @@ namespace Models.Pathing
     {
         public static PathFinder Instance { get; private set; }
 
-        private const float STRAIGHT_MOVEMENT_COST = 10.0f;
-        private const float DIAGONAL_MOVEMENT_COST = 14.0f;
+        private const float STRAIGHT_MOVEMENT_COST = 5.0f;
+        private const float DIAGONAL_MOVEMENT_COST = 7.0f;
 
-        private Queue<PathRequest> RequestQueue { get; set; }
+        private SimplePriorityQueue<PathRequest> RequestQueue { get; set; }
 
         private volatile bool IsBusy;
 
         private HashSet<NodeChunk> ChunkClosedSet { get; set; }
         private FastPriorityQueue<NodeChunk> ChunkOpenList { get; set; }
 
-        private HashSet<Node> NodeClosedSet { get; set; }
-        private FastPriorityQueue<Node> NodeOpenList { get; set; }
+        private volatile HashSet<Node> NodeClosedSet;
+        private volatile FastPriorityQueue<Node> NodeOpenList;
 
         private volatile Path path;
 
-        private bool FoundPath { get; set; }
+        private volatile PathRequest currentRequest;
+
+        private volatile bool FoundPath;
 
         private PathFinder() { }
 
@@ -37,7 +41,7 @@ namespace Models.Pathing
         {
             Instance = new PathFinder
             {
-                RequestQueue = new Queue<PathRequest>(),
+                RequestQueue = new SimplePriorityQueue<PathRequest>(),
                 IsBusy = false,
                 ChunkClosedSet = new HashSet<NodeChunk>(),
                 ChunkOpenList = new FastPriorityQueue<NodeChunk>(NodeGraph.Instance.Width / NodeGraph.Instance.ChunkSize * (NodeGraph.Instance.Height / NodeGraph.Instance.ChunkSize)),
@@ -46,13 +50,18 @@ namespace Models.Pathing
             };
         }
 
+        public static void NewRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback)
+        {
+            Instance?.Queue(new PathRequest(_start, _end, _onCompleteCallback));
+        }
+
         /// <summary>
         /// Adds a path request to the path finding queue.
         /// </summary>
         /// <param name="_request"></param>
         public void Queue(PathRequest _request)
         {
-            RequestQueue.Enqueue(_request);
+            RequestQueue.Enqueue(_request, 0);
         }
 
         /// <summary>
@@ -62,22 +71,22 @@ namespace Models.Pathing
         {
             if (RequestQueue.Count == 0 || IsBusy) return;
 
-            var request = RequestQueue.Dequeue();
+            currentRequest = RequestQueue.Dequeue();
 
-            if (request != null)
+            if (currentRequest != null)
             {
                 IsBusy = true;
-                await Task.Run(() => Search(request));
-                request.onPathCompleteCallback.Invoke(path);
+                await Task.Run(() => Search());
+                currentRequest.onPathCompleteCallback?.Invoke(path);
                 IsBusy = false;
+                currentRequest = null;
             }
         }
 
         /// <summary>
         /// Performs A* search for a given path request in a seperate thread.
         /// </summary>
-        /// <param name="_request"></param>
-        private void Search(PathRequest _request)
+        private void Search()
         {
             var sw = new Stopwatch();
             sw.Start();
@@ -95,9 +104,9 @@ namespace Models.Pathing
             //    return;
             //}
 
-            _request.Start.H = Heuristic(_request.Start, _request.End);
+            currentRequest.Start.H = Heuristic(currentRequest.Start, currentRequest.End);
 
-            NodeOpenList.Enqueue(_request.Start, _request.Start.F);
+            NodeOpenList.Enqueue(currentRequest.Start, currentRequest.Start.F);
 
             while (NodeOpenList.Count != 0)
             {
@@ -105,7 +114,7 @@ namespace Models.Pathing
 
                 NodeClosedSet.Add(currentNode);
 
-                if (currentNode == _request.End)
+                if (currentNode == currentRequest.End)
                 {
                     sw.Stop();
                     FoundPath = true;
@@ -123,7 +132,7 @@ namespace Models.Pathing
                     if(movementCostToNeigbour < node.G || !NodeOpenList.Contains(node))
                     {
                         node.G = movementCostToNeigbour;
-                        node.H = Heuristic(node, _request.End);
+                        node.H = Heuristic(node, currentRequest.End);
                         node.Parent = currentNode;
 
                         if(!NodeOpenList.Contains(node))
@@ -138,6 +147,16 @@ namespace Models.Pathing
             if (!FoundPath)
             {
                 path = new Path(null, false, 0.0f);
+            }
+
+            foreach(var chunk in NodeGraph.Instance.Chunks)
+            {
+                foreach(var node in chunk.Nodes)
+                {
+                    node.G = 0.0f;
+                    node.H = 0.0f;
+                    node.Parent = null;
+                }
             }
         }
 

@@ -87,6 +87,15 @@ namespace Models.Map
         }
 
         /// <summary>
+        /// Returns a random world tile.
+        /// </summary>
+        /// <returns></returns>
+        public Tile GetRandomTile()
+        {
+            return Tiles[UnityEngine.Random.Range(0, Width), UnityEngine.Random.Range(0, Height)];
+        }
+
+        /// <summary>
         /// Returns a list of neighbour tiles for the given tile.
         /// </summary>
         /// <param name="_tile"></param>
@@ -113,14 +122,14 @@ namespace Models.Map
         public void SpawnTileEntity(Tile _tile)
         {
             // TODO: Spawn a tile entity and create a callback to the world controller.
-            var entity = new TileEntity(_tile.X, _tile.Y);
+            var entity = new TileEntity(_tile);
 
             onEntitySpawnCallback?.Invoke(entity);
         }
 
         public void SpawnCharacter(Tile _tile)
         {
-            var entity = new CharacterEntity(_tile.X, _tile.Y);
+            var entity = new CharacterEntity(_tile);
             Characters.Add(entity);
 
             onEntitySpawnCallback?.Invoke(entity);

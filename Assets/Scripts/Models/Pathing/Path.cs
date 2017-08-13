@@ -6,6 +6,8 @@ namespace Models.Pathing
 	{
 	    public List<Node> NodePath { get; }
 
+	    public Node EndNode => NodePath?[NodePath.Count - 1];
+
         public bool IsValid { get; }
 
         public float ComputeTime { get; }

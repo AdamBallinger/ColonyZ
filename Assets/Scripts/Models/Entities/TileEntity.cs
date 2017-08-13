@@ -1,9 +1,10 @@
+using Models.Map;
 
 namespace Models.Entities
 {
-	public class TileEntity : Entities.Entity 
+	public class TileEntity : Entity 
 	{
-	    public TileEntity(int _x, int _y) : base(_x, _y)
+	    public TileEntity(Tile _tile) : base(_tile)
 	    {
 	        
 	    }
