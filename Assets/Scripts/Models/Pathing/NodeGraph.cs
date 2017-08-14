@@ -41,7 +41,7 @@ namespace Models.Pathing
         /// Re-Builds the entire Node Graph.
         /// This should only ever be used once on initialization, and UpdateGraph should be used for updating the graph.
         /// </summary>
-        public void BuildFullGraph()
+        private void BuildFullGraph()
         {
             var sw = new Stopwatch();
             sw.Start();
