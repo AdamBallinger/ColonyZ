@@ -20,9 +20,15 @@ namespace Models.Pathing
 
 	    public float F => H + G;
 
+        /// <summary>
+        /// The cost of moving into this node.
+        /// </summary>
 	    public float MovementCost { get; }
 
-        public bool Pathable { get; }
+        /// <summary>
+        /// Is this node a pathable node?
+        /// </summary>
+        public bool Pathable { get; set; }
 
         public Node Parent { get; set; }
 
@@ -44,7 +50,7 @@ namespace Models.Pathing
         }
 
         /// <summary>
-        /// Populates the neighbours list for this Node.
+        /// Updates the neighbours list for this Node.
         /// </summary>
         public void ComputeNeighbours()
         {
@@ -90,11 +96,28 @@ namespace Models.Pathing
             Neighbours.RemoveAll(node => !node.Pathable);
         }
 
+        /// <summary>
+        /// Called when the Pathable property for this node has changed.
+        /// </summary>
+        public void OnModify()
+        {
+            ComputeNeighbours();
+            NotifyNeighboursToUpdate();
+        }
+
         public void Reset()
         {
             Parent = null;
             G = 0.0f;
             H = 0.0f;
+        }
+
+        private void NotifyNeighboursToUpdate()
+        {
+            foreach(var node in Neighbours)
+            {
+                node.ComputeNeighbours();
+            }
         }
 	}
 }

@@ -37,7 +37,7 @@ namespace Controllers
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                PathFinder.NewRequest(World.Instance?.GetRandomTile(), World.Instance?.GetRandomTile(), OnPath);
+                PathFinder.NewRequest(World.Instance?.GetTileAt(0, 0), World.Instance?.GetRandomTile(), OnPath);
             }
         }
 
@@ -126,8 +126,8 @@ namespace Controllers
                         }
                     }
 
-                    //NodeGraph.Instance.BuildPartialGraph(dragStartX, dragStartY, dragEndX, dragEndY);
-                    NodeGraph.Instance?.BuildFullGraph();
+                    NodeGraph.Instance.UpdateGraph(dragStartX, dragStartY, dragEndX, dragEndY);
+                    //NodeGraph.Instance?.BuildFullGraph();
                 }
             }
         }

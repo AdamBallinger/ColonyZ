@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Models.Map;
 using Priority_Queue;
 
@@ -34,6 +33,15 @@ namespace Models.Pathing
         public void AddNode(Node _node, int _x, int _y)
         {
             Nodes[_x, _y] = _node;
+        }
+
+        public void UpdateNode(int _x, int _y, bool _pathable)
+        {
+            if(Nodes[_x, _y].Pathable != _pathable)
+            {
+                Nodes[_x, _y].Pathable = _pathable;
+                Nodes[_x, _y].OnModify();
+            }
         }
 
         public List<NodeChunk> GetNeighbours()

@@ -13,8 +13,8 @@ namespace Models.Pathing
     {
         public static PathFinder Instance { get; private set; }
 
-        private const float STRAIGHT_MOVEMENT_COST = 5.0f;
-        private const float DIAGONAL_MOVEMENT_COST = 7.0f;
+        private const float STRAIGHT_MOVEMENT_COST = 1.0f;
+        private const float DIAGONAL_MOVEMENT_COST = 1.4f;
 
         private SimplePriorityQueue<PathRequest> RequestQueue { get; set; }
 

@@ -11,8 +11,6 @@ namespace Models.Pathing
         public int Height { get; private set; }
         public int ChunkSize { get; private set; }
 
-        //public Node[,] Nodes { get; private set; }
-
         public NodeChunk[,] Chunks { get; private set; }
 
         private NodeGraph() { }
@@ -32,8 +30,6 @@ namespace Models.Pathing
                 ChunkSize = _chunkSize
             };
 
-            //Instance.Nodes = new Node[Instance.Width, Instance.Height];
-
             Instance.Chunks = new NodeChunk[Instance.Width / Instance.ChunkSize, Instance.Height / Instance.ChunkSize];
 
             Instance.BuildFullGraph();
@@ -42,20 +38,21 @@ namespace Models.Pathing
         }
 
         /// <summary>
-        /// Builds the entire Node Graph.
+        /// Re-Builds the entire Node Graph.
+        /// This should only ever be used once on initialization, and UpdateGraph should be used for updating the graph.
         /// </summary>
         public void BuildFullGraph()
         {
             var sw = new Stopwatch();
             sw.Start();
+
             for (var x = 0; x < Width / ChunkSize; x++)
             {
                 for (var y = 0; y < Height / ChunkSize; y++)
                 {
-                    // TODO: Replace 1.0f with an actual movement cost based on tile. For now 1.0 will do.
-                    //Nodes[x, y] = new Node(x, y, 1.0f, World.Instance.Tiles[x, y].InstalledStructure == null);
-
                     Chunks[x, y] = new NodeChunk(x, y, ChunkSize);
+
+                    // Create the nodes for the chunk at x,y
                     for (var nodeX = 0; nodeX < ChunkSize; nodeX++)
                     {
                         for (var nodeY = 0; nodeY < ChunkSize; nodeY++)
@@ -67,22 +64,25 @@ namespace Models.Pathing
                 }
             }
 
-            BuildChunkNeighbours();
+            BuildNodeNeighbours();
             sw.Stop();
-            //UnityEngine.Debug.Log("Graph compute time: " + sw.ElapsedMilliseconds + "ms.");
+            //UnityEngine.Debug.Log("Graph build time: " + sw.ElapsedMilliseconds + "ms.");
         }
 
         /// <summary>
-        /// Partially rebuild the node graph from a start and end point with an optional padding for node neighbour computing.
+        /// Update the node graph around a specified are.
         /// </summary>
         /// <param name="_startX"></param>
         /// <param name="_startY"></param>
         /// <param name="_endX"></param>
         /// <param name="_endY"></param>
         /// <param name="_padding"></param>
-        public void BuildPartialGraph(int _startX, int _startY, int _endX, int _endY, int _padding = 2)
+        public void UpdateGraph(int _startX, int _startY, int _endX, int _endY, int _padding = 2)
         {
-            // First rebuild the nodes.
+            var sw = new Stopwatch();
+            sw.Start();
+
+            // Iterate each chunk
             for (var x = _startX / ChunkSize; x <= _endX / ChunkSize; x++)
             {
                 if (x < 0 || x >= Width / ChunkSize) continue;
@@ -91,54 +91,23 @@ namespace Models.Pathing
                 {
                     if (y < 0 || y >= Height / ChunkSize) continue;
 
-                    // TODO: Replace 1.0f with a real movement cost based on tile. 1.0 will do for now.
-                    //Nodes[x, y] = new Node(x, y, 1.0f, World.Instance.Tiles[x, y].InstalledStructure == null);
-
-                    Chunks[x, y] = new NodeChunk(x, y, ChunkSize);
+                    // Iterate every node in the chunk at x,y and update it.
                     for (var nodeX = 0; nodeX < ChunkSize; nodeX++)
                     {
                         for (var nodeY = 0; nodeY < ChunkSize; nodeY++)
                         {
-                            Chunks[x, y].AddNode(new Node(x * ChunkSize + nodeX, y * ChunkSize + nodeY, 1.0f,
-                                World.Instance.Tiles[x * ChunkSize + nodeX, y * ChunkSize + nodeY].InstalledStructure == null), nodeX, nodeY);
+                            Chunks[x, y].UpdateNode(nodeX, nodeY, 
+                                World.Instance.Tiles[x * ChunkSize + nodeX, y * ChunkSize + nodeY].InstalledStructure == null);
                         }
                     }
                 }
             }
 
-            BuildChunkNeighbours();
-
-            // Recompute neighbour nodes for the rebuilt nodes, and with some padding to surrounding tiles to allow them to update their own 
-            // list of neighbours.
-            //for (var x = _startX - _padding; x < _endX + _padding; x++)
-            //{
-            //    if (x < 0 || x >= Width) continue;
-
-            //    for (var y = _startY - _padding; y < _endY + _padding; y++)
-            //    {
-            //        if (y < 0 || y >= Height) continue;
-
-            //        // Optimisation to ignore neigbour generation for none pathable nodes since they never get
-            //        // evaluated by the path finder anyway.
-            //        if (!Nodes[x, y].Pathable) continue;
-
-            //        Nodes[x, y].ComputeNeighbours();
-            //    }
-            //}
+            sw.Stop();
+            //UnityEngine.Debug.Log("Graph update time: " + sw.ElapsedMilliseconds + "ms.");
         }
 
         private void BuildNodeNeighbours()
-        {
-            //foreach (var node in Nodes)
-            //{
-            //    // Ignore none pathable nodes since they wont be evaulated by the path finder.
-            //    if (!node.Pathable) continue;
-
-            //    node.ComputeNeighbours();
-            //}
-        }
-
-        private void BuildChunkNeighbours()
         {
             foreach (var chunk in Chunks)
             {
@@ -157,13 +126,6 @@ namespace Models.Pathing
         /// <returns></returns>
         public Node GetNodeAt(int _x, int _y)
         {
-            //if (_x < 0 || _x >= Width || _y < 0 || _y >= Height)
-            //{
-            //    return null;
-            //}
-
-            //return Nodes[_x, _y];
-
             if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
 
             var cX = _x / ChunkSize;
