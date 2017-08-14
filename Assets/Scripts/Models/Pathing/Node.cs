@@ -65,22 +65,22 @@ namespace Models.Pathing
             var node_SW = NodeGraph.Instance?.GetNodeAt(X - 1, Y - 1);
             var node_NW = NodeGraph.Instance?.GetNodeAt(X - 1, Y + 1);
 
-            if(node_N != null && node_N.Pathable || node_E != null && node_E.Pathable)
+            if(node_N != null && node_N.Pathable && node_E != null && node_E.Pathable)
             {
                 Neighbours.Add(node_NE);
             }
 
-            if(node_N != null && node_N.Pathable || node_W != null && node_W.Pathable)
+            if(node_N != null && node_N.Pathable && node_W != null && node_W.Pathable)
             {
                 Neighbours.Add(node_NW);
             }
 
-            if(node_S != null && node_S.Pathable || node_E != null && node_E.Pathable)
+            if(node_S != null && node_S.Pathable && node_E != null && node_E.Pathable)
             {
                 Neighbours.Add(node_SE);
             }
 
-            if (node_S != null && node_S.Pathable || node_W != null && node_W.Pathable)
+            if (node_S != null && node_S.Pathable && node_W != null && node_W.Pathable)
             {
                 Neighbours.Add(node_SW);
             }

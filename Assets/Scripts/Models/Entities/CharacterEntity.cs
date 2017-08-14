@@ -21,7 +21,7 @@ namespace Models.Entities
 
         public CharacterEntity(Tile _tile) : base(_tile)
         {
-            MovementSpeed = 2.0f;
+            MovementSpeed = 1.0f;
             PathFinished();
         }
 
