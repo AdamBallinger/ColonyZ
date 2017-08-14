@@ -128,28 +128,28 @@ namespace Models.Pathing
         {
             if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
 
-            var cX = _x / ChunkSize;
-            var cY = _y / ChunkSize;
+            var chunkX = _x / ChunkSize;
+            var chunkY = _y / ChunkSize;
 
-            if (cX < 0 || cX >= Width / ChunkSize || cY < 0 || cY >= Height / ChunkSize) return null;
+            if (chunkX < 0 || chunkX >= Width / ChunkSize || chunkY < 0 || chunkY >= Height / ChunkSize) return null;
 
-            return Chunks[cX, cY].Nodes[_x % ChunkSize, _y % ChunkSize];
+            return Chunks[chunkX, chunkY].Nodes[_x % ChunkSize, _y % ChunkSize];
         }
 
         /// <summary>
-        /// Gets the Node Chunk at a given X and Y point in the world.
+        /// Gets the Node Chunk at a given X and Y in world space.
         /// </summary>
         /// <param name="_x"></param>
         /// <param name="_y"></param>
         /// <returns></returns>
         public NodeChunk GetChunkInWorld(int _x, int _y)
         {
-            var cX = _x / ChunkSize;
-            var cY = _y / ChunkSize;
+            var chunkX = _x / ChunkSize;
+            var chunkY = _y / ChunkSize;
 
-            if (cX < 0 || cX >= Width / ChunkSize || cY < 0 || cY >= Height / ChunkSize) return null;
+            if (chunkX < 0 || chunkX >= Width / ChunkSize || chunkY < 0 || chunkY >= Height / ChunkSize) return null;
 
-            return Chunks[cX, cY];
+            return Chunks[chunkX, chunkY];
         }
 
         public NodeChunk GetChunkInWorld(Node _node)
@@ -157,6 +157,12 @@ namespace Models.Pathing
             return _node == null ? null : GetChunkInWorld(_node.X, _node.Y);
         }
 
+        /// <summary>
+        /// Gets a chunk at a given chunk at x and y in array space.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <returns></returns>
         public NodeChunk GetChunkAt(int _x, int _y)
         {
             if (_x < 0 || _x >= Width / ChunkSize || _y < 0 || _y >= Height / ChunkSize) return null;
