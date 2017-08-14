@@ -52,11 +52,11 @@ namespace Controllers
 
             Debug.Log($"Path generated in {_path.ComputeTime}ms.");
 
-            ren.positionCount = _path.NodePath.Count;
+            ren.positionCount = _path.Size;
 
-            for (var i = 0; i < _path.NodePath.Count; i++)
+            for (var i = 0; i < _path.Size; i++)
             {
-                ren.SetPosition(i, new Vector3(_path.NodePath[i].X, _path.NodePath[i].Y, 0.0f));
+                ren.SetPosition(i, new Vector3(_path.TilePath[i].X, _path.TilePath[i].Y, 0.0f));
             }
         }
 

@@ -86,10 +86,10 @@ namespace Models.Entities
 
         private void OnPathReceived(Path _path)
         {
-            if (_path.IsValid && _path.NodePath.Count > 1)
+            if (_path.IsValid && _path.Size > 1)
             {
                 path = _path;
-                path.NodePath.RemoveAt(0);
+                path.Next(); // Remove the current tile character is on from the path.
                 AdvancePath();
                 distToTravel = Mathf.Sqrt(Mathf.Pow(CurrentTile.X - nextTile.X, 2) + Mathf.Pow(CurrentTile.Y - nextTile.Y, 2));
             }
@@ -101,13 +101,12 @@ namespace Models.Entities
 
         private void AdvancePath()
         {
-            nextTile = World.Instance?.GetTileAt(path.NodePath[0].X, path.NodePath[0].Y);
-            path.NodePath.RemoveAt(0);
+            nextTile = path?.Next();
         }
 
         private bool HasReachedPathDestination()
         {
-            return path?.NodePath.Count == 0 || path.EndNode.X == CurrentTile.X && path.EndNode.Y == CurrentTile.Y;
+            return path?.Size == 0 || path.EndTile == CurrentTile;
         }
     }
 }
