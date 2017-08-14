@@ -70,14 +70,14 @@ namespace Models.Pathing
         }
 
         /// <summary>
-        /// Update the node graph around a specified are.
+        /// Update the node graph around a specified are with an optional padding. By default, padding is 1 chunk padding
         /// </summary>
         /// <param name="_startX"></param>
         /// <param name="_startY"></param>
         /// <param name="_endX"></param>
         /// <param name="_endY"></param>
         /// <param name="_padding"></param>
-        public void UpdateGraph(int _startX, int _startY, int _endX, int _endY, int _padding = 2)
+        public void UpdateGraph(int _startX, int _startY, int _endX, int _endY, int _padding = 1)
         {
             var sw = new Stopwatch();
             sw.Start();
