@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Models.Entities;
 using Models.Map;
+using Models.Map.Generation;
 using Models.Pathing;
 using UnityEngine;
 
@@ -68,6 +69,9 @@ namespace Controllers.Tiles
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
 
             GenerateTileGameObjects();
+
+            var worldGen = new WorldGenerator(World.Instance);
+            worldGen.GenerateWorld();
         }
 
         private void Update()
