@@ -37,9 +37,14 @@ namespace Controllers.Tiles
             Instance.tileTypeSpritesController = gameObject.AddComponent<TileTypeSpriteController>();
             Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
 
-            TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_wood_walls");
-            TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_steel_walls");
-            TileSpriteController.LoadTileSet("Sprites/Game/Tiles/tileset_grass_tiles");
+            SpriteDataController.RegisterSpriteDataType<TileSpriteData>();
+            //SpriteDataController.AddSpriteDataType<EntitySpriteData>();
+
+            SpriteDataController.LoadSpriteData(new TileSpriteData("Grass_Tile", true, "tileset_grass_tiles_0", 
+                "Sprites/Game/Tiles/tileset_grass_tiles"));
+
+            SpriteDataController.LoadSpriteData(new TileSpriteData("Wood_Wall", true, "tileset_wood_walls_",
+                "Sprites/Game/Tiles/tileset_wood_walls"));
 
             NewWorld();
         }
@@ -54,15 +59,7 @@ namespace Controllers.Tiles
             {
                 for (var y = 0; y < World.Instance.Height; y++)
                 {
-                    World.Instance.Tiles[x, y] = new Tile(x, y)
-                    {
-                        SpriteData = new TileSpriteData
-                        {
-                            IsTileSet = true,
-                            SpriteName = "tileset_grass_tiles_0",
-                            ResourceLocation = "Sprites/Game/Tiles/tileset_grass_tiles"
-                        }
-                    };
+                    World.Instance.Tiles[x, y] = new Tile(x, y, "Grass_Tile");
                 }
             }
 

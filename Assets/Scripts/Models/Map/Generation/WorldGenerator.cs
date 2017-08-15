@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Controllers;
 using Models.Pathing;
 using UnityEngine;
 
@@ -45,12 +46,12 @@ namespace Models.Map.Generation
             }
         }
 
-	    private TileSpriteData woodWallData = new TileSpriteData
-	    {
-	        IsTileSet = true,
-	        SpriteName = "tileset_wood_walls_",
-	        ResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
-	    };
+	    //private TileSpriteData woodWallData = new TileSpriteData
+	    //{
+	    //    IsTileSet = true,
+	    //    SpriteName = "tileset_wood_walls_",
+	    //    ResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
+	    //};
 
         private void ExpandCenterTiles()
         {
@@ -59,7 +60,8 @@ namespace Models.Map.Generation
                 var closest = GetClosestCenterTileToTile(tile);
 
                 if(centerTiles[closest] == 1)
-                    tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile, woodWallData));
+                    tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile, 
+                        SpriteDataController.GetSpriteDataFor<TileSpriteData>("Wood_Wall")));
             }
         }
 

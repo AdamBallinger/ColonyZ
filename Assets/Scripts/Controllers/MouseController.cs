@@ -127,35 +127,22 @@ namespace Controllers
                     }
 
                     NodeGraph.Instance.UpdateGraph(dragStartX, dragStartY, dragEndX, dragEndY);
-                    //NodeGraph.Instance?.BuildFullGraph();
                 }
             }
         }
-
-        private TileSpriteData woodWallData = new TileSpriteData
-        {
-            IsTileSet = true,
-            SpriteName = "tileset_wood_walls_",
-            ResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
-        };
-
-        //private TileSpriteData steelWallData = new TileSpriteData
-        //{
-        //    IsTileSet = true,
-        //    SpriteName = "tileset_steel_walls_",
-        //    ResourceLocation = "Sprites/Game/Tiles/tileset_steel_walls"
-        //};
 
         private void ProcessSelectedTile(Tile _tile)
         {
             if (_tile.InstalledStructure == null)
             {
-                _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile, woodWallData));
+                _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile,
+                    SpriteDataController.GetSpriteDataFor<TileSpriteData>("Wood_Wall")));
             }
             //else if (_tile.InstalledStructure.StructureName.Equals("Wood_Wall"))
             //{
             //    _tile.UninstallStructure();
-            //    _tile.InstallStructure(new TileStructure(1, 1, "Steel_Wall", TileStructureType.Multi_Tile, steelWallData));
+            //    _tile.InstallStructure(new TileStructure(1, 1, "Steel_Wall", TileStructureType.Multi_Tile,
+            //        SpriteDataController.GetSpriteDataFor<TileSpriteData>("Steel_Wall")));
             //}
             else
             {

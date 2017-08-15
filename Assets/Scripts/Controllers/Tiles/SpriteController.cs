@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using Models.Map;
+using Models.Sprites;
 using UnityEngine;
 
 namespace Controllers.Tiles
 {
     /// <summary>
-    /// Abstract Tile sprite controller class for setting tiles sprites based on types.
+    /// Abstract sprite controller class for setting sprites based on types.
     /// </summary>
-	public abstract class TileSpriteController : MonoBehaviour
+	public abstract class SpriteController : MonoBehaviour
     {
         protected static Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
 
@@ -33,7 +34,7 @@ namespace Controllers.Tiles
         /// Loads the given sprite at the given path to the sprite cache for the sprite controllers.
         /// </summary>
         /// <param name="_spritePath"></param>
-        public static void LoadSprite(string _spritePath)
+        private static void LoadSprite(string _spritePath)
         {
             var sprite = Resources.Load<Sprite>(_spritePath);
 
@@ -50,7 +51,7 @@ namespace Controllers.Tiles
         /// Loads the given tileset at the given path to the sprite cache for the sprite controllers.
         /// </summary>
         /// <param name="_tileSetPath"></param>
-        public static void LoadTileSet(string _tileSetPath)
+        private static void LoadTileSet(string _tileSetPath)
         {
             var tileset = Resources.LoadAll<Sprite>(_tileSetPath);
 
@@ -63,6 +64,18 @@ namespace Controllers.Tiles
             foreach(var sprite in tileset)
             {
                 spriteCache.Add(sprite.name, sprite);
+            }
+        }
+
+        public static void LoadSpriteData<T>(T _t) where T : ISpriteData
+        {
+            if(_t.GetIsTileSet())
+            {
+                LoadTileSet(_t.GetResourcesPath());
+            }
+            else
+            {
+                LoadSprite(_t.GetResourcesPath());
             }
         }
     }

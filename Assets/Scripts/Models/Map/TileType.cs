@@ -1,10 +1,9 @@
-namespace Models.Map
+﻿namespace Models.Map
 {
 	public enum TileType 
 	{
-		Grass,
+        Grass,
         Dirt,
-        Stone,
-        Water
+        Stone
 	}
 }

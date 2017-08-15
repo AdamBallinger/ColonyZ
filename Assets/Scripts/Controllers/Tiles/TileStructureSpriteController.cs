@@ -6,7 +6,7 @@ namespace Controllers.Tiles
     /// <summary>
     /// Sprite controller for handling settings the sprite for structures placed on tiles such as walls.
     /// </summary>
-	public class TileStructureSpriteController : TileSpriteController 
+	public class TileStructureSpriteController : SpriteController 
 	{
 	    public override Sprite GetSprite(Tile _tile)
 	    {
@@ -20,11 +20,11 @@ namespace Controllers.Tiles
                 {
                     var bitmask = TileBitMask.ComputeBitmaskValue(_tile, BitmaskEvaluationType.Tile_Structure);
 
-                    return GetSpriteFromCache(structureSpriteData.SpriteName + bitmask);
+                    return GetSpriteFromCache(structureSpriteData.GetSpriteName() + bitmask);
                 }
 
                 // If not multi-tile, then just return the sprite name inside the structure sprite data.
-                return GetSpriteFromCache(structureSpriteData.SpriteName);
+                return GetSpriteFromCache(structureSpriteData.GetSpriteName());
             }
 
 	        return null;

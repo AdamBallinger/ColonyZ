@@ -35,10 +35,7 @@ namespace Models.Map
             }
         }
 
-        /// <summary>
-        /// Tile Sprite Data containing information on the sprite for this tile type.
-        /// </summary>
-        public TileSpriteData SpriteData { get; set; }
+        public string TileName { get; set; }
 
         /// <summary>
         /// Installed tile structure for this tile.
@@ -59,11 +56,13 @@ namespace Models.Map
         /// </summary>
         /// <param name="_x"></param>
         /// <param name="_y"></param>
+        /// <param name="_tileName"></param>
         /// <param name="_movementModifier"></param>
-        public Tile(int _x, int _y, float _movementModifier = 1.0f)
+        public Tile(int _x, int _y, string _tileName, float _movementModifier = 1.0f)
         {
             X = _x;
             Y = _y;
+            TileName = _tileName;
             MovementModifier = _movementModifier;
         }
 
