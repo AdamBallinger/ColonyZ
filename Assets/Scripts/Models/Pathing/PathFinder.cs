@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Models.Map;
 using Priority_Queue;
@@ -19,9 +18,6 @@ namespace Models.Pathing
         private SimplePriorityQueue<PathRequest> RequestQueue { get; set; }
 
         private volatile bool IsBusy;
-
-        private HashSet<NodeChunk> ChunkClosedSet { get; set; }
-        private FastPriorityQueue<NodeChunk> ChunkOpenList { get; set; }
 
         private volatile HashSet<Node> NodeClosedSet;
         private volatile FastPriorityQueue<Node> NodeOpenList;
@@ -43,8 +39,6 @@ namespace Models.Pathing
             {
                 RequestQueue = new SimplePriorityQueue<PathRequest>(),
                 IsBusy = false,
-                ChunkClosedSet = new HashSet<NodeChunk>(),
-                ChunkOpenList = new FastPriorityQueue<NodeChunk>(NodeGraph.Instance.Width / NodeGraph.Instance.ChunkSize * (NodeGraph.Instance.Height / NodeGraph.Instance.ChunkSize)),
                 NodeClosedSet = new HashSet<Node>(),
                 NodeOpenList = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height)
             };
@@ -106,14 +100,6 @@ namespace Models.Pathing
             NodeClosedSet.Clear();
             NodeOpenList.Clear();
 
-            //var nodesToEvaluate = ChunkSearch(_request);
-
-            //if (nodesToEvaluate == null)
-            //{
-            //    path = new Path(null, false, 0.0f);
-            //    return;
-            //}
-
             currentRequest.Start.H = Heuristic(currentRequest.Start, currentRequest.End);
 
             NodeOpenList.Enqueue(currentRequest.Start, currentRequest.Start.F);
@@ -168,70 +154,6 @@ namespace Models.Pathing
             {
                 node.Reset();
             }
-        }
-
-        private List<Node> ChunkSearch(PathRequest _request)
-        {
-            ChunkClosedSet.Clear();
-            ChunkOpenList.Clear();
-
-            var startChunk = NodeGraph.Instance.GetChunkInWorld(_request.Start);
-            var endChunk = NodeGraph.Instance.GetChunkInWorld(_request.End);
-
-            startChunk.H = Heuristic(startChunk, endChunk);
-
-            ChunkOpenList.Enqueue(startChunk, startChunk.F);
-
-            while(ChunkOpenList.Count > 0)
-            {
-                var currentChunk = ChunkOpenList.Dequeue();
-
-                ChunkClosedSet.Add(currentChunk);
-
-                if(currentChunk == endChunk)
-                {
-                    //UnityEngine.Debug.Log("Found chunk route.");
-                    return RetraceChunks(currentChunk);
-                }
-
-                var neighbours = currentChunk.GetNeighbours();
-
-                foreach(var chunk in neighbours)
-                {
-                    if (ChunkClosedSet.Contains(chunk))
-                        continue;
-
-                    var movementCostToNeigbour = currentChunk.G + Heuristic(currentChunk, chunk);
-
-                    if (movementCostToNeigbour < chunk.G || !ChunkOpenList.Contains(chunk))
-                    {        
-                        chunk.G = movementCostToNeigbour;
-                        chunk.H = Heuristic(chunk, endChunk);
-                        chunk.Parent = currentChunk;
-
-                        if (!ChunkOpenList.Contains(chunk))
-                            ChunkOpenList.Enqueue(chunk, chunk.F);
-                        else
-                            ChunkOpenList.UpdatePriority(chunk, chunk.F);
-                    }
-                }
-            }
-
-            UnityEngine.Debug.LogWarning("Failed to find a chunk route.");
-            return null;
-        }
-
-        private List<Node> RetraceChunks(NodeChunk _lastChunk)
-        {
-            var list = _lastChunk.Nodes.Cast<Node>().ToList();
-
-            while (_lastChunk.Parent != null)
-            {
-                list.AddRange(_lastChunk.Parent.Nodes.Cast<Node>().ToList());
-                _lastChunk = _lastChunk.Parent;
-            }
-
-            return list;
         }
 
         /// <summary>

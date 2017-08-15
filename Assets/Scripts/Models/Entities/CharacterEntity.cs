@@ -35,7 +35,7 @@ namespace Models.Entities
                 // Cant walk through tile yet so wait. Doesn't ever get occur yet however.
                 return;
             }
-
+            
             // TODO: Change Time.deltaTime to a custom Time tracking class.
             distThisFrame = MovementSpeed * nextTile.MovementModifier * Time.deltaTime;
             percentThisFrame = distThisFrame / distToTravel;

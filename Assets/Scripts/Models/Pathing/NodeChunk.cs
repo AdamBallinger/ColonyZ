@@ -35,68 +35,68 @@ namespace Models.Pathing
             Nodes[_x, _y] = _node;
         }
 
-        public void UpdateNode(int _x, int _y, bool _pathable)
-        {
-            if(Nodes[_x, _y].Pathable != _pathable)
-            {
-                Nodes[_x, _y].Pathable = _pathable;
-                Nodes[_x, _y].OnModify();
-            }
-        }
+        //public void UpdateNode(int _x, int _y, bool _pathable)
+        //{
+        //    if(Nodes[_x, _y].Pathable != _pathable)
+        //    {
+        //        Nodes[_x, _y].Pathable = _pathable;
+        //        Nodes[_x, _y].OnModify();
+        //    }
+        //}
 
         public List<NodeChunk> GetNeighbours()
         {
             var neighbours = new List<NodeChunk>();
 
-            var chunk_N = NodeGraph.Instance?.GetChunkAt(X, Y + 1);
-            var chunk_E = NodeGraph.Instance?.GetChunkAt(X + 1, Y);
-            var chunk_S = NodeGraph.Instance?.GetChunkAt(X, Y - 1);
-            var chunk_W = NodeGraph.Instance?.GetChunkAt(X - 1, Y);
+            //var chunk_N = NodeGraph.Instance?.GetChunkAt(X, Y + 1);
+            //var chunk_E = NodeGraph.Instance?.GetChunkAt(X + 1, Y);
+            //var chunk_S = NodeGraph.Instance?.GetChunkAt(X, Y - 1);
+            //var chunk_W = NodeGraph.Instance?.GetChunkAt(X - 1, Y);
 
-            if (chunk_N != null && CheckEnterable(chunk_N, Cardinals.North))
-            {
-                neighbours.Add(chunk_N);
-            }
+            //if (chunk_N != null && CheckEnterable(chunk_N, Cardinals.North))
+            //{
+            //    neighbours.Add(chunk_N);
+            //}
 
-            if (chunk_E != null && CheckEnterable(chunk_E, Cardinals.East))
-            {
-                neighbours.Add(chunk_E);
-            }
+            //if (chunk_E != null && CheckEnterable(chunk_E, Cardinals.East))
+            //{
+            //    neighbours.Add(chunk_E);
+            //}
 
-            if (chunk_S != null && CheckEnterable(chunk_S, Cardinals.South))
-            {
-                neighbours.Add(chunk_S);
-            }
+            //if (chunk_S != null && CheckEnterable(chunk_S, Cardinals.South))
+            //{
+            //    neighbours.Add(chunk_S);
+            //}
 
-            if (chunk_W != null && CheckEnterable(chunk_W, Cardinals.West))
-            {
-                neighbours.Add(chunk_W);
-            }
+            //if (chunk_W != null && CheckEnterable(chunk_W, Cardinals.West))
+            //{
+            //    neighbours.Add(chunk_W);
+            //}
 
-            var chunk_NE = NodeGraph.Instance?.GetChunkAt(X + 1, Y + 1);
-            var chunk_SE = NodeGraph.Instance?.GetChunkAt(X + 1, Y - 1);
-            var chunk_SW = NodeGraph.Instance?.GetChunkAt(X - 1, Y - 1);
-            var chunk_NW = NodeGraph.Instance?.GetChunkAt(X - 1, Y + 1);
+            //var chunk_NE = NodeGraph.Instance?.GetChunkAt(X + 1, Y + 1);
+            //var chunk_SE = NodeGraph.Instance?.GetChunkAt(X + 1, Y - 1);
+            //var chunk_SW = NodeGraph.Instance?.GetChunkAt(X - 1, Y - 1);
+            //var chunk_NW = NodeGraph.Instance?.GetChunkAt(X - 1, Y + 1);
 
-            if (chunk_NE != null && CheckEnterable(chunk_NE, Cardinals.North_East, true))
-            {
-                neighbours.Add(chunk_NE);
-            }
+            //if (chunk_NE != null && CheckEnterable(chunk_NE, Cardinals.North_East, true))
+            //{
+            //    neighbours.Add(chunk_NE);
+            //}
 
-            if (chunk_NW != null && CheckEnterable(chunk_NW, Cardinals.North_West, true))
-            {
-                neighbours.Add(chunk_NW);
-            }
+            //if (chunk_NW != null && CheckEnterable(chunk_NW, Cardinals.North_West, true))
+            //{
+            //    neighbours.Add(chunk_NW);
+            //}
 
-            if (chunk_SE != null && CheckEnterable(chunk_SE, Cardinals.South_East, true))
-            {
-                neighbours.Add(chunk_SE);
-            }
+            //if (chunk_SE != null && CheckEnterable(chunk_SE, Cardinals.South_East, true))
+            //{
+            //    neighbours.Add(chunk_SE);
+            //}
 
-            if (chunk_SW != null && CheckEnterable(chunk_SW, Cardinals.South_West, true))
-            {
-                neighbours.Add(chunk_SW);
-            }
+            //if (chunk_SW != null && CheckEnterable(chunk_SW, Cardinals.South_West, true))
+            //{
+            //    neighbours.Add(chunk_SW);
+            //}
 
             return neighbours;
         }

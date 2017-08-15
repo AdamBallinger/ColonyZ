@@ -9,9 +9,8 @@ namespace Models.Pathing
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public int ChunkSize { get; private set; }
 
-        public NodeChunk[,] Chunks { get; private set; }
+        public Node[,] Nodes { get; private set; }
 
         private NodeGraph() { }
 
@@ -20,17 +19,15 @@ namespace Models.Pathing
         /// </summary>
         /// <param name="_width"></param>
         /// <param name="_height"></param>
-        /// <param name="_chunkSize"></param>
-        public static void Create(int _width, int _height, int _chunkSize = 8)
+        public static void Create(int _width, int _height)
         {
             Instance = new NodeGraph
             {
                 Width = _width,
-                Height = _height,
-                ChunkSize = _chunkSize
+                Height = _height
             };
 
-            Instance.Chunks = new NodeChunk[Instance.Width / Instance.ChunkSize, Instance.Height / Instance.ChunkSize];
+            Instance.Nodes = new Node[Instance.Width, Instance.Height];
 
             Instance.BuildFullGraph();
 
@@ -46,21 +43,11 @@ namespace Models.Pathing
             var sw = new Stopwatch();
             sw.Start();
 
-            for (var x = 0; x < Width / ChunkSize; x++)
+            for (var x = 0; x < Width; x++)
             {
-                for (var y = 0; y < Height / ChunkSize; y++)
+                for (var y = 0; y < Height; y++)
                 {
-                    Chunks[x, y] = new NodeChunk(x, y, ChunkSize);
-
-                    // Create the nodes for the chunk at x,y
-                    for (var nodeX = 0; nodeX < ChunkSize; nodeX++)
-                    {
-                        for (var nodeY = 0; nodeY < ChunkSize; nodeY++)
-                        {
-                            Chunks[x, y].AddNode(new Node(x * ChunkSize + nodeX, y * ChunkSize + nodeY, 1.0f,
-                                World.Instance.Tiles[x * ChunkSize + nodeX, y * ChunkSize + nodeY].InstalledStructure == null), nodeX, nodeY);
-                        }
-                    }
+                    Nodes[x, y] = new Node(x, y, 1.0f, World.Instance?.GetTileAt(x, y).InstalledStructure == null);
                 }
             }
 
@@ -70,36 +57,28 @@ namespace Models.Pathing
         }
 
         /// <summary>
-        /// Update the node graph around a specified are with an optional padding. By default, padding is 1 chunk padding
+        /// Update the node graph around a specified are with an optional padding. By default, padding is 2 nodes.
         /// </summary>
         /// <param name="_startX"></param>
         /// <param name="_startY"></param>
         /// <param name="_endX"></param>
         /// <param name="_endY"></param>
         /// <param name="_padding"></param>
-        public void UpdateGraph(int _startX, int _startY, int _endX, int _endY, int _padding = 1)
+        public void UpdateGraph(int _startX, int _startY, int _endX, int _endY, int _padding = 2)
         {
             var sw = new Stopwatch();
             sw.Start();
 
-            // Iterate each chunk
-            for (var x = _startX / ChunkSize; x <= _endX / ChunkSize; x++)
+            // Iterate each node and update its Pathable property.
+            for (var x = _startX; x <= _endX; x++)
             {
-                if (x < 0 || x >= Width / ChunkSize) continue;
+                if (x < 0 || x >= Width) continue;
 
-                for (var y = _startY / ChunkSize; y <= _endY / ChunkSize; y++)
+                for (var y = _startY; y <= _endY; y++)
                 {
-                    if (y < 0 || y >= Height / ChunkSize) continue;
+                    if (y < 0 || y >= Height) continue;
 
-                    // Iterate every node in the chunk at x,y and update it.
-                    for (var nodeX = 0; nodeX < ChunkSize; nodeX++)
-                    {
-                        for (var nodeY = 0; nodeY < ChunkSize; nodeY++)
-                        {
-                            Chunks[x, y].UpdateNode(nodeX, nodeY, 
-                                World.Instance.Tiles[x * ChunkSize + nodeX, y * ChunkSize + nodeY].InstalledStructure == null);
-                        }
-                    }
+                    Nodes[x, y].Pathable = World.Instance?.GetTileAt(x, y).InstalledStructure == null;
                 }
             }
 
@@ -109,12 +88,9 @@ namespace Models.Pathing
 
         private void BuildNodeNeighbours()
         {
-            foreach (var chunk in Chunks)
+            foreach (var node in Nodes)
             {
-                foreach (var node in chunk.Nodes)
-                {
-                    node.ComputeNeighbours();
-                }
+                node.ComputeNeighbours();
             }
         }
 
@@ -128,46 +104,7 @@ namespace Models.Pathing
         {
             if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
 
-            var chunkX = _x / ChunkSize;
-            var chunkY = _y / ChunkSize;
-
-            if (chunkX < 0 || chunkX >= Width / ChunkSize || chunkY < 0 || chunkY >= Height / ChunkSize) return null;
-
-            return Chunks[chunkX, chunkY].Nodes[_x % ChunkSize, _y % ChunkSize];
-        }
-
-        /// <summary>
-        /// Gets the Node Chunk at a given X and Y in world space.
-        /// </summary>
-        /// <param name="_x"></param>
-        /// <param name="_y"></param>
-        /// <returns></returns>
-        public NodeChunk GetChunkInWorld(int _x, int _y)
-        {
-            var chunkX = _x / ChunkSize;
-            var chunkY = _y / ChunkSize;
-
-            if (chunkX < 0 || chunkX >= Width / ChunkSize || chunkY < 0 || chunkY >= Height / ChunkSize) return null;
-
-            return Chunks[chunkX, chunkY];
-        }
-
-        public NodeChunk GetChunkInWorld(Node _node)
-        {
-            return _node == null ? null : GetChunkInWorld(_node.X, _node.Y);
-        }
-
-        /// <summary>
-        /// Gets a chunk at a given chunk at x and y in array space.
-        /// </summary>
-        /// <param name="_x"></param>
-        /// <param name="_y"></param>
-        /// <returns></returns>
-        public NodeChunk GetChunkAt(int _x, int _y)
-        {
-            if (_x < 0 || _x >= Width / ChunkSize || _y < 0 || _y >= Height / ChunkSize) return null;
-
-            return Chunks[_x, _y];
+            return Nodes[_x, _y];
         }
     }
 }

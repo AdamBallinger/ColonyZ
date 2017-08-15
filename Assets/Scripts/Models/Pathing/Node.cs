@@ -25,10 +25,22 @@ namespace Models.Pathing
         /// </summary>
 	    public float MovementCost { get; }
 
-        /// <summary>
-        /// Is this node a pathable node?
-        /// </summary>
-        public bool Pathable { get; set; }
+	    private bool _pathable = true;
+	    /// <summary>
+	    /// Is this node a pathable node?
+	    /// </summary>
+	    public bool Pathable
+	    {
+	        get { return _pathable; }
+            set
+            {
+                if(value != _pathable)
+                {
+                    _pathable = value;
+                    OnModify();
+                }
+            }
+	    }
 
         public Node Parent { get; set; }
 
@@ -99,7 +111,7 @@ namespace Models.Pathing
         /// <summary>
         /// Called when the Pathable property for this node has changed.
         /// </summary>
-        public void OnModify()
+        private void OnModify()
         {
             ComputeNeighbours();
             NotifyNeighboursToUpdate();
@@ -116,7 +128,7 @@ namespace Models.Pathing
         {
             foreach(var node in Neighbours)
             {
-                node.ComputeNeighbours();
+                node?.ComputeNeighbours();
             }
         }
 	}
