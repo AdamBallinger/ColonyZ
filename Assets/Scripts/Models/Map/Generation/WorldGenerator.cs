@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Models.Pathing;
 using UnityEngine;
 
 namespace Models.Map.Generation
@@ -20,6 +21,7 @@ namespace Models.Map.Generation
         {
             GenerateCenterTiles();
             ExpandCenterTiles();
+            NodeGraph.Instance?.UpdateGraph(0, 0, world.Width, world.Height, 0);
         }
 
         private void GenerateCenterTiles()
