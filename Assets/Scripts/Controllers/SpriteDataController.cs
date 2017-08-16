@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Controllers.Tiles;
-using Models.Map;
 using Models.Sprites;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -26,7 +24,8 @@ namespace Controllers
         }
 
         /// <summary>
-        /// Loads the sprite data for the given SpriteData object.
+        /// Loads the sprite data for the given object name E.g. "Wood_Wall". This must exist as a .json file in the
+        /// sprite_data resources folder in the respective sprite data type folder.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="_dataName"></param>
@@ -34,7 +33,7 @@ namespace Controllers
         {
             if(!dataDict.ContainsKey(typeof(T)))
             {
-                Debug.LogError("[SpriteDataController.LoadSpriteData] -> " +
+                Debug.LogError("[SpriteDataController.Load] -> " +
                                            $"Failed to load sprite data for: {typeof(T).Name} as it doesn't exist in the dict!");
             }
             else
