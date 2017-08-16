@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Controllers.Tiles;
+using Models.Map;
 using Models.Sprites;
+using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Controllers
 {
@@ -10,12 +14,14 @@ namespace Controllers
 
 	    private static Dictionary<Type, List<ISpriteData>> dataDict = new Dictionary<Type, List<ISpriteData>>();
 
+	    private static readonly string dataRoot = "Game_Data/Sprite_Data/";
+
         public static void RegisterSpriteDataType<T>() where T : ISpriteData
         {
             if(!dataDict.ContainsKey(typeof(T)))
                 dataDict.Add(typeof(T), new List<ISpriteData>());
             else
-                UnityEngine.Debug.LogError("[SpriteDataController.RegisterSpriteDataType] -> " +
+                Debug.LogError("[SpriteDataController.RegisterSpriteDataType] -> " +
                                            $"Attempted to add duplicate type key: {typeof(T).Name} to sprite data dict!");
         }
 
@@ -23,18 +29,23 @@ namespace Controllers
         /// Loads the sprite data for the given SpriteData object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="_t"></param>
-        public static void LoadSpriteData<T>(T _t) where T : ISpriteData
+        /// <param name="_dataName"></param>
+        public static void LoadSpriteData<T>(string _dataName) where T : ISpriteData
         {
-            if(!dataDict.ContainsKey(_t.GetType()))
+            if(!dataDict.ContainsKey(typeof(T)))
             {
-                UnityEngine.Debug.LogError("[SpriteDataController.LoadSpriteData] -> " +
-                                           $"Failed to load sprite data for: {_t.GetType().Name} as it doesn't exist in the dict!");
+                Debug.LogError("[SpriteDataController.LoadSpriteData] -> " +
+                                           $"Failed to load sprite data for: {typeof(T).Name} as it doesn't exist in the dict!");
             }
             else
             {
-                dataDict[_t.GetType()].Add(_t);
-                SpriteController.LoadSpriteData(_t);
+                var path = $"{dataRoot}{typeof(T).Name}/{_dataName}";
+
+                var dataJsonFile = Resources.Load<TextAsset>(path);
+                var dataObj = JsonConvert.DeserializeObject<T>(dataJsonFile.text);
+
+                dataDict[typeof(T)].Add(dataObj);
+                SpriteController.LoadSpriteData(dataObj);
             }
         }
 

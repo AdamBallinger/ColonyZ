@@ -1,0 +1,6 @@
+{
+	"IsTileSet": true,
+	"SpriteName": "tileset_wood_walls_",
+	"ResourceLocation": "Sprites/Game/Tiles/tileset_wood_walls",
+	"MappedObjectName": "Wood_Wall"
+}

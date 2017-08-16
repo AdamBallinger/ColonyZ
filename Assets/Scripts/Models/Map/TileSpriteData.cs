@@ -1,26 +1,33 @@
+using System;
 using Models.Sprites;
+using Newtonsoft.Json;
 
 namespace Models.Map
 {
+    [Serializable]
 	public class TileSpriteData : ISpriteData
 	{
         /// <summary>
         /// Is the sprite data for the tile a single sprite or a set of tiles.
         /// </summary>
-	    private bool IsTileSet { get; }
+        [JsonProperty]
+	    private bool IsTileSet { get; set; }
 
         /// <summary>
         /// The name of the sprite associated with this tile data's tile.
         /// If marked as a tileset, additonal data can be appended.
         /// </summary>
-        private string SpriteName { get; }
+        [JsonProperty]
+        private string SpriteName { get; set; }
 
         /// <summary>
         /// Sprite path in the Resources directory.
         /// </summary>
-        private string ResourceLocation { get; }
+        [JsonProperty]
+        private string ResourceLocation { get; set; }
 
-        private string MappedObjectName { get; }
+	    [JsonProperty]
+        private string MappedObjectName { get; set; }
 
 	    /// <summary>
 	    /// Creates a new tile sprite data mapped to the given tile name.
