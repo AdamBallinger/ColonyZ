@@ -3,6 +3,7 @@ using Models.Entities;
 using Models.Map;
 using Models.Map.Generation;
 using Models.Pathing;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Controllers.Tiles
@@ -67,6 +68,7 @@ namespace Controllers.Tiles
             World.Instance?.Update();
 
             // TODO: Possibly change this as it could be inefficient for large amounts of characters. For now it will do.
+            // TODO: Maybe create a single gameobject->transform dict to remove the large amount of GetComponent calls.
             foreach (var pair in characterEntityGameObjectMap)
             {
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
@@ -84,7 +86,7 @@ namespace Controllers.Tiles
         private void GenerateTileGameObjects()
         {
             // if the world controller object has children then the gameobjects have already been instantiated.
-            if (transform.childCount > 0)
+            if (_transform.childCount > 0)
             {
                 Debug.LogWarning("Tried to create world tile gameobjects when they were already instantiated!");
                 return;

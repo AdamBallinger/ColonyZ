@@ -195,6 +195,9 @@ namespace Models.Map
             onEntitySpawnCallback += _callback;
         }
 
+
+        #region IEnumerable Implementation
+
         public IEnumerator<Tile> GetEnumerator()
         {
             return ((IEnumerable<Tile>) Tiles).GetEnumerator();
@@ -204,5 +207,7 @@ namespace Models.Map
         {
             return Tiles.GetEnumerator();
         }
+
+        #endregion
     }
 }
