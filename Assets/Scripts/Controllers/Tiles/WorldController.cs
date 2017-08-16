@@ -41,8 +41,8 @@ namespace Controllers.Tiles
             SpriteDataController.RegisterSpriteDataType<TileSpriteData>();
             SpriteDataController.RegisterSpriteDataType<EntitySpriteData>();
 
-            SpriteDataController.LoadSpriteData<TileSpriteData>("GrassTiles");
-            SpriteDataController.LoadSpriteData<TileSpriteData>("Wood_Wall");
+            SpriteDataController.Load<TileSpriteData>("Grass_Tile");
+            SpriteDataController.Load<TileSpriteData>("Wood_Wall");
 
             NewWorld();
         }

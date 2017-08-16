@@ -30,7 +30,7 @@ namespace Controllers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="_dataName"></param>
-        public static void LoadSpriteData<T>(string _dataName) where T : ISpriteData
+        public static void Load<T>(string _dataName) where T : ISpriteData
         {
             if(!dataDict.ContainsKey(typeof(T)))
             {
@@ -73,6 +73,5 @@ namespace Controllers
 
 		    return default(T);
 		}
-
 	}
 }
