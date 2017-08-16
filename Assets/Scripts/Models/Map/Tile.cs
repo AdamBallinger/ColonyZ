@@ -17,7 +17,7 @@ namespace Models.Map
         public int X { get; }
         public int Y { get; }
 
-        public float MovementModifier { get; private set; }
+        public float MovementModifier { get; }
 
         /// <summary>
         /// The current tile type of this tile.
@@ -57,12 +57,14 @@ namespace Models.Map
         /// <param name="_x"></param>
         /// <param name="_y"></param>
         /// <param name="_tileName"></param>
+        /// <param name="_type"></param>
         /// <param name="_movementModifier"></param>
-        public Tile(int _x, int _y, string _tileName, float _movementModifier = 1.0f)
+        public Tile(int _x, int _y, string _tileName, TileType _type, float _movementModifier = 1.0f)
         {
             X = _x;
             Y = _y;
             TileName = _tileName;
+            Type = _type;
             MovementModifier = _movementModifier;
         }
 

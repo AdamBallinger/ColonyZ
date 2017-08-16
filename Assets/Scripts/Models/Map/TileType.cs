@@ -2,6 +2,7 @@
 {
 	public enum TileType 
 	{
+        None,
         Grass,
         Dirt,
         Stone

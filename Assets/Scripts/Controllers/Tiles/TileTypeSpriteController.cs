@@ -10,6 +10,8 @@ namespace Controllers.Tiles
 	{
 	    public override Sprite GetSprite(Tile _tile)
 	    {
+	        if (_tile.Type == TileType.None) return null;
+
 	        return GetSpriteFromCache(SpriteDataController.GetSpriteDataFor<TileSpriteData>(_tile.TileName).GetSpriteName());
 	    }
 	}

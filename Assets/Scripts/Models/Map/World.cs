@@ -58,7 +58,7 @@ namespace Models.Map
             {
                 for(var y = 0; y < Height; y++)
                 {
-                    Tiles[x * Width + y] = new Tile(x, y, "Grass_Tile");
+                    Tiles[x * Width + y] = new Tile(x, y, "Grass_Tile", TileType.Grass);
                 }
             }
         }
