@@ -38,9 +38,9 @@ namespace Controllers.Tiles
             Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
 
             SpriteDataController.RegisterSpriteDataType<TileSpriteData>();
-            //SpriteDataController.AddSpriteDataType<EntitySpriteData>();
+            SpriteDataController.RegisterSpriteDataType<EntitySpriteData>();
 
-            SpriteDataController.LoadSpriteData(new TileSpriteData("Grass_Tile", true, "tileset_grass_tiles_0", 
+            SpriteDataController.LoadSpriteData(new TileSpriteData("Grass_Tile", true, "tileset_grass_tiles_0",
                 "Sprites/Game/Tiles/tileset_grass_tiles"));
 
             SpriteDataController.LoadSpriteData(new TileSpriteData("Wood_Wall", true, "tileset_wood_walls_",
@@ -52,16 +52,7 @@ namespace Controllers.Tiles
         private void NewWorld()
         {
             World.CreateWorld(worldWidth, worldHeight);
-
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
-
-            for (var x = 0; x < World.Instance.Width; x++)
-            {
-                for (var y = 0; y < World.Instance.Height; y++)
-                {
-                    World.Instance.Tiles[x, y] = new Tile(x, y, "Grass_Tile");
-                }
-            }
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
 
@@ -76,14 +67,14 @@ namespace Controllers.Tiles
             World.Instance?.Update();
 
             // TODO: Possibly change this as it could be inefficient for large amounts of characters. For now it will do.
-            foreach(var pair in characterEntityGameObjectMap)
+            foreach (var pair in characterEntityGameObjectMap)
             {
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
             }
 
-            if(Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.C))
             {
-                World.Instance.SpawnCharacter(World.Instance.Tiles[3,3]);
+                World.Instance.SpawnCharacter(World.Instance.GetTileAt(3, 3));
             }
         }
 
@@ -99,7 +90,7 @@ namespace Controllers.Tiles
                 return;
             }
 
-            foreach (var tile in World.Instance.Tiles)
+            foreach (var tile in World.Instance)
             {
                 // Create the Tile GameObject.
                 var tile_GO = new GameObject("Tile");

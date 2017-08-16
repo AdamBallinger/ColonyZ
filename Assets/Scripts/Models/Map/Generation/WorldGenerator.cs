@@ -46,16 +46,9 @@ namespace Models.Map.Generation
             }
         }
 
-	    //private TileSpriteData woodWallData = new TileSpriteData
-	    //{
-	    //    IsTileSet = true,
-	    //    SpriteName = "tileset_wood_walls_",
-	    //    ResourceLocation = "Sprites/Game/Tiles/tileset_wood_walls"
-	    //};
-
         private void ExpandCenterTiles()
         {
-            foreach(var tile in world.Tiles)
+            foreach(var tile in world)
             {
                 var closest = GetClosestCenterTileToTile(tile);
 

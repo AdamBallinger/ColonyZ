@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Models.Entities;
 using Models.Pathing;
+using System.Collections;
 
 namespace Models.Map
 {
-	public class World 
+	public class World : IEnumerable
 	{
 
 		public static World Instance { get; private set; }
@@ -14,7 +15,7 @@ namespace Models.Map
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public Tile[,] Tiles { get; private set; }
+        private Tile[] Tiles { get; set; }
 
 	    public List<CharacterEntity> Characters { get; private set; }
 
@@ -35,8 +36,10 @@ namespace Models.Map
                 Height = _height
             };
 
-            Instance.Tiles = new Tile[Instance.Width, Instance.Height];
+            Instance.Tiles = new Tile[Instance.Width * Instance.Height];
             Instance.Characters = new List<CharacterEntity>();
+
+            Instance.PopulateTileArray();
         }
 
         public void Update()
@@ -47,6 +50,35 @@ namespace Models.Map
             }
 
             PathFinder.Instance?.ProcessNext();
+        }
+
+        private void PopulateTileArray()
+        {
+            for(var x = 0; x < Width; x++)
+            {
+                for(var y = 0; y < Height; y++)
+                {
+                    Tiles[x * Width + y] = new Tile(x, y, "Grass_Tile");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets a tile's properties at given world X and Y.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <param name="_tileName"></param>
+        /// <param name="_type"></param>
+        public void SetTileAt(int _x, int _y, string _tileName, TileType _type)
+        {
+            var tile = GetTileAt(_x, _y);
+
+            if(tile != null)
+            {
+                tile.TileName = _tileName;
+                tile.Type = _type;
+            }
         }
 
         /// <summary>
@@ -62,7 +94,7 @@ namespace Models.Map
                 return null;
             }
 
-            return Tiles[_x, _y];
+            return Tiles[_x * Width + _y];
         }
 
         /// <summary>
@@ -92,7 +124,7 @@ namespace Models.Map
         /// <returns></returns>
         public Tile GetRandomTile()
         {
-            return Tiles[UnityEngine.Random.Range(0, Width), UnityEngine.Random.Range(0, Height)];
+            return GetTileAt(UnityEngine.Random.Range(0, Width), UnityEngine.Random.Range(0, Height));
         }
 
 	    /// <summary>
@@ -111,7 +143,7 @@ namespace Models.Map
             _yRangeMin = Mathf.Clamp(_yRangeMin, 0, Height);
             _yRangeMax = Mathf.Clamp(_yRangeMax, 0, Height);
 
-            return Tiles[UnityEngine.Random.Range(_xRangeMin, _xRangeMax), UnityEngine.Random.Range(_yRangeMin, _yRangeMax)];
+            return GetTileAt(UnityEngine.Random.Range(_xRangeMin, _xRangeMax), UnityEngine.Random.Range(_yRangeMin, _yRangeMax));
         }
 
         /// <summary>
@@ -162,5 +194,15 @@ namespace Models.Map
         {
             onEntitySpawnCallback += _callback;
         }
-	}
+
+        public IEnumerator<Tile> GetEnumerator()
+        {
+            return ((IEnumerable<Tile>) Tiles).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Tiles.GetEnumerator();
+        }
+    }
 }
