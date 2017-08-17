@@ -31,7 +31,7 @@ namespace Controllers
             maxCameraX = World.Instance.Width;
             maxCameraY = World.Instance.Height;
 
-            cameraTransform.position = new Vector3(maxCameraX  / 2, maxCameraY / 2, cameraTransform.position.z);
+            cameraTransform.position = new Vector3(maxCameraX / 2, maxCameraY / 2, cameraTransform.position.z);
         }
 
         private void Update()

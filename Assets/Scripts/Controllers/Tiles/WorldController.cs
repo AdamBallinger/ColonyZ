@@ -43,6 +43,7 @@ namespace Controllers.Tiles
 
             SpriteDataController.Load<TileSpriteData>("Grass_Tile");
             SpriteDataController.Load<TileSpriteData>("Wood_Wall");
+            SpriteDataController.Load<TileSpriteData>("Steel_Wall");
 
             NewWorld();
         }

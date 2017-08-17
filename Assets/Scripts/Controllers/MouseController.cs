@@ -135,15 +135,8 @@ namespace Controllers
         {
             if (_tile.InstalledStructure == null)
             {
-                _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile,
-                    SpriteDataController.GetSpriteDataFor<TileSpriteData>("Wood_Wall")));
+                _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile));
             }
-            //else if (_tile.InstalledStructure.StructureName.Equals("Wood_Wall"))
-            //{
-            //    _tile.UninstallStructure();
-            //    _tile.InstallStructure(new TileStructure(1, 1, "Steel_Wall", TileStructureType.Multi_Tile,
-            //        SpriteDataController.GetSpriteDataFor<TileSpriteData>("Steel_Wall")));
-            //}
             else
             {
                 _tile.UninstallStructure();

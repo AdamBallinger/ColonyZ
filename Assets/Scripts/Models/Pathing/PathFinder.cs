@@ -195,16 +195,5 @@ namespace Models.Pathing
 
             return DIAGONAL_MOVEMENT_COST * dx + STRAIGHT_MOVEMENT_COST * (dy - dx);
         }
-
-        private float Heuristic(NodeChunk _chunk, NodeChunk _end)
-        {
-            var dx = Mathf.Abs(_chunk.X - _end.X);
-            var dy = Mathf.Abs(_chunk.Y - _end.Y);
-
-            if (dx > dy)
-                return DIAGONAL_MOVEMENT_COST * dy + STRAIGHT_MOVEMENT_COST * (dx - dy);
-
-            return DIAGONAL_MOVEMENT_COST * dx + STRAIGHT_MOVEMENT_COST * (dy - dx);
-        }
     }
 }
