@@ -34,7 +34,7 @@ namespace Controllers
             cameraTransform.position = new Vector3(maxCameraX / 2, maxCameraY / 2, cameraTransform.position.z);
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
 

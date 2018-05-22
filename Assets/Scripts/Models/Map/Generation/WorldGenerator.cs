@@ -108,7 +108,6 @@ namespace Models.Map.Generation
             var dy = Mathf.Abs(_tileA.Y - _tileB.Y);
 
             return dx + dy;
-            //return Vector2.Distance(new Vector2(_tileA.X, _tileA.Y), new Vector2(_tileB.X, _tileB.Y));
         }
     }
 }
