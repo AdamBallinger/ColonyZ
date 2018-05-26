@@ -8,7 +8,7 @@ namespace Controllers.Tiles
     /// <summary>
     /// Abstract sprite controller class for setting sprites based on types.
     /// </summary>
-	public abstract class SpriteController : MonoBehaviour
+	public abstract class SpriteController
     {
         protected static Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
 

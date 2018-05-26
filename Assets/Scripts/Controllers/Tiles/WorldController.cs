@@ -3,7 +3,6 @@ using Models.Entities;
 using Models.Map;
 using Models.Map.Generation;
 using Models.Pathing;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Controllers.Tiles
@@ -21,8 +20,8 @@ namespace Controllers.Tiles
         private Dictionary<Tile, GameObject> tileStructureGameObjectMap;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
 
-        private TileTypeSpriteController tileTypeSpritesController;
-        private TileStructureSpriteController tileStructureSpriteController;
+        public TileTypeSpriteController TileTypeSpriteController { get; private set; }
+        public TileStructureSpriteController TileStructureSpriteController { get; private set; }
 
         private Transform _transform;
 
@@ -35,8 +34,8 @@ namespace Controllers.Tiles
             Instance.tileStructureGameObjectMap = new Dictionary<Tile, GameObject>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
-            Instance.tileTypeSpritesController = gameObject.AddComponent<TileTypeSpriteController>();
-            Instance.tileStructureSpriteController = gameObject.AddComponent<TileStructureSpriteController>();
+            TileTypeSpriteController = new TileTypeSpriteController();
+            TileStructureSpriteController = new TileStructureSpriteController();
 
             SpriteDataController.RegisterSpriteDataType<TileSpriteData>();
             SpriteDataController.RegisterSpriteDataType<EntitySpriteData>();
@@ -100,7 +99,7 @@ namespace Controllers.Tiles
                 tileGameObjectMap.Add(tile, tile_GO);
 
                 var tile_sr = tile_GO.AddComponent<SpriteRenderer>();
-                tile_sr.sprite = tileTypeSpritesController.GetSprite(tile);
+                tile_sr.sprite = TileTypeSpriteController.GetSprite(tile);
                 tile_sr.sortingLayerName = tileSortingLayerName;
                 tile_sr.sortingOrder = -10;
 
@@ -130,7 +129,7 @@ namespace Controllers.Tiles
             {
                 if (tile != null)
                 {
-                    tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(tile);
+                    tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = TileStructureSpriteController.GetSprite(tile);
                 }
             }
         }
@@ -143,7 +142,7 @@ namespace Controllers.Tiles
         {
             if (_tile != null)
             {
-                tileStructureGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = tileStructureSpriteController.GetSprite(_tile);
+                tileStructureGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = TileStructureSpriteController.GetSprite(_tile);
                 UpdateTileNeighbourSprites(_tile);
             }
         }
@@ -154,7 +153,7 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileTypeChange(Tile _tile)
         {
-            tileGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = tileTypeSpritesController.GetSprite(_tile);
+            tileGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = TileTypeSpriteController.GetSprite(_tile);
         }
 
         /// <summary>
