@@ -69,9 +69,11 @@ namespace Models.AI
                         movementPercentage = overShotAmount;
                         break;
                     case Enterability.None:
-                        // Abort because something got in the way like a new structure.
-                        // TODO: Possibly recalcualte the path?
-                        Debug.Log("Path failed to complete for character.");
+                        // If the next tile can't be entered then something was built after the path was
+                        // created, so recalculate the path to the destination from the current tile.
+                        //TODO: maybe add some kind of relationship between tiles and paths so that paths that are invalidated due to building
+                        //TODO: are instantly recalculated rather than waiting for the character to reach the invalid tile.
+                        PathFinder.NewRequest(character.CurrentTile, destination, OnPathReceived);
                         PathFinished();
                         return;
                 }

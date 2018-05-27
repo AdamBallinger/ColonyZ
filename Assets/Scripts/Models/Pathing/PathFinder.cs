@@ -107,12 +107,6 @@ namespace Models.Pathing
 
             var parents = new Node[World.Instance.Size];
 
-            foreach(var node in NodeGraph.Instance.Nodes)
-            {
-                gCosts[node.ID] = node.G;
-                hCosts[node.ID] = node.H;
-            }
-
             hCosts[_request.Start.ID] = Heuristic(_request.Start, _request.End);
 
             NodeOpenList.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
