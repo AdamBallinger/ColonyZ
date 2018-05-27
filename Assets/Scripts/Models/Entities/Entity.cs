@@ -28,9 +28,9 @@ namespace Models.Entities
         /// <summary>
         /// The current tile the pivot of the entity is placed within.
         /// </summary>
-        public Tile CurrentTile { get; protected set; }
+        public Tile CurrentTile { get; set; }
 
-        public Vector2 TileOffset { get; protected set; }
+        public Vector2 TileOffset { get; set; }
 
         /// <summary>
         /// Sprite data for this entity.

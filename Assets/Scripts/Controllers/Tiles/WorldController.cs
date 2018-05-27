@@ -56,8 +56,8 @@ namespace Controllers.Tiles
 
             GenerateTileGameObjects();
 
-            var worldGen = new WorldGenerator(World.Instance);
-            worldGen.GenerateWorld();
+            //var worldGen = new WorldGenerator(World.Instance);
+            //worldGen.GenerateWorld();
         }
 
         private void Update()
@@ -73,7 +73,11 @@ namespace Controllers.Tiles
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                World.Instance.SpawnCharacter(World.Instance.GetTileAt(3, 3));
+                //for(var i = 0; i < 100; i++)
+                //{
+                //    World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+                //}  
+                World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
             }
         }
 

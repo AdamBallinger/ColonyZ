@@ -4,6 +4,7 @@ using UnityEngine;
 using Models.Entities;
 using Models.Pathing;
 using System.Collections;
+using Models.Entities.Characters;
 
 namespace Models.Map
 {
@@ -180,7 +181,7 @@ namespace Models.Map
 
         public void SpawnCharacter(Tile _tile)
         {
-            var entity = new CharacterEntity(_tile);
+            var entity = new HumanEntity(_tile);
             Characters.Add(entity);
 
             onEntitySpawnCallback?.Invoke(entity);

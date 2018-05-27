@@ -88,7 +88,7 @@ namespace Models.Pathing
         }
 
         /// <summary>
-        /// Performs A* search for a given path request in a seperate thread.
+        /// Performs A* search for a given path request.
         /// </summary>
         private void Search()
         {

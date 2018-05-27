@@ -33,7 +33,7 @@ namespace Models.Map.Generation
         {
             centerTiles.Clear();
 
-            var centerTileCount = Random.Range(100, 150);
+            var centerTileCount = Random.Range(100, 200);
 
             for (var i = 0; i < centerTileCount; i++)
             {
