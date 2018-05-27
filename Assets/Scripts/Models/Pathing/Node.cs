@@ -20,11 +20,6 @@ namespace Models.Pathing
         /// </summary>
         public int Y { get; }
 
-        public float H { get; set; }
-        public float G { get; set; }
-
-	    public float F => H + G;
-
         /// <summary>
         /// The cost of moving into this node.
         /// </summary>
@@ -59,8 +54,6 @@ namespace Models.Pathing
             ID = _id;
             X = _x;
             Y = _y;
-            H = 0;
-            G = 0;
             MovementCost = _movementCost;
             Pathable = _pathable;
             Parent = null;
@@ -121,13 +114,6 @@ namespace Models.Pathing
         {
             ComputeNeighbours();
             NotifyNeighboursToUpdate();
-        }
-
-        public void Reset()
-        {
-            Parent = null;
-            G = 0.0f;
-            H = 0.0f;
         }
 
         private void NotifyNeighboursToUpdate()
