@@ -43,11 +43,13 @@ namespace Models.Pathing
             var sw = new Stopwatch();
             sw.Start();
 
+            var nodeID = 0;
+
             for (var x = 0; x < Width; x++)
             {
                 for (var y = 0; y < Height; y++)
                 {
-                    Nodes[x, y] = new Node(x, y, 1.0f, World.Instance?.GetTileAt(x, y).InstalledStructure == null);
+                    Nodes[x, y] = new Node(nodeID++, x, y, 1.0f, World.Instance?.GetTileAt(x, y).InstalledStructure == null);
                 }
             }
 

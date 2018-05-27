@@ -41,9 +41,6 @@ namespace Models.Pathing
             }
 
             onPathCompleteCallback += _onCompleteCallback;
-
-            // TODO: Maybe this should be added to a function to allow control over when the path is queued?
-            //PathFinder.Instance?.Queue(this);
         }
 	}
 }

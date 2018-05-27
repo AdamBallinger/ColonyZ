@@ -72,12 +72,16 @@ namespace Controllers.Tiles
             }
 
             if (Input.GetKeyDown(KeyCode.C))
-            {
-                //for(var i = 0; i < 100; i++)
-                //{
-                //    World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
-                //}  
+            { 
                 World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+            }
+
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                for (var i = 0; i < 100; i++)
+                {
+                    World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+                }
             }
         }
 

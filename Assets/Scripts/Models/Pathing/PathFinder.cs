@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Models.Map;
 using Priority_Queue;
 using UnityEngine;
+using UnityEngine.Networking.Types;
 
 namespace Models.Pathing
 {
@@ -80,7 +82,7 @@ namespace Models.Pathing
             if (currentRequest != null)
             {
                 IsBusy = true;
-                await Task.Run(() => Search());
+                await Task.Run(() => Search(currentRequest));
                 currentRequest.onPathCompleteCallback?.Invoke(path);
                 IsBusy = false;
                 currentRequest = null;
@@ -90,7 +92,7 @@ namespace Models.Pathing
         /// <summary>
         /// Performs A* search for a given path request.
         /// </summary>
-        private void Search()
+        private void Search(PathRequest _request)
         {
             var sw = new Stopwatch();
             sw.Start();
@@ -100,9 +102,20 @@ namespace Models.Pathing
             NodeClosedSet.Clear();
             NodeOpenList.Clear();
 
-            currentRequest.Start.H = Heuristic(currentRequest.Start, currentRequest.End);
+            var gCosts = new float[World.Instance.Size];
+            var hCosts = new float[World.Instance.Size];
 
-            NodeOpenList.Enqueue(currentRequest.Start, currentRequest.Start.F);
+            var parents = new Node[World.Instance.Size];
+
+            foreach(var node in NodeGraph.Instance.Nodes)
+            {
+                gCosts[node.ID] = node.G;
+                hCosts[node.ID] = node.H;
+            }
+
+            hCosts[_request.Start.ID] = Heuristic(_request.Start, _request.End);
+
+            NodeOpenList.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
 
             while (NodeOpenList.Count != 0)
             {
@@ -110,31 +123,37 @@ namespace Models.Pathing
 
                 NodeClosedSet.Add(currentNode);
 
-                if (currentNode == currentRequest.End)
+                if (currentNode == _request.End)
                 {
                     sw.Stop();
                     FoundPath = true;
-                    path = new Path(Retrace(currentNode), true, sw.ElapsedMilliseconds);
+                    path = new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds);
                     break;
                 }
 
                 foreach(var node in currentNode.Neighbours)
                 {
-                    if(!node.Pathable || NodeClosedSet.Contains(node) /*|| !nodesToEvaluate.Contains(node)*/)
-                        continue;
-
-                    var movementCostToNeigbour = currentNode.G + Heuristic(currentNode, node) + node.MovementCost;
-
-                    if(movementCostToNeigbour < node.G || !NodeOpenList.Contains(node))
+                    if(!node.Pathable || NodeClosedSet.Contains(node))
                     {
-                        node.G = movementCostToNeigbour;
-                        node.H = Heuristic(node, currentRequest.End);
-                        node.Parent = currentNode;
+                        continue;
+                    }
+
+                    var movementCostToNeighbour = gCosts[currentNode.ID] + Heuristic(currentNode, node) + node.MovementCost;
+
+                    if(movementCostToNeighbour < gCosts[node.ID] || !NodeOpenList.Contains(node))
+                    {
+                        gCosts[node.ID] = movementCostToNeighbour;
+                        hCosts[node.ID] = Heuristic(node, _request.End);
+                        parents[node.ID] = currentNode;
 
                         if(!NodeOpenList.Contains(node))
-                            NodeOpenList.Enqueue(node, node.F);
+                        {
+                            NodeOpenList.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
+                        }
                         else
-                            NodeOpenList.UpdatePriority(node, node.F);
+                        {
+                            NodeOpenList.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
+                        }
                     }
                 }
             }
@@ -144,16 +163,6 @@ namespace Models.Pathing
             {
                 path = new Path(null, false, 0.0f);
             }
-
-            foreach(var node in NodeClosedSet)
-            {
-                node.Reset();
-            }
-
-            foreach(var node in NodeOpenList)
-            {
-                node.Reset();
-            }
         }
 
         /// <summary>
@@ -161,17 +170,19 @@ namespace Models.Pathing
         /// </summary>
         /// <param name="_lastNode"></param>
         /// <returns></returns>
-        private List<Node> Retrace(Node _lastNode)
+        private List<Node> Retrace(Node _lastNode, Node[] _parents)
         {
             var list = new List<Node>
             {
                 _lastNode
             };
 
-            while (_lastNode.Parent != null)
+            while (_parents[_lastNode.ID] != null)
             {
-                list.Add(_lastNode.Parent);
-                _lastNode = _lastNode.Parent;
+                //list.Add(_lastNode.Parent);
+                list.Add(_parents[_lastNode.ID]);
+                //_lastNode = _lastNode.Parent;
+                _lastNode = _parents[_lastNode.ID];
             }
 
             list.Reverse();

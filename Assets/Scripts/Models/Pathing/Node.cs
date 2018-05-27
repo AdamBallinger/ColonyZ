@@ -6,6 +6,11 @@ namespace Models.Pathing
 	public class Node : FastPriorityQueueNode
 	{
         /// <summary>
+        /// ID of the node in the node graph. Used for fetching node costs during search.
+        /// </summary>
+        public int ID { get; }
+
+        /// <summary>
         /// X position of the Node in the node graph.
         /// </summary>
         public int X { get; }
@@ -49,13 +54,14 @@ namespace Models.Pathing
         /// </summary>
         public List<Node> Neighbours { get; set; }
 
-        public Node(int _x, int _y, float __movementCost, bool _pathable)
+        public Node(int _id, int _x, int _y, float _movementCost, bool _pathable)
         {
+            ID = _id;
             X = _x;
             Y = _y;
             H = 0;
             G = 0;
-            MovementCost = __movementCost;
+            MovementCost = _movementCost;
             Pathable = _pathable;
             Parent = null;
             Neighbours = new List<Node>();

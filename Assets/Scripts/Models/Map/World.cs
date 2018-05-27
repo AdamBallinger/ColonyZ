@@ -8,13 +8,17 @@ using Models.Entities.Characters;
 
 namespace Models.Map
 {
-	public class World : IEnumerable
-	{
-
-		public static World Instance { get; private set; }
+    public class World : IEnumerable
+    {
+        public static World Instance { get; private set; }
 
         public int Width { get; private set; }
         public int Height { get; private set; }
+
+        /// <summary>
+        /// Returns the number of tiles in the world.
+        /// </summary>
+        public int Size => Width * Height;
 
         private Tile[] Tiles { get; set; }
 
