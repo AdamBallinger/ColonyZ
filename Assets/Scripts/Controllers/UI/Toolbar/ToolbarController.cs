@@ -36,7 +36,7 @@ namespace Controllers.UI.Toolbar
         private GameObject toolbarSubMenuItemsParent = null;
 
         /// <summary>
-        /// Maps the sub menus for the root toolbar menu names.
+        /// Maps each root menu to its sub menu container.
         /// </summary>
         private Dictionary<string, ToolbarSubMenuContainer> subMenuMap = new Dictionary<string, ToolbarSubMenuContainer>();
 
@@ -118,20 +118,27 @@ namespace Controllers.UI.Toolbar
         /// Adds an item button for a specified sub menu.
         /// Example usage: AddSubMenuItem("Construction", "Building", ...)
         /// </summary>
-        /// <param name="_subMenuName"></param>
-        /// <param name="_subMenuButton"></param>
-        public void AddSubMenuItem(string _subMenuName, string _subMenuButton)
+        /// <param name="_rootMenuName">The root menu name. E.g. Construction</param>
+        /// <param name="_subMenuName">Name of the sub menu.</param>
+        public void AddSubMenuItem(string _rootMenuName, string _subMenuName)
         {
-            if (!subMenuMap.ContainsKey(_subMenuName))
+            if (!subMenuMap.ContainsKey(_rootMenuName))
             {
-                // No sub menu matches the given sub menu name.
+                // No root menu matches given root menu name.
                 return;
             }
 
-            // TODO: Add some kind of ISubMenuItem interface to create a button to add to the submenu. Needs new prefab + controller.
+            if (!subMenuMap[_rootMenuName].ContainsSubMenu(_subMenuName))
+            {
+                // No sub menu matches given sub menu name.
+                return;
+            }
+
+            //TODO: Figure out how to pass data to let button display required information for each item.
             var button = Instantiate(toolbarSubMenuItemPrefab, toolbarSubMenuItemsParent.transform);
             var buttonController = button.GetComponent<ToolbarSubMenuItemButton>();
 
+            subMenuMap[_rootMenuName].AddSubMenuItem(_subMenuName, buttonController);
         }
     }
 }
