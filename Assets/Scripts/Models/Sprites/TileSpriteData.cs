@@ -1,8 +1,7 @@
 using System;
-using Models.Sprites;
 using Newtonsoft.Json;
 
-namespace Models.Map
+namespace Models.Sprites
 {
     [Serializable]
 	public class TileSpriteData : ISpriteData

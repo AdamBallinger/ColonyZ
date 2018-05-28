@@ -3,6 +3,7 @@ using Models.Entities;
 using Models.Map;
 using Models.Map.Generation;
 using Models.Pathing;
+using Models.Sprites;
 using UnityEngine;
 
 namespace Controllers.Tiles

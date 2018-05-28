@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Models.Map;
 
-namespace Models.Map
+namespace Models.Sprites
 {
     [Flags]
     public enum Cardinals

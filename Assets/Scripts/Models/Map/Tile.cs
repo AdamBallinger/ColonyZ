@@ -1,5 +1,6 @@
 using System;
 using Models.Entities;
+using Models.Sprites;
 using UnityEngine;
 
 namespace Models.Map

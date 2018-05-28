@@ -1,4 +1,5 @@
 using Controllers;
+using Models.Sprites;
 
 namespace Models.Map
 {

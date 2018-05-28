@@ -1,4 +1,5 @@
 using Models.Map;
+using Models.Sprites;
 using UnityEngine;
 
 namespace Controllers.Tiles
