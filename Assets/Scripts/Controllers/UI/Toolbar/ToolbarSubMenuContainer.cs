@@ -21,6 +21,24 @@ namespace Controllers.UI.Toolbar
         }
 
         /// <summary>
+        /// Returns whether this sub menu container contains a sub menu button matching the given name.
+        /// </summary>
+        /// <param name="_buttonName"></param>
+        /// <returns></returns>
+        public bool ContainsMenuButton(string _buttonName)
+        {
+            foreach(var pair in Buttons)
+            {
+                if(pair.Key.Equals(_buttonName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Adds a new menu button for this sub menu container.
         /// </summary>
         /// <param name="_subMenuName"></param>
