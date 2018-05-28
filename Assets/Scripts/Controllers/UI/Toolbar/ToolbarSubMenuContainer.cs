@@ -25,7 +25,7 @@ namespace Controllers.UI.Toolbar
         /// </summary>
         /// <param name="_buttonName"></param>
         /// <returns></returns>
-        public bool ContainsMenuButton(string _buttonName)
+        public bool ContainsSubMenu(string _buttonName)
         {
             foreach(var pair in Buttons)
             {
