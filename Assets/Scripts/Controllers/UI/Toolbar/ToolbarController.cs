@@ -4,15 +4,18 @@ using UnityEngine;
 
 namespace Controllers.UI.Toolbar
 {
-    public class ToolbarUIController : MonoBehaviour
+    public class ToolbarController : MonoBehaviour
     {
-        public static ToolbarUIController Instance { get; private set; }
+        public static ToolbarController Instance { get; private set; }
 
         [SerializeField]
         private GameObject toolbarButtonPrefab = null;
 
         [SerializeField]
         private GameObject toolbarTabButtonPrefab = null;
+
+        [SerializeField]
+        private GameObject toolbarSubMenuItemPrefab = null;
 
         /// <summary>
         /// Reference to the gameobject that parents all of the toolbar menu buttons. E.g. Construction, Commands, etc.
@@ -27,9 +30,15 @@ namespace Controllers.UI.Toolbar
         private GameObject toolbarSubMenuParent = null;
 
         /// <summary>
+        /// Reference to the gameobject that parents all the sub menu item buttons. E.g. construction -> building -> Wood Wall, Steel Wall etc.
+        /// </summary>
+        [SerializeField]
+        private GameObject toolbarSubMenuItemsParent = null;
+
+        /// <summary>
         /// Maps the sub menus for the root toolbar menu names.
         /// </summary>
-        private Dictionary<string, ToolbarSubMenu> subMenuMap = new Dictionary<string, ToolbarSubMenu>();
+        private Dictionary<string, ToolbarSubMenuContainer> subMenuMap = new Dictionary<string, ToolbarSubMenuContainer>();
 
         private string currentSubMenu = string.Empty;
 
@@ -66,17 +75,17 @@ namespace Controllers.UI.Toolbar
                 if (currentSubMenu == _menuName)
                 {
                     currentSubMenu = string.Empty;
-                    subMenuMap[_menuName].SetButtonsActive(false);
+                    subMenuMap[_menuName].SetMenuButtonsState(false);
                 }
                 else
                 {
                     if (subMenuMap.ContainsKey(currentSubMenu))
                     {
-                        subMenuMap[currentSubMenu].SetButtonsActive(false);
+                        subMenuMap[currentSubMenu].SetMenuButtonsState(false);
                     }
 
                     currentSubMenu = _menuName;
-                    subMenuMap[_menuName].SetButtonsActive(true);
+                    subMenuMap[_menuName].SetMenuButtonsState(true);
                 }
             });
         }
@@ -91,7 +100,7 @@ namespace Controllers.UI.Toolbar
         {
             if (!subMenuMap.ContainsKey(_rootMenu))
             {
-                subMenuMap.Add(_rootMenu, new ToolbarSubMenu());
+                subMenuMap.Add(_rootMenu, new ToolbarSubMenuContainer());
             }
 
             var button = Instantiate(toolbarTabButtonPrefab, toolbarSubMenuParent.transform);
@@ -102,14 +111,16 @@ namespace Controllers.UI.Toolbar
 
             // TODO: Add button action (lambda) to display sub menu items to sub menu items panel when clicked.
 
-            subMenuMap[_rootMenu].AddButton(buttonController);
+            subMenuMap[_rootMenu].AddButton(_subMenuName, buttonController);
         }
 
         /// <summary>
         /// Adds an item button for a specified sub menu.
+        /// Example usage: AddSubMenuItem("Construction", "Building", ...)
         /// </summary>
         /// <param name="_subMenuName"></param>
-        public void AddSubMenuItem(string _subMenuName)
+        /// <param name="_subMenuButton"></param>
+        public void AddSubMenuItem(string _subMenuName, string _subMenuButton)
         {
             if (!subMenuMap.ContainsKey(_subMenuName))
             {
@@ -118,6 +129,9 @@ namespace Controllers.UI.Toolbar
             }
 
             // TODO: Add some kind of ISubMenuItem interface to create a button to add to the submenu. Needs new prefab + controller.
+            var button = Instantiate(toolbarSubMenuItemPrefab, toolbarSubMenuItemsParent.transform);
+            var buttonController = button.GetComponent<ToolbarSubMenuItemButton>();
+
         }
     }
 }
