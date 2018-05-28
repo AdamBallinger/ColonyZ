@@ -888,8 +888,11 @@ MonoBehaviour:
     type: 2}
   toolbarTabButtonPrefab: {fileID: 1029201877543582, guid: 79ca2d5c507e2884197d3a58d2d09997,
     type: 2}
+  toolbarSubMenuItemPrefab: {fileID: 1939952103592664, guid: d3f2558043fced44db5b11c70870e7a7,
+    type: 2}
   toolBarButtonsParent: {fileID: 283091895}
   toolbarSubMenuParent: {fileID: 571045783}
+  toolbarSubMenuItemsParent: {fileID: 633259236}
 --- !u!1 &1450586760
 GameObject:
   m_ObjectHideFlags: 0
