@@ -37,7 +37,7 @@ namespace Controllers
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                PathFinder.NewRequest(World.Instance?.GetTileAt(0, 0), World.Instance?.GetTileAt(144, 144), OnPath);
+                PathFinder.NewRequest(World.Instance?.GetTileAt(0, 0), World.Instance?.GetRandomTile(), OnPath);
             }
         }
 
