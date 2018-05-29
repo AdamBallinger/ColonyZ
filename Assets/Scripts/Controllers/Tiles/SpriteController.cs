@@ -10,8 +10,6 @@ namespace Controllers.Tiles
     /// </summary>
 	public abstract class SpriteController
     {
-        protected static Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
-
         /// <summary>
         /// Get the sprite for a specific tile.
         /// </summary>
@@ -27,7 +25,7 @@ namespace Controllers.Tiles
         /// <returns></returns>
         protected Sprite GetSpriteFromCache(string _spriteName)
         {
-            return spriteCache.ContainsKey(_spriteName) ? spriteCache[_spriteName] : null;
+            return SpriteCache.GetSprite(_spriteName);
         }
 
         /// <summary>
@@ -44,7 +42,7 @@ namespace Controllers.Tiles
                 return;
             }
 
-            spriteCache.Add(sprite.name, sprite);
+            SpriteCache.AddSprite(sprite.name, sprite);
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace Controllers.Tiles
 
             foreach(var sprite in tileset)
             {
-                spriteCache.Add(sprite.name, sprite);
+                SpriteCache.AddSprite(sprite.name, sprite);
             }
         }
 
