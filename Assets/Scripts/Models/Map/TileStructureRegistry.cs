@@ -13,12 +13,12 @@ namespace Models.Map
                 return;
             }
 
-            structureRegistry.Add(_instance.StructureName, _instance.Clone());
+            structureRegistry.Add(_instance.StructureName, _instance);
         }
 
         public static TileStructure GetStructure(string _structureName)
         {
-            return !structureRegistry.ContainsKey(_structureName) ? null : structureRegistry[_structureName];
+            return !structureRegistry.ContainsKey(_structureName) ? null : structureRegistry[_structureName].Clone();
         }
     }
 }
