@@ -135,7 +135,6 @@ namespace Controllers
         {
             if (_tile.InstalledStructure == null)
             {
-               // _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile));
                 _tile.InstallStructure(TileStructureRegistry.GetStructure("Wood_Wall"));
             }
             else
