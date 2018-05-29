@@ -83,5 +83,15 @@ namespace Controllers.UI.Toolbar
                 pair.Value.gameObject.SetActive(_activeState);
             }
         }
+
+        /// <summary>
+        /// Gets the number of sub menu items for a given sub menu.
+        /// </summary>
+        /// <param name="_subMenuName"></param>
+        /// <returns></returns>
+        public int GetSubMenuItemCount(string _subMenuName)
+        {
+            return !Items.ContainsKey(_subMenuName) ? 0 : Items[_subMenuName].Count;
+        }
     }
 }
