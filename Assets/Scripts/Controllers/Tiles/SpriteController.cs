@@ -38,7 +38,7 @@ namespace Controllers.Tiles
 
             if(sprite == null)
             {
-                Debug.LogError($"[TileSpriteController.LoadSprite] Failed to load sprite at path: {_spritePath}");
+                Debug.LogError($"[SpriteController.LoadSprite] Failed to load sprite at path: {_spritePath}");
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace Controllers.Tiles
 
             if(tileset == null)
             {
-                Debug.LogError($"[TileSpriteController.LoadTileSet] Failed to load tileset at path: {_tileSetPath}");
+                Debug.LogError($"[SpriteController.LoadTileSet] Failed to load tileset at path: {_tileSetPath}");
                 return;
             }
 

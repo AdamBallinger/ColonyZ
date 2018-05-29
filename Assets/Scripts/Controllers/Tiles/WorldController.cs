@@ -47,6 +47,8 @@ namespace Controllers.Tiles
             SpriteDataController.Load<TileSpriteData>("Wood_Wall");
             SpriteDataController.Load<TileSpriteData>("Steel_Wall");
 
+            SpriteDataController.Load<EntitySpriteData>("character_bodies");
+
             // TODO: God this way of getting sprites is awful for sub menu items.. 
             ToolbarController.Instance.AddSubMenuItem("Construction", "Building", "Wood Wall", 
                 SpriteCache.GetSprite("tileset_wood_walls_47"));

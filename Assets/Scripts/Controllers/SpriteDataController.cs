@@ -9,7 +9,6 @@ namespace Controllers
 {
 	public class SpriteDataController
 	{
-
 	    private static Dictionary<Type, List<ISpriteData>> dataDict = new Dictionary<Type, List<ISpriteData>>();
 
 	    private static readonly string dataRoot = "Game_Data/Sprite_Data/";

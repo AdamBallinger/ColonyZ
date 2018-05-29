@@ -1,7 +1,10 @@
+using System;
 using Models.Sprites;
+using Newtonsoft.Json;
 
 namespace Models.Entities
 {
+    [Serializable]
 	public class EntitySpriteData : ISpriteData
 	{	
         /// <summary>
@@ -9,21 +12,24 @@ namespace Models.Entities
         /// These variants can include anything such as directional based sprites for characters, or item stack icons
         /// based on the quantity in the stack.
         /// </summary>
-        private bool IsDynamic { get; }
+        [JsonProperty]
+        private bool IsDynamic { get; set; }
 
         /// <summary>
         /// The sprite name allocated to the entity of this sprite data.
         /// If the data is marked as dynamic, then additional data can be appended to the sprite name.
         /// </summary>
-        private string SpriteName { get; }
+        [JsonProperty]
+        private string SpriteName { get; set; }
 
         /// <summary>
         /// The path for the sprite in the Resources directory.
         /// </summary>
-        private string ResourceLocation { get; }
+        [JsonProperty]
+        private string ResourceLocation { get; set; }
 
-        private string MappedObjectName { get; }
-
+        [JsonProperty]
+        private string MappedObjectName { get; set; }
 
         public EntitySpriteData(string _entityName, bool _isDynamic, string _spriteBaseName, string _resLocation)
         {
