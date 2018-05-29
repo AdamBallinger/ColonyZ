@@ -40,6 +40,11 @@ namespace Controllers.UI.Toolbar
         /// </summary>
         private Dictionary<string, ToolbarSubMenuContainer> subMenuMap = new Dictionary<string, ToolbarSubMenuContainer>();
 
+        /// <summary>
+        /// The current root menu that is open. Empty is no open root menu.
+        /// </summary>
+        private string currentRootMenu = string.Empty;
+
         private string currentSubMenu = string.Empty;
 
         private void Awake()
@@ -57,6 +62,12 @@ namespace Controllers.UI.Toolbar
             AddSubMenu("Construction", "Area");
 
             AddSubMenu("Menu", "Exit", Application.Quit);
+
+            AddSubMenuItem("Construction", "Building");
+            AddSubMenuItem("Construction", "Building");
+            AddSubMenuItem("Construction", "Building");
+
+            AddSubMenuItem("Construction", "Area");
         }
 
         /// <summary>
@@ -72,19 +83,30 @@ namespace Controllers.UI.Toolbar
             buttonController.SetButtonState(_enabledByDefault);
             buttonController.AddButtonClickAction(() =>
             {
-                if (currentSubMenu == _menuName)
-                {
+                // If the menu is already open then disable all of its buttons.s
+                if (currentRootMenu.Equals(_menuName))
+                {          
+                    subMenuMap[currentRootMenu].SetMenuButtonsState(false);
+                    // Disable any sub menu item buttons if they are enabled as this root menu is closing.
+                    subMenuMap[_menuName].SetMenuItemButtonsState(currentSubMenu, false);
+
+                    currentRootMenu = string.Empty;
                     currentSubMenu = string.Empty;
-                    subMenuMap[_menuName].SetMenuButtonsState(false);
                 }
                 else
                 {
-                    if (subMenuMap.ContainsKey(currentSubMenu))
+                    // Check that the current root menu exists in the sub menu map (Used to check for string.Empty)
+                    if (subMenuMap.ContainsKey(currentRootMenu))
                     {
-                        subMenuMap[currentSubMenu].SetMenuButtonsState(false);
+                        // Disable all the current sub menu buttons as a new root menu needs to open.
+                        subMenuMap[currentRootMenu].SetMenuButtonsState(false);
+                        // Also disable any open sub menu item button that were active.
+                        subMenuMap[currentRootMenu].SetMenuItemButtonsState(currentSubMenu, false);
+                        currentSubMenu = string.Empty;
                     }
 
-                    currentSubMenu = _menuName;
+                    // Update the current root menu to the new menu name, and activate its buttons.
+                    currentRootMenu = _menuName;
                     subMenuMap[_menuName].SetMenuButtonsState(true);
                 }
             });
@@ -109,7 +131,30 @@ namespace Controllers.UI.Toolbar
             buttonController.SetButtonText(_subMenuName);
             buttonController.AddButtonClickAction(_clickAction);
 
-            // TODO: Add button action (lambda) to display sub menu items to sub menu items panel when clicked.
+            // Add function to display sub menu items when button is clicked.
+            buttonController.AddButtonClickAction(() =>
+            {
+                // Only do something if the sub menu has items.
+                if(subMenuMap[_rootMenu].GetSubMenuItemCount(_subMenuName) > 0)
+                {
+                    // Remove the items if this sub menu is the one already open.
+                    if(currentSubMenu.Equals(_subMenuName))
+                    {
+                        currentSubMenu = string.Empty;
+                        subMenuMap[_rootMenu].SetMenuItemButtonsState(_subMenuName, false);
+                    }
+                    else
+                    {
+                        if(subMenuMap[_rootMenu].ContainsSubMenu(currentSubMenu))
+                        {
+                            subMenuMap[_rootMenu].SetMenuItemButtonsState(currentSubMenu, false);
+                        }
+
+                        currentSubMenu = _subMenuName;
+                        subMenuMap[_rootMenu].SetMenuItemButtonsState(_subMenuName, true);
+                    }
+                }
+            });        
 
             subMenuMap[_rootMenu].AddButton(_subMenuName, buttonController);
         }
@@ -136,6 +181,7 @@ namespace Controllers.UI.Toolbar
 
             //TODO: Figure out how to pass data to let button display required information for each item.
             var button = Instantiate(toolbarSubMenuItemPrefab, toolbarSubMenuItemsParent.transform);
+            button.SetActive(false);
             var buttonController = button.GetComponent<ToolbarSubMenuItemButton>();
 
             subMenuMap[_rootMenuName].AddSubMenuItem(_subMenuName, buttonController);

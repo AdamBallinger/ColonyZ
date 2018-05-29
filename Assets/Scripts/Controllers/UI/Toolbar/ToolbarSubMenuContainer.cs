@@ -58,7 +58,7 @@ namespace Controllers.UI.Toolbar
         /// <param name="_button"></param>
         public void AddSubMenuItem(string _subMenuName, ToolbarSubMenuItemButton _button)
         {
-            if(Buttons.ContainsKey(_subMenuName))
+            if(!Buttons.ContainsKey(_subMenuName))
             {
                 // No sub menu button matches the provided sub menu name.
                 return;
@@ -81,6 +81,22 @@ namespace Controllers.UI.Toolbar
             foreach(var pair in Buttons)
             {
                 pair.Value.gameObject.SetActive(_activeState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the active state for a sub menu's item buttons.
+        /// </summary>
+        /// <param name="_subMenuName"></param>
+        /// <param name="_activeState"></param>
+        public void SetMenuItemButtonsState(string _subMenuName, bool _activeState)
+        {
+            if(Items.ContainsKey(_subMenuName))
+            {
+                foreach(var button in Items[_subMenuName])
+                {
+                    button.gameObject.SetActive(_activeState);
+                }
             }
         }
 
