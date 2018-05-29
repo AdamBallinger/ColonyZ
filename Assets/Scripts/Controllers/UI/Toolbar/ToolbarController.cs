@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Models.Sprites;
 using UnityEngine;
 
 namespace Controllers.UI.Toolbar
@@ -50,10 +51,6 @@ namespace Controllers.UI.Toolbar
         private void Awake()
         {
             Instance = this;
-        }
-
-        private void Start()
-        {
             AddRootMenu("Construction");
             AddRootMenu("Commands", false);
             AddRootMenu("Menu");
@@ -62,12 +59,6 @@ namespace Controllers.UI.Toolbar
             AddSubMenu("Construction", "Area");
 
             AddSubMenu("Menu", "Exit", Application.Quit);
-
-            AddSubMenuItem("Construction", "Building");
-            AddSubMenuItem("Construction", "Building");
-            AddSubMenuItem("Construction", "Building");
-
-            AddSubMenuItem("Construction", "Area");
         }
 
         /// <summary>
@@ -165,7 +156,9 @@ namespace Controllers.UI.Toolbar
         /// </summary>
         /// <param name="_rootMenuName">The root menu name. E.g. Construction</param>
         /// <param name="_subMenuName">Name of the sub menu.</param>
-        public void AddSubMenuItem(string _rootMenuName, string _subMenuName)
+        /// <param name="_itemName"></param>
+        /// <param name="_itemIcon"></param>
+        public void AddSubMenuItem(string _rootMenuName, string _subMenuName, string _itemName, Sprite _itemIcon)
         {
             if (!subMenuMap.ContainsKey(_rootMenuName))
             {
@@ -179,10 +172,11 @@ namespace Controllers.UI.Toolbar
                 return;
             }
 
-            //TODO: Figure out how to pass data to let button display required information for each item.
             var button = Instantiate(toolbarSubMenuItemPrefab, toolbarSubMenuItemsParent.transform);
             button.SetActive(false);
             var buttonController = button.GetComponent<ToolbarSubMenuItemButton>();
+            buttonController.SetButtonName(_itemName);
+            buttonController.SetIcon(_itemIcon);
 
             subMenuMap[_rootMenuName].AddSubMenuItem(_subMenuName, buttonController);
         }
