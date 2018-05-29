@@ -7,7 +7,6 @@ namespace Controllers
 {
     public class MouseController : MonoBehaviour
     {
-
         public GameObject selectionObject;
 
         private SpriteRenderer selectionObjectRenderer;
