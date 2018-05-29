@@ -58,7 +58,7 @@ namespace Models.Map.Generation
 
                 if (centerTiles[closest] == 1)
                 {
-                    tile.InstallStructure(new TileStructure(1, 1, "Steel_Wall", TileStructureType.Multi_Tile));
+                    //tile.InstallStructure(new TileStructure(1, 1, "Steel_Wall", TileStructureType.Multi_Tile));
                     filledTiles.Add(tile);
                 }
             }

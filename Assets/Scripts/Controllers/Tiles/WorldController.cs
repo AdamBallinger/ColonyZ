@@ -3,6 +3,7 @@ using Controllers.UI.Toolbar;
 using Models.Entities;
 using Models.Map;
 using Models.Map.Generation;
+using Models.Map.Structures;
 using Models.Pathing;
 using Models.Sprites;
 using UnityEngine;
@@ -51,6 +52,9 @@ namespace Controllers.Tiles
                 SpriteCache.GetSprite("tileset_wood_walls_47"));
             ToolbarController.Instance.AddSubMenuItem("Construction", "Building", "Steel Wall", 
                 SpriteCache.GetSprite("tileset_steel_walls_47"));
+
+            TileStructureRegistry.RegisterTileStructure(new WoodWallStructure("Wood_Wall"));
+            TileStructureRegistry.RegisterTileStructure(new SteelWallStructure("Steel_Wall"));
 
             NewWorld();
         }

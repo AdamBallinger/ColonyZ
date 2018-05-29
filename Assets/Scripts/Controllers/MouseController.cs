@@ -1,4 +1,5 @@
 using Models.Map;
+using Models.Map.Structures;
 using Models.Pathing;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -134,7 +135,8 @@ namespace Controllers
         {
             if (_tile.InstalledStructure == null)
             {
-                _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile));
+               // _tile.InstallStructure(new TileStructure(1, 1, "Wood_Wall", TileStructureType.Multi_Tile));
+                _tile.InstallStructure(TileStructureRegistry.GetStructure("Wood_Wall"));
             }
             else
             {
