@@ -1,8 +1,7 @@
 using System;
-using Models.Sprites;
 using Newtonsoft.Json;
 
-namespace Models.Entities
+namespace Models.Sprites
 {
     [Serializable]
 	public class EntitySpriteData : ISpriteData
