@@ -192,6 +192,45 @@ namespace Models.Map
         }
 
         /// <summary>
+        /// Returns if a given tile structure can be placed on a given tile.
+        /// </summary>
+        /// <param name="_structure"></param>
+        /// <param name="_tile"></param>
+        /// <returns></returns>
+        public bool IsStructurePositionValid(TileStructure _structure, Tile _tile)
+        {
+            if(_structure == null)
+            {
+                return false;
+            }
+
+            if(_tile != null && _tile.Structure == null)
+            {
+                if(_structure.Width > 1 || _structure.Height > 1)
+                {
+                    for(var xOffset = 0; xOffset < _structure.Width; xOffset++)
+                    {
+                        for(var yOffset = 0; yOffset < _structure.Height; yOffset++)
+                        {
+                            var t = GetTileAt(_tile.X + xOffset, _tile.Y + yOffset);
+                            
+                            if(t != null && t.Structure == null)
+                            {
+                                continue;
+                            }
+
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Registers a callback function invoked when any kind of new entity is spawned into the world.
         /// </summary>
         /// <param name="_callback"></param>

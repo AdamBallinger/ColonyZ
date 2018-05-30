@@ -18,8 +18,8 @@ namespace Models.Map
 
         public string StructureName { get; }
 
-        public int Width { get; }
-        public int Height { get; }
+        public int Width { get; protected set; }
+        public int Height { get; protected set; }
 
         protected TileStructure(string _structureName)
         {

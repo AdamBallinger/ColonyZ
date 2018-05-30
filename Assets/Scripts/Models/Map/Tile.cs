@@ -14,7 +14,6 @@ namespace Models.Map
 
     public class Tile
     {
-
         public int X { get; }
         public int Y { get; }
 
@@ -76,8 +75,17 @@ namespace Models.Map
                 return;
             }
 
-            Structure = _structure;
-            Structure.OriginTile = this; // TODO: Fix this as this wont work in future for objects that are multi-tile.
+            for(var xOffset = 0; xOffset < _structure.Width; xOffset++)
+            {
+                for(var yOffset = 0; yOffset < _structure.Height; yOffset++)
+                {
+                    var t = World.Instance.GetTileAt(X + xOffset, Y + yOffset);
+
+                    t.Structure = _structure;
+                    t.Structure.OriginTile = this;
+                    t.onTileChanged?.Invoke(t);
+                }
+            }
 
             onTileChanged?.Invoke(this);
         }

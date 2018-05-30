@@ -7,6 +7,10 @@ namespace Controllers
 {
     public class MouseController : MonoBehaviour
     {
+        public static MouseController Instance { get; private set; }
+
+        public BuildModeController BuildModeController { get; private set; }
+
         public GameObject selectionObject;
 
         private SpriteRenderer selectionObjectRenderer;
@@ -22,15 +26,36 @@ namespace Controllers
 
         private new Camera camera;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         private void Start()
         {
             camera = Camera.main;
             selectionObjectRenderer = selectionObject.GetComponent<SpriteRenderer>();
+
+            BuildModeController = new BuildModeController
+            {
+                Mode = BuildMode.Structure,
+                StructureName = "Wood_Wall"
+            };
         }
 
         private void Update()
         {
             HandleDragging();
+
+            if(Input.GetKeyDown(KeyCode.B))
+            {
+                BuildModeController.Mode = BuildMode.Structure;
+            }
+
+            if(Input.GetKeyDown(KeyCode.F))
+            {
+                BuildModeController.Mode = BuildMode.Demolish;
+            }
         }
 
         private void HandleDragging()
@@ -114,14 +139,7 @@ namespace Controllers
                         continue;
                     }
 
-                    if(tile.Structure == null)
-                    {
-                        tile.InstallStructure(TileStructureRegistry.GetStructure("Wood_Wall"));
-                    }
-                    else
-                    {
-                        tile.UninstallStructure();
-                    }
+                    BuildModeController.Build(tile);
                 }
             }
 
