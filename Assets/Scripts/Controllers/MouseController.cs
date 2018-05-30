@@ -1,5 +1,4 @@
 using Models.Map;
-using Models.Map.Structures;
 using Models.Pathing;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -23,8 +22,6 @@ namespace Controllers
 
         private new Camera camera;
 
-        private Tile processingTile;
-
         private void Start()
         {
             camera = Camera.main;
@@ -34,118 +31,243 @@ namespace Controllers
         private void Update()
         {
             HandleDragging();
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                PathFinder.NewRequest(World.Instance?.GetTileAt(0, 0), World.Instance?.GetRandomTile(), OnPath);
-            }
-        }
-
-        public LineRenderer ren;
-        private void OnPath(Path _path)
-        {
-            if (!_path.IsValid)
-            {
-                Debug.Log(_path.ComputeTime < 0.0f ? "Invalid path start and/or end." : "Invalid path.");
-                return;
-            }
-
-            Debug.Log($"Path generated in {_path.ComputeTime}ms.");
-
-            ren.positionCount = _path.Size;
-
-            for (var i = 0; i < _path.Size; i++)
-            {
-                ren.SetPosition(i, new Vector3(_path.TilePath[i].X, _path.TilePath[i].Y, 0.0f));
-            }
         }
 
         private void HandleDragging()
         {
             IsMouseOverUI = EventSystem.current.IsPointerOverGameObject();
 
-            if (Input.GetMouseButtonDown(0) && !IsMouseOverUI)
+            currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+
+            if(!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
             {
                 isDragging = true;
-                dragStartPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-                selectionObject.SetActive(true);
-                selectionObject.transform.position = dragStartPosition;
+                dragStartPosition = currentMousePosition;
             }
 
-            if (isDragging)
+            if(!isDragging)
             {
-                currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
-                var dragDist = Vector2.Distance(currentMousePosition, dragStartPosition);
+                dragStartPosition = currentMousePosition;
+            }
 
-                selectionObjectRenderer.size = dragStartPosition - currentMousePosition;
+            var dragData = GetDragData();
 
-                // Create drag start and end coordinates. Add 0.5f to compensate for the fact gameobject pivots are in the center
-                // and the tile map asumes it would be the bottom left corner of the tile.
-                var dragStartX = Mathf.FloorToInt(dragStartPosition.x + 0.5f);
-                var dragEndX = Mathf.FloorToInt(currentMousePosition.x + 0.5f);
-                var dragStartY = Mathf.FloorToInt(dragStartPosition.y + 0.5f);
-                var dragEndY = Mathf.FloorToInt(currentMousePosition.y + 0.5f);
+            UpdateDragPreview(dragData);
 
-                if (dragEndX < dragStartX)
-                {
-                    var tmp = dragEndX;
-                    dragEndX = dragStartX;
-                    dragStartX = tmp;
-                }
-
-                if (dragEndY < dragStartY)
-                {
-                    var tmp = dragEndY;
-                    dragEndY = dragStartY;
-                    dragStartY = tmp;
-                }
-
-                if (Input.GetMouseButtonUp(0))
+            if(isDragging)
+            {
+                if(Input.GetMouseButtonUp(0))
                 {
                     isDragging = false;
-                    selectionObject.SetActive(false);
 
-                    // Experimental drag threshold as clicking and dragging feels inconsistent sometimes 
-                    if (dragDist <= 0.6f)
+                    // Abort if dragged over a UI object.
+                    if(!IsMouseOverUI)
                     {
-                        dragEndX = dragStartX;
-                        dragEndY = dragStartY;
+                        ProcessDragSelection(dragData);
+                    }
+                }
+            }
+
+            //Vector2 mouseWorldPos = camera.ScreenToWorldPoint(Input.mousePosition);
+            //var roundedMouseWorldPos = new Vector2(Mathf.Round(mouseWorldPos.x) + 0.5f, Mathf.Round(mouseWorldPos.y) + 0.5f);
+
+            //if(!isDragging)
+            //{
+            //    selectionObject.transform.position = roundedMouseWorldPos;
+            //    selectionObjectRenderer.size = Vector2.one;
+            //}
+
+            //if (Input.GetMouseButtonDown(0) && !IsMouseOverUI)
+            //{
+            //    isDragging = true;
+            //    dragStartPosition = roundedMouseWorldPos; // TODO: Later add dif mouse modes; Selection shouldn't clamp, build should.
+            //    selectionObject.transform.position = dragStartPosition;
+            //}
+
+            //if (isDragging)
+            //{
+            //    currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+
+            //    var selectionSize = dragStartPosition - roundedMouseWorldPos;
+
+            //    // Create drag start and end coordinates. Add 0.5f to compensate for the fact gameobject pivots are in the center
+            //    // and the tile map asumes it would be the bottom left corner of the tile.
+            //    var dragStartX = (int)dragStartPosition.x;
+            //    var dragEndX = (int)roundedMouseWorldPos.x;
+            //    var dragStartY = (int)dragStartPosition.y;
+            //    var dragEndY = (int)roundedMouseWorldPos.y;
+
+            //    if (dragEndX < dragStartX)
+            //    {
+            //        if (selectionSize.x == 0)
+            //        {
+            //            selectionSize.x = -1;
+            //        }
+            //        else if(selectionSize.x > 0)
+            //        {
+            //            selectionSize.x = -selectionSize.x;
+            //        }
+                    
+            //        var tmp = dragEndX;
+            //        dragEndX = dragStartX;
+            //        dragStartX = tmp;
+            //    }
+            //    else
+            //    {
+            //        if(selectionSize.x == 0)
+            //        {
+            //            selectionSize.x = 1;
+            //        }
+            //    }
+
+            //    if (dragEndY < dragStartY)
+            //    {
+            //        if (selectionSize.y == 0)
+            //        {
+            //            selectionSize.y = -1;
+            //        }
+            //        else if(selectionSize.y > 0)
+            //        {
+            //            selectionSize.y = -selectionSize.y;
+            //        }
+
+            //        var tmp = dragEndY;
+            //        dragEndY = dragStartY;
+            //        dragStartY = tmp;
+            //    }
+            //    else
+            //    {
+            //        if(selectionSize.y == 0)
+            //        {
+            //            selectionSize.y = 1;
+            //        }
+            //    }
+
+            //    selectionObjectRenderer.size = selectionSize;
+
+            //    if (Input.GetMouseButtonUp(0))
+            //    {
+            //        isDragging = false;
+
+            //        // Process tiles in drag area.
+            //        for (var x = dragStartX; x <= dragEndX; x++)
+            //        {
+            //            for (var y = dragStartY; y <= dragEndY; y++)
+            //            {
+            //                processingTile = World.Instance.GetTileAt(x, y);
+
+            //                if (processingTile != null)
+            //                {
+            //                    ProcessSelectedTile(processingTile);
+            //                }
+            //            }
+            //        }
+
+            //        NodeGraph.Instance.UpdateGraph(dragStartX, dragStartY, dragEndX, dragEndY);
+            //    }
+            //}
+        }
+
+        /// <summary>
+        /// Updates the preview for the current mouse drag.
+        /// </summary>
+        /// <param name="_dragData"></param>
+        private void UpdateDragPreview(DragData _dragData)
+        {
+            // TODO: With multiple mouse modes (Select, Build, etc.) change what the preview is based on that.
+            // Hide cursor if off the map.
+            selectionObject.SetActive(GetTileUnderMouse() != null);
+
+            // Calculates the size of the cursor based on the drag distance.
+            var selectionSize = new Vector2(_dragData.StartX, _dragData.StartY) -
+                                new Vector2(_dragData.EndX, _dragData.EndY) - Vector2.one;          
+
+            selectionObjectRenderer.size = -selectionSize;
+
+            selectionObject.transform.position = new Vector2(_dragData.StartX + 0.5f, _dragData.StartY + 0.5f)
+                                                 - selectionSize / 2 - Vector2.one;
+        }
+
+        private DragData GetDragData()
+        {
+            var dragData = new DragData();
+            dragData.Build(Mathf.FloorToInt(dragStartPosition.x + 0.5f),
+                            Mathf.FloorToInt(currentMousePosition.x + 0.5f),
+                            Mathf.FloorToInt(dragStartPosition.y + 0.5f),
+                            Mathf.FloorToInt(currentMousePosition.y + 0.5f));
+
+            return dragData;
+        }
+
+        private void ProcessDragSelection(DragData _dragData)
+        {
+            for(var x = _dragData.StartX; x <= _dragData.EndX; x++)
+            {
+                for(var y = _dragData.StartY; y <= _dragData.EndY; y++)
+                {
+                    var tile = World.Instance?.GetTileAt(x, y);
+
+                    if(tile == null)
+                    {
+                        continue;
                     }
 
-                    // Process tiles in drag area.
-                    for (var x = dragStartX; x <= dragEndX; x++)
+                    if(tile.Structure == null)
                     {
-                        for (var y = dragStartY; y <= dragEndY; y++)
-                        {
-                            processingTile = World.Instance.GetTileAt(x, y);
-
-                            if (processingTile != null)
-                            {
-                                ProcessSelectedTile(processingTile);
-                            }
-                        }
+                        tile.InstallStructure(TileStructureRegistry.GetStructure("Wood_Wall"));
                     }
-
-                    NodeGraph.Instance.UpdateGraph(dragStartX, dragStartY, dragEndX, dragEndY);
+                    else
+                    {
+                        tile.UninstallStructure();
+                    }
                 }
             }
         }
 
-        private void ProcessSelectedTile(Tile _tile)
-        {
-            if (_tile.InstalledStructure == null)
-            {
-                _tile.InstallStructure(TileStructureRegistry.GetStructure("Wood_Wall"));
-            }
-            else
-            {
-                _tile.UninstallStructure();
-            }
-        }
+        //private void ProcessSelectedTile(Tile _tile)
+        //{
+        //    if (_tile.InstalledStructure == null)
+        //    {
+        //        _tile.InstallStructure(TileStructureRegistry.GetStructure("Wood_Wall"));
+        //    }
+        //    else
+        //    {
+        //        _tile.UninstallStructure();
+        //    }
+        //}
 
         private Tile GetTileUnderMouse()
         {
-            return World.Instance.GetTileAt(currentMousePosition);
+            var pos = currentMousePosition;
+            pos.x += 0.5f;
+            pos.y += 0.5f;
+            return World.Instance.GetTileAt(pos);
+        }
+    }
+
+    public struct DragData
+    {
+        public float RealStartX { get; private set; }
+        public float RealStartY { get; private set; }
+        public float RealEndX { get; private set; }
+        public float RealEndY { get; private set; }
+
+        public float StartX { get; private set; }
+        public float StartY { get; private set; }
+        public float EndX { get; private set; }
+        public float EndY { get; private set; }
+
+        public void Build(float _startX, float _endX, float _startY, float _endY)
+        {
+            RealStartX = _startX;
+            RealStartY = _startY;
+            RealEndX = _endX;
+            RealEndY = _endY;
+
+            StartX = Mathf.Min(_startX, _endX);
+            StartY = Mathf.Min(_startY, _endY);
+            EndX = Mathf.Max(_startX, _endX);
+            EndY = Mathf.Max(_startY, _endY);
         }
     }
 }
