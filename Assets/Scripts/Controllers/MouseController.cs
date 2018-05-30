@@ -80,13 +80,14 @@ namespace Controllers
             selectionObject.SetActive(GetTileUnderMouse() != null);
 
             // Calculates the size of the cursor based on the drag distance.
-            var selectionSize = new Vector2(_dragData.StartX, _dragData.StartY) -
-                                new Vector2(_dragData.EndX, _dragData.EndY) - Vector2.one;          
+            var selectionSize = new Vector2(_dragData.EndX, _dragData.EndY) -
+                                new Vector2(_dragData.StartX, _dragData.StartY) + Vector2.one; // Add one so its not 0 for single tile selection       
 
-            selectionObjectRenderer.size = -selectionSize;
+            selectionObjectRenderer.size = selectionSize;
 
-            selectionObject.transform.position = new Vector2(_dragData.StartX + 0.5f, _dragData.StartY + 0.5f)
-                                                 - selectionSize / 2 - Vector2.one;
+            // As pivot for the selection cursor is the center, set position based on the drag start + half the selection size.
+            // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
+            selectionObject.transform.position = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
         }
 
         private DragData GetDragData()

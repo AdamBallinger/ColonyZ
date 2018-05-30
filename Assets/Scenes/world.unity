@@ -916,8 +916,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cee140ee272f24ba4a9e3dfdb4d706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 6
-  worldHeight: 6
+  worldWidth: 32
+  worldHeight: 32
   tileSortingLayerName: Tiles
 --- !u!1 &1999893016
 GameObject:
