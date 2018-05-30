@@ -18,7 +18,7 @@ namespace Controllers
         /// <summary>
         /// If the build mode is set to structure, this is the name of the structure to build.
         /// </summary>
-        public string StructureName { get; set; }
+        public string StructureName { get; set; } = string.Empty;
 
         public BuildModeController()
         {

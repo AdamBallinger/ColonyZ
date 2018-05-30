@@ -158,7 +158,8 @@ namespace Controllers.UI.Toolbar
         /// <param name="_subMenuName">Name of the sub menu.</param>
         /// <param name="_itemName"></param>
         /// <param name="_itemIcon"></param>
-        public void AddSubMenuItem(string _rootMenuName, string _subMenuName, string _itemName, Sprite _itemIcon)
+        /// <param name="_clickAction"></param>
+        public void AddSubMenuItem(string _rootMenuName, string _subMenuName, string _itemName, Sprite _itemIcon, Action _clickAction)
         {
             if (!subMenuMap.ContainsKey(_rootMenuName))
             {
@@ -177,6 +178,7 @@ namespace Controllers.UI.Toolbar
             var buttonController = button.GetComponent<ToolbarSubMenuItemButton>();
             buttonController.SetButtonName(_itemName);
             buttonController.SetIcon(_itemIcon);
+            buttonController.AddButtonClickAction(_clickAction);
 
             subMenuMap[_rootMenuName].AddSubMenuItem(_subMenuName, buttonController);
         }

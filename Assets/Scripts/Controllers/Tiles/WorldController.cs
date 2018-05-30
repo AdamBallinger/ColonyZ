@@ -49,11 +49,19 @@ namespace Controllers.Tiles
 
             SpriteDataController.Load<EntitySpriteData>("character_bodies");
 
-            // TODO: God this way of getting sprites is awful for sub menu items.. 
             ToolbarController.Instance.AddSubMenuItem("Construction", "Building", "Wood Wall", 
-                SpriteCache.GetSprite("tileset_wood_walls_47"));
+                SpriteCache.GetSprite("tileset_wood_walls_47"), () =>
+                {
+                    MouseController.Instance.BuildModeController.Mode = BuildMode.Structure;
+                    MouseController.Instance.BuildModeController.StructureName = "Wood_Wall";
+                });
+
             ToolbarController.Instance.AddSubMenuItem("Construction", "Building", "Steel Wall", 
-                SpriteCache.GetSprite("tileset_steel_walls_47"));
+                SpriteCache.GetSprite("tileset_steel_walls_47"), () =>
+                {
+                    MouseController.Instance.BuildModeController.Mode = BuildMode.Structure;
+                    MouseController.Instance.BuildModeController.StructureName = "Steel_Wall";
+                });
 
             TileStructureRegistry.RegisterTileStructure(new WoodWallStructure("Wood_Wall"));
             TileStructureRegistry.RegisterTileStructure(new SteelWallStructure("Steel_Wall"));

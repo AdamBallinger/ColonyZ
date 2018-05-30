@@ -39,7 +39,6 @@ namespace Controllers
             BuildModeController = new BuildModeController
             {
                 Mode = BuildMode.Structure,
-                StructureName = "Wood_Wall"
             };
         }
 
