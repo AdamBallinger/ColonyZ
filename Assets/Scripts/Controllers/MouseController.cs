@@ -67,105 +67,6 @@ namespace Controllers
                     }
                 }
             }
-
-            //Vector2 mouseWorldPos = camera.ScreenToWorldPoint(Input.mousePosition);
-            //var roundedMouseWorldPos = new Vector2(Mathf.Round(mouseWorldPos.x) + 0.5f, Mathf.Round(mouseWorldPos.y) + 0.5f);
-
-            //if(!isDragging)
-            //{
-            //    selectionObject.transform.position = roundedMouseWorldPos;
-            //    selectionObjectRenderer.size = Vector2.one;
-            //}
-
-            //if (Input.GetMouseButtonDown(0) && !IsMouseOverUI)
-            //{
-            //    isDragging = true;
-            //    dragStartPosition = roundedMouseWorldPos; // TODO: Later add dif mouse modes; Selection shouldn't clamp, build should.
-            //    selectionObject.transform.position = dragStartPosition;
-            //}
-
-            //if (isDragging)
-            //{
-            //    currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
-
-            //    var selectionSize = dragStartPosition - roundedMouseWorldPos;
-
-            //    // Create drag start and end coordinates. Add 0.5f to compensate for the fact gameobject pivots are in the center
-            //    // and the tile map asumes it would be the bottom left corner of the tile.
-            //    var dragStartX = (int)dragStartPosition.x;
-            //    var dragEndX = (int)roundedMouseWorldPos.x;
-            //    var dragStartY = (int)dragStartPosition.y;
-            //    var dragEndY = (int)roundedMouseWorldPos.y;
-
-            //    if (dragEndX < dragStartX)
-            //    {
-            //        if (selectionSize.x == 0)
-            //        {
-            //            selectionSize.x = -1;
-            //        }
-            //        else if(selectionSize.x > 0)
-            //        {
-            //            selectionSize.x = -selectionSize.x;
-            //        }
-                    
-            //        var tmp = dragEndX;
-            //        dragEndX = dragStartX;
-            //        dragStartX = tmp;
-            //    }
-            //    else
-            //    {
-            //        if(selectionSize.x == 0)
-            //        {
-            //            selectionSize.x = 1;
-            //        }
-            //    }
-
-            //    if (dragEndY < dragStartY)
-            //    {
-            //        if (selectionSize.y == 0)
-            //        {
-            //            selectionSize.y = -1;
-            //        }
-            //        else if(selectionSize.y > 0)
-            //        {
-            //            selectionSize.y = -selectionSize.y;
-            //        }
-
-            //        var tmp = dragEndY;
-            //        dragEndY = dragStartY;
-            //        dragStartY = tmp;
-            //    }
-            //    else
-            //    {
-            //        if(selectionSize.y == 0)
-            //        {
-            //            selectionSize.y = 1;
-            //        }
-            //    }
-
-            //    selectionObjectRenderer.size = selectionSize;
-
-            //    if (Input.GetMouseButtonUp(0))
-            //    {
-            //        isDragging = false;
-
-            //        // Process tiles in drag area.
-            //        for (var x = dragStartX; x <= dragEndX; x++)
-            //        {
-            //            for (var y = dragStartY; y <= dragEndY; y++)
-            //            {
-            //                processingTile = World.Instance.GetTileAt(x, y);
-
-            //                if (processingTile != null)
-            //                {
-            //                    ProcessSelectedTile(processingTile);
-            //                }
-            //            }
-            //        }
-
-            //        NodeGraph.Instance.UpdateGraph(dragStartX, dragStartY, dragEndX, dragEndY);
-            //    }
-            //}
         }
 
         /// <summary>
@@ -222,19 +123,9 @@ namespace Controllers
                     }
                 }
             }
-        }
 
-        //private void ProcessSelectedTile(Tile _tile)
-        //{
-        //    if (_tile.InstalledStructure == null)
-        //    {
-        //        _tile.InstallStructure(TileStructureRegistry.GetStructure("Wood_Wall"));
-        //    }
-        //    else
-        //    {
-        //        _tile.UninstallStructure();
-        //    }
-        //}
+            NodeGraph.Instance?.UpdateGraph(_dragData.StartX, _dragData.StartY, _dragData.EndX, _dragData.EndY);
+        }
 
         private Tile GetTileUnderMouse()
         {
@@ -247,17 +138,17 @@ namespace Controllers
 
     public struct DragData
     {
-        public float RealStartX { get; private set; }
-        public float RealStartY { get; private set; }
-        public float RealEndX { get; private set; }
-        public float RealEndY { get; private set; }
+        public int RealStartX { get; private set; }
+        public int RealStartY { get; private set; }
+        public int RealEndX { get; private set; }
+        public int RealEndY { get; private set; }
 
-        public float StartX { get; private set; }
-        public float StartY { get; private set; }
-        public float EndX { get; private set; }
-        public float EndY { get; private set; }
+        public int StartX { get; private set; }
+        public int StartY { get; private set; }
+        public int EndX { get; private set; }
+        public int EndY { get; private set; }
 
-        public void Build(float _startX, float _endX, float _startY, float _endY)
+        public void Build(int _startX, int _endX, int _startY, int _endY)
         {
             RealStartX = _startX;
             RealStartY = _startY;
