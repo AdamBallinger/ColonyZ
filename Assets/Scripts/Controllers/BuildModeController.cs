@@ -32,24 +32,29 @@ namespace Controllers
         /// <param name="_tile"></param>
         public void Build(Tile _tile)
         {
-            if (Mode == BuildMode.Structure)
+            switch (Mode)
             {
-                var structure = GetStructure();
+                case BuildMode.Structure:
+                    HandleStructureBuild(_tile);
+                    break;
+                case BuildMode.Demolish:
+                    _tile.UninstallStructure();
+                    break;
+            }
+        }
 
-                if (structure == null)
-                {
-                    return;
-                }
+        private void HandleStructureBuild(Tile _tile)
+        {
+            var structure = GetStructure();
 
-                if (World.Instance.IsStructurePositionValid(structure, _tile))
-                {
-                    _tile.InstallStructure(structure);
-                }
+            if (structure == null)
+            {
+                return;
             }
 
-            if(Mode == BuildMode.Demolish)
+            if (World.Instance.IsStructurePositionValid(structure, _tile))
             {
-                _tile.UninstallStructure();
+                _tile.InstallStructure(structure);
             }
         }
 
