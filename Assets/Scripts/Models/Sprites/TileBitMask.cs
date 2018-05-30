@@ -61,42 +61,42 @@ namespace Models.Sprites
             var tile_S = World.Instance.GetTileAt(_origin.X, _origin.Y - 1);
             var tile_SE = World.Instance.GetTileAt(_origin.X + 1, _origin.Y - 1);
 
-            if (tile_NW?.InstalledStructure != null && tile_N?.InstalledStructure != null && tile_W?.InstalledStructure != null)
+            if (tile_NW?.Structure != null && tile_N?.Structure != null && tile_W?.Structure != null)
             {
                 bitmaskValue += 1;
             }
 
-            if (tile_N?.InstalledStructure != null)
+            if (tile_N?.Structure != null)
             {
                 bitmaskValue += 2;
             }
 
-            if (tile_NE?.InstalledStructure != null && tile_N?.InstalledStructure != null && tile_E?.InstalledStructure != null)
+            if (tile_NE?.Structure != null && tile_N?.Structure != null && tile_E?.Structure != null)
             {
                 bitmaskValue += 4;
             }
 
-            if (tile_W?.InstalledStructure != null)
+            if (tile_W?.Structure != null)
             {
                 bitmaskValue += 8;
             }
 
-            if (tile_E?.InstalledStructure != null)
+            if (tile_E?.Structure != null)
             {
                 bitmaskValue += 16;
             }
 
-            if (tile_SW?.InstalledStructure != null && tile_S?.InstalledStructure != null && tile_W?.InstalledStructure != null)
+            if (tile_SW?.Structure != null && tile_S?.Structure != null && tile_W?.Structure != null)
             {
                 bitmaskValue += 32;
             }
 
-            if (tile_S?.InstalledStructure != null)
+            if (tile_S?.Structure != null)
             {
                 bitmaskValue += 64;
             }
 
-            if (tile_SE?.InstalledStructure != null && tile_S?.InstalledStructure != null && tile_E?.InstalledStructure != null)
+            if (tile_SE?.Structure != null && tile_S?.Structure != null && tile_E?.Structure != null)
             {
                 bitmaskValue += 128;
             }

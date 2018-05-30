@@ -41,7 +41,7 @@ namespace Models.Map
         /// <summary>
         /// Installed tile structure for this tile.
         /// </summary>
-        public TileStructure InstalledStructure { get; private set; }
+        public TileStructure Structure { get; private set; }
 
         public Entity TileEntity { get; private set; }
 
@@ -71,25 +71,25 @@ namespace Models.Map
 
         public void InstallStructure(TileStructure _structure)
         {
-            if(InstalledStructure != null)
+            if(Structure != null)
             {
                 return;
             }
 
-            InstalledStructure = _structure;
-            InstalledStructure.OriginTile = this; // TODO: Fix this as this wont work in future for objects that are multi-tile.
+            Structure = _structure;
+            Structure.OriginTile = this; // TODO: Fix this as this wont work in future for objects that are multi-tile.
 
             onTileChanged?.Invoke(this);
         }
 
         public void UninstallStructure()
         {
-            if(InstalledStructure == null)
+            if(Structure == null)
             {
                 return;
             }
 
-            InstalledStructure = null;
+            Structure = null;
 
             onTileChanged?.Invoke(this);
         }
@@ -97,7 +97,7 @@ namespace Models.Map
         public Enterability GetEnterability()
         {
             // TODO: When doors are a thing, return Enterability.Delayed for doors or similar structures.
-            return InstalledStructure == null ? Enterability.Immediate : Enterability.None;
+            return Structure == null ? Enterability.Immediate : Enterability.None;
         }
 
         /// <summary>

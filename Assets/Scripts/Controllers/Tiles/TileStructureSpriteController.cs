@@ -8,7 +8,7 @@ namespace Controllers.Tiles
 	{
 	    public override Sprite GetSprite(Tile _tile)
 	    {
-	        var tileStructure = _tile.InstalledStructure;
+	        var tileStructure = _tile.Structure;
 
             if(tileStructure != null)
             {
