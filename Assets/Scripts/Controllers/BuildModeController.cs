@@ -13,7 +13,7 @@ namespace Controllers
 
     public class BuildModeController
     {
-        public BuildMode Mode { get; set; }
+        public BuildMode Mode { get; private set; }
 
         /// <summary>
         /// If the build mode is set to structure, this is the name of the structure to build.
@@ -56,6 +56,19 @@ namespace Controllers
             {
                 _tile.InstallStructure(structure);
             }
+        }
+
+        public void StartStructureBuild(string _structureName)
+        {
+            MouseController.Instance.Mode = MouseMode.Build;
+            Mode = BuildMode.Structure;
+            StructureName = _structureName;
+        }
+
+        public void StartDemolishBuild()
+        {
+            MouseController.Instance.Mode = MouseMode.Build;
+            Mode = BuildMode.Demolish;
         }
 
         /// <summary>

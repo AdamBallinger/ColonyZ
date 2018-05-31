@@ -5,11 +5,19 @@ using UnityEngine.EventSystems;
 
 namespace Controllers
 {
+    public enum MouseMode
+    {
+        Select,
+        Build
+    }
+
     public class MouseController : MonoBehaviour
     {
         public static MouseController Instance { get; private set; }
 
         public BuildModeController BuildModeController { get; private set; }
+
+        public MouseMode Mode { get; set; } = MouseMode.Select;
 
         public GameObject selectionObject;
 
@@ -36,24 +44,16 @@ namespace Controllers
             camera = Camera.main;
             selectionObjectRenderer = selectionObject.GetComponent<SpriteRenderer>();
 
-            BuildModeController = new BuildModeController
-            {
-                Mode = BuildMode.Structure,
-            };
+            BuildModeController = new BuildModeController();
         }
 
         private void Update()
         {
             HandleDragging();
 
-            if(Input.GetKeyDown(KeyCode.B))
-            {
-                BuildModeController.Mode = BuildMode.Structure;
-            }
-
             if(Input.GetKeyDown(KeyCode.F))
             {
-                BuildModeController.Mode = BuildMode.Demolish;
+                BuildModeController.StartDemolishBuild();
             }
         }
 
@@ -99,19 +99,38 @@ namespace Controllers
         /// <param name="_dragData"></param>
         private void UpdateDragPreview(DragData _dragData)
         {
-            // TODO: With multiple mouse modes (Select, Build, etc.) change what the preview is based on that.
-            // Hide cursor if off the map.
+            // Hide selection graphic if mouse is off the map.
             selectionObject.SetActive(GetTileUnderMouse() != null);
 
-            // Calculates the size of the cursor based on the drag distance.
-            var selectionSize = new Vector2(_dragData.EndX, _dragData.EndY) -
-                                new Vector2(_dragData.StartX, _dragData.StartY) + Vector2.one; // Add one so its not 0 for single tile selection       
+            var selectionSize = Vector2.zero;
+            var selectionPosition = Vector2.zero;
 
+            if(Mode == MouseMode.Select)
+            {
+                selectionObject.SetActive(isDragging);
+                
+                if(isDragging)
+                {
+                    selectionSize.x = dragStartPosition.x - currentMousePosition.x;
+                    selectionSize.y = dragStartPosition.y - currentMousePosition.y;
+
+                    selectionPosition = dragStartPosition - selectionSize / 2;
+                }
+            }
+
+            if(Mode == MouseMode.Build)
+            {
+                // Calculate size of drag area. Add one as the world starts at 0, 0
+                selectionSize.x = _dragData.EndX - _dragData.StartX + 1.0f;
+                selectionSize.y = _dragData.EndY - _dragData.StartY + 1.0f;
+
+                // As pivot for the selection cursor is the center, set position based on the drag start + half the selection size.
+                // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
+                selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
+            }
+
+            selectionObject.transform.position = selectionPosition;
             selectionObjectRenderer.size = selectionSize;
-
-            // As pivot for the selection cursor is the center, set position based on the drag start + half the selection size.
-            // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
-            selectionObject.transform.position = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
         }
 
         private DragData GetDragData()
