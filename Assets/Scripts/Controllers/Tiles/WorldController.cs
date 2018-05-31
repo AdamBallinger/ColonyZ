@@ -19,7 +19,7 @@ namespace Controllers.Tiles
 
         public string tileSortingLayerName = "Tiles";
 
-        private Dictionary<Tile, GameObject> tileGameObjectMap;
+        private Dictionary<Tile, SpriteRenderer> tileTypeRenderer;
         private Dictionary<Tile, SpriteRenderer> tileStructureRenderers;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
 
@@ -33,7 +33,7 @@ namespace Controllers.Tiles
             Instance = this;
             Instance._transform = Instance.transform;
 
-            Instance.tileGameObjectMap = new Dictionary<Tile, GameObject>();
+            Instance.tileTypeRenderer = new Dictionary<Tile, SpriteRenderer>();
             Instance.tileStructureRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
@@ -126,12 +126,12 @@ namespace Controllers.Tiles
                 tile_GO.transform.position = new Vector2(tile.X, tile.Y);
                 tile_GO.transform.SetParent(_transform);
 
-                tileGameObjectMap.Add(tile, tile_GO);
+                var tile_SR = tile_GO.AddComponent<SpriteRenderer>();
+                tile_SR.sprite = TileTypeSpriteController.GetSprite(tile);
+                tile_SR.sortingLayerName = tileSortingLayerName;
+                tile_SR.sortingOrder = -10;
 
-                var tile_sr = tile_GO.AddComponent<SpriteRenderer>();
-                tile_sr.sprite = TileTypeSpriteController.GetSprite(tile);
-                tile_sr.sortingLayerName = tileSortingLayerName;
-                tile_sr.sortingOrder = -10;
+                tileTypeRenderer.Add(tile, tile_SR);
 
                 tile.RegisterTileChangedCallback(OnTileChanged);
                 tile.RegisterTileTypeChangedCallback(OnTileTypeChange);
@@ -183,7 +183,7 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileTypeChange(Tile _tile)
         {
-            tileGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = TileTypeSpriteController.GetSprite(_tile);
+            tileTypeRenderer[_tile].sprite = TileTypeSpriteController.GetSprite(_tile);
         }
 
         /// <summary>
