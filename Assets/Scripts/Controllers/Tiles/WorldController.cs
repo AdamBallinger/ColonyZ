@@ -20,7 +20,7 @@ namespace Controllers.Tiles
         public string tileSortingLayerName = "Tiles";
 
         private Dictionary<Tile, GameObject> tileGameObjectMap;
-        private Dictionary<Tile, GameObject> tileStructureGameObjectMap;
+        private Dictionary<Tile, SpriteRenderer> tileStructureRenderers;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
 
         public TileTypeSpriteController TileTypeSpriteController { get; private set; }
@@ -34,7 +34,7 @@ namespace Controllers.Tiles
             Instance._transform = Instance.transform;
 
             Instance.tileGameObjectMap = new Dictionary<Tile, GameObject>();
-            Instance.tileStructureGameObjectMap = new Dictionary<Tile, GameObject>();
+            Instance.tileStructureRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
             TileTypeSpriteController = new TileTypeSpriteController();
@@ -145,7 +145,7 @@ namespace Controllers.Tiles
                 tileStructure_SR.sortingLayerName = tileSortingLayerName;
                 tileStructure_SR.sortingOrder = -9;
 
-                tileStructureGameObjectMap.Add(tile, tileStructure_GO);
+                tileStructureRenderers.Add(tile, tileStructure_SR);
             }
         }
 
@@ -159,7 +159,7 @@ namespace Controllers.Tiles
             {
                 if (tile != null)
                 {
-                    tileStructureGameObjectMap[tile].GetComponent<SpriteRenderer>().sprite = TileStructureSpriteController.GetSprite(tile);
+                    tileStructureRenderers[tile].sprite = TileStructureSpriteController.GetSprite(tile);
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace Controllers.Tiles
         {
             if (_tile != null)
             {
-                tileStructureGameObjectMap[_tile].GetComponent<SpriteRenderer>().sprite = TileStructureSpriteController.GetSprite(_tile);
+                tileStructureRenderers[_tile].sprite = TileStructureSpriteController.GetSprite(_tile);
                 UpdateTileNeighbourSprites(_tile);
             }
         }
