@@ -65,42 +65,42 @@ namespace Models.Sprites
             var tile_S = World.Instance.GetTileAt(_origin.X, _origin.Y - 1);
             var tile_SE = World.Instance.GetTileAt(_origin.X + 1, _origin.Y - 1);
 
-            if (Connects(tile_NW) && Connects(tile_N) && Connects(tile_W)/*tile_NW?.Structure != null && tile_N?.Structure != null && tile_W?.Structure != null*/)
+            if (Connects(tile_NW) && Connects(tile_N) && Connects(tile_W))
             {
                 bitmaskValue += 1;
             }
 
-            if (Connects(tile_N)/*tile_N?.Structure != null*/)
+            if (Connects(tile_N))
             {
                 bitmaskValue += 2;
             }
 
-            if (Connects(tile_NE) && Connects(tile_N) && Connects(tile_E)/*tile_NE?.Structure != null && tile_N?.Structure != null && tile_E?.Structure != null*/)
+            if (Connects(tile_NE) && Connects(tile_N) && Connects(tile_E))
             {
                 bitmaskValue += 4;
             }
 
-            if (Connects(tile_W)/*tile_W?.Structure != null*/)
+            if (Connects(tile_W))
             {
                 bitmaskValue += 8;
             }
 
-            if (Connects(tile_E)/*tile_E?.Structure != null*/)
+            if (Connects(tile_E))
             {
                 bitmaskValue += 16;
             }
 
-            if (Connects(tile_SW) && Connects(tile_S) && Connects(tile_W)/*tile_SW?.Structure != null && tile_S?.Structure != null && tile_W?.Structure != null*/)
+            if (Connects(tile_SW) && Connects(tile_S) && Connects(tile_W))
             {
                 bitmaskValue += 32;
             }
 
-            if (Connects(tile_S)/*tile_S?.Structure != null*/)
+            if (Connects(tile_S))
             {
                 bitmaskValue += 64;
             }
 
-            if (Connects(tile_SE) && Connects(tile_S) && Connects(tile_E)/*tile_SE?.Structure != null && tile_S?.Structure != null && tile_E?.Structure != null*/)
+            if (Connects(tile_SE) && Connects(tile_S) && Connects(tile_E))
             {
                 bitmaskValue += 128;
             }
