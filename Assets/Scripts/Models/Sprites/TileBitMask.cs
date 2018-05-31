@@ -7,14 +7,14 @@ namespace Models.Sprites
     [Flags]
     public enum Cardinals
     {
-        None       = 0,
+        None = 0,
         North_West = 1 << 0,
-        North      = 1 << 1,
+        North = 1 << 1,
         North_East = 1 << 2,
-        West       = 1 << 3,
-        East       = 1 << 4,
+        West = 1 << 3,
+        East = 1 << 4,
         South_West = 1 << 5,
-        South      = 1 << 6,
+        South = 1 << 6,
         South_East = 1 << 7
     }
 
@@ -26,7 +26,6 @@ namespace Models.Sprites
 
     public class TileBitMask
     {
-
         /// <summary>
         /// Bit masking dictionary that maps different bitmask values to the matching index of a tileset
         /// [bitMaskIndex, tileSetIndex]
@@ -41,6 +40,9 @@ namespace Models.Sprites
             {223, 41}, {248, 42}, {250, 43}, {251, 44}, {254, 45}, {255, 46}, {0, 47}
         };
 
+        private static Tile Origin;
+        private static BitmaskEvaluationType Type;
+
         /// <summary>
         /// Returns the bitmask tileset value for a given tile based on its surrounding tiles according to the evaluation type.
         /// </summary>
@@ -51,7 +53,9 @@ namespace Models.Sprites
         {
             var bitmaskValue = 0;
 
-            // this is ugly as fuck
+            Origin = _origin;
+            Type = _evalType;
+
             var tile_NW = World.Instance.GetTileAt(_origin.X - 1, _origin.Y + 1);
             var tile_N = World.Instance.GetTileAt(_origin.X, _origin.Y + 1);
             var tile_NE = World.Instance.GetTileAt(_origin.X + 1, _origin.Y + 1);
@@ -61,47 +65,62 @@ namespace Models.Sprites
             var tile_S = World.Instance.GetTileAt(_origin.X, _origin.Y - 1);
             var tile_SE = World.Instance.GetTileAt(_origin.X + 1, _origin.Y - 1);
 
-            if (tile_NW?.Structure != null && tile_N?.Structure != null && tile_W?.Structure != null)
+            if (Connects(tile_NW) && Connects(tile_N) && Connects(tile_W)/*tile_NW?.Structure != null && tile_N?.Structure != null && tile_W?.Structure != null*/)
             {
                 bitmaskValue += 1;
             }
 
-            if (tile_N?.Structure != null)
+            if (Connects(tile_N)/*tile_N?.Structure != null*/)
             {
                 bitmaskValue += 2;
             }
 
-            if (tile_NE?.Structure != null && tile_N?.Structure != null && tile_E?.Structure != null)
+            if (Connects(tile_NE) && Connects(tile_N) && Connects(tile_E)/*tile_NE?.Structure != null && tile_N?.Structure != null && tile_E?.Structure != null*/)
             {
                 bitmaskValue += 4;
             }
 
-            if (tile_W?.Structure != null)
+            if (Connects(tile_W)/*tile_W?.Structure != null*/)
             {
                 bitmaskValue += 8;
             }
 
-            if (tile_E?.Structure != null)
+            if (Connects(tile_E)/*tile_E?.Structure != null*/)
             {
                 bitmaskValue += 16;
             }
 
-            if (tile_SW?.Structure != null && tile_S?.Structure != null && tile_W?.Structure != null)
+            if (Connects(tile_SW) && Connects(tile_S) && Connects(tile_W)/*tile_SW?.Structure != null && tile_S?.Structure != null && tile_W?.Structure != null*/)
             {
                 bitmaskValue += 32;
             }
 
-            if (tile_S?.Structure != null)
+            if (Connects(tile_S)/*tile_S?.Structure != null*/)
             {
                 bitmaskValue += 64;
             }
 
-            if (tile_SE?.Structure != null && tile_S?.Structure != null && tile_E?.Structure != null)
+            if (Connects(tile_SE) && Connects(tile_S) && Connects(tile_E)/*tile_SE?.Structure != null && tile_S?.Structure != null && tile_E?.Structure != null*/)
             {
                 bitmaskValue += 128;
             }
 
             return bitMaskMap[bitmaskValue];
+        }
+
+        private static bool Connects(Tile _neighbour)
+        {
+            if (Type == BitmaskEvaluationType.Tile_Structure)
+            {
+                if (Origin?.Structure == null || _neighbour?.Structure == null)
+                {
+                    return false;
+                }
+
+                return Origin.Structure.ConnectsWith(_neighbour.Structure);
+            }
+
+            return false;
         }
     }
 }

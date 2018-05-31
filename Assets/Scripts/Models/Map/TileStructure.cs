@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Controllers;
 using Models.Sprites;
 
@@ -13,13 +14,27 @@ namespace Models.Map
 
         public TileSpriteData SpriteData { get; }
 
-        // Type of structure Wall, machine etc.
+        /// <summary>
+        /// The type of this structure (Single or multi tile).
+        /// </summary>
         public TileStructureType Type { get; protected set; }
 
+        /// <summary>
+        /// Name of the structure. This refers to the name associated with this structure in the TileStructureRegistry.
+        /// </summary>
         public string StructureName { get; }
 
         public int Width { get; protected set; }
         public int Height { get; protected set; }
+
+        /// <summary>
+        /// Returns whether this structure occupies more than 1 tile.
+        /// </summary>
+        public bool MultiTile => Width > 1 || Height > 1;
+
+        protected bool ConnectsToSelf { get; set; }
+
+        protected List<string> Connectables { get; set; }
 
         protected TileStructure(string _structureName)
         {
@@ -28,6 +43,8 @@ namespace Models.Map
             Width = 1;
             Height = 1;
             SpriteData = SpriteDataController.GetSpriteDataFor<TileSpriteData>(StructureName);
+            ConnectsToSelf = false;
+            Connectables = new List<string>();
         }
 
         private TileStructure(TileStructure _source)
@@ -37,6 +54,23 @@ namespace Models.Map
             StructureName = _source.StructureName;
             Width = _source.Width;
             Height = _source.Height;
+            ConnectsToSelf = _source.ConnectsToSelf;
+            Connectables = _source.Connectables;
+        }
+
+        /// <summary>
+        /// Returns if this structure connects to a given structure.
+        /// </summary>
+        /// <param name="_other"></param>
+        /// <returns></returns>
+        public bool ConnectsWith(TileStructure _other)
+        {
+            if(_other == null)
+            {
+                return false;
+            }
+
+            return ConnectsToSelf && _other.StructureName.Equals(StructureName);
         }
 
         public virtual TileStructure Clone()

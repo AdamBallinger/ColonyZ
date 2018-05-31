@@ -5,6 +5,7 @@
         public SteelWallStructure(string _structureName) : base(_structureName)
         {
             Type = TileStructureType.Multi_Tile;
+            ConnectsToSelf = true;
         }
     }
 }

@@ -49,6 +49,9 @@ namespace Controllers.Tiles
 
             SpriteDataController.Load<EntitySpriteData>("character_bodies");
 
+            TileStructureRegistry.RegisterTileStructure(new WoodWallStructure("Wood_Wall"));
+            TileStructureRegistry.RegisterTileStructure(new SteelWallStructure("Steel_Wall"));
+
             ToolbarController.Instance.AddSubMenuItem("Construction", "Building", "Wood Wall", 
                 SpriteCache.GetSprite("tileset_wood_walls_47"), () =>
                 {
@@ -59,10 +62,7 @@ namespace Controllers.Tiles
                 SpriteCache.GetSprite("tileset_steel_walls_47"), () =>
                 {
                     MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Wall");
-                });
-
-            TileStructureRegistry.RegisterTileStructure(new WoodWallStructure("Wood_Wall"));
-            TileStructureRegistry.RegisterTileStructure(new SteelWallStructure("Steel_Wall"));
+                });     
 
             NewWorld();
         }
