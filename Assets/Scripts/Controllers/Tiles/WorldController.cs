@@ -80,6 +80,8 @@ namespace Controllers.Tiles
 
             //var worldGen = new WorldGenerator(World.Instance);
             //worldGen.GenerateWorld();
+
+            World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
         }
 
         private void Update()
