@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Controllers.Tiles;
 using Models.Sprites;
 using Newtonsoft.Json;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace Controllers
@@ -73,6 +74,8 @@ namespace Controllers
         //	}
         private static readonly string dataRoot = "Game_Data/Sprite_Data/";
 
+        private static Dictionary<string, SpriteData> dataMap = new Dictionary<string, SpriteData>();
+
         /// <summary>
         /// Loads all sprite data files and adds the sprites to the sprite cache.
         /// </summary>
@@ -81,8 +84,13 @@ namespace Controllers
 
         }
 
+        public static SpriteData GetSpriteData(string _dataName)
+        {
+            return dataMap.ContainsKey(_dataName) ? dataMap[_dataName] : null;
+        }
+
         /// <summary>
-        /// Loads the given sprite at the given path to the sprite cache for the sprite controllers.
+        /// Loads the sprite at the given path to the sprite cache.
         /// </summary>
         /// <param name="_spritePath"></param>
         private static void LoadSprite(string _spritePath)
@@ -95,11 +103,11 @@ namespace Controllers
                 return;
             }
 
-            SpriteCache.AddSprite(sprite.name, sprite);
+            //SpriteCache.AddSprite(sprite.name, sprite);
         }
 
         /// <summary>
-        /// Loads the given tileset at the given path to the sprite cache for the sprite controllers.
+        /// Loads the tileset at the given path to the sprite cache.
         /// </summary>
         /// <param name="_tileSetPath"></param>
         private static void LoadTileSet(string _tileSetPath)
@@ -114,7 +122,7 @@ namespace Controllers
 
             foreach (var sprite in tileset)
             {
-                SpriteCache.AddSprite(sprite.name, sprite);
+                //SpriteCache.AddSprite(sprite.name, sprite);
             }
         }
     }
