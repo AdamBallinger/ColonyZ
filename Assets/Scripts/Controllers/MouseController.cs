@@ -34,9 +34,14 @@ namespace Controllers
 
         private List<GameObject> previewObjects;
 
-        // World space drag start position.
+        /// <summary>
+        /// Stores the exact world space position that the mouse drag started.
+        /// </summary>
         private Vector2 dragStartPosition;
-        // World space position of the mouse.
+
+        /// <summary>
+        /// Stores the exact world space position of the mouse.
+        /// </summary>
         private Vector2 currentMousePosition;
 
         private new Camera camera;
@@ -59,11 +64,6 @@ namespace Controllers
         private void Update()
         {
             HandleDragging();
-
-            if(Input.GetKeyDown(KeyCode.F))
-            {
-                BuildModeController.StartDemolishBuild();
-            }
         }
 
         private void HandleDragging()
@@ -139,11 +139,11 @@ namespace Controllers
                 // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
-                // TODO: Fix this. Only showing top right corner preview..
                 for(var x = _dragData.StartX; x <= _dragData.EndX; x++)
                 {
                     for(var y = _dragData.StartY; y <= _dragData.EndY; y++)
                     {
+                        var tile = World.Instance.GetTileAt(x, y);
                         var previewObject = previewPool.GetAvailable();
                         previewObject.transform.position = new Vector2(x, y);
                         var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
@@ -154,8 +154,14 @@ namespace Controllers
                             previewRenderer.sprite = structure?.GetIcon();
 
                             // Tint the preview color based on if the structure position is valid.
-                            previewRenderer.color = !World.Instance.IsStructurePositionValid(structure, World.Instance.GetTileAt(x, y)) 
-                                ? new Color(0.8f, 0.2f, 0.2f, 0.55f) : new Color(0.2f, 1.0f, 0.2f, 0.55f);
+                            previewRenderer.color = !World.Instance.IsStructurePositionValid(structure, tile) 
+                                ? new Color(1.0f, 0.3f, 0.3f, 0.6f) : new Color(0.3f, 1.0f, 0.3f, 0.6f);
+                        }
+
+                        if(BuildModeController.Mode == BuildMode.Demolish)
+                        {
+                            previewRenderer.sprite = null;
+                            previewRenderer.color = new Color(0.3f, 1.0f, 0.3f, 0.6f);
                         }
 
                         previewObjects.Add(previewObject);
@@ -171,7 +177,8 @@ namespace Controllers
         {
             foreach(var obj in previewObjects)
             {
-                obj.SetActive(false);
+                previewPool.PoolObject(obj);
+                obj.SetActive(false);              
             }
 
             previewObjects.Clear();

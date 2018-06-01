@@ -50,7 +50,11 @@ namespace Controllers.UI.Toolbar
 
         private void Awake()
         {
-            Instance = this;
+            Instance = this;           
+        }
+
+        private void Start()
+        {
             AddRootMenu("Construction");
             AddRootMenu("Commands");
             AddRootMenu("Menu");
@@ -58,7 +62,7 @@ namespace Controllers.UI.Toolbar
             AddSubMenu("Construction", "Building");
             AddSubMenu("Construction", "Area");
 
-            AddSubMenu("Commands", "Worlk");
+            AddSubMenu("Commands", "Work");
 
             AddSubMenu("Menu", "Exit", Application.Quit);
 

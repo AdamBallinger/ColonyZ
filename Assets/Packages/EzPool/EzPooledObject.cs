@@ -20,9 +20,9 @@ namespace EzPool
             poolManager?.PoolObject(gameObject);
         }
 
-        private void OnDisable()
-        {
-            RePool();
-        }
+        //private void OnDisable()
+        //{
+        //    RePool();
+        //}
     }
 }

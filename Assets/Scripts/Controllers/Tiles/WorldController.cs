@@ -28,7 +28,7 @@ namespace Controllers.Tiles
 
         private Transform _transform;
 
-        private void Start()
+        private void Awake()
         {
             Instance = this;
             Instance._transform = Instance.transform;
