@@ -132,7 +132,7 @@ namespace Controllers.Tiles
             {
                 if (tile != null)
                 {
-                    tileStructureRenderers[tile].sprite = TileStructureSpriteController.GetSprite(tile);
+                    tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Structure?.SpriteData);
                 }
             }
         }
@@ -145,7 +145,7 @@ namespace Controllers.Tiles
         {
             if (_tile != null)
             {
-                tileStructureRenderers[_tile].sprite = TileStructureSpriteController.GetSprite(_tile);
+                tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure?.SpriteData);
                 UpdateTileNeighbourSprites(_tile);
             }
         }
@@ -156,7 +156,7 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileTypeChange(Tile _tile)
         {
-            tileTypeRenderer[_tile].sprite = TileTypeSpriteController.GetSprite(_tile);
+            tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName);
         }
 
         /// <summary>
