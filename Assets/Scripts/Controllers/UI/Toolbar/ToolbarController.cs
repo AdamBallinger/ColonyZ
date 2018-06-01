@@ -52,13 +52,30 @@ namespace Controllers.UI.Toolbar
         {
             Instance = this;
             AddRootMenu("Construction");
-            AddRootMenu("Commands", false);
+            AddRootMenu("Commands");
             AddRootMenu("Menu");
 
             AddSubMenu("Construction", "Building");
             AddSubMenu("Construction", "Area");
 
+            AddSubMenu("Commands", "Worlk");
+
             AddSubMenu("Menu", "Exit", Application.Quit);
+
+            AddSubMenuItem("Construction", "Building", "Wood Wall", SpriteCache.GetSprite("tileset_wood_walls_47"), () =>
+            {
+                MouseController.Instance.BuildModeController.StartStructureBuild("Wood_Wall");
+            });
+
+            AddSubMenuItem("Construction", "Building", "Steel Wall", SpriteCache.GetSprite("tileset_steel_walls_47"), () =>
+            {
+                MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Wall");
+            });
+
+            AddSubMenuItem("Commands", "Work", "Demolish", SpriteCache.GetSprite("overlay_demolish"), () =>
+            {
+                MouseController.Instance.BuildModeController.StartDemolishBuild();
+            });
         }
 
         /// <summary>
@@ -76,7 +93,7 @@ namespace Controllers.UI.Toolbar
             {
                 // If the menu is already open then disable all of its buttons.s
                 if (currentRootMenu.Equals(_menuName))
-                {          
+                {
                     subMenuMap[currentRootMenu].SetMenuButtonsState(false);
                     // Disable any sub menu item buttons if they are enabled as this root menu is closing.
                     subMenuMap[_menuName].SetMenuItemButtonsState(currentSubMenu, false);
@@ -126,17 +143,17 @@ namespace Controllers.UI.Toolbar
             buttonController.AddButtonClickAction(() =>
             {
                 // Only do something if the sub menu has items.
-                if(subMenuMap[_rootMenu].GetSubMenuItemCount(_subMenuName) > 0)
+                if (subMenuMap[_rootMenu].GetSubMenuItemCount(_subMenuName) > 0)
                 {
                     // Remove the items if this sub menu is the one already open.
-                    if(currentSubMenu.Equals(_subMenuName))
+                    if (currentSubMenu.Equals(_subMenuName))
                     {
                         currentSubMenu = string.Empty;
                         subMenuMap[_rootMenu].SetMenuItemButtonsState(_subMenuName, false);
                     }
                     else
                     {
-                        if(subMenuMap[_rootMenu].ContainsSubMenu(currentSubMenu))
+                        if (subMenuMap[_rootMenu].ContainsSubMenu(currentSubMenu))
                         {
                             subMenuMap[_rootMenu].SetMenuItemButtonsState(currentSubMenu, false);
                         }
@@ -145,7 +162,7 @@ namespace Controllers.UI.Toolbar
                         subMenuMap[_rootMenu].SetMenuItemButtonsState(_subMenuName, true);
                     }
                 }
-            });        
+            });
 
             subMenuMap[_rootMenu].AddButton(_subMenuName, buttonController);
         }
