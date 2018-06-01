@@ -13,12 +13,12 @@ namespace Models.Map
         /// </summary>
         public Tile OriginTile { get; set; }
 
-        public TileSpriteData SpriteData { get; protected set; }
-
         /// <summary>
         /// The type of this structure (Single or multi tile).
         /// </summary>
         public TileStructureType Type { get; protected set; }
+
+        public SpriteData SpriteData { get; protected set; }
 
         /// <summary>
         /// Name of the structure. This refers to the name associated with this structure in the TileStructureRegistry.
