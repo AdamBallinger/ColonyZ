@@ -1,3 +1,5 @@
+#! /bin/sh
+
 project="ColonyZ"
 
 echo "Attempting to build $project for Windows"
