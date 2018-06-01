@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using EzPool;
 using Models.Map;
+using Models.Map.Structures;
 using Models.Pathing;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,6 +30,10 @@ namespace Controllers
 
         private bool IsMouseOverUI { get; set; }
 
+        private EzPoolManager previewPool;
+
+        private List<GameObject> previewObjects;
+
         // World space drag start position.
         private Vector2 dragStartPosition;
         // World space position of the mouse.
@@ -41,6 +48,8 @@ namespace Controllers
 
         private void Start()
         {
+            previewPool = GetComponent<EzPoolManager>();
+            previewObjects = new List<GameObject>();
             camera = Camera.main;
             selectionObjectRenderer = selectionObject.GetComponent<SpriteRenderer>();
 
@@ -99,6 +108,8 @@ namespace Controllers
         /// <param name="_dragData"></param>
         private void UpdateDragPreview(DragData _dragData)
         {
+            ClearPreviewObjects();
+
             // Hide selection graphic if mouse is off the map.
             selectionObject.SetActive(GetTileUnderMouse() != null);
 
@@ -127,10 +138,48 @@ namespace Controllers
                 // As pivot for the selection cursor is the center, set position based on the drag start + half the selection size.
                 // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
+
+                // TODO: Fix this. Only showing top right corner preview..
+                for(var x = _dragData.StartX; x <= _dragData.EndX; x++)
+                {
+                    for(var y = _dragData.StartY; y <= _dragData.EndY; y++)
+                    {
+                        var previewObject = previewPool.GetAvailable();
+                        previewObject.transform.position = new Vector2(x, y);
+                        var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
+
+                        if (BuildModeController.Mode == BuildMode.Structure)
+                        {
+                            var structure = TileStructureRegistry.GetStructure(BuildModeController.StructureName);
+                            previewRenderer.sprite = structure?.GetIcon();
+
+                            if(!World.Instance.IsStructurePositionValid(structure, World.Instance.GetTileAt(x, y)))
+                            {
+                                previewRenderer.color = new Color(0.8f, 0.2f, 0.2f, 0.55f);
+                            }
+                            else
+                            {
+                                previewRenderer.color = new Color(0.2f, 1.0f, 0.2f, 0.55f);
+                            }
+                        }
+
+                        previewObjects.Add(previewObject);
+                    }
+                }             
             }
 
             selectionObject.transform.position = selectionPosition;
             selectionObjectRenderer.size = selectionSize;
+        }
+
+        private void ClearPreviewObjects()
+        {
+            foreach(var obj in previewObjects)
+            {
+                obj.SetActive(false);
+            }
+
+            previewObjects.Clear();
         }
 
         private DragData GetDragData()

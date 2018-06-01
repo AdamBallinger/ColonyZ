@@ -883,6 +883,7 @@ GameObject:
   - component: {fileID: 1999893017}
   - component: {fileID: 1999893018}
   - component: {fileID: 1999893019}
+  - component: {fileID: 1999893020}
   m_Layer: 0
   m_Name: Mouse/Camera Controller
   m_TagString: Untagged
@@ -930,3 +931,20 @@ MonoBehaviour:
   minZoom: 35
   zoomSpeed: 65
   cameraMoveSpeed: 2.5
+--- !u!114 &1999893020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1999893016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70f5b8cbada3efb4e80f7c7f0aa5eeb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pooledPrefab: {fileID: 1391713949002200, guid: 5b3197ee3b11be746b23f89b3d65ac5c,
+    type: 2}
+  maxPoolCount: 16384
+  prePoolCount: 10
+  activeObjects: []
+  inactiveObjects: []
