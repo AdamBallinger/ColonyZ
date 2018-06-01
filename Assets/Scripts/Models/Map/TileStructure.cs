@@ -43,7 +43,7 @@ namespace Models.Map
             Type = TileStructureType.Single_Tile;
             Width = 1;
             Height = 1;
-            SpriteData = SpriteDataController.GetSpriteDataFor<TileSpriteData>(StructureName);
+            SpriteData = SpriteDataController.GetSpriteData(StructureName);
             ConnectsToSelf = false;
             Connectables = new List<string>();
         }
