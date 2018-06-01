@@ -1,5 +1,5 @@
 {
 	"SpriteType": "Tileset",
-	"ResourcePath": "Sprites/Game/Tiles/tileset_grass_walls",
+	"ResourcePath": "Sprites/Game/Tiles/tileset_grass_tiles",
 	"SpriteGroup": "Grass_Tile"
 }

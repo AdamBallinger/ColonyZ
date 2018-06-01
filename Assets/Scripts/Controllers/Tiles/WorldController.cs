@@ -100,7 +100,7 @@ namespace Controllers.Tiles
                 tile_GO.transform.SetParent(_transform);
 
                 var tile_SR = tile_GO.AddComponent<SpriteRenderer>();
-                tile_SR.sprite = SpriteCache.GetSprite(tile.TileName);
+                tile_SR.sprite = SpriteCache.GetSprite(tile.TileName, 0);
                 tile_SR.sortingLayerName = tileSortingLayerName;
                 tile_SR.sortingOrder = -10;
 
@@ -156,7 +156,8 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileTypeChange(Tile _tile)
         {
-            tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName);
+            Debug.Log("Changed");
+            tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName, 0);
         }
 
         /// <summary>
