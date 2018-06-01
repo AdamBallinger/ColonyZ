@@ -80,6 +80,10 @@ namespace Controllers.UI.Toolbar
             {
                 MouseController.Instance.BuildModeController.StartDemolishBuild();
             });
+
+            AddSubMenuItem("Commands", "Work", "Mine", SpriteCache.GetSprite("Overlay", "mine"), null);
+            AddSubMenuItem("Commands", "Work", "Fell", SpriteCache.GetSprite("Overlay", "chop"), null);
+            AddSubMenuItem("Commands", "Work", "Cancel", SpriteCache.GetSprite("Overlay", "cancel"), null);
         }
 
         /// <summary>
