@@ -81,7 +81,24 @@ namespace Controllers
         /// </summary>
         public static void LoadSpriteData()
         {
+            var data = Resources.LoadAll(dataRoot, typeof(TextAsset));
 
+            foreach(var obj in data)
+            {
+                var asset = (TextAsset) obj;
+                var spriteData = JsonConvert.DeserializeObject<SpriteData>(asset.text);
+
+                dataMap.Add(asset.name, spriteData);
+
+                if(spriteData.SpriteType == SpriteType.Single)
+                {
+                    LoadSprite(spriteData);
+                }
+                else
+                {
+                    LoadTileSet(spriteData);
+                }
+            }
         }
 
         public static SpriteData GetSpriteData(string _dataName)
@@ -92,37 +109,37 @@ namespace Controllers
         /// <summary>
         /// Loads the sprite at the given path to the sprite cache.
         /// </summary>
-        /// <param name="_spritePath"></param>
-        private static void LoadSprite(string _spritePath)
+        /// <param name="_spriteData"></param>
+        private static void LoadSprite(SpriteData _spriteData)
         {
-            var sprite = Resources.Load<Sprite>(_spritePath);
+            var sprite = Resources.Load<Sprite>(_spriteData.ResourcePath);
 
             if (sprite == null)
             {
-                Debug.LogError($"[SpriteDataController.LoadSprite] Failed to load sprite at path: {_spritePath}");
+                Debug.LogError($"[SpriteDataController.LoadSprite] Failed to load sprite at path: {_spriteData.ResourcePath}");
                 return;
             }
 
-            //SpriteCache.AddSprite(sprite.name, sprite);
+            SpriteCache.AddSprite(_spriteData.SpriteGroup, sprite);
         }
 
         /// <summary>
         /// Loads the tileset at the given path to the sprite cache.
         /// </summary>
-        /// <param name="_tileSetPath"></param>
-        private static void LoadTileSet(string _tileSetPath)
+        /// <param name="_spriteData"></param>
+        private static void LoadTileSet(SpriteData _spriteData)
         {
-            var tileset = Resources.LoadAll<Sprite>(_tileSetPath);
+            var tileset = Resources.LoadAll<Sprite>(_spriteData.ResourcePath);
 
             if (tileset == null)
             {
-                Debug.LogError($"[SpriteDataController.LoadTileSet] Failed to load tileset at path: {_tileSetPath}");
+                Debug.LogError($"[SpriteDataController.LoadTileSet] Failed to load tileset at path: {_spriteData.ResourcePath}");
                 return;
             }
 
             foreach (var sprite in tileset)
             {
-                //SpriteCache.AddSprite(sprite.name, sprite);
+                SpriteCache.AddSprite(_spriteData.SpriteGroup, sprite);
             }
         }
     }
