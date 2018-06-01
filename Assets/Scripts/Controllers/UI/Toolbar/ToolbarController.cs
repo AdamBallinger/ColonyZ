@@ -66,17 +66,17 @@ namespace Controllers.UI.Toolbar
 
             AddSubMenu("Menu", "Exit", Application.Quit);
 
-            AddSubMenuItem("Construction", "Building", "Wood Wall", SpriteCache.GetSprite("tileset_wood_walls_47"), () =>
+            AddSubMenuItem("Construction", "Building", "Wood Wall", SpriteCache.GetSprite("Wood_Wall", 47), () =>
             {
                 MouseController.Instance.BuildModeController.StartStructureBuild("Wood_Wall");
             });
 
-            AddSubMenuItem("Construction", "Building", "Steel Wall", SpriteCache.GetSprite("tileset_steel_walls_47"), () =>
+            AddSubMenuItem("Construction", "Building", "Steel Wall", SpriteCache.GetSprite("Wood_Wall", 47), () =>
             {
                 MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Wall");
             });
 
-            AddSubMenuItem("Commands", "Work", "Demolish", SpriteCache.GetSprite("overlay_demolish"), () =>
+            AddSubMenuItem("Commands", "Work", "Demolish", SpriteCache.GetSprite("Overlay", "demolish"), () =>
             {
                 MouseController.Instance.BuildModeController.StartDemolishBuild();
             });
