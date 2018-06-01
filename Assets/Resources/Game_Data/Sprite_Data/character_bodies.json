@@ -1,6 +1,6 @@
 {
 	"SpriteType": "Tileset",
-	"ResourcePath": "Sprites/Game/Tiles/tileset_wood_walls",
+	"ResourcePath": "Sprites/Game/Entities/character_bodies",
 	"SpriteGroup": "Character_Bodies",
 	"SpriteGroupPrefix": "body_"
 }
