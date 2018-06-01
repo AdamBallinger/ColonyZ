@@ -71,7 +71,7 @@ namespace Controllers.UI.Toolbar
                 MouseController.Instance.BuildModeController.StartStructureBuild("Wood_Wall");
             });
 
-            AddSubMenuItem("Construction", "Building", "Steel Wall", SpriteCache.GetSprite("Wood_Wall", 47), () =>
+            AddSubMenuItem("Construction", "Building", "Steel Wall", SpriteCache.GetSprite("Steel_Wall", 47), () =>
             {
                 MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Wall");
             });
