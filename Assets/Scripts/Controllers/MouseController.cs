@@ -100,8 +100,6 @@ namespace Controllers
                     }
                 }
             }
-
-            lastDragSize = dragData.DragSize;
         }
 
         /// <summary>
