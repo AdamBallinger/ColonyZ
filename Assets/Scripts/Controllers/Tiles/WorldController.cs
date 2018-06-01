@@ -132,7 +132,7 @@ namespace Controllers.Tiles
             {
                 if (tile != null)
                 {
-                    tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Structure?.SpriteData);
+                    tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Structure);
                 }
             }
         }
@@ -145,7 +145,7 @@ namespace Controllers.Tiles
         {
             if (_tile != null)
             {
-                tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure?.SpriteData);
+                tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
                 UpdateTileNeighbourSprites(_tile);
             }
         }

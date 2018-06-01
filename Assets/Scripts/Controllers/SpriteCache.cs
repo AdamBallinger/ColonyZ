@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Models.Map;
 using Models.Sprites;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ namespace Controllers
         {
             if(spriteCache.ContainsKey(_spriteGroup))
             {
-                if(spriteCache[_spriteGroup].Count <= _groupIndex)
+                if(spriteCache[_spriteGroup].Count >= _groupIndex - 1)
                 {
                     return spriteCache[_spriteGroup][_groupIndex];
                 }
@@ -42,8 +43,26 @@ namespace Controllers
             return null;
         }
 
-        public static Sprite GetSprite(SpriteData _data)
+        public static Sprite GetSprite(TileStructure _structure)
         {
+            if(_structure == null)
+            {
+                return null;
+            }
+
+            if(spriteCache.ContainsKey(_structure.SpriteData.SpriteGroup))
+            {
+                var spriteData = _structure.SpriteData;
+
+                if(spriteData.SpriteType == SpriteType.Single)
+                {
+                    return spriteCache[spriteData.SpriteGroup][0];
+                }
+
+                var index = TileBitMask.ComputeBitmaskValue(_structure.Tile, BitmaskEvaluationType.Tile_Structure);
+                return spriteCache[spriteData.SpriteGroup][index];
+            }
+
             return null;
         }
 
