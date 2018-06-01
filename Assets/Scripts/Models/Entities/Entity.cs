@@ -36,7 +36,7 @@ namespace Models.Entities
         /// <summary>
         /// Sprite data for this entity.
         /// </summary>
-        public EntitySpriteData SpriteData { get; set; }
+        public SpriteData SpriteData { get; set; }
 
         protected Entity(Tile _tile)
         {

@@ -83,6 +83,7 @@ namespace Models.Map
 
                     t.Structure = _structure;
                     t.Structure.OriginTile = this;
+                    t.Structure.Tile = t;
                     t.onTileChanged?.Invoke(t);
                 }
             }

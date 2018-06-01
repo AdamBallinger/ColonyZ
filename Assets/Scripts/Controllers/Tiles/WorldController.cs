@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using Controllers.UI.Toolbar;
 using Models.Entities;
 using Models.Map;
 using Models.Map.Generation;
 using Models.Map.Structures;
 using Models.Pathing;
-using Models.Sprites;
 using UnityEngine;
 
 namespace Controllers.Tiles
@@ -23,9 +21,6 @@ namespace Controllers.Tiles
         private Dictionary<Tile, SpriteRenderer> tileStructureRenderers;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
 
-        public TileTypeSpriteController TileTypeSpriteController { get; private set; }
-        public TileStructureSpriteController TileStructureSpriteController { get; private set; }
-
         private Transform _transform;
 
         private void Awake()
@@ -37,20 +32,10 @@ namespace Controllers.Tiles
             Instance.tileStructureRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
-            TileTypeSpriteController = new TileTypeSpriteController();
-            TileStructureSpriteController = new TileStructureSpriteController();
-
-            SpriteDataController.RegisterSpriteDataType<TileSpriteData>();
-            SpriteDataController.RegisterSpriteDataType<EntitySpriteData>();
-
-            SpriteDataController.Load<TileSpriteData>("Grass_Tile");
-            SpriteDataController.Load<TileSpriteData>("Wood_Wall");
-            SpriteDataController.Load<TileSpriteData>("Steel_Wall");
-
-            SpriteDataController.Load<EntitySpriteData>("character_bodies");
+            SpriteDataController.LoadSpriteData();
 
             TileStructureRegistry.RegisterTileStructure(new WoodWallStructure("Wood_Wall"));
-            TileStructureRegistry.RegisterTileStructure(new SteelWallStructure("Steel_Wall"));  
+            TileStructureRegistry.RegisterTileStructure(new SteelWallStructure("Steel_Wall"));
 
             NewWorld();
         }
@@ -82,7 +67,7 @@ namespace Controllers.Tiles
             }
 
             if (Input.GetKeyDown(KeyCode.C))
-            { 
+            {
                 World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
             }
 
@@ -115,7 +100,7 @@ namespace Controllers.Tiles
                 tile_GO.transform.SetParent(_transform);
 
                 var tile_SR = tile_GO.AddComponent<SpriteRenderer>();
-                tile_SR.sprite = TileTypeSpriteController.GetSprite(tile);
+                tile_SR.sprite = SpriteCache.GetSprite(tile.TileName, 0);
                 tile_SR.sortingLayerName = tileSortingLayerName;
                 tile_SR.sortingOrder = -10;
 
@@ -147,7 +132,7 @@ namespace Controllers.Tiles
             {
                 if (tile != null)
                 {
-                    tileStructureRenderers[tile].sprite = TileStructureSpriteController.GetSprite(tile);
+                    tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Structure);
                 }
             }
         }
@@ -160,7 +145,7 @@ namespace Controllers.Tiles
         {
             if (_tile != null)
             {
-                tileStructureRenderers[_tile].sprite = TileStructureSpriteController.GetSprite(_tile);
+                tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
                 UpdateTileNeighbourSprites(_tile);
             }
         }
@@ -171,7 +156,8 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileTypeChange(Tile _tile)
         {
-            tileTypeRenderer[_tile].sprite = TileTypeSpriteController.GetSprite(_tile);
+            Debug.Log("Changed");
+            tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName, 0);
         }
 
         /// <summary>

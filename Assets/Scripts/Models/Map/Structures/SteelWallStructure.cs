@@ -19,7 +19,7 @@ namespace Models.Map.Structures
 
         public override Sprite GetIcon()
         {
-            var sprite = SpriteCache.GetSprite(SpriteData.GetSpriteName() + 47);
+            var sprite = SpriteCache.GetSprite(SpriteData.SpriteGroup, 47);
             return sprite;
         }
     }

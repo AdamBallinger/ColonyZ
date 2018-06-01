@@ -13,12 +13,18 @@ namespace Models.Map
         /// </summary>
         public Tile OriginTile { get; set; }
 
-        public TileSpriteData SpriteData { get; protected set; }
+        /// <summary>
+        /// The Tile this part of a structure occupies. If the struction is a single type, then this will be the same as OriginTile.
+        /// If the structure is a multi tile structure, then it will point to the tile each part of the structure is placed on.
+        /// </summary>
+        public Tile Tile { get; set; }
 
         /// <summary>
         /// The type of this structure (Single or multi tile).
         /// </summary>
         public TileStructureType Type { get; protected set; }
+
+        public SpriteData SpriteData { get; protected set; }
 
         /// <summary>
         /// Name of the structure. This refers to the name associated with this structure in the TileStructureRegistry.
@@ -43,7 +49,7 @@ namespace Models.Map
             Type = TileStructureType.Single_Tile;
             Width = 1;
             Height = 1;
-            SpriteData = SpriteDataController.GetSpriteDataFor<TileSpriteData>(StructureName);
+            SpriteData = SpriteDataController.GetSpriteData(StructureName);
             ConnectsToSelf = false;
             Connectables = new List<string>();
         }

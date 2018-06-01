@@ -40,30 +40,30 @@ namespace Models.Sprites
             {223, 41}, {248, 42}, {250, 43}, {251, 44}, {254, 45}, {255, 46}, {0, 47}
         };
 
-        private static Tile Origin;
+        private static Tile tile;
         private static BitmaskEvaluationType Type;
 
         /// <summary>
         /// Returns the bitmask tileset value for a given tile based on its surrounding tiles according to the evaluation type.
         /// </summary>
-        /// <param name="_origin"></param>
+        /// <param name="_tile"></param>
         /// <param name="_evalType"></param>
         /// <returns></returns>
-        public static int ComputeBitmaskValue(Tile _origin, BitmaskEvaluationType _evalType)
+        public static int ComputeBitmaskValue(Tile _tile, BitmaskEvaluationType _evalType)
         {
             var bitmaskValue = 0;
 
-            Origin = _origin;
+            tile = _tile;
             Type = _evalType;
 
-            var tile_NW = World.Instance.GetTileAt(_origin.X - 1, _origin.Y + 1);
-            var tile_N = World.Instance.GetTileAt(_origin.X, _origin.Y + 1);
-            var tile_NE = World.Instance.GetTileAt(_origin.X + 1, _origin.Y + 1);
-            var tile_W = World.Instance.GetTileAt(_origin.X - 1, _origin.Y);
-            var tile_E = World.Instance.GetTileAt(_origin.X + 1, _origin.Y);
-            var tile_SW = World.Instance.GetTileAt(_origin.X - 1, _origin.Y - 1);
-            var tile_S = World.Instance.GetTileAt(_origin.X, _origin.Y - 1);
-            var tile_SE = World.Instance.GetTileAt(_origin.X + 1, _origin.Y - 1);
+            var tile_NW = World.Instance.GetTileAt(tile.X - 1, tile.Y + 1);
+            var tile_N = World.Instance.GetTileAt(tile.X, tile.Y + 1);
+            var tile_NE = World.Instance.GetTileAt(tile.X + 1, tile.Y + 1);
+            var tile_W = World.Instance.GetTileAt(tile.X - 1, tile.Y);
+            var tile_E = World.Instance.GetTileAt(tile.X + 1, tile.Y);
+            var tile_SW = World.Instance.GetTileAt(tile.X - 1, tile.Y - 1);
+            var tile_S = World.Instance.GetTileAt(tile.X, tile.Y - 1);
+            var tile_SE = World.Instance.GetTileAt(tile.X + 1, tile.Y - 1);
 
             if (Connects(tile_NW) && Connects(tile_N) && Connects(tile_W))
             {
@@ -112,12 +112,12 @@ namespace Models.Sprites
         {
             if (Type == BitmaskEvaluationType.Tile_Structure)
             {
-                if (Origin?.Structure == null || _neighbour?.Structure == null)
+                if (tile?.Structure == null || _neighbour?.Structure == null)
                 {
                     return false;
                 }
 
-                return Origin.Structure.ConnectsWith(_neighbour.Structure);
+                return tile.Structure.ConnectsWith(_neighbour.Structure);
             }
 
             return false;
