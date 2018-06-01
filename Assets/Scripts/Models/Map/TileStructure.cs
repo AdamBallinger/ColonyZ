@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using Controllers;
 using Models.Sprites;
+using UnityEngine;
 
 namespace Models.Map
 {
-    public class TileStructure
+    public abstract class TileStructure
     {
         /// <summary>
         /// The Tile this structure originates from. If the structure is a multi tile structure, then this is the "base" tile
@@ -12,7 +13,7 @@ namespace Models.Map
         /// </summary>
         public Tile OriginTile { get; set; }
 
-        public TileSpriteData SpriteData { get; }
+        public TileSpriteData SpriteData { get; protected set; }
 
         /// <summary>
         /// The type of this structure (Single or multi tile).
@@ -22,7 +23,7 @@ namespace Models.Map
         /// <summary>
         /// Name of the structure. This refers to the name associated with this structure in the TileStructureRegistry.
         /// </summary>
-        public string StructureName { get; }
+        public string StructureName { get; protected set; }
 
         public int Width { get; protected set; }
         public int Height { get; protected set; }
@@ -47,16 +48,18 @@ namespace Models.Map
             Connectables = new List<string>();
         }
 
-        private TileStructure(TileStructure _source)
+        protected void CopyInto(TileStructure _clone)
         {
-            SpriteData = _source.SpriteData;
-            Type = _source.Type;
-            StructureName = _source.StructureName;
-            Width = _source.Width;
-            Height = _source.Height;
-            ConnectsToSelf = _source.ConnectsToSelf;
-            Connectables = _source.Connectables;
+            _clone.SpriteData = SpriteData;
+            _clone.Type = Type;
+            _clone.StructureName = StructureName;
+            _clone.Width = Width;
+            _clone.Height = Height;
+            _clone.ConnectsToSelf = ConnectsToSelf;
+            _clone.Connectables = Connectables;
         }
+
+        public abstract TileStructure Clone();
 
         /// <summary>
         /// Returns if this structure connects to a given structure.
@@ -70,12 +73,13 @@ namespace Models.Map
                 return false;
             }
 
-            return ConnectsToSelf && _other.StructureName.Equals(StructureName);
+            return ConnectsToSelf && _other.StructureName.Equals(StructureName) || Connectables.Contains(_other.StructureName);
         }
 
-        public virtual TileStructure Clone()
-        {
-            return new TileStructure(this);
-        }
+        /// <summary>
+        /// Return an icon sprite for this tile structure. This is used for display the structure in UI.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Sprite GetIcon();
     }
 }

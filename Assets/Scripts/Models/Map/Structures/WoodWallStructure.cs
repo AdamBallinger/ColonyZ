@@ -1,4 +1,7 @@
-﻿namespace Models.Map.Structures
+﻿using Controllers;
+using UnityEngine;
+
+namespace Models.Map.Structures
 {
     public class WoodWallStructure : TileStructure
     {
@@ -6,6 +9,19 @@
         {
             Type = TileStructureType.Multi_Tile;
             ConnectsToSelf = true;
+        }
+
+        public override TileStructure Clone()
+        {
+            var clone = new WoodWallStructure(StructureName);
+            CopyInto(clone);
+            return clone;
+        }
+
+        public override Sprite GetIcon()
+        {
+            var sprite = SpriteCache.GetSprite(SpriteData.GetSpriteName() + 47);
+            return sprite;
         }
     }
 }
