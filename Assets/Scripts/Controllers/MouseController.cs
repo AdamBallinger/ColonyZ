@@ -100,6 +100,8 @@ namespace Controllers
                     }
                 }
             }
+
+            lastDragSize = dragData.DragSize;
         }
 
         /// <summary>
@@ -144,6 +146,9 @@ namespace Controllers
                     for(var y = _dragData.StartY; y <= _dragData.EndY; y++)
                     {
                         var tile = World.Instance.GetTileAt(x, y);
+                        
+                        if(tile == null) continue;
+
                         var previewObject = previewPool.GetAvailable();
                         previewObject.transform.position = new Vector2(x, y);
                         var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
@@ -160,8 +165,15 @@ namespace Controllers
 
                         if(BuildModeController.Mode == BuildMode.Demolish)
                         {
-                            previewRenderer.sprite = null;
-                            previewRenderer.color = new Color(0.3f, 1.0f, 0.3f, 0.6f);
+                            if(tile.Structure != null)
+                            {
+                                previewRenderer.sprite = SpriteCache.GetSprite("Overlay", "demolish");
+                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.6f);
+                            }
+                            else
+                            {
+                                previewRenderer.sprite = null;
+                            }
                         }
 
                         previewObjects.Add(previewObject);
@@ -177,8 +189,7 @@ namespace Controllers
         {
             foreach(var obj in previewObjects)
             {
-                previewPool.PoolObject(obj);
-                obj.SetActive(false);              
+                obj.SetActive(false);            
             }
 
             previewObjects.Clear();
