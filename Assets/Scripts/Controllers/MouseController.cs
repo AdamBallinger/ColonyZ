@@ -153,14 +153,9 @@ namespace Controllers
                             var structure = TileStructureRegistry.GetStructure(BuildModeController.StructureName);
                             previewRenderer.sprite = structure?.GetIcon();
 
-                            if(!World.Instance.IsStructurePositionValid(structure, World.Instance.GetTileAt(x, y)))
-                            {
-                                previewRenderer.color = new Color(0.8f, 0.2f, 0.2f, 0.55f);
-                            }
-                            else
-                            {
-                                previewRenderer.color = new Color(0.2f, 1.0f, 0.2f, 0.55f);
-                            }
+                            // Tint the preview color based on if the structure position is valid.
+                            previewRenderer.color = !World.Instance.IsStructurePositionValid(structure, World.Instance.GetTileAt(x, y)) 
+                                ? new Color(0.8f, 0.2f, 0.2f, 0.55f) : new Color(0.2f, 1.0f, 0.2f, 0.55f);
                         }
 
                         previewObjects.Add(previewObject);
