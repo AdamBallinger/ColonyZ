@@ -1,6 +1,5 @@
 {
-	"IsTileSet": true,
-	"SpriteName": "tileset_grass_tiles_0",
-	"ResourceLocation": "Sprites/Game/Tiles/tileset_grass_tiles",
-	"MappedObjectName": "Grass_Tile"
+	"SpriteType": "Tileset",
+	"ResourcePath": "Sprites/Game/Tiles/tileset_grass_walls",
+	"SpriteGroup": "Grass_Tile"
 }

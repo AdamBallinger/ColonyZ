@@ -1,6 +1,6 @@
 {
-	"IsTileSet": true,
-	"SpriteName": "tileset_bodies_",
-	"ResourceLocation": "Sprites/Game/Entities/Characters/tileset_bodies",
-	"MappedObjectName": ""
+	"SpriteType": "Tileset",
+	"ResourcePath": "Sprites/Game/Tiles/tileset_wood_walls",
+	"SpriteGroup": "Character_Bodies",
+	"SpriteGroupPrefix": "body_"
 }

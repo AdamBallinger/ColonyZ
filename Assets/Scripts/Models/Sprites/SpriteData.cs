@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Models.Sprites
 {
@@ -14,6 +15,7 @@ namespace Models.Sprites
     public class SpriteData
     {
         [JsonProperty]
+        [JsonConverter(typeof(StringEnumConverter))]
         public SpriteType SpriteType { get; private set; } = SpriteType.Single;
 
         [JsonProperty]
