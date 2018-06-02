@@ -206,6 +206,11 @@ namespace Controllers
 
         private void ProcessDragSelection(DragData _dragData)
         {
+            if(Mode == MouseMode.Select)
+            {
+                return;
+            }
+
             for(var x = _dragData.StartX; x <= _dragData.EndX; x++)
             {
                 for(var y = _dragData.StartY; y <= _dragData.EndY; y++)

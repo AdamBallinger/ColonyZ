@@ -108,6 +108,8 @@ namespace Controllers.UI.Toolbar
 
                     currentRootMenu = string.Empty;
                     currentSubMenu = string.Empty;
+
+                    MouseController.Instance.Mode = MouseMode.Select;
                 }
                 else
                 {
@@ -119,6 +121,8 @@ namespace Controllers.UI.Toolbar
                         // Also disable any open sub menu item button that were active.
                         subMenuMap[currentRootMenu].SetMenuItemButtonsState(currentSubMenu, false);
                         currentSubMenu = string.Empty;
+
+                        MouseController.Instance.Mode = MouseMode.Select;
                     }
 
                     // Update the current root menu to the new menu name, and activate its buttons.
