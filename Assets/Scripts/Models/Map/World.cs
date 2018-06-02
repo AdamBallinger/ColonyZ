@@ -66,6 +66,14 @@ namespace Models.Map
                     Tiles[x * Width + y] = new Tile(x, y, "Grass_Tile", TileType.Ground);
                 }
             }
+
+            for(var x = 0; x < Width; x++)
+            {
+                for(var y = 0; y < Height; y++)
+                {
+                    SetTileNeighbours(Tiles[x * Width + y]);
+                }
+            }
         }
 
         /// <summary>

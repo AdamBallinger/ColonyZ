@@ -16,9 +16,9 @@ namespace Controllers
         public BuildMode Mode { get; private set; }
 
         /// <summary>
-        /// If the build mode is set to structure, this is the name of the structure to build.
+        /// If the build mode is set to structure, this is instance of the structure to build
         /// </summary>
-        public string StructureName { get; set; } = string.Empty;
+        public TileStructure Structure { get; set; }
 
         public BuildModeController()
         {
@@ -45,16 +45,14 @@ namespace Controllers
 
         private void HandleStructureBuild(Tile _tile)
         {
-            var structure = GetStructure();
-
-            if (structure == null)
+            if (Structure == null)
             {
                 return;
             }
 
-            if (World.Instance.IsStructurePositionValid(structure, _tile))
+            if (World.Instance.IsStructurePositionValid(Structure, _tile))
             {
-                _tile.InstallStructure(structure);
+                _tile.InstallStructure(Structure.Clone());
             }
         }
 
@@ -62,22 +60,13 @@ namespace Controllers
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Structure;
-            StructureName = _structureName;
+            Structure = TileStructureRegistry.GetStructure(_structureName);
         }
 
         public void StartDemolishBuild()
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Demolish;
-        }
-
-        /// <summary>
-        /// Returns a copy of the tile structure set to be built.
-        /// </summary>
-        /// <returns></returns>
-        private TileStructure GetStructure()
-        {
-            return TileStructureRegistry.GetStructure(StructureName);
         }
     }
 }
