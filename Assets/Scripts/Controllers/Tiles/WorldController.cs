@@ -37,6 +37,7 @@ namespace Controllers.Tiles
             TileStructureRegistry.RegisterTileStructure(new WallStructure("Wood_Wall"));
             TileStructureRegistry.RegisterTileStructure(new WallStructure("Steel_Wall"));
             TileStructureRegistry.RegisterTileStructure(new DoorStructure("Wood_Door"));
+            TileStructureRegistry.RegisterTileStructure(new DoorStructure("Steel_Door"));
 
             NewWorld();
         }
