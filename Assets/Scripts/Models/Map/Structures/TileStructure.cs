@@ -3,7 +3,7 @@ using Controllers;
 using Models.Sprites;
 using UnityEngine;
 
-namespace Models.Map
+namespace Models.Map.Structures
 {
     public abstract class TileStructure
     {

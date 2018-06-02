@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Models.Map;
+using Models.Map.Structures;
 using Models.Sprites;
 using UnityEngine;
 

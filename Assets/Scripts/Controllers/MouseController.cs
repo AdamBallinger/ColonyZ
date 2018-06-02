@@ -153,7 +153,6 @@ namespace Controllers
 
                         if (BuildModeController.Mode == BuildMode.Structure)
                         {
-                            //var structure = TileStructureRegistry.GetStructure(BuildModeController.StructureName);
                             previewRenderer.sprite = BuildModeController.Structure?.GetIcon();
 
                             // Tint the preview color based on if the structure position is valid.

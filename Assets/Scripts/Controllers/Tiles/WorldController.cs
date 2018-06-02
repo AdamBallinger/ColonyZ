@@ -34,8 +34,8 @@ namespace Controllers.Tiles
 
             SpriteDataController.LoadSpriteData();
 
-            TileStructureRegistry.RegisterTileStructure(new WoodWallStructure("Wood_Wall"));
-            TileStructureRegistry.RegisterTileStructure(new SteelWallStructure("Steel_Wall"));
+            TileStructureRegistry.RegisterTileStructure(new WallStructure("Wood_Wall"));
+            TileStructureRegistry.RegisterTileStructure(new WallStructure("Steel_Wall"));
 
             NewWorld();
         }
