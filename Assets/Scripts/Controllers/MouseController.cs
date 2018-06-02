@@ -187,7 +187,7 @@ namespace Controllers
         {
             foreach(var obj in previewObjects)
             {
-                obj.SetActive(false);            
+                previewPool.PoolObject(obj);           
             }
 
             previewObjects.Clear();
