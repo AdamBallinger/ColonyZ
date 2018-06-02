@@ -228,7 +228,7 @@ namespace Models.Map
                         {
                             var t = GetTileAt(_tile.X + xOffset, _tile.Y + yOffset);
 
-                            if (t != null && t.Structure == null)
+                            if (t != null && _structure.CanPlace(t))
                             {
                                 continue;
                             }
@@ -238,7 +238,7 @@ namespace Models.Map
                     }
                 }
 
-                return true;
+                return _structure.CanPlace(_tile);
             }
 
             return false;

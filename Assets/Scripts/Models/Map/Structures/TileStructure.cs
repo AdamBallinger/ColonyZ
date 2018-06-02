@@ -92,6 +92,13 @@ namespace Models.Map.Structures
         }
 
         /// <summary>
+        /// Checks if the structure can be placed on the given tile.
+        /// </summary>
+        /// <param name="_tile"></param>
+        /// <returns></returns>
+        public abstract bool CanPlace(Tile _tile);
+
+        /// <summary>
         /// Return an icon sprite for this tile structure. This is used for display the structure in UI.
         /// </summary>
         /// <returns></returns>

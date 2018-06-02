@@ -20,6 +20,11 @@ namespace Models.Map.Structures
             return clone;
         }
 
+        public override bool CanPlace(Tile _tile)
+        {
+            return _tile.Structure == null;
+        }
+
         public override Sprite GetIcon()
         {
             return SpriteCache.GetSprite(SpriteData.SpriteGroup, 47);

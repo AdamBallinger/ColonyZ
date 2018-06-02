@@ -5,18 +5,14 @@ namespace Models.Map.Structures
 {
     public class DoorStructure : TileStructure
     {
-        private readonly string iconName;
-
-        public DoorStructure(string _structureName, string _iconName) : base(_structureName)
+        public DoorStructure(string _structureName) : base(_structureName)
         {
             Type = TileStructureType.Single_Tile;
-            iconName = _iconName;
-            SpriteData = SpriteDataController.GetSpriteData("Doors");
         }
 
         public override TileStructure Clone()
         {
-            var clone = new DoorStructure(StructureName, iconName);
+            var clone = new DoorStructure(StructureName);
             CopyInto(clone);
             return clone;
         }
@@ -50,9 +46,48 @@ namespace Models.Map.Structures
             return 0;
         }
 
+        public override bool CanPlace(Tile _tile)
+        {
+            if (_tile == null || _tile.Structure != null)
+            {
+                return false;
+            }
+
+            var east = World.Instance.GetTileAt(_tile.X + 1, _tile.Y);
+            var west = World.Instance.GetTileAt(_tile.X - 1, _tile.Y);
+            var north = World.Instance.GetTileAt(_tile.X, _tile.Y + 1);
+            var south = World.Instance.GetTileAt(_tile.X, _tile.Y - 1);
+
+            if (east != null && west != null)
+            {
+                if (east.Structure != null && east.Structure.GetType() == typeof(WallStructure) &&
+                    west.Structure != null && west.Structure.GetType() == typeof(WallStructure))
+                {
+                    if(north?.Structure == null && south?.Structure == null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if(north != null && south != null)
+            {
+                if(north.Structure != null && north.Structure.GetType() == typeof(WallStructure) &&
+                   south.Structure != null && south.Structure.GetType() == typeof(WallStructure))
+                {
+                    if(east?.Structure == null && west?.Structure == null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public override Sprite GetIcon()
         {
-            return SpriteCache.GetSprite(SpriteData.SpriteGroup, iconName);
+            return SpriteCache.GetSprite(SpriteData.SpriteGroup, 0);
         }
     }
 }
