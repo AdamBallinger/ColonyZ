@@ -72,13 +72,13 @@ namespace Controllers
 
             currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
 
-            if(!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
+            if (!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
             {
                 isDragging = true;
                 dragStartPosition = currentMousePosition;
             }
 
-            if(!isDragging)
+            if (!isDragging)
             {
                 dragStartPosition = currentMousePosition;
             }
@@ -87,14 +87,14 @@ namespace Controllers
 
             UpdateDragPreview(dragData);
 
-            if(isDragging)
+            if (isDragging)
             {
-                if(Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonUp(0))
                 {
                     isDragging = false;
 
                     // Abort if dragged over a UI object.
-                    if(!IsMouseOverUI)
+                    if (!IsMouseOverUI)
                     {
                         ProcessDragSelection(dragData);
                     }
@@ -116,11 +116,11 @@ namespace Controllers
             var selectionSize = Vector2.zero;
             var selectionPosition = Vector2.zero;
 
-            if(Mode == MouseMode.Select)
+            if (Mode == MouseMode.Select)
             {
                 selectionObject.SetActive(isDragging);
-                
-                if(isDragging)
+
+                if (isDragging)
                 {
                     selectionSize.x = dragStartPosition.x - currentMousePosition.x;
                     selectionSize.y = dragStartPosition.y - currentMousePosition.y;
@@ -129,7 +129,7 @@ namespace Controllers
                 }
             }
 
-            if(Mode == MouseMode.Build)
+            if (Mode == MouseMode.Build)
             {
                 // Calculate size of drag area. Add one as the world starts at 0, 0
                 selectionSize.x = _dragData.EndX - _dragData.StartX + 1.0f;
@@ -139,13 +139,13 @@ namespace Controllers
                 // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
-                for(var x = _dragData.StartX; x <= _dragData.EndX; x++)
+                for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
                 {
-                    for(var y = _dragData.StartY; y <= _dragData.EndY; y++)
+                    for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                     {
                         var tile = World.Instance.GetTileAt(x, y);
-                        
-                        if(tile == null) continue;
+
+                        if (tile == null) continue;
 
                         var previewObject = previewPool.GetAvailable();
                         previewObject.transform.position = new Vector2(x, y);
@@ -156,13 +156,13 @@ namespace Controllers
                             previewRenderer.sprite = BuildModeController.Structure?.GetIcon();
 
                             // Tint the preview color based on if the structure position is valid.
-                            previewRenderer.color = !World.Instance.IsStructurePositionValid(BuildModeController.Structure, tile) 
+                            previewRenderer.color = !World.Instance.IsStructurePositionValid(BuildModeController.Structure, tile)
                                 ? new Color(1.0f, 0.3f, 0.3f, 0.6f) : new Color(0.3f, 1.0f, 0.3f, 0.6f);
                         }
 
-                        if(BuildModeController.Mode == BuildMode.Demolish)
+                        if (BuildModeController.Mode == BuildMode.Demolish)
                         {
-                            if(tile.Structure != null)
+                            if (tile.Structure != null)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", "demolish");
                                 previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.6f);
@@ -175,7 +175,7 @@ namespace Controllers
 
                         previewObjects.Add(previewObject);
                     }
-                }             
+                }
             }
 
             selectionObject.transform.position = selectionPosition;
@@ -184,9 +184,9 @@ namespace Controllers
 
         private void ClearPreviewObjects()
         {
-            foreach(var obj in previewObjects)
+            foreach (var obj in previewObjects)
             {
-                previewPool.PoolObject(obj);           
+                previewPool.PoolObject(obj);
             }
 
             previewObjects.Clear();
@@ -205,18 +205,18 @@ namespace Controllers
 
         private void ProcessDragSelection(DragData _dragData)
         {
-            if(Mode == MouseMode.Select)
+            if (Mode == MouseMode.Select)
             {
                 return;
             }
 
-            for(var x = _dragData.StartX; x <= _dragData.EndX; x++)
+            for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
             {
-                for(var y = _dragData.StartY; y <= _dragData.EndY; y++)
+                for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                 {
                     var tile = World.Instance?.GetTileAt(x, y);
 
-                    if(tile == null)
+                    if (tile == null)
                     {
                         continue;
                     }

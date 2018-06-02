@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Controllers;
+﻿using Controllers;
 using UnityEngine;
 
 namespace Models.Map.Structures
