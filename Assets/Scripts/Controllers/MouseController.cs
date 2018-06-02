@@ -46,6 +46,8 @@ namespace Controllers
 
         private new Camera camera;
 
+        private bool edgeFill;
+
         private void Awake()
         {
             Instance = this;
@@ -139,10 +141,20 @@ namespace Controllers
                 // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
+                edgeFill = Input.GetKey(KeyCode.LeftShift);
+
                 for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
                 {
                     for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                     {
+                        if(edgeFill)
+                        {
+                            if(x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY)
+                            {
+                                continue;
+                            }
+                        }
+
                         var tile = World.Instance.GetTileAt(x, y);
 
                         if (tile == null) continue;
@@ -214,6 +226,14 @@ namespace Controllers
             {
                 for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                 {
+                    if (edgeFill)
+                    {
+                        if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY)
+                        {
+                            continue;
+                        }
+                    }
+
                     var tile = World.Instance?.GetTileAt(x, y);
 
                     if (tile == null)
