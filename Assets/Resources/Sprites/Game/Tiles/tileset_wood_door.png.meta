@@ -1,15 +1,13 @@
 fileFormatVersion: 2
-guid: c02b980b98a97ef4282306d3a3f7562a
-timeCreated: 1527940866
+guid: e04b0f93d2957cd45ae003ef6b9cccbe
+timeCreated: 1527945077
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: wood_closed
-    21300002: wood_open
-    21300004: wood_closed_0
-    21300006: wood_open_0
-    21300008: wood_closed_1
-    21300010: wood_open_1
+    21300000: closed_0
+    21300002: open_0
+    21300004: closed_1
+    21300006: open_1
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -48,7 +46,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
@@ -87,7 +85,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: wood_closed_0
+      name: closed_0
       rect:
         serializedVersion: 2
         x: 0
@@ -101,7 +99,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: wood_open_0
+      name: open_0
       rect:
         serializedVersion: 2
         x: 32
@@ -115,7 +113,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: wood_closed_1
+      name: closed_1
       rect:
         serializedVersion: 2
         x: 64
@@ -129,7 +127,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: wood_open_1
+      name: open_1
       rect:
         serializedVersion: 2
         x: 96
