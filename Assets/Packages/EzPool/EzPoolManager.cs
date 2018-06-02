@@ -20,15 +20,18 @@ namespace EzPool
 
         // List of active objects (Enabled in scene and being used).
         [SerializeField]
-        private List<GameObject> activeObjects = new List<GameObject>();
+        private List<GameObject> activeObjects;
 
         // List of inactive objects (Disabled in scene and available to unpool).
         [SerializeField]
-        private List<GameObject> inactiveObjects = new List<GameObject>();
+        private List<GameObject> inactiveObjects;
 
 
         private void Start()
         {
+            activeObjects = new List<GameObject>(maxPoolCount);
+            inactiveObjects = new List<GameObject>(maxPoolCount);
+
             if(pooledPrefab != null)
             {
                 PrewarmPool();
@@ -124,7 +127,6 @@ namespace EzPool
             }
 
             var obj = Instantiate(pooledPrefab, Vector3.zero, Quaternion.identity);
-            obj.AddComponent<EzPooledObject>().poolManager = this;
             obj.SetActive(false);
 
             return obj;
