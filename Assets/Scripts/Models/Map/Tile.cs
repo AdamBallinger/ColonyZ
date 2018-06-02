@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Models.Entities;
 using Models.Sprites;
 using UnityEngine;
@@ -37,6 +38,8 @@ namespace Models.Map
 
         public string TileName { get; set; }
 
+        public List<Tile> Neighbours { get; set; }
+
         /// <summary>
         /// Installed tile structure for this tile.
         /// </summary>
@@ -65,6 +68,7 @@ namespace Models.Map
             Y = _y;
             TileName = _tileName;
             Type = _type;
+            Neighbours = new List<Tile>();
             MovementModifier = _movementModifier;
         }
 

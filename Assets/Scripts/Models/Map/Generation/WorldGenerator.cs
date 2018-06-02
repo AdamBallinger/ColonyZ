@@ -68,7 +68,7 @@ namespace Models.Map.Generation
         {
             foreach (var tile in filledTiles)
             {
-                var tileNeighbourFilled = world.GetTileNeighbours(tile).Count(neighbour => filledTiles.Contains(neighbour));
+                var tileNeighbourFilled = tile.Neighbours.Count(neighbour => filledTiles.Contains(neighbour));
 
                 switch (tileNeighbourFilled)
                 {

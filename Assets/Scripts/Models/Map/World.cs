@@ -22,9 +22,9 @@ namespace Models.Map
 
         private Tile[] Tiles { get; set; }
 
-	    public List<CharacterEntity> Characters { get; private set; }
+        public List<CharacterEntity> Characters { get; private set; }
 
-	    private Action<Entity> onEntitySpawnCallback;
+        private Action<Entity> onEntitySpawnCallback;
 
         private World() { }
 
@@ -49,7 +49,7 @@ namespace Models.Map
 
         public void Update()
         {
-            foreach(var character in Characters)
+            foreach (var character in Characters)
             {
                 character.Update();
             }
@@ -59,9 +59,9 @@ namespace Models.Map
 
         private void PopulateTileArray()
         {
-            for(var x = 0; x < Width; x++)
+            for (var x = 0; x < Width; x++)
             {
-                for(var y = 0; y < Height; y++)
+                for (var y = 0; y < Height; y++)
                 {
                     Tiles[x * Width + y] = new Tile(x, y, "Grass_Tile", TileType.Ground);
                 }
@@ -79,7 +79,7 @@ namespace Models.Map
         {
             var tile = GetTileAt(_x, _y);
 
-            if(tile != null)
+            if (tile != null)
             {
                 tile.TileName = _tileName;
                 tile.Type = _type;
@@ -94,7 +94,7 @@ namespace Models.Map
         /// <returns></returns>
         public Tile GetTileAt(int _x, int _y)
         {
-            if((_x < 0 || _x >= Width) || (_y < 0 || _y >= Height))
+            if ((_x < 0 || _x >= Width) || (_y < 0 || _y >= Height))
             {
                 return null;
             }
@@ -132,16 +132,16 @@ namespace Models.Map
             return GetTileAt(UnityEngine.Random.Range(0, Width), UnityEngine.Random.Range(0, Height));
         }
 
-	    /// <summary>
-	    /// Returns a random world tile with a specified range. The range will be automatically clamped to
-	    /// the bounds of the world.
-	    /// </summary>
-	    /// <param name="_xRangeMin"></param>
-	    /// <param name="_yRangeMin"></param>
-	    /// <param name="_xRangeMax"></param>
-	    /// <param name="_yRangeMax"></param>
-	    /// <returns></returns>
-	    public Tile GetRandomTile(int _xRangeMin, int _yRangeMin, int _xRangeMax, int _yRangeMax)
+        /// <summary>
+        /// Returns a random world tile with a specified range. The range will be automatically clamped to
+        /// the bounds of the world.
+        /// </summary>
+        /// <param name="_xRangeMin"></param>
+        /// <param name="_yRangeMin"></param>
+        /// <param name="_xRangeMax"></param>
+        /// <param name="_yRangeMax"></param>
+        /// <returns></returns>
+        public Tile GetRandomTile(int _xRangeMin, int _yRangeMin, int _xRangeMax, int _yRangeMax)
         {
             _xRangeMin = Mathf.Clamp(_xRangeMin, 0, Width);
             _xRangeMax = Mathf.Clamp(_xRangeMax, 0, Width);
@@ -156,23 +156,28 @@ namespace Models.Map
         /// </summary>
         /// <param name="_tile"></param>
         /// <returns></returns>
-        public List<Tile> GetTileNeighbours(Tile _tile)
+        private IEnumerable<Tile> GetTileNeighbours(Tile _tile)
         {
-            var neighbours = new List<Tile>
+            var neighbours = new List<Tile>(8)
             {
-                Instance.GetTileAt(_tile.X - 1, _tile.Y + 1),
-                Instance.GetTileAt(_tile.X, _tile.Y + 1),
-                Instance.GetTileAt(_tile.X + 1, _tile.Y + 1),
-                Instance.GetTileAt(_tile.X - 1, _tile.Y),
-                Instance.GetTileAt(_tile.X + 1, _tile.Y),
-                Instance.GetTileAt(_tile.X - 1, _tile.Y - 1),
-                Instance.GetTileAt(_tile.X, _tile.Y - 1),
-                Instance.GetTileAt(_tile.X + 1, _tile.Y - 1)
+                GetTileAt(_tile.X - 1, _tile.Y + 1),
+                GetTileAt(_tile.X, _tile.Y + 1),
+                GetTileAt(_tile.X + 1, _tile.Y + 1),
+                GetTileAt(_tile.X - 1, _tile.Y),
+                GetTileAt(_tile.X + 1, _tile.Y),
+                GetTileAt(_tile.X - 1, _tile.Y - 1),
+                GetTileAt(_tile.X, _tile.Y - 1),
+                GetTileAt(_tile.X + 1, _tile.Y - 1)
             };
 
             neighbours.RemoveAll(tile => tile == null);
 
             return neighbours;
+        }
+
+        private void SetTileNeighbours(Tile _tile)
+        {
+            _tile.Neighbours.AddRange(GetTileNeighbours(_tile));
         }
 
         public void SpawnTileEntity(Tile _tile)
@@ -199,22 +204,22 @@ namespace Models.Map
         /// <returns></returns>
         public bool IsStructurePositionValid(TileStructure _structure, Tile _tile)
         {
-            if(_structure == null)
+            if (_structure == null)
             {
                 return false;
             }
 
-            if(_tile != null && _tile.Structure == null)
+            if (_tile != null && _tile.Structure == null)
             {
-                if(_structure.Width > 1 || _structure.Height > 1)
+                if (_structure.Width > 1 || _structure.Height > 1)
                 {
-                    for(var xOffset = 0; xOffset < _structure.Width; xOffset++)
+                    for (var xOffset = 0; xOffset < _structure.Width; xOffset++)
                     {
-                        for(var yOffset = 0; yOffset < _structure.Height; yOffset++)
+                        for (var yOffset = 0; yOffset < _structure.Height; yOffset++)
                         {
                             var t = GetTileAt(_tile.X + xOffset, _tile.Y + yOffset);
-                            
-                            if(t != null && t.Structure == null)
+
+                            if (t != null && t.Structure == null)
                             {
                                 continue;
                             }
@@ -244,7 +249,7 @@ namespace Models.Map
 
         public IEnumerator<Tile> GetEnumerator()
         {
-            return ((IEnumerable<Tile>) Tiles).GetEnumerator();
+            return ((IEnumerable<Tile>)Tiles).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

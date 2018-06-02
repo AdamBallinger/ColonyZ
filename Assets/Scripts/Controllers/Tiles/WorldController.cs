@@ -128,7 +128,7 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         private void UpdateTileNeighbourSprites(Tile _tile)
         {
-            foreach (var tile in World.Instance.GetTileNeighbours(_tile))
+            foreach (var tile in _tile.Neighbours)
             {
                 if (tile != null)
                 {
