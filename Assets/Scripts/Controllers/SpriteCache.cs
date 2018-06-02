@@ -60,7 +60,8 @@ namespace Controllers
                     return spriteCache[spriteData.SpriteGroup][0];
                 }
 
-                var index = TileBitMask.ComputeBitmaskValue(_structure.Tile, BitmaskEvaluationType.Tile_Structure);
+                var index = _structure.Type == TileStructureType.Single_Tile ? _structure.GetSpriteIndex() : 
+                    TileBitMask.ComputeBitmaskValue(_structure.Tile, BitmaskEvaluationType.Tile_Structure);
                 return spriteCache[spriteData.SpriteGroup][index];
             }
 

@@ -83,6 +83,15 @@ namespace Models.Map.Structures
         }
 
         /// <summary>
+        /// Returns the sprite index to use for single tile structures.
+        /// </summary>
+        /// <returns></returns>
+        public virtual int GetSpriteIndex()
+        {
+            return 0;
+        }
+
+        /// <summary>
         /// Return an icon sprite for this tile structure. This is used for display the structure in UI.
         /// </summary>
         /// <returns></returns>

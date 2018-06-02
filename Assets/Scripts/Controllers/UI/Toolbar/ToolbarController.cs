@@ -76,6 +76,11 @@ namespace Controllers.UI.Toolbar
                 MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Wall");
             });
 
+            AddSubMenuItem("Construction", "Building", "Wooden Door", SpriteCache.GetSprite("Doors", "wood_closed_0"), () =>
+            {
+                MouseController.Instance.BuildModeController.StartStructureBuild("Wood_Door");
+            });
+
             AddSubMenuItem("Commands", "Work", "Demolish", SpriteCache.GetSprite("Overlay", "demolish"), () =>
             {
                 MouseController.Instance.BuildModeController.StartDemolishBuild();
