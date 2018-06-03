@@ -48,11 +48,6 @@ namespace Models.Map.Structures
 
         public override bool CanPlace(Tile _tile)
         {
-            if (_tile == null || _tile.Structure != null)
-            {
-                return false;
-            }
-
             var east = World.Instance.GetTileAt(_tile.X + 1, _tile.Y);
             var west = World.Instance.GetTileAt(_tile.X - 1, _tile.Y);
             var north = World.Instance.GetTileAt(_tile.X, _tile.Y + 1);
