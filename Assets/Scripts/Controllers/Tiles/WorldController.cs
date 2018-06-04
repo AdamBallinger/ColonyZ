@@ -134,7 +134,7 @@ namespace Controllers.Tiles
                     // Tile in sprite sheet (not 0 indexed)
                     var tileSprite = 1;
                     // Get the index of the tile in the texture
-                    var tileIndex = 1 - 1;
+                    var tileIndex = tileSprite - 1;
 
                     // Calculate tile X and Y inside the texture
                     var tileX = tileIndex % textureTileWidth;
