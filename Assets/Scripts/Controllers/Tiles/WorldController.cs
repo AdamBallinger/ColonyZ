@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using Models.Entities;
 using Models.Map;
-using Models.Map.Generation;
 using Models.Map.Structures;
 using Models.Pathing;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Controllers.Tiles
 {
+    [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class WorldController : MonoBehaviour
     {
         public static WorldController Instance { get; private set; }
@@ -17,9 +18,13 @@ namespace Controllers.Tiles
 
         public string tileSortingLayerName = "Tiles";
 
-        private Dictionary<Tile, SpriteRenderer> tileTypeRenderer;
         private Dictionary<Tile, SpriteRenderer> tileStructureRenderers;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
+
+        private MeshFilter meshFilter;
+
+        [SerializeField]
+        private Texture2D tileTypesTexture;
 
         private Transform _transform;
 
@@ -28,7 +33,6 @@ namespace Controllers.Tiles
             Instance = this;
             Instance._transform = Instance.transform;
 
-            Instance.tileTypeRenderer = new Dictionary<Tile, SpriteRenderer>();
             Instance.tileStructureRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
@@ -49,10 +53,7 @@ namespace Controllers.Tiles
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
 
-            GenerateTileGameObjects();
-
-            //var worldGen = new WorldGenerator(World.Instance);
-            //worldGen.GenerateWorld();
+            GenerateWorldMesh();
 
             World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
         }
@@ -70,58 +71,104 @@ namespace Controllers.Tiles
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+                World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
             }
 
             if (Input.GetKeyDown(KeyCode.X))
             {
                 for (var i = 0; i < 100; i++)
                 {
-                    World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+                    World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
                 }
             }
         }
 
         /// <summary>
-        /// Instantiate each gameobject for each world tile.
+        /// Generates the full tilemap mesh for the world
         /// </summary>
-        private void GenerateTileGameObjects()
+        private void GenerateWorldMesh()
         {
-            // if the world controller object has children then the gameobjects have already been instantiated.
-            if (_transform.childCount > 0)
+            if (meshFilter == null)
             {
-                Debug.LogWarning("Tried to create world tile gameobjects when they were already instantiated!");
+                meshFilter = GetComponent<MeshFilter>();
+            }
+            else
+            {
+                // if mesh filter isn't null, then the mesh must be already generated, so abort.
                 return;
             }
 
-            foreach (var tile in World.Instance)
+            var mesh = new Mesh
             {
-                // Create the Tile GameObject.
-                var tile_GO = new GameObject("Tile");
-                tile_GO.transform.position = new Vector2(tile.X, tile.Y);
-                tile_GO.transform.SetParent(_transform);
+                name = "World Mesh",
+                indexFormat = IndexFormat.UInt32
+            };
+            
+            var combiner = new CombineInstance[World.Instance.Size];
 
-                var tile_SR = tile_GO.AddComponent<SpriteRenderer>();
-                tile_SR.sprite = SpriteCache.GetSprite(tile.TileName, 0);
-                tile_SR.sortingLayerName = tileSortingLayerName;
-                tile_SR.sortingOrder = -10;
+            for (var x = 0; x < worldWidth; x++)
+            {
+                for (var y = 0; y < worldHeight; y++)
+                {
+                    var tile = World.Instance.GetTileAt(x, y);
+                    
+                    tile.RegisterTileChangedCallback(OnTileChanged);
+                    tile.RegisterTileTypeChangedCallback(OnTileTypeChange);
 
-                tileTypeRenderer.Add(tile, tile_SR);
+                    var tileMesh = new Mesh();
+                    
+                    var tileVerts = new Vector3[4];
+                    tileVerts[0] = new Vector2(x - 0.5f, y - 0.5f);
+                    tileVerts[1] = new Vector2(x - 0.5f, y + 0.5f);
+                    tileVerts[2] = new Vector2(x + 0.5f, y + 0.5f);
+                    tileVerts[3] = new Vector2(x + 0.5f, y - 0.5f);
+                    
+                    var tileUV = new Vector2[4];
 
-                tile.RegisterTileChangedCallback(OnTileChanged);
-                tile.RegisterTileTypeChangedCallback(OnTileTypeChange);
+                    var textureTileWidth = tileTypesTexture.width / 32.0f;
+                    var textureTileHeight = tileTypesTexture.height / 32.0f;
 
-                // Create the Tile Structure GameObject.
-                var tileStructure_GO = new GameObject("Tile Structure");
-                tileStructure_GO.transform.position = new Vector2(tile.X, tile.Y);
-                tileStructure_GO.transform.SetParent(tile_GO.transform);
+                    var uSize = 1.0f / textureTileWidth;
+                    var vSize = 1.0f / textureTileHeight;
 
-                var tileStructure_SR = tileStructure_GO.AddComponent<SpriteRenderer>();
-                tileStructure_SR.sortingLayerName = tileSortingLayerName;
-                tileStructure_SR.sortingOrder = -9;
+                    // Tile in sprite sheet (not 0 indexed)
+                    var tileSprite = 1;
+                    // Get the index of the tile in the texture
+                    var tileIndex = tileSprite - 1;
 
-                tileStructureRenderers.Add(tile, tileStructure_SR);
+                    // Calculate tile X and Y inside the texture
+                    var tileX = tileIndex % textureTileWidth;
+                    var tileY = (tileIndex - tileX) / textureTileWidth;
+
+                    // Generate UV for the bottom left vertex of the tile
+                    var u = uSize * tileX;
+                    // invert the v as it starts at lower left rather than top left. Minus 1 so v points to bottom vertex
+                    var v = vSize * (textureTileHeight - tileY - 1);
+                    
+                    // Set the UV for the tile quad
+                    tileUV[0] = new Vector2(u, v);
+                    tileUV[1] = new Vector2(u, v + vSize);
+                    tileUV[2] = new Vector2(u + uSize, v + vSize);
+                    tileUV[3] = new Vector2(u + uSize, v);
+
+                    var tileTris = new int[6];
+                    tileTris[0] = 0;
+                    tileTris[1] = 1;
+                    tileTris[2] = 3;
+                    tileTris[3] = 1;
+                    tileTris[4] = 2;
+                    tileTris[5] = 3;
+
+                    tileMesh.vertices = tileVerts;
+                    tileMesh.triangles = tileTris;
+                    tileMesh.uv = tileUV;
+
+                    combiner[x * worldWidth + y].mesh = tileMesh;
+                }
             }
+
+            mesh.CombineMeshes(combiner, true, false);
+            meshFilter.mesh = mesh;
         }
 
         /// <summary>
@@ -132,11 +179,28 @@ namespace Controllers.Tiles
         {
             foreach (var tile in _tile.Neighbours)
             {
-                if (tile != null)
+                if (tile?.Structure != null)
                 {
                     tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Structure);
                 }
             }
+        }
+        
+        /// <summary>
+        /// Creates the game object for a tile structure, and adds it the renderer map.
+        /// </summary>
+        /// <param name="_tile"></param>
+        private void CreateStructureGameObject(Tile _tile)
+        {
+            var structure_GO = new GameObject("Structure");
+            var structure_SR = structure_GO.AddComponent<SpriteRenderer>();
+            
+            structure_GO.transform.position = new Vector2(_tile.X, _tile.Y);
+            structure_GO.transform.SetParent(_transform);
+            
+            structure_SR.sortingLayerName = tileSortingLayerName;
+            
+            tileStructureRenderers.Add(_tile, structure_SR);
         }
 
         /// <summary>
@@ -145,11 +209,18 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileChanged(Tile _tile)
         {
-            if (_tile != null)
+            if (_tile == null)
             {
-                tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
-                UpdateTileNeighbourSprites(_tile);
+                return;
             }
+            
+            if(!tileStructureRenderers.ContainsKey(_tile))
+            {
+                CreateStructureGameObject(_tile);
+            }
+
+            tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
+            UpdateTileNeighbourSprites(_tile);
         }
 
         /// <summary>
@@ -158,8 +229,7 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileTypeChange(Tile _tile)
         {
-            Debug.Log("Changed");
-            tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName, 0);
+            // TODO: Update just this tiles mesh to the new texture
         }
 
         /// <summary>
@@ -175,7 +245,7 @@ namespace Controllers.Tiles
 
                 // TODO: Set sprites for character GameObject.
 
-                characterEntityGameObjectMap.Add((CharacterEntity)_entity, char_GO);
+                characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);
             }
             else if (_entity is TileEntity)
             {
