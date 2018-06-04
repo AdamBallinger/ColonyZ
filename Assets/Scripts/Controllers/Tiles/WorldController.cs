@@ -1,13 +1,17 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using Models.Entities;
 using Models.Map;
 using Models.Map.Generation;
 using Models.Map.Structures;
 using Models.Pathing;
 using UnityEngine;
+using UnityEngine.Profiling;
+using Debug = UnityEngine.Debug;
 
 namespace Controllers.Tiles
 {
+    [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class WorldController : MonoBehaviour
     {
         public static WorldController Instance { get; private set; }
@@ -17,9 +21,11 @@ namespace Controllers.Tiles
 
         public string tileSortingLayerName = "Tiles";
 
-        private Dictionary<Tile, SpriteRenderer> tileTypeRenderer;
+        //private Dictionary<Tile, SpriteRenderer> tileTypeRenderer;
         private Dictionary<Tile, SpriteRenderer> tileStructureRenderers;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
+
+        private MeshFilter meshFilter;
 
         private Transform _transform;
 
@@ -28,7 +34,7 @@ namespace Controllers.Tiles
             Instance = this;
             Instance._transform = Instance.transform;
 
-            Instance.tileTypeRenderer = new Dictionary<Tile, SpriteRenderer>();
+            //Instance.tileTypeRenderer = new Dictionary<Tile, SpriteRenderer>();
             Instance.tileStructureRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
@@ -49,7 +55,8 @@ namespace Controllers.Tiles
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
 
-            GenerateTileGameObjects();
+            //GenerateTileGameObjects();
+            GenerateWorldMesh();
 
             //var worldGen = new WorldGenerator(World.Instance);
             //worldGen.GenerateWorld();
@@ -70,16 +77,118 @@ namespace Controllers.Tiles
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+                World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
             }
 
             if (Input.GetKeyDown(KeyCode.X))
             {
                 for (var i = 0; i < 100; i++)
                 {
-                    World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+                    World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
                 }
             }
+        }
+
+        private void GenerateWorldMesh()
+        {
+            if (meshFilter == null)
+            {
+                meshFilter = GetComponent<MeshFilter>();
+            }
+
+            var mesh = new Mesh
+            {
+                name = "World Mesh"
+            };
+
+            /*var vertices = new Vector3[(worldWidth + 1) * (worldHeight + 1)];
+            var uv = new Vector2[vertices.Length];
+
+            for (int i = 0, y = 0; y <= worldHeight; y++)
+            {
+                for (var x = 0; x <= worldWidth; x++, i++)
+                {
+                    vertices[i] = new Vector3(x - 0.5f, y - 0.5f);
+                    uv[i] = new Vector2((float)x / worldWidth, (float)y / worldHeight);
+                    //uv[i] = new Vector2(1.0f / (47 / 8), 1.0f / (47 / 6));
+                }
+            }
+            
+            mesh.vertices = vertices;
+            mesh.uv = uv;
+
+            var triangles = new int[worldWidth * worldHeight * 6];
+            
+            for(int triIndex = 0, vertIndex = 0, y = 0; y < worldHeight; y++, vertIndex++)
+            {
+                for(var x = 0; x < worldWidth; x++, triIndex += 6, vertIndex++)
+                {
+                    triangles[triIndex] = vertIndex;
+                    triangles[triIndex + 3] = triangles[triIndex + 2] = vertIndex + 1;
+                    triangles[triIndex + 4] = triangles[triIndex + 1] = vertIndex + worldWidth + 1;
+                    triangles[triIndex + 5] = vertIndex + worldWidth + 2;
+                }
+            }
+
+            mesh.triangles = triangles;
+            mesh.RecalculateNormals();*/
+
+            //var uvs = new List<Vector2>();
+
+            var sw = new Stopwatch();
+            sw.Start();
+            
+            var combiner = new CombineInstance[World.Instance.Size];
+
+            for (var x = 0; x < worldWidth; x++)
+            {
+                for (var y = 0; y < worldHeight; y++)
+                {
+                    //var tile = World.Instance.GetTileAt(x, y);
+
+                    var tileMesh = new Mesh();
+                    
+                    var tileVerts = new Vector3[4];
+                    tileVerts[0] = new Vector2(x - 0.5f, y - 0.5f);
+                    tileVerts[1] = new Vector2(x - 0.5f, y + 0.5f);
+                    tileVerts[2] = new Vector2(x + 0.5f, y + 0.5f);
+                    tileVerts[3] = new Vector2(x + 0.5f, y - 0.5f);
+                    
+                    var tileUV = new Vector2[tileVerts.Length];
+
+                    var uSize = 1.0f / 8.0f;
+                    var vSize = 1.0f / 6.0f;
+
+                    // TODO: Fix this so the UVs point to the bottom left corner of the texture
+                    var u = 8.0f / 47.0f;
+                    var v = 1.0f - 6.0f / 47.0f;
+                    
+                    tileUV[0] = new Vector2(u, v);
+                    tileUV[1] = new Vector2(u, v + vSize);
+                    tileUV[2] = new Vector2(u + uSize, v + vSize);
+                    tileUV[3] = new Vector2(u + uSize, v);
+
+                    var tileTris = new int[6];
+                    tileTris[0] = 0;
+                    tileTris[1] = 1;
+                    tileTris[2] = 3;
+                    tileTris[3] = 1;
+                    tileTris[4] = 2;
+                    tileTris[5] = 3;
+
+                    tileMesh.vertices = tileVerts;
+                    tileMesh.triangles = tileTris;
+                    tileMesh.uv = tileUV;
+
+                    combiner[x * worldWidth + y].mesh = tileMesh;
+                }
+            }
+
+            mesh.CombineMeshes(combiner, true, false);
+            meshFilter.mesh = mesh;
+
+            sw.Stop();
+            Debug.Log("Generated mesh in " + sw.ElapsedMilliseconds + "ms");
         }
 
         /// <summary>
@@ -106,7 +215,7 @@ namespace Controllers.Tiles
                 tile_SR.sortingLayerName = tileSortingLayerName;
                 tile_SR.sortingOrder = -10;
 
-                tileTypeRenderer.Add(tile, tile_SR);
+                //tileTypeRenderer.Add(tile, tile_SR);
 
                 tile.RegisterTileChangedCallback(OnTileChanged);
                 tile.RegisterTileTypeChangedCallback(OnTileTypeChange);
@@ -145,11 +254,13 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileChanged(Tile _tile)
         {
-            if (_tile != null)
+            if (_tile == null)
             {
-                tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
-                UpdateTileNeighbourSprites(_tile);
+                return;
             }
+
+            tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
+            UpdateTileNeighbourSprites(_tile);
         }
 
         /// <summary>
@@ -158,8 +269,8 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileTypeChange(Tile _tile)
         {
-            Debug.Log("Changed");
-            tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName, 0);
+            // TODO: Update mesh texture at tile position to new type texture
+            //tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName, 0);
         }
 
         /// <summary>
@@ -175,7 +286,7 @@ namespace Controllers.Tiles
 
                 // TODO: Set sprites for character GameObject.
 
-                characterEntityGameObjectMap.Add((CharacterEntity)_entity, char_GO);
+                characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);
             }
             else if (_entity is TileEntity)
             {
