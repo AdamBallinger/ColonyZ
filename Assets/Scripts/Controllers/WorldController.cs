@@ -6,7 +6,7 @@ using Models.Pathing;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Controllers.Tiles
+namespace Controllers
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class WorldController : MonoBehaviour
@@ -125,8 +125,9 @@ namespace Controllers.Tiles
                     
                     var tileUV = new Vector2[4];
 
-                    var textureTileWidth = tileTypesTexture.width / 32.0f;
-                    var textureTileHeight = tileTypesTexture.height / 32.0f;
+                    // Calculate the number of tiles along the X and Y of the texture
+                    var textureTileWidth = tileTypesTexture.width / 32;
+                    var textureTileHeight = tileTypesTexture.height / 32;
 
                     var uSize = 1.0f / textureTileWidth;
                     var vSize = 1.0f / textureTileHeight;
