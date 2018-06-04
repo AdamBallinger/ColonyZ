@@ -7,6 +7,7 @@ using Models.Map.Structures;
 using Models.Pathing;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.Rendering;
 using Debug = UnityEngine.Debug;
 
 namespace Controllers.Tiles
@@ -101,39 +102,7 @@ namespace Controllers.Tiles
                 name = "World Mesh"
             };
 
-            /*var vertices = new Vector3[(worldWidth + 1) * (worldHeight + 1)];
-            var uv = new Vector2[vertices.Length];
-
-            for (int i = 0, y = 0; y <= worldHeight; y++)
-            {
-                for (var x = 0; x <= worldWidth; x++, i++)
-                {
-                    vertices[i] = new Vector3(x - 0.5f, y - 0.5f);
-                    uv[i] = new Vector2((float)x / worldWidth, (float)y / worldHeight);
-                    //uv[i] = new Vector2(1.0f / (47 / 8), 1.0f / (47 / 6));
-                }
-            }
-            
-            mesh.vertices = vertices;
-            mesh.uv = uv;
-
-            var triangles = new int[worldWidth * worldHeight * 6];
-            
-            for(int triIndex = 0, vertIndex = 0, y = 0; y < worldHeight; y++, vertIndex++)
-            {
-                for(var x = 0; x < worldWidth; x++, triIndex += 6, vertIndex++)
-                {
-                    triangles[triIndex] = vertIndex;
-                    triangles[triIndex + 3] = triangles[triIndex + 2] = vertIndex + 1;
-                    triangles[triIndex + 4] = triangles[triIndex + 1] = vertIndex + worldWidth + 1;
-                    triangles[triIndex + 5] = vertIndex + worldWidth + 2;
-                }
-            }
-
-            mesh.triangles = triangles;
-            mesh.RecalculateNormals();*/
-
-            //var uvs = new List<Vector2>();
+            mesh.indexFormat = IndexFormat.UInt32;
 
             var sw = new Stopwatch();
             sw.Start();
