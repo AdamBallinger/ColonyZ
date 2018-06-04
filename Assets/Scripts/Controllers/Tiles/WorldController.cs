@@ -56,7 +56,6 @@ namespace Controllers.Tiles
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
 
-            //GenerateTileGameObjects();
             GenerateWorldMesh();
 
             //var worldGen = new WorldGenerator(World.Instance);
@@ -90,11 +89,19 @@ namespace Controllers.Tiles
             }
         }
 
+        /// <summary>
+        /// Generates the full tilemap mesh for the world
+        /// </summary>
         private void GenerateWorldMesh()
         {
             if (meshFilter == null)
             {
                 meshFilter = GetComponent<MeshFilter>();
+            }
+            else
+            {
+                // if mesh filter isn't null, then the mesh must be already generated, so abort.
+                return;
             }
 
             var mesh = new Mesh
@@ -102,10 +109,6 @@ namespace Controllers.Tiles
                 name = "World Mesh",
                 indexFormat = IndexFormat.UInt32
             };
-
-
-            var sw = new Stopwatch();
-            sw.Start();
             
             var combiner = new CombineInstance[World.Instance.Size];
 
@@ -113,7 +116,10 @@ namespace Controllers.Tiles
             {
                 for (var y = 0; y < worldHeight; y++)
                 {
-                    //var tile = World.Instance.GetTileAt(x, y);
+                    var tile = World.Instance.GetTileAt(x, y);
+                    
+                    tile.RegisterTileChangedCallback(OnTileChanged);
+                    tile.RegisterTileTypeChangedCallback(OnTileTypeChange);
 
                     var tileMesh = new Mesh();
                     
@@ -123,7 +129,7 @@ namespace Controllers.Tiles
                     tileVerts[2] = new Vector2(x + 0.5f, y + 0.5f);
                     tileVerts[3] = new Vector2(x + 0.5f, y - 0.5f);
                     
-                    var tileUV = new Vector2[tileVerts.Length];
+                    var tileUV = new Vector2[4];
 
                     var textureTileWidth = 8;
                     var textureTileHeight = 6;
@@ -169,15 +175,9 @@ namespace Controllers.Tiles
 
             mesh.CombineMeshes(combiner, true, false);
             meshFilter.mesh = mesh;
-
-            sw.Stop();
-            Debug.Log("Generated mesh in " + sw.ElapsedMilliseconds + "ms");
         }
 
-        /// <summary>
-        /// Instantiate each gameobject for each world tile.
-        /// </summary>
-        private void GenerateTileGameObjects()
+        /*private void GenerateTileGameObjects()
         {
             // if the world controller object has children then the gameobjects have already been instantiated.
             if (_transform.childCount > 0)
@@ -214,7 +214,7 @@ namespace Controllers.Tiles
 
                 tileStructureRenderers.Add(tile, tileStructure_SR);
             }
-        }
+        }*/
 
         /// <summary>
         /// Forces an update to a tiles surrounding tiles sprites.
@@ -224,11 +224,28 @@ namespace Controllers.Tiles
         {
             foreach (var tile in _tile.Neighbours)
             {
-                if (tile != null)
+                if (tile?.Structure != null)
                 {
                     tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Structure);
                 }
             }
+        }
+        
+        /// <summary>
+        /// Creates the game object for a tile structure, and adds it the renderer map.
+        /// </summary>
+        /// <param name="_tile"></param>
+        private void CreateStructureGameObject(Tile _tile)
+        {
+            var structure_GO = new GameObject("Structure");
+            var structure_SR = structure_GO.AddComponent<SpriteRenderer>();
+            
+            structure_GO.transform.position = new Vector2(_tile.X, _tile.Y);
+            structure_GO.transform.SetParent(_transform);
+            
+            structure_SR.sortingLayerName = tileSortingLayerName;
+            
+            tileStructureRenderers.Add(_tile, structure_SR);
         }
 
         /// <summary>
@@ -241,6 +258,11 @@ namespace Controllers.Tiles
             {
                 return;
             }
+            
+            if(!tileStructureRenderers.ContainsKey(_tile))
+            {
+                CreateStructureGameObject(_tile);
+            }
 
             tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
             UpdateTileNeighbourSprites(_tile);
@@ -252,7 +274,7 @@ namespace Controllers.Tiles
         /// <param name="_tile"></param>
         public void OnTileTypeChange(Tile _tile)
         {
-            // TODO: Update mesh texture at tile position to new type texture
+            // TODO: Update just this tiles mesh to the new texture
             //tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName, 0);
         }
 
