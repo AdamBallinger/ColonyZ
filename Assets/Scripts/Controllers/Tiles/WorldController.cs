@@ -99,10 +99,10 @@ namespace Controllers.Tiles
 
             var mesh = new Mesh
             {
-                name = "World Mesh"
+                name = "World Mesh",
+                indexFormat = IndexFormat.UInt32
             };
 
-            mesh.indexFormat = IndexFormat.UInt32;
 
             var sw = new Stopwatch();
             sw.Start();
@@ -125,13 +125,27 @@ namespace Controllers.Tiles
                     
                     var tileUV = new Vector2[tileVerts.Length];
 
-                    var uSize = 1.0f / 8.0f;
-                    var vSize = 1.0f / 6.0f;
+                    var textureTileWidth = 8;
+                    var textureTileHeight = 6;
 
-                    // TODO: Fix this so the UVs point to the bottom left corner of the texture
-                    var u = 8.0f / 47.0f;
-                    var v = 1.0f - 6.0f / 47.0f;
+                    var uSize = 1.0f / textureTileWidth;
+                    var vSize = 1.0f / textureTileHeight;
+
+                    // Tile in sprite sheet (not 0 indexed)
+                    var tileSprite = 1;
+                    // Get the index of the tile in the texture
+                    var tileIndex = 1 - 1;
+
+                    // Calculate tile X and Y inside the texture
+                    var tileX = tileIndex % textureTileWidth;
+                    var tileY = (tileIndex - tileX) / textureTileWidth;
+
+                    // Generate UV for the bottom left vertex of the tile
+                    var u = uSize * tileX;
+                    // invert the v as it starts at lower left rather than top left. Minus 1 so v points to bottom vertex
+                    var v = vSize * (textureTileHeight - tileY - 1);
                     
+                    // Set the UV for the tile quad
                     tileUV[0] = new Vector2(u, v);
                     tileUV[1] = new Vector2(u, v + vSize);
                     tileUV[2] = new Vector2(u + uSize, v + vSize);
