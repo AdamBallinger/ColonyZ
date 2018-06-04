@@ -1,14 +1,10 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using Models.Entities;
 using Models.Map;
-using Models.Map.Generation;
 using Models.Map.Structures;
 using Models.Pathing;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.Rendering;
-using Debug = UnityEngine.Debug;
 
 namespace Controllers.Tiles
 {
@@ -60,9 +56,6 @@ namespace Controllers.Tiles
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
 
             GenerateWorldMesh();
-
-            //var worldGen = new WorldGenerator(World.Instance);
-            //worldGen.GenerateWorld();
 
             World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
         }

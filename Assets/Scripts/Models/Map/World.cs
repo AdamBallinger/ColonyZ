@@ -88,11 +88,13 @@ namespace Models.Map
         {
             var tile = GetTileAt(_x, _y);
 
-            if (tile != null)
+            if (tile == null)
             {
-                tile.TileName = _tileName;
-                tile.Type = _type;
+                return;
             }
+            
+            tile.TileName = _tileName;
+            tile.Type = _type;
         }
 
         /// <summary>
