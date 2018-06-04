@@ -28,6 +28,9 @@ namespace Controllers.Tiles
 
         private MeshFilter meshFilter;
 
+        [SerializeField]
+        private Texture2D tileTypesTexture;
+
         private Transform _transform;
 
         private void Awake()
@@ -131,8 +134,8 @@ namespace Controllers.Tiles
                     
                     var tileUV = new Vector2[4];
 
-                    var textureTileWidth = 8;
-                    var textureTileHeight = 6;
+                    var textureTileWidth = tileTypesTexture.width / 32.0f;
+                    var textureTileHeight = tileTypesTexture.height / 32.0f;
 
                     var uSize = 1.0f / textureTileWidth;
                     var vSize = 1.0f / textureTileHeight;
@@ -176,45 +179,6 @@ namespace Controllers.Tiles
             mesh.CombineMeshes(combiner, true, false);
             meshFilter.mesh = mesh;
         }
-
-        /*private void GenerateTileGameObjects()
-        {
-            // if the world controller object has children then the gameobjects have already been instantiated.
-            if (_transform.childCount > 0)
-            {
-                Debug.LogWarning("Tried to create world tile gameobjects when they were already instantiated!");
-                return;
-            }
-
-            foreach (var tile in World.Instance)
-            {
-                // Create the Tile GameObject.
-                var tile_GO = new GameObject("Tile");
-                tile_GO.transform.position = new Vector2(tile.X, tile.Y);
-                tile_GO.transform.SetParent(_transform);
-
-                var tile_SR = tile_GO.AddComponent<SpriteRenderer>();
-                tile_SR.sprite = SpriteCache.GetSprite(tile.TileName, 0);
-                tile_SR.sortingLayerName = tileSortingLayerName;
-                tile_SR.sortingOrder = -10;
-
-                //tileTypeRenderer.Add(tile, tile_SR);
-
-                tile.RegisterTileChangedCallback(OnTileChanged);
-                tile.RegisterTileTypeChangedCallback(OnTileTypeChange);
-
-                // Create the Tile Structure GameObject.
-                var tileStructure_GO = new GameObject("Tile Structure");
-                tileStructure_GO.transform.position = new Vector2(tile.X, tile.Y);
-                tileStructure_GO.transform.SetParent(tile_GO.transform);
-
-                var tileStructure_SR = tileStructure_GO.AddComponent<SpriteRenderer>();
-                tileStructure_SR.sortingLayerName = tileSortingLayerName;
-                tileStructure_SR.sortingOrder = -9;
-
-                tileStructureRenderers.Add(tile, tileStructure_SR);
-            }
-        }*/
 
         /// <summary>
         /// Forces an update to a tiles surrounding tiles sprites.

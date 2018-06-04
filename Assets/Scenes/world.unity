@@ -875,6 +875,7 @@ MonoBehaviour:
   worldWidth: 128
   worldHeight: 128
   tileSortingLayerName: Tiles
+  tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
 --- !u!23 &1920970006
 MeshRenderer:
   m_ObjectHideFlags: 0
