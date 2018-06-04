@@ -18,7 +18,6 @@ namespace Controllers.Tiles
 
         public string tileSortingLayerName = "Tiles";
 
-        //private Dictionary<Tile, SpriteRenderer> tileTypeRenderer;
         private Dictionary<Tile, SpriteRenderer> tileStructureRenderers;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
 
@@ -34,7 +33,6 @@ namespace Controllers.Tiles
             Instance = this;
             Instance._transform = Instance.transform;
 
-            //Instance.tileTypeRenderer = new Dictionary<Tile, SpriteRenderer>();
             Instance.tileStructureRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
@@ -232,7 +230,6 @@ namespace Controllers.Tiles
         public void OnTileTypeChange(Tile _tile)
         {
             // TODO: Update just this tiles mesh to the new texture
-            //tileTypeRenderer[_tile].sprite = SpriteCache.GetSprite(_tile.TileName, 0);
         }
 
         /// <summary>
