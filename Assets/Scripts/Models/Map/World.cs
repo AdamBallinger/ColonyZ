@@ -34,7 +34,10 @@ namespace Models.Map
         /// </summary>
         /// <param name="_width"></param>
         /// <param name="_height"></param>
-        public static void CreateWorld(int _width = 200, int _height = 200)
+        /// <param name="_tileTypeChangedCallback"></param>
+        /// <param name="_tileChangedCallback"></param>
+        public static void CreateWorld(int _width, int _height, Action<Tile> _tileTypeChangedCallback, 
+            Action<Tile> _tileChangedCallback)
         {
             Instance = new World
             {
@@ -45,7 +48,7 @@ namespace Models.Map
             Instance.Tiles = new Tile[Instance.Width * Instance.Height];
             Instance.Characters = new List<CharacterEntity>();
 
-            Instance.PopulateTileArray();
+            Instance.PopulateTileArray(_tileTypeChangedCallback, _tileChangedCallback);
         }
 
         public void Update()
@@ -58,13 +61,16 @@ namespace Models.Map
             PathFinder.Instance?.ProcessNext();
         }
 
-        private void PopulateTileArray()
+        private void PopulateTileArray(Action<Tile> _tileTypeChangeCallback, Action<Tile> _tileChangeCallback)
         {
             for (var x = 0; x < Width; x++)
             {
                 for (var y = 0; y < Height; y++)
                 {
-                    Tiles[x * Width + y] = new Tile(x, y, "Grass_Tile", TileType.Ground);
+                    var tile = new Tile(x, y, "Grass", TileType.Grass);
+                    tile.RegisterTileTypeChangedCallback(_tileTypeChangeCallback);
+                    tile.RegisterTileChangedCallback(_tileChangeCallback);
+                    Tiles[x * Width + y] = tile;
                 }
             }
 
@@ -88,13 +94,7 @@ namespace Models.Map
         {
             var tile = GetTileAt(_x, _y);
 
-            if (tile == null)
-            {
-                return;
-            }
-            
-            tile.TileName = _tileName;
-            tile.Type = _type;
+            tile?.SetTypeAndName(_type, _tileName);
         }
 
         /// <summary>
@@ -220,30 +220,33 @@ namespace Models.Map
                 return false;
             }
 
-            if (_tile != null && _tile.Structure == null)
+            if (_tile == null || _tile.Structure != null)
             {
-                if (_structure.Width > 1 || _structure.Height > 1)
-                {
-                    for (var xOffset = 0; xOffset < _structure.Width; xOffset++)
-                    {
-                        for (var yOffset = 0; yOffset < _structure.Height; yOffset++)
-                        {
-                            var t = GetTileAt(_tile.X + xOffset, _tile.Y + yOffset);
-
-                            if (t != null && _structure.CanPlace(t))
-                            {
-                                continue;
-                            }
-
-                            return false;
-                        }
-                    }
-                }
-
+                return false;
+            }
+            
+            if (_structure.Width <= 1 && _structure.Height <= 1)
+            {
                 return _structure.CanPlace(_tile);
             }
+            
+            for (var xOffset = 0; xOffset < _structure.Width; xOffset++)
+            {
+                for (var yOffset = 0; yOffset < _structure.Height; yOffset++)
+                {
+                    var t = GetTileAt(_tile.X + xOffset, _tile.Y + yOffset);
 
-            return false;
+                    if (t != null && _structure.CanPlace(t))
+                    {
+                        continue;
+                    }
+
+                    return false;
+                }
+            }
+
+            return true;
+
         }
 
         /// <summary>
