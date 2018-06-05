@@ -48,11 +48,12 @@ namespace Controllers
 
         private void NewWorld()
         {
-            World.CreateWorld(worldWidth, worldHeight);
+            World.CreateWorld(worldWidth, worldHeight, OnTileTypeChange, OnTileChanged);
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
+            WorldGenerator.Generate();
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
-
+            
             GenerateWorldMesh();
 
             World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
@@ -111,9 +112,6 @@ namespace Controllers
                 for (var y = 0; y < worldHeight; y++)
                 {
                     var tile = World.Instance.GetTileAt(x, y);
-                    
-                    tile.RegisterTileChangedCallback(OnTileChanged);
-                    tile.RegisterTileTypeChangedCallback(OnTileTypeChange);
 
                     var tileMesh = new Mesh();
                     
@@ -124,16 +122,18 @@ namespace Controllers
                     tileVerts[3] = new Vector2(x + 0.5f, y - 0.5f);
                     
                     var tileUV = new Vector2[4];
+                    var tileUV2 = new Vector2[4];
+                    var tileUV3 = new Vector2[4];
 
                     // Calculate the number of tiles along the X and Y of the texture
                     var textureTileWidth = tileTypesTexture.width / 32;
                     var textureTileHeight = tileTypesTexture.height / 32;
 
-                    var uSize = 1.0f / textureTileWidth;
+                    var uSize = 1.0f / textureTileWidth; 
                     var vSize = 1.0f / textureTileHeight;
 
                     // Tile in sprite sheet (not 0 indexed)
-                    var tileSprite = 1;
+                    var tileSprite = (int)tile.Type;
                     // Get the index of the tile in the texture
                     var tileIndex = tileSprite - 1;
 
@@ -163,6 +163,8 @@ namespace Controllers
                     tileMesh.vertices = tileVerts;
                     tileMesh.triangles = tileTris;
                     tileMesh.uv = tileUV;
+                    tileMesh.uv2 = tileUV2;
+                    tileMesh.uv3 = tileUV3;
 
                     combiner[x * worldWidth + y].mesh = tileMesh;
                 }

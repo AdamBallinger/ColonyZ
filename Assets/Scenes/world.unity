@@ -988,7 +988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pooledPrefab: {fileID: 1391713949002200, guid: 5b3197ee3b11be746b23f89b3d65ac5c,
     type: 2}
-  maxPoolCount: 16384
-  prePoolCount: 10
+  maxPoolCount: 262144
+  prePoolCount: 500
   activeObjects: []
   inactiveObjects: []

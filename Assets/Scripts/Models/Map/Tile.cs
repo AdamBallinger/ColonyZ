@@ -27,7 +27,7 @@ namespace Models.Map
         public TileType Type
         {
             get { return type; }
-            set
+            private set
             {
                 oldType = Type;
                 type = value;
@@ -39,7 +39,7 @@ namespace Models.Map
 
         public string TileName { get; set; }
 
-        public List<Tile> Neighbours { get; set; }
+        public List<Tile> Neighbours { get; }
 
         /// <summary>
         /// Installed tile structure for this tile.
@@ -71,6 +71,12 @@ namespace Models.Map
             Type = _type;
             Neighbours = new List<Tile>();
             MovementModifier = _movementModifier;
+        }
+        
+        public void SetTypeAndName(TileType _type, string _name)
+        {
+            Type = _type;
+            TileName = _name;
         }
 
         public void InstallStructure(TileStructure _structure)
