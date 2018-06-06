@@ -122,8 +122,6 @@ namespace Controllers
                     tileVerts[3] = new Vector2(x + 0.5f, y - 0.5f);
                     
                     var tileUV = new Vector2[4];
-                    var tileUV2 = new Vector2[4];
-                    var tileUV3 = new Vector2[4];
 
                     // Calculate the number of tiles along the X and Y of the texture
                     var textureTileWidth = tileTypesTexture.width / 32;
@@ -163,8 +161,6 @@ namespace Controllers
                     tileMesh.vertices = tileVerts;
                     tileMesh.triangles = tileTris;
                     tileMesh.uv = tileUV;
-                    tileMesh.uv2 = tileUV2;
-                    tileMesh.uv3 = tileUV3;
 
                     combiner[x * worldWidth + y].mesh = tileMesh;
                 }
