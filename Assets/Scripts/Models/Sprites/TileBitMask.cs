@@ -7,7 +7,6 @@ namespace Models.Sprites
     [Flags]
     public enum Cardinals
     {
-        None = 0,
         North_West = 1 << 0,
         North = 1 << 1,
         North_East = 1 << 2,
@@ -118,7 +117,7 @@ namespace Models.Sprites
                 }
 
                 return tile.Structure.ConnectsWith(_neighbour.Structure);
-            }
+            }          
 
             return false;
         }
