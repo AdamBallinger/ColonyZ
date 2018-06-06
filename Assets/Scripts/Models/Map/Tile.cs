@@ -72,7 +72,7 @@ namespace Models.Map
             Neighbours = new List<Tile>();
             MovementModifier = _movementModifier;
         }
-        
+
         public void SetTypeAndName(TileType _type, string _name)
         {
             Type = _type;
@@ -81,14 +81,14 @@ namespace Models.Map
 
         public void InstallStructure(TileStructure _structure)
         {
-            if(Structure != null)
+            if (Structure != null)
             {
                 return;
             }
 
-            for(var xOffset = 0; xOffset < _structure.Width; xOffset++)
+            for (var xOffset = 0; xOffset < _structure.Width; xOffset++)
             {
-                for(var yOffset = 0; yOffset < _structure.Height; yOffset++)
+                for (var yOffset = 0; yOffset < _structure.Height; yOffset++)
                 {
                     var t = World.Instance.GetTileAt(X + xOffset, Y + yOffset);
 
@@ -104,7 +104,7 @@ namespace Models.Map
 
         public void UninstallStructure()
         {
-            if(Structure == null)
+            if (Structure == null)
             {
                 return;
             }
@@ -120,31 +120,29 @@ namespace Models.Map
             return Structure == null ? Enterability.Immediate : Enterability.None;
         }
 
-        /// <summary>
-        /// Returns the tile adjacency cardinal for a given tile against this tile.
-        /// </summary>
-        /// <param name="_tileNeighbour"></param>
-        /// <returns></returns>
-        public Cardinals GetAdjacentFlag(Tile _tileNeighbour)
+        public Tile GetNeighbour(Cardinals _direction)
         {
-            if(_tileNeighbour == null || _tileNeighbour == this) return Cardinals.None;
+            switch (_direction)
+            {
+                case Cardinals.North:
+                    return World.Instance.GetTileAt(X, Y + 1);
+                case Cardinals.North_East:
+                    return World.Instance.GetTileAt(X + 1, Y + 1);
+                case Cardinals.East:
+                    return World.Instance.GetTileAt(X + 1, Y);
+                case Cardinals.South_East:
+                    return World.Instance.GetTileAt(X + 1, Y - 1);
+                case Cardinals.South:
+                    return World.Instance.GetTileAt(X, Y - 1);
+                case Cardinals.South_West:
+                    return World.Instance.GetTileAt(X - 1, Y - 1);
+                case Cardinals.West:
+                    return World.Instance.GetTileAt(X - 1, Y);
+                case Cardinals.North_West:
+                    return World.Instance.GetTileAt(X - 1, Y + 1);
+            }
 
-            var xDist = _tileNeighbour.X - X;
-            var yDist = _tileNeighbour.Y - Y;
-
-            // Tile is too far away to be directly adjacent to this tile.
-            if(Mathf.Abs(xDist) > 1 || Mathf.Abs(yDist) > 1) return Cardinals.None;
-
-            if(xDist == 0 && yDist == 1) return Cardinals.North;
-            if(xDist == 1 && yDist == 1) return Cardinals.North_East;
-            if(xDist == 1 && yDist == 0) return Cardinals.East;
-            if(xDist == 1 && yDist == -1) return Cardinals.South_East;
-            if(xDist == 0 && yDist == -1) return Cardinals.South;
-            if(xDist == -1 && yDist == -1) return Cardinals.South_West;
-            if(xDist == -1 && yDist == 0) return Cardinals.West;
-            if(xDist == -1 && yDist == 1) return Cardinals.North_West;
-
-            return Cardinals.None;
+            return null;
         }
 
         /// <summary>
