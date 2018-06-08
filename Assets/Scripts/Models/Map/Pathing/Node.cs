@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Priority_Queue;
 
-namespace Models.Pathing
+namespace Models.Map.Pathing
 {
 	public class Node : FastPriorityQueueNode
 	{

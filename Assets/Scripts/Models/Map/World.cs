@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Models.Entities;
-using Models.Pathing;
 using System.Collections;
 using Models.Entities.Characters;
+using Models.Map.Pathing;
 using Models.Map.Structures;
 
 namespace Models.Map

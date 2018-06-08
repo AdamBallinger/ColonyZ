@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Models.Entities;
 using Models.Map;
+using Models.Map.Pathing;
 using Models.Map.Structures;
-using Models.Pathing;
 using UnityEngine;
 using UnityEngine.Rendering;
 

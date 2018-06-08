@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
-using Models.Map;
 
-namespace Models.Pathing
+namespace Models.Map.Pathing
 {
     public class NodeGraph
     {

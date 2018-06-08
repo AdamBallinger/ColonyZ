@@ -1,7 +1,6 @@
-﻿using Models.Map;
-using System;
+﻿using System;
 
-namespace Models.Pathing
+namespace Models.Map.Pathing
 {
     public class PathRequest
 	{

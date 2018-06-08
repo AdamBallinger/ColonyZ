@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
-using Models.Map;
 using Priority_Queue;
 using UnityEngine;
-using UnityEngine.Networking.Types;
 
-namespace Models.Pathing
+namespace Models.Map.Pathing
 {
     public class PathFinder
     {

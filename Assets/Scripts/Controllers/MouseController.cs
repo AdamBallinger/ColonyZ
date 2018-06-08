@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using EzPool;
 using Models.Map;
-using Models.Map.Structures;
-using Models.Pathing;
+using Models.Map.Pathing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
