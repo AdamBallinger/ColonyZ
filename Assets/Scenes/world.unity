@@ -859,8 +859,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cee140ee272f24ba4a9e3dfdb4d706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 128
-  worldHeight: 128
+  worldWidth: 16
+  worldHeight: 16
   tileSortingLayerName: Tiles
   tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
 --- !u!23 &1920970006

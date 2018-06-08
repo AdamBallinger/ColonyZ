@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Models.Entities;
 using Models.Map;
@@ -50,7 +51,7 @@ namespace Controllers
         {
             World.CreateWorld(worldWidth, worldHeight, OnTileTypeChange, OnTileChanged);
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
-            WorldGenerator.Generate();
+            //WorldGenerator.Generate();
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
             
