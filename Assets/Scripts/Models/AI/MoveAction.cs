@@ -39,7 +39,7 @@ namespace Models.AI
             }
 
             // TODO: Change Time.deltaTime to a custom Time tracking class.
-            distThisFrame = character.MovementSpeed * nextTile.MovementModifier * Time.deltaTime;
+            distThisFrame = character.MovementSpeed * nextTile.MovementCost * Time.deltaTime;
             percentThisFrame = distThisFrame / distToTravel;
             movementPercentage += percentThisFrame;
 

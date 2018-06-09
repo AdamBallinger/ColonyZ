@@ -33,6 +33,10 @@ namespace Models.Map.Structures
 
         public int Width { get; protected set; }
         public int Height { get; protected set; }
+        
+        public Enterability Enterability { get; protected set; }
+        
+        public float MovementModifier { get; protected set; }
 
         /// <summary>
         /// Returns whether this structure occupies more than 1 tile.
@@ -49,6 +53,8 @@ namespace Models.Map.Structures
             Type = TileStructureType.Single_Tile;
             Width = 1;
             Height = 1;
+            Enterability = Enterability.None;
+            MovementModifier = 0.0f;
             SpriteData = SpriteDataController.GetSpriteData(StructureName);
             ConnectsToSelf = false;
             Connectables = new List<string>();
@@ -61,6 +67,8 @@ namespace Models.Map.Structures
             _clone.StructureName = StructureName;
             _clone.Width = Width;
             _clone.Height = Height;
+            _clone.Enterability = Enterability;
+            _clone.MovementModifier = MovementModifier;
             _clone.ConnectsToSelf = ConnectsToSelf;
             _clone.Connectables = Connectables;
         }

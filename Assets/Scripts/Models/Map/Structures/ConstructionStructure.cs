@@ -8,6 +8,8 @@ namespace Models.Map.Structures
         public ConstructionStructure(string _structureName) : base(_structureName)
         {
             Type = TileStructureType.Multi_Tile;
+            Enterability = Enterability.Immediate;
+            MovementModifier = 1.0f;
             ConnectsToSelf = true;
         }
         

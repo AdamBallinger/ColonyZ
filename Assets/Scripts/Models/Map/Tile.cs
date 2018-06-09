@@ -19,7 +19,7 @@ namespace Models.Map
         public int X { get; }
         public int Y { get; }
 
-        public float MovementModifier { get; }
+        public float MovementCost { get; }
 
         /// <summary>
         /// The current tile type of this tile.
@@ -62,15 +62,15 @@ namespace Models.Map
         /// <param name="_y"></param>
         /// <param name="_tileName"></param>
         /// <param name="_type"></param>
-        /// <param name="_movementModifier"></param>
-        public Tile(int _x, int _y, string _tileName, TileType _type, float _movementModifier = 1.0f)
+        /// <param name="_movementCost"></param>
+        public Tile(int _x, int _y, string _tileName, TileType _type, float _movementCost = 1.0f)
         {
             X = _x;
             Y = _y;
             TileName = _tileName;
             Type = _type;
             Neighbours = new List<Tile>();
-            MovementModifier = _movementModifier;
+            MovementCost = _movementCost;
         }
 
         public void SetTypeAndName(TileType _type, string _name)
@@ -116,8 +116,7 @@ namespace Models.Map
 
         public Enterability GetEnterability()
         {
-            // TODO: When doors are a thing, return Enterability.Delayed for doors or similar structures.
-            return Structure == null ? Enterability.Immediate : Enterability.None;
+            return Structure?.Enterability ?? Enterability.Immediate;
         }
 
         public Tile GetNeighbour(Cardinals _direction)
