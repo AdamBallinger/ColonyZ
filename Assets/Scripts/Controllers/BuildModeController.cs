@@ -53,7 +53,10 @@ namespace Controllers
 
             if (World.Instance.IsStructurePositionValid(Structure, _tile))
             {
-                _tile.InstallStructure(Structure.Clone());
+                // TODO: Add Job to build structure, rather than this instant build.
+                //_tile.InstallStructure(Structure.Clone());
+                // Set the tile as a construction base until the job is completed, which should then change the structure.
+                _tile.InstallStructure(TileStructureRegistry.GetStructure("Construction_Base"));
             }
         }
 

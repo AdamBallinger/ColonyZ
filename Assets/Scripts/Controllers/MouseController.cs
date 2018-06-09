@@ -141,6 +141,8 @@ namespace Controllers
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
                 edgeFill = Input.GetKey(KeyCode.LeftShift);
+                
+                selectionObject.SetActive(Mode == MouseMode.Select);
 
                 for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
                 {
@@ -176,7 +178,7 @@ namespace Controllers
                             if (tile.Structure != null)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", "demolish");
-                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.6f);
+                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
                             }
                             else
                             {
