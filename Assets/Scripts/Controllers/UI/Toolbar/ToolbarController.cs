@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Controllers.Dev;
 using Models.Sprites;
 using UnityEngine;
 
@@ -65,35 +66,46 @@ namespace Controllers.UI.Toolbar
             AddSubMenu("Commands", "Work");
 
             AddSubMenu("Menu", "Exit", Application.Quit);
+            AddSubMenu("Menu", "Dev");
 
-            AddSubMenuItem("Construction", "Building", "Wood Wall", SpriteCache.GetSprite("Wood_Wall", 47), () =>
+            AddSubMenuItem("Construction", "Building", "Wood Wall",
+                           SpriteCache.GetSprite("Wood_Wall", 47), () =>
             {
                 MouseController.Instance.BuildModeController.StartStructureBuild("Wood_Wall");
             });
 
-            AddSubMenuItem("Construction", "Building", "Steel Wall", SpriteCache.GetSprite("Steel_Wall", 47), () =>
+            AddSubMenuItem("Construction", "Building", "Steel Wall", 
+                           SpriteCache.GetSprite("Steel_Wall", 47), () =>
             {
                 MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Wall");
             });
 
-            AddSubMenuItem("Construction", "Building", "Wooden Door", SpriteCache.GetSprite("Wood_Door", "closed_0"), () =>
+            AddSubMenuItem("Construction", "Building", "Wooden Door", 
+                           SpriteCache.GetSprite("Wood_Door", "closed_0"), () =>
             {
                 MouseController.Instance.BuildModeController.StartStructureBuild("Wood_Door");
             });
 
-            AddSubMenuItem("Construction", "Building", "Steel Door", SpriteCache.GetSprite("Steel_Door", "closed_0"), () =>
+            AddSubMenuItem("Construction", "Building", "Steel Door", 
+                           SpriteCache.GetSprite("Steel_Door", "closed_0"), () =>
             {
                 MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Door");
             });
 
-            AddSubMenuItem("Commands", "Work", "Demolish", SpriteCache.GetSprite("Overlay", "demolish"), () =>
+            AddSubMenuItem("Commands", "Work", "Demolish", 
+                           SpriteCache.GetSprite("Overlay", "demolish"), () =>
             {
                 MouseController.Instance.BuildModeController.StartDemolishBuild();
             });
 
-            AddSubMenuItem("Commands", "Work", "Mine", SpriteCache.GetSprite("Overlay", "mine"), null);
-            AddSubMenuItem("Commands", "Work", "Fell", SpriteCache.GetSprite("Overlay", "chop"), null);
-            AddSubMenuItem("Commands", "Work", "Cancel", SpriteCache.GetSprite("Overlay", "cancel"), null);
+            AddSubMenuItem("Commands", "Work", "Mine", 
+                           SpriteCache.GetSprite("Overlay", "mine"), null);
+            AddSubMenuItem("Commands", "Work", "Fell", 
+                           SpriteCache.GetSprite("Overlay", "chop"), null);
+            AddSubMenuItem("Commands", "Work", "Cancel", 
+                           SpriteCache.GetSprite("Overlay", "cancel"), null);
+            
+            AddSubMenuItem("Menu", "Dev", "Tile Nodes", null, DevToolManager.Instance.ToggleTileNodes);
         }
 
         /// <summary>
