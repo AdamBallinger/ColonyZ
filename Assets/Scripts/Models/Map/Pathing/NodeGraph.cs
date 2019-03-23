@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace Models.Map.Pathing
 {
@@ -10,6 +11,9 @@ namespace Models.Map.Pathing
         public int Height { get; private set; }
 
         public Node[,] Nodes { get; private set; }
+
+        private Action onBuildGraphCallback = null;
+        private Action onUpdateGraphCallback = null;
 
         private NodeGraph() { }
 
@@ -54,6 +58,7 @@ namespace Models.Map.Pathing
 
             BuildNodeNeighbours();
             sw.Stop();
+            onBuildGraphCallback?.Invoke();
             //UnityEngine.Debug.Log("Graph build time: " + sw.ElapsedMilliseconds + "ms.");
         }
 
@@ -84,6 +89,7 @@ namespace Models.Map.Pathing
             }
 
             sw.Stop();
+            onUpdateGraphCallback?.Invoke();
             //UnityEngine.Debug.Log("Graph update time: " + sw.ElapsedMilliseconds + "ms.");
         }
 
@@ -106,6 +112,16 @@ namespace Models.Map.Pathing
             if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
 
             return Nodes[_x, _y];
+        }
+        
+        public void RegisterGraphBuildCallback(Action _callback)
+        {
+            onBuildGraphCallback += _callback;
+        }
+        
+        public void RegisterGraphUpdateCallback(Action _callback)
+        {
+            onUpdateGraphCallback += _callback;
         }
     }
 }
