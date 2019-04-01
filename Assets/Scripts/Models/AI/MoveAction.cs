@@ -33,7 +33,7 @@ namespace Models.AI
         {
             if (path == null) return;
 
-            if (nextTile?.GetEnterability() == Enterability.Delayed)
+            if (nextTile?.GetEnterability() == TileEnterability.Delayed)
             {
                 // Cant walk through tile yet so wait. TODO: Implement this when its a thing!
                 return;
@@ -66,10 +66,10 @@ namespace Models.AI
 
                 switch (nextTile.GetEnterability())
                 {
-                    case Enterability.Immediate:
+                    case TileEnterability.Immediate:
                         movementPercentage = overShotAmount;
                         break;
-                    case Enterability.None:
+                    case TileEnterability.None:
                         // If the next tile can't be entered then something was built after the path was
                         // created, so recalculate the path to the destination from the current tile.
                         //TODO: recalculate path when a tile in the path has changed rather than waiting for the entity to get there.

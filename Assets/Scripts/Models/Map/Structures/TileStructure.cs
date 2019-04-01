@@ -35,7 +35,7 @@ namespace Models.Map.Structures
         public int Width { get; protected set; }
         public int Height { get; protected set; }
         
-        public Enterability Enterability { get; protected set; }
+        public TileEnterability Enterability { get; protected set; }
         
         public float MovementModifier { get; protected set; }
 
@@ -54,7 +54,7 @@ namespace Models.Map.Structures
             Type = TileStructureType.Single_Tile;
             Width = 1;
             Height = 1;
-            Enterability = Enterability.None;
+            Enterability = TileEnterability.None;
             MovementModifier = 0.0f;
             SpriteData = SpriteDataController.GetSpriteData(StructureName);
             ConnectsToSelf = false;

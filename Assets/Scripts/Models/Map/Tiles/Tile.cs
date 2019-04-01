@@ -6,13 +6,6 @@ using Models.Sprites;
 
 namespace Models.Map.Tiles
 {
-    public enum Enterability
-    {
-        Immediate,
-        Delayed,
-        None
-    }
-
     public class Tile
     {
         public int X { get; }
@@ -111,9 +104,9 @@ namespace Models.Map.Tiles
             onTileChanged?.Invoke(this);
         }
 
-        public Enterability GetEnterability()
+        public TileEnterability GetEnterability()
         {
-            return Structure?.Enterability ?? Enterability.Immediate;
+            return Structure?.Enterability ?? TileEnterability.Immediate;
         }
 
         public Tile GetNeighbour(Cardinals _direction)
