@@ -248,10 +248,6 @@ namespace Controllers
 
                 characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);
             }
-            else if (_entity is TileEntity)
-            {
-                // TODO: Create TileEntity GameObject and add it to a GameObject collection (This is still undecided on how it will be stored).
-            }
         }
     }
 }

@@ -192,14 +192,6 @@ namespace Models.Map
             _tile.Neighbours.AddRange(GetTileNeighbours(_tile));
         }
 
-        public void SpawnTileEntity(Tile _tile)
-        {
-            // TODO: Spawn a tile entity and create a callback to the world controller.
-            var entity = new TileEntity(_tile);
-
-            onEntitySpawnCallback?.Invoke(entity);
-        }
-
         public void SpawnCharacter(Tile _tile)
         {
             var entity = new HumanEntity(_tile);

@@ -45,8 +45,6 @@ namespace Models.Map.Tiles
         /// </summary>
         public TileStructure Structure { get; private set; }
 
-        public Entity TileEntity { get; private set; }
-
         private TileType type;
         private TileType oldType;
 
