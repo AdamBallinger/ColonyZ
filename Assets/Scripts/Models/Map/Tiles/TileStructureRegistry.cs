@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Models.Map.Structures;
 
-namespace Models.Map
+namespace Models.Map.Tiles
 {
     public class TileStructureRegistry
     {

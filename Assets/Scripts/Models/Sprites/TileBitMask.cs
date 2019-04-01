@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Models.Map;
+using Models.Map.Tiles;
 
 namespace Models.Sprites
 {

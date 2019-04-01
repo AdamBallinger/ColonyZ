@@ -3,6 +3,7 @@ using Models.Entities;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Structures;
+using Models.Map.Tiles;
 using UnityEngine;
 using UnityEngine.Rendering;
 

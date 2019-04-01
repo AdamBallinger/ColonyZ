@@ -1,5 +1,6 @@
 ﻿using Models.Map;
 using Models.Map.Structures;
+using Models.Map.Tiles;
 
 namespace Controllers
 {

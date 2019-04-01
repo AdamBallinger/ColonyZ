@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Controllers;
+using Models.Map.Tiles;
 using Models.Sprites;
 using UnityEngine;
 

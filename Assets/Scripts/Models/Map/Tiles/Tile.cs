@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using Models.Entities;
 using Models.Map.Structures;
 using Models.Sprites;
-using UnityEngine;
 
-namespace Models.Map
+namespace Models.Map.Tiles
 {
     public enum Enterability
     {

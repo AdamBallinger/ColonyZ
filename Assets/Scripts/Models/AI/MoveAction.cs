@@ -1,6 +1,7 @@
 ﻿using Models.Entities;
 using Models.Map;
 using Models.Map.Pathing;
+using Models.Map.Tiles;
 using UnityEngine;
 
 namespace Models.AI

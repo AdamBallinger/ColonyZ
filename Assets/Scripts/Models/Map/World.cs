@@ -6,6 +6,7 @@ using System.Collections;
 using Models.Entities.Characters;
 using Models.Map.Pathing;
 using Models.Map.Structures;
+using Models.Map.Tiles;
 
 namespace Models.Map
 {

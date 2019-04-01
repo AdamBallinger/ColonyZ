@@ -1,4 +1,5 @@
 ﻿using Controllers;
+using Models.Map.Tiles;
 using UnityEngine;
 
 namespace Models.Map.Structures

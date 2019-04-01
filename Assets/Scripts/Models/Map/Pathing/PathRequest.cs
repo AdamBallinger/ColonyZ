@@ -1,4 +1,5 @@
 ﻿using System;
+using Models.Map.Tiles;
 
 namespace Models.Map.Pathing
 {

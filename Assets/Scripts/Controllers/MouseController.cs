@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using EzPool;
 using Models.Map;
 using Models.Map.Pathing;
+using Models.Map.Tiles;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

@@ -1,4 +1,5 @@
 using Models.Map;
+using Models.Map.Tiles;
 
 namespace Models.Entities
 {

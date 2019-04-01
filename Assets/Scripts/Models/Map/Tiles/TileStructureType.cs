@@ -1,4 +1,4 @@
-namespace Models.Map
+namespace Models.Map.Tiles
 {
 	public enum TileStructureType 
 	{

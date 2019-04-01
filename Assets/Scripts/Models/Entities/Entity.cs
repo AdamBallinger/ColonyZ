@@ -1,4 +1,5 @@
 using Models.Map;
+using Models.Map.Tiles;
 using Models.Sprites;
 using UnityEngine;
 
