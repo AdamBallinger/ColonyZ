@@ -1,99 +1,79 @@
 using System;
 using System.Collections.Generic;
 using Models.Entities;
-using Models.Map.Structures;
+using Models.Extensions;
+using Models.Map.Tiles.Objects;
 using Models.Sprites;
 
 namespace Models.Map.Tiles
 {
-    public enum Enterability
-    {
-        Immediate,
-        Delayed,
-        None
-    }
-
     public class Tile
     {
         public int X { get; }
         public int Y { get; }
 
-        public float MovementCost { get; }
-
         /// <summary>
-        /// The current tile type of this tile.
+        /// The definition of this tile.
         /// </summary>
-        public TileType Type
+        public TileDefinition TileDefinition
         {
-            get { return type; }
-            private set
+            get => definition;
+            set
             {
-                oldType = Type;
-                type = value;
+                oldDefinition = definition;
+                definition = value;
 
-                if (oldType != type)
-                    onTileTypeChanged?.Invoke(this);
+                if (oldDefinition != definition)
+                    onTileDefinitionChanged?.Invoke(this);
             }
         }
 
-        public string TileName { get; set; }
-
+        /// <summary>
+        /// Contains a list of tiles that surround this tile.
+        /// </summary>
         public List<Tile> Neighbours { get; }
 
         /// <summary>
-        /// Installed tile structure for this tile.
+        /// Installed tile object for this tile.
         /// </summary>
-        public TileStructure Structure { get; private set; }
+        public TileObject Object { get; private set; }
 
-        public Entity TileEntity { get; private set; }
-
-        private TileType type;
-        private TileType oldType;
-
+        private TileDefinition definition, oldDefinition;
+        
         private Action<Tile> onTileChanged;
-        private Action<Tile> onTileTypeChanged;
+        
+        private Action<Tile> onTileDefinitionChanged;
 
         /// <summary>
-        /// Create a tile at the given x and y with an optional param for movement speed modifer to change the rate in which
-        /// entitys can move across this tile. 1 = normal, 0.5 = half, 2 = double etc.
+        /// Create a tile at the given x and y from a provided tile definition.
         /// </summary>
         /// <param name="_x"></param>
         /// <param name="_y"></param>
-        /// <param name="_tileName"></param>
-        /// <param name="_type"></param>
-        /// <param name="_movementCost"></param>
-        public Tile(int _x, int _y, string _tileName, TileType _type, float _movementCost = 1.0f)
+        /// <param name="_definition"></param>
+        public Tile(int _x, int _y, TileDefinition _definition)
         {
             X = _x;
             Y = _y;
-            TileName = _tileName;
-            Type = _type;
+            TileDefinition = _definition;
             Neighbours = new List<Tile>();
-            MovementCost = _movementCost;
         }
 
-        public void SetTypeAndName(TileType _type, string _name)
+        public void SetObject(TileObject _object)
         {
-            Type = _type;
-            TileName = _name;
-        }
-
-        public void InstallStructure(TileStructure _structure)
-        {
-            if (Structure != null)
+            if (Object != null)
             {
                 return;
             }
 
-            for (var xOffset = 0; xOffset < _structure.Width; xOffset++)
+            for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             {
-                for (var yOffset = 0; yOffset < _structure.Height; yOffset++)
+                for (var yOffset = 0; yOffset < _object.Height; yOffset++)
                 {
                     var t = World.Instance.GetTileAt(X + xOffset, Y + yOffset);
 
-                    t.Structure = _structure;
-                    t.Structure.OriginTile = this;
-                    t.Structure.Tile = t;
+                    t.Object = _object;
+                    t.Object.OriginTile = this;
+                    t.Object.Tile = t;
                     t.onTileChanged?.Invoke(t);
                 }
             }
@@ -101,21 +81,21 @@ namespace Models.Map.Tiles
             onTileChanged?.Invoke(this);
         }
 
-        public void UninstallStructure()
+        public void RemoveObject()
         {
-            if (Structure == null)
+            if (Object == null)
             {
                 return;
             }
 
-            Structure = null;
+            Object = null;
 
             onTileChanged?.Invoke(this);
         }
 
-        public Enterability GetEnterability()
+        public TileEnterability GetEnterability()
         {
-            return Structure?.Enterability ?? Enterability.Immediate;
+            return Object?.Enterability ?? TileEnterability.Immediate;
         }
 
         public Tile GetNeighbour(Cardinals _direction)
@@ -158,7 +138,7 @@ namespace Models.Map.Tiles
         /// <param name="_callback"></param>
         public void RegisterTileTypeChangedCallback(Action<Tile> _callback)
         {
-            onTileTypeChanged += _callback;
+            onTileDefinitionChanged += _callback;
         }
     }
 }

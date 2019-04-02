@@ -71,25 +71,25 @@ namespace Controllers.UI.Toolbar
             AddSubMenuItem("Construction", "Building", "Wood Wall",
                            SpriteCache.GetSprite("Wood_Wall", 47), () =>
             {
-                MouseController.Instance.BuildModeController.StartStructureBuild("Wood_Wall");
+                MouseController.Instance.BuildModeController.StartObjectBuild("Wood_Wall");
             });
 
             AddSubMenuItem("Construction", "Building", "Steel Wall", 
                            SpriteCache.GetSprite("Steel_Wall", 47), () =>
             {
-                MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Wall");
+                MouseController.Instance.BuildModeController.StartObjectBuild("Steel_Wall");
             });
 
             AddSubMenuItem("Construction", "Building", "Wooden Door", 
                            SpriteCache.GetSprite("Wood_Door", "closed_0"), () =>
             {
-                MouseController.Instance.BuildModeController.StartStructureBuild("Wood_Door");
+                MouseController.Instance.BuildModeController.StartObjectBuild("Wood_Door");
             });
 
             AddSubMenuItem("Construction", "Building", "Steel Door", 
                            SpriteCache.GetSprite("Steel_Door", "closed_0"), () =>
             {
-                MouseController.Instance.BuildModeController.StartStructureBuild("Steel_Door");
+                MouseController.Instance.BuildModeController.StartObjectBuild("Steel_Door");
             });
 
             AddSubMenuItem("Commands", "Work", "Demolish", 

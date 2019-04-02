@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Models.Entities;
 using Models.Map;
 using Models.Map.Pathing;
-using Models.Map.Structures;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -19,7 +19,7 @@ namespace Controllers
 
         public string tileSortingLayerName = "Tiles";
 
-        private Dictionary<Tile, SpriteRenderer> tileStructureRenderers;
+        private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
 
         private MeshFilter meshFilter;
@@ -34,25 +34,24 @@ namespace Controllers
             Instance = this;
             Instance._transform = Instance.transform;
 
-            Instance.tileStructureRenderers = new Dictionary<Tile, SpriteRenderer>();
+            Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
             SpriteDataController.LoadSpriteData();
 
-            TileStructureRegistry.RegisterTileStructure(new ConstructionStructure("Construction_Base"));
-            TileStructureRegistry.RegisterTileStructure(new WallStructure("Wood_Wall"));
-            TileStructureRegistry.RegisterTileStructure(new WallStructure("Steel_Wall"));
-            TileStructureRegistry.RegisterTileStructure(new DoorStructure("Wood_Door"));
-            TileStructureRegistry.RegisterTileStructure(new DoorStructure("Steel_Door"));
+            TileObjectRegistry.RegisterTileObject(new FoundationObject("Foundation_Base"));
+            TileObjectRegistry.RegisterTileObject(new WallObject("Wood_Wall"));
+            TileObjectRegistry.RegisterTileObject(new WallObject("Steel_Wall"));
+            TileObjectRegistry.RegisterTileObject(new DoorObject("Wood_Door"));
+            TileObjectRegistry.RegisterTileObject(new DoorObject("Steel_Door"));
 
             NewWorld();
         }
 
         private void NewWorld()
         {
-            World.CreateWorld(worldWidth, worldHeight, OnTileTypeChange, OnTileChanged);
+            World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
-            //WorldGenerator.Generate();
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
             
@@ -132,10 +131,8 @@ namespace Controllers
                     var uSize = 1.0f / textureTileWidth; 
                     var vSize = 1.0f / textureTileHeight;
 
-                    // Tile in sprite sheet (not 0 indexed)
-                    var tileSprite = (int)tile.Type;
                     // Get the index of the tile in the texture
-                    var tileIndex = tileSprite - 1;
+                    var tileIndex = tile.TileDefinition.TextureIndex;
 
                     // Calculate tile X and Y inside the texture
                     var tileX = tileIndex % textureTileWidth;
@@ -180,28 +177,28 @@ namespace Controllers
         {
             foreach (var tile in _tile.Neighbours)
             {
-                if (tile?.Structure != null)
+                if (tile?.Object != null)
                 {
-                    tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Structure);
+                    tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
                 }
             }
         }
         
         /// <summary>
-        /// Creates the game object for a tile structure, and adds it the renderer map.
+        /// Creates the game object for a tile object, and adds it the renderer map.
         /// </summary>
         /// <param name="_tile"></param>
-        private void CreateStructureGameObject(Tile _tile)
+        private void CreateTileObject(Tile _tile)
         {
-            var structure_GO = new GameObject("Structure");
-            var structure_SR = structure_GO.AddComponent<SpriteRenderer>();
+            var object_GO = new GameObject("Tile Object");
+            var object_SR = object_GO.AddComponent<SpriteRenderer>();
             
-            structure_GO.transform.position = new Vector2(_tile.X, _tile.Y);
-            structure_GO.transform.SetParent(_transform);
+            object_GO.transform.position = new Vector2(_tile.X, _tile.Y);
+            object_GO.transform.SetParent(_transform);
             
-            structure_SR.sortingLayerName = tileSortingLayerName;
+            object_SR.sortingLayerName = tileSortingLayerName;
             
-            tileStructureRenderers.Add(_tile, structure_SR);
+            tileObjectRenderers.Add(_tile, object_SR);
         }
 
         /// <summary>
@@ -215,22 +212,22 @@ namespace Controllers
                 return;
             }
             
-            if(!tileStructureRenderers.ContainsKey(_tile))
+            if(!tileObjectRenderers.ContainsKey(_tile))
             {
-                CreateStructureGameObject(_tile);
+                CreateTileObject(_tile);
             }
 
-            tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
+            tileObjectRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Object);
             UpdateTileNeighbourSprites(_tile);
         }
 
         /// <summary>
-        /// Callback for when the type of a tile has been changed.
+        /// Callback for when the definition of a tile has been changed.
         /// </summary>
         /// <param name="_tile"></param>
-        public void OnTileTypeChange(Tile _tile)
+        public void OnTileDefinitionChanged(Tile _tile)
         {
-            // TODO: Update just this tiles mesh to the new texture
+            // TODO: Update world mesh
         }
 
         /// <summary>
@@ -247,10 +244,6 @@ namespace Controllers
                 // TODO: Set sprites for character GameObject.
 
                 characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);
-            }
-            else if (_entity is TileEntity)
-            {
-                // TODO: Create TileEntity GameObject and add it to a GameObject collection (This is still undecided on how it will be stored).
             }
         }
     }

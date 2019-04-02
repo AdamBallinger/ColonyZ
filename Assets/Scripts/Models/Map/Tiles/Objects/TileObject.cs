@@ -1,46 +1,45 @@
 using System.Collections.Generic;
 using Controllers;
-using Models.Map.Tiles;
 using Models.Sprites;
 using UnityEngine;
 
-namespace Models.Map.Structures
+namespace Models.Map.Tiles.Objects
 {
-    public abstract class TileStructure
+    public abstract class TileObject
     {
         /// <summary>
-        /// The Tile this structure originates from. If the structure is a multi tile structure, then this is the "base" tile
-        /// for that structure.
+        /// The Tile this object originates from. If the object is a multi tile object, then this is the "base" tile
+        /// for that object.
         /// </summary>
         public Tile OriginTile { get; set; }
 
         /// <summary>
-        /// The Tile this part of a structure occupies. If the struction is a single type, then this will be the same as OriginTile.
-        /// If the structure is a multi tile structure, then it will point to the tile each part of the structure is placed on.
+        /// The Tile this part of a object occupies. If the object is a single type, then this will be the same as OriginTile.
+        /// If the object is a multi tile object, then it will point to the tile each part of the object is placed on.
         /// </summary>
         public Tile Tile { get; set; }
 
         /// <summary>
-        /// The type of this structure (Single or multi tile).
+        /// The type of this object (Single or multi tile).
         /// </summary>
-        public TileStructureType Type { get; protected set; }
+        public TileObjectType Type { get; protected set; }
 
         public SpriteData SpriteData { get; protected set; }
 
         /// <summary>
-        /// Name of the structure. This refers to the name associated with this structure in the TileStructureRegistry.
+        /// Name of the object. This refers to the name associated with this object in the TileStructureRegistry.
         /// </summary>
-        public string StructureName { get; protected set; }
+        public string ObjectName { get; protected set; }
 
         public int Width { get; protected set; }
         public int Height { get; protected set; }
         
-        public Enterability Enterability { get; protected set; }
+        public TileEnterability Enterability { get; protected set; }
         
         public float MovementModifier { get; protected set; }
 
         /// <summary>
-        /// Returns whether this structure occupies more than 1 tile.
+        /// Returns whether this object occupies more than 1 tile.
         /// </summary>
         public bool MultiTile => Width > 1 || Height > 1;
 
@@ -48,24 +47,24 @@ namespace Models.Map.Structures
 
         protected List<string> Connectables { get; set; }
 
-        protected TileStructure(string _structureName)
+        protected TileObject(string _objectName)
         {
-            StructureName = _structureName;
-            Type = TileStructureType.Single_Tile;
+            ObjectName = _objectName;
+            Type = TileObjectType.Single_Tile;
             Width = 1;
             Height = 1;
-            Enterability = Enterability.None;
+            Enterability = TileEnterability.None;
             MovementModifier = 0.0f;
-            SpriteData = SpriteDataController.GetSpriteData(StructureName);
+            SpriteData = SpriteDataController.GetSpriteData(ObjectName);
             ConnectsToSelf = false;
             Connectables = new List<string>();
         }
 
-        protected void CopyInto(TileStructure _clone)
+        protected void CopyInto(TileObject _clone)
         {
             _clone.SpriteData = SpriteData;
             _clone.Type = Type;
-            _clone.StructureName = StructureName;
+            _clone.ObjectName = ObjectName;
             _clone.Width = Width;
             _clone.Height = Height;
             _clone.Enterability = Enterability;
@@ -74,21 +73,21 @@ namespace Models.Map.Structures
             _clone.Connectables = Connectables;
         }
 
-        public abstract TileStructure Clone();
+        public abstract TileObject Clone();
 
         /// <summary>
         /// Returns if this structure connects to a given structure.
         /// </summary>
         /// <param name="_other"></param>
         /// <returns></returns>
-        public bool ConnectsWith(TileStructure _other)
+        public bool ConnectsWith(TileObject _other)
         {
             if(_other == null)
             {
                 return false;
             }
 
-            return ConnectsToSelf && _other.StructureName.Equals(StructureName) || Connectables.Contains(_other.StructureName);
+            return ConnectsToSelf && _other.ObjectName.Equals(ObjectName) || Connectables.Contains(_other.ObjectName);
         }
 
         /// <summary>
