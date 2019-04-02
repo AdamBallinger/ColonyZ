@@ -20,16 +20,16 @@ namespace Models.Map.Tiles.Objects
         public Tile Tile { get; set; }
 
         /// <summary>
-        /// The type of this structure (Single or multi tile).
+        /// The type of this object (Single or multi tile).
         /// </summary>
         public TileObjectType Type { get; protected set; }
 
         public SpriteData SpriteData { get; protected set; }
 
         /// <summary>
-        /// Name of the structure. This refers to the name associated with this structure in the TileStructureRegistry.
+        /// Name of the object. This refers to the name associated with this object in the TileStructureRegistry.
         /// </summary>
-        public string StructureName { get; protected set; }
+        public string ObjectName { get; protected set; }
 
         public int Width { get; protected set; }
         public int Height { get; protected set; }
@@ -39,7 +39,7 @@ namespace Models.Map.Tiles.Objects
         public float MovementModifier { get; protected set; }
 
         /// <summary>
-        /// Returns whether this structure occupies more than 1 tile.
+        /// Returns whether this object occupies more than 1 tile.
         /// </summary>
         public bool MultiTile => Width > 1 || Height > 1;
 
@@ -47,15 +47,15 @@ namespace Models.Map.Tiles.Objects
 
         protected List<string> Connectables { get; set; }
 
-        protected TileObject(string _structureName)
+        protected TileObject(string _objectName)
         {
-            StructureName = _structureName;
+            ObjectName = _objectName;
             Type = TileObjectType.Single_Tile;
             Width = 1;
             Height = 1;
             Enterability = TileEnterability.None;
             MovementModifier = 0.0f;
-            SpriteData = SpriteDataController.GetSpriteData(StructureName);
+            SpriteData = SpriteDataController.GetSpriteData(ObjectName);
             ConnectsToSelf = false;
             Connectables = new List<string>();
         }
@@ -64,7 +64,7 @@ namespace Models.Map.Tiles.Objects
         {
             _clone.SpriteData = SpriteData;
             _clone.Type = Type;
-            _clone.StructureName = StructureName;
+            _clone.ObjectName = ObjectName;
             _clone.Width = Width;
             _clone.Height = Height;
             _clone.Enterability = Enterability;
@@ -87,7 +87,7 @@ namespace Models.Map.Tiles.Objects
                 return false;
             }
 
-            return ConnectsToSelf && _other.StructureName.Equals(StructureName) || Connectables.Contains(_other.StructureName);
+            return ConnectsToSelf && _other.ObjectName.Equals(ObjectName) || Connectables.Contains(_other.ObjectName);
         }
 
         /// <summary>

@@ -165,12 +165,12 @@ namespace Controllers
                         previewObject.transform.position = new Vector2(x, y);
                         var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
 
-                        if (BuildModeController.Mode == BuildMode.Structure)
+                        if (BuildModeController.Mode == BuildMode.Object)
                         {
                             previewRenderer.sprite = BuildModeController.Object?.GetIcon();
 
                             // Tint the preview color based on if the structure position is valid.
-                            previewRenderer.color = !World.Instance.IsStructurePositionValid(BuildModeController.Object, tile)
+                            previewRenderer.color = !World.Instance.IsObjectPositionValid(BuildModeController.Object, tile)
                                 ? new Color(1.0f, 0.3f, 0.3f, 0.6f) : new Color(0.3f, 1.0f, 0.3f, 0.6f);
                         }
 

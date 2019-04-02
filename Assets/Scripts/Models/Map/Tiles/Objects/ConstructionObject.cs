@@ -6,7 +6,7 @@ namespace Models.Map.Tiles.Objects
 {
     public class ConstructionObject : TileObject
     {
-        public ConstructionObject(string _structureName) : base(_structureName)
+        public ConstructionObject(string _objectName) : base(_objectName)
         {
             Type = TileObjectType.Multi_Tile;
             Enterability = TileEnterability.Immediate;
@@ -16,7 +16,7 @@ namespace Models.Map.Tiles.Objects
         
         public override TileObject Clone()
         {
-            var clone = new ConstructionObject(StructureName);
+            var clone = new ConstructionObject(ObjectName);
             CopyInto(clone);
             return clone;
         }

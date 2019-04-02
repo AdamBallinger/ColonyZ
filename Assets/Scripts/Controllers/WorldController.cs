@@ -19,7 +19,7 @@ namespace Controllers
 
         public string tileSortingLayerName = "Tiles";
 
-        private Dictionary<Tile, SpriteRenderer> tileStructureRenderers;
+        private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
         private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
 
         private MeshFilter meshFilter;
@@ -34,16 +34,16 @@ namespace Controllers
             Instance = this;
             Instance._transform = Instance.transform;
 
-            Instance.tileStructureRenderers = new Dictionary<Tile, SpriteRenderer>();
+            Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
             SpriteDataController.LoadSpriteData();
 
-            TileObjectRegistry.RegisterTileStructure(new ConstructionObject("Construction_Base"));
-            TileObjectRegistry.RegisterTileStructure(new WallObject("Wood_Wall"));
-            TileObjectRegistry.RegisterTileStructure(new WallObject("Steel_Wall"));
-            TileObjectRegistry.RegisterTileStructure(new DoorObject("Wood_Door"));
-            TileObjectRegistry.RegisterTileStructure(new DoorObject("Steel_Door"));
+            TileObjectRegistry.RegisterTileObject(new ConstructionObject("Construction_Base"));
+            TileObjectRegistry.RegisterTileObject(new WallObject("Wood_Wall"));
+            TileObjectRegistry.RegisterTileObject(new WallObject("Steel_Wall"));
+            TileObjectRegistry.RegisterTileObject(new DoorObject("Wood_Door"));
+            TileObjectRegistry.RegisterTileObject(new DoorObject("Steel_Door"));
 
             NewWorld();
         }
@@ -52,7 +52,6 @@ namespace Controllers
         {
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
-            //WorldGenerator.Generate();
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
             
@@ -180,26 +179,26 @@ namespace Controllers
             {
                 if (tile?.Object != null)
                 {
-                    tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
+                    tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
                 }
             }
         }
         
         /// <summary>
-        /// Creates the game object for a tile structure, and adds it the renderer map.
+        /// Creates the game object for a tile object, and adds it the renderer map.
         /// </summary>
         /// <param name="_tile"></param>
-        private void CreateStructureGameObject(Tile _tile)
+        private void CreateTileObject(Tile _tile)
         {
-            var structure_GO = new GameObject("Structure");
-            var structure_SR = structure_GO.AddComponent<SpriteRenderer>();
+            var object_GO = new GameObject("Tile Object");
+            var object_SR = object_GO.AddComponent<SpriteRenderer>();
             
-            structure_GO.transform.position = new Vector2(_tile.X, _tile.Y);
-            structure_GO.transform.SetParent(_transform);
+            object_GO.transform.position = new Vector2(_tile.X, _tile.Y);
+            object_GO.transform.SetParent(_transform);
             
-            structure_SR.sortingLayerName = tileSortingLayerName;
+            object_SR.sortingLayerName = tileSortingLayerName;
             
-            tileStructureRenderers.Add(_tile, structure_SR);
+            tileObjectRenderers.Add(_tile, object_SR);
         }
 
         /// <summary>
@@ -213,12 +212,12 @@ namespace Controllers
                 return;
             }
             
-            if(!tileStructureRenderers.ContainsKey(_tile))
+            if(!tileObjectRenderers.ContainsKey(_tile))
             {
-                CreateStructureGameObject(_tile);
+                CreateTileObject(_tile);
             }
 
-            tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Object);
+            tileObjectRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Object);
             UpdateTileNeighbourSprites(_tile);
         }
 

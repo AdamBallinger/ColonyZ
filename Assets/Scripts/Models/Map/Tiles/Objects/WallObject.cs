@@ -5,7 +5,7 @@ namespace Models.Map.Tiles.Objects
 {
     public class WallObject : TileObject
     {
-        public WallObject(string _structureName, params string[] _connectsTo) : base(_structureName)
+        public WallObject(string _objectName, params string[] _connectsTo) : base(_objectName)
         {
             Type = TileObjectType.Multi_Tile;
             ConnectsToSelf = true;
@@ -15,7 +15,7 @@ namespace Models.Map.Tiles.Objects
 
         public override TileObject Clone()
         {
-            var clone = new WallObject(StructureName);
+            var clone = new WallObject(ObjectName);
             CopyInto(clone);
             return clone;
         }

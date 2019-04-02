@@ -20,11 +20,11 @@ namespace Models.Sprites
 
     public enum BitmaskEvaluationType
     {
-        Tile_Type,
-        Tile_Structure
+        Tile,
+        Object
     }
 
-    public class TileBitMask
+    public static class TileBitMask
     {
         /// <summary>
         /// Bit masking dictionary that maps different bitmask values to the matching index of a tileset
@@ -110,7 +110,7 @@ namespace Models.Sprites
 
         private static bool Connects(Tile _neighbour)
         {
-            if (Type == BitmaskEvaluationType.Tile_Structure)
+            if (Type == BitmaskEvaluationType.Object)
             {
                 if (tile?.Object == null || _neighbour?.Object == null)
                 {

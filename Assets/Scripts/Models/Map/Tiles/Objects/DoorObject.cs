@@ -5,14 +5,14 @@ namespace Models.Map.Tiles.Objects
 {
     public class DoorObject : TileObject
     {
-        public DoorObject(string _structureName) : base(_structureName)
+        public DoorObject(string _objectName) : base(_objectName)
         {
             Type = TileObjectType.Single_Tile;
         }
 
         public override TileObject Clone()
         {
-            var clone = new DoorObject(StructureName);
+            var clone = new DoorObject(ObjectName);
             CopyInto(clone);
             return clone;
         }

@@ -34,7 +34,7 @@ namespace Models.Map.Tiles
         public List<Tile> Neighbours { get; }
 
         /// <summary>
-        /// Installed tile structure for this tile.
+        /// Installed tile object for this tile.
         /// </summary>
         public TileObject Object { get; private set; }
 
@@ -58,7 +58,7 @@ namespace Models.Map.Tiles
             Neighbours = new List<Tile>();
         }
 
-        public void InstallStructure(TileObject _object)
+        public void SetObject(TileObject _object)
         {
             if (Object != null)
             {
@@ -81,7 +81,7 @@ namespace Models.Map.Tiles
             onTileChanged?.Invoke(this);
         }
 
-        public void UninstallStructure()
+        public void RemoveObject()
         {
             if (Object == null)
             {

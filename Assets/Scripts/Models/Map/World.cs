@@ -204,12 +204,12 @@ namespace Models.Map
         }
 
         /// <summary>
-        /// Returns if a given tile structure can be placed on a given tile.
+        /// Returns if a given object can be placed on a given tile.
         /// </summary>
         /// <param name="_object"></param>
         /// <param name="_tile"></param>
         /// <returns></returns>
-        public bool IsStructurePositionValid(TileObject _object, Tile _tile)
+        public bool IsObjectPositionValid(TileObject _object, Tile _tile)
         {
             if (_object == null)
             {
