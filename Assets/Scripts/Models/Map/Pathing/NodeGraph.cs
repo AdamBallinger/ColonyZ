@@ -52,7 +52,7 @@ namespace Models.Map.Pathing
             {
                 for (var y = 0; y < Height; y++)
                 {
-                    Nodes[x, y] = new Node(nodeID++, x, y, 1.0f, World.Instance?.GetTileAt(x, y).Structure == null);
+                    Nodes[x, y] = new Node(nodeID++, x, y, 1.0f, World.Instance?.GetTileAt(x, y).Object == null);
                 }
             }
 
@@ -84,7 +84,7 @@ namespace Models.Map.Pathing
                 {
                     if (y < 0 || y >= Height) continue;
 
-                    Nodes[x, y].Pathable = World.Instance?.GetTileAt(x, y).Structure == null;
+                    Nodes[x, y].Pathable = World.Instance?.GetTileAt(x, y).Object == null;
                 }
             }
 

@@ -1,19 +1,18 @@
 ﻿using Controllers;
-using Models.Map.Tiles;
 using UnityEngine;
 
-namespace Models.Map.Structures
+namespace Models.Map.Tiles.Objects
 {
-    public class DoorStructure : TileStructure
+    public class DoorObject : TileObject
     {
-        public DoorStructure(string _structureName) : base(_structureName)
+        public DoorObject(string _structureName) : base(_structureName)
         {
-            Type = TileStructureType.Single_Tile;
+            Type = TileObjectType.Single_Tile;
         }
 
-        public override TileStructure Clone()
+        public override TileObject Clone()
         {
-            var clone = new DoorStructure(StructureName);
+            var clone = new DoorObject(StructureName);
             CopyInto(clone);
             return clone;
         }
@@ -25,8 +24,8 @@ namespace Models.Map.Structures
 
             if (east != null && west != null)
             {
-                if (east.Structure != null && east.Structure.GetType() == typeof(WallStructure) &&
-                   west.Structure != null && west.Structure.GetType() == typeof(WallStructure))
+                if (east.Object != null && east.Object.GetType() == typeof(WallObject) &&
+                   west.Object != null && west.Object.GetType() == typeof(WallObject))
                 {
                     return 0;
                 }
@@ -37,8 +36,8 @@ namespace Models.Map.Structures
 
             if (north != null && south != null)
             {
-                if (north.Structure != null && north.Structure.GetType() == typeof(WallStructure) &&
-                   south.Structure != null && south.Structure.GetType() == typeof(WallStructure))
+                if (north.Object != null && north.Object.GetType() == typeof(WallObject) &&
+                   south.Object != null && south.Object.GetType() == typeof(WallObject))
                 {
                     return 1;
                 }
@@ -56,10 +55,10 @@ namespace Models.Map.Structures
 
             if (east != null && west != null)
             {
-                if (east.Structure != null && east.Structure.GetType() == typeof(WallStructure) &&
-                    west.Structure != null && west.Structure.GetType() == typeof(WallStructure))
+                if (east.Object != null && east.Object.GetType() == typeof(WallObject) &&
+                    west.Object != null && west.Object.GetType() == typeof(WallObject))
                 {
-                    if(north?.Structure == null && south?.Structure == null)
+                    if(north?.Object == null && south?.Object == null)
                     {
                         return true;
                     }
@@ -68,10 +67,10 @@ namespace Models.Map.Structures
 
             if(north != null && south != null)
             {
-                if(north.Structure != null && north.Structure.GetType() == typeof(WallStructure) &&
-                   south.Structure != null && south.Structure.GetType() == typeof(WallStructure))
+                if(north.Object != null && north.Object.GetType() == typeof(WallObject) &&
+                   south.Object != null && south.Object.GetType() == typeof(WallObject))
                 {
-                    if(east?.Structure == null && west?.Structure == null)
+                    if(east?.Object == null && west?.Object == null)
                     {
                         return true;
                     }

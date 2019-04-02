@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Models.Map;
-using Models.Map.Structures;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 using Models.Sprites;
 using UnityEngine;
 
 namespace Controllers
 {
-    public class SpriteCache
+    public static class SpriteCache
     {
         private static Dictionary<string, List<Sprite>> spriteCache = new Dictionary<string, List<Sprite>>();
 
@@ -45,24 +45,24 @@ namespace Controllers
             return null;
         }
 
-        public static Sprite GetSprite(TileStructure _structure)
+        public static Sprite GetSprite(TileObject _object)
         {
-            if(_structure == null)
+            if(_object == null)
             {
                 return null;
             }
 
-            if(spriteCache.ContainsKey(_structure.SpriteData.SpriteGroup))
+            if(spriteCache.ContainsKey(_object.SpriteData.SpriteGroup))
             {
-                var spriteData = _structure.SpriteData;
+                var spriteData = _object.SpriteData;
 
                 if(spriteData.SpriteType == SpriteType.Single)
                 {
                     return spriteCache[spriteData.SpriteGroup][0];
                 }
 
-                var index = _structure.Type == TileStructureType.Single_Tile ? _structure.GetSpriteIndex() : 
-                    TileBitMask.ComputeBitmaskValue(_structure.Tile, BitmaskEvaluationType.Tile_Structure);
+                var index = _object.Type == TileObjectType.Single_Tile ? _object.GetSpriteIndex() : 
+                    TileBitMask.ComputeBitmaskValue(_object.Tile, BitmaskEvaluationType.Tile_Structure);
                 return spriteCache[spriteData.SpriteGroup][index];
             }
 

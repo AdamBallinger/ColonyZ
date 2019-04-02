@@ -5,8 +5,8 @@ using Models.Entities;
 using System.Collections;
 using Models.Entities.Characters;
 using Models.Map.Pathing;
-using Models.Map.Structures;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 
 namespace Models.Map
 {
@@ -45,6 +45,8 @@ namespace Models.Map
                 Width = _width,
                 Height = _height
             };
+            
+            TileManager.LoadDefinitions();
 
             Instance.Tiles = new Tile[Instance.Width * Instance.Height];
             Instance.Characters = new List<CharacterEntity>();
@@ -68,7 +70,7 @@ namespace Models.Map
             {
                 for (var y = 0; y < Height; y++)
                 {
-                    var tile = new Tile(x, y, "Grass", TileType.Grass);
+                    var tile = new Tile(x, y, TileManager.GetTileDefinition("Grass"));
                     tile.RegisterTileTypeChangedCallback(_tileTypeChangeCallback);
                     tile.RegisterTileChangedCallback(_tileChangeCallback);
                     Tiles[x * Width + y] = tile;
@@ -89,13 +91,14 @@ namespace Models.Map
         /// </summary>
         /// <param name="_x"></param>
         /// <param name="_y"></param>
-        /// <param name="_tileName"></param>
-        /// <param name="_type"></param>
-        public void SetTileAt(int _x, int _y, string _tileName, TileType _type)
+        /// <param name="_definition"></param>
+        public void SetTileAt(int _x, int _y, TileDefinition _definition)
         {
             var tile = GetTileAt(_x, _y);
 
-            tile?.SetTypeAndName(_type, _tileName);
+            if (tile == null) return;
+
+            tile.TileDefinition = _definition;
         }
 
         /// <summary>
@@ -203,33 +206,33 @@ namespace Models.Map
         /// <summary>
         /// Returns if a given tile structure can be placed on a given tile.
         /// </summary>
-        /// <param name="_structure"></param>
+        /// <param name="_object"></param>
         /// <param name="_tile"></param>
         /// <returns></returns>
-        public bool IsStructurePositionValid(TileStructure _structure, Tile _tile)
+        public bool IsStructurePositionValid(TileObject _object, Tile _tile)
         {
-            if (_structure == null)
+            if (_object == null)
             {
                 return false;
             }
 
-            if (_tile == null || _tile.Structure != null)
+            if (_tile == null || _tile.Object != null)
             {
                 return false;
             }
             
-            if (_structure.Width <= 1 && _structure.Height <= 1)
+            if (_object.Width <= 1 && _object.Height <= 1)
             {
-                return _structure.CanPlace(_tile);
+                return _object.CanPlace(_tile);
             }
             
-            for (var xOffset = 0; xOffset < _structure.Width; xOffset++)
+            for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             {
-                for (var yOffset = 0; yOffset < _structure.Height; yOffset++)
+                for (var yOffset = 0; yOffset < _object.Height; yOffset++)
                 {
                     var t = GetTileAt(_tile.X + xOffset, _tile.Y + yOffset);
 
-                    if (t != null && _structure.CanPlace(t))
+                    if (t != null && _object.CanPlace(t))
                     {
                         continue;
                     }

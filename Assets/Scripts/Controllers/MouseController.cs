@@ -167,16 +167,16 @@ namespace Controllers
 
                         if (BuildModeController.Mode == BuildMode.Structure)
                         {
-                            previewRenderer.sprite = BuildModeController.Structure?.GetIcon();
+                            previewRenderer.sprite = BuildModeController.Object?.GetIcon();
 
                             // Tint the preview color based on if the structure position is valid.
-                            previewRenderer.color = !World.Instance.IsStructurePositionValid(BuildModeController.Structure, tile)
+                            previewRenderer.color = !World.Instance.IsStructurePositionValid(BuildModeController.Object, tile)
                                 ? new Color(1.0f, 0.3f, 0.3f, 0.6f) : new Color(0.3f, 1.0f, 0.3f, 0.6f);
                         }
 
                         if (BuildModeController.Mode == BuildMode.Demolish)
                         {
-                            if (tile.Structure != null)
+                            if (tile.Object != null)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", "demolish");
                                 previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);

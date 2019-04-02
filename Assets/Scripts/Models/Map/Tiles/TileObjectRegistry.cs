@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using Models.Map.Structures;
+using Models.Map.Tiles.Objects;
 
 namespace Models.Map.Tiles
 {
-    public class TileStructureRegistry
+    public static class TileObjectRegistry
     {
-        private static Dictionary<string, TileStructure> structureRegistry = new Dictionary<string, TileStructure>();
+        private static Dictionary<string, TileObject> structureRegistry = new Dictionary<string, TileObject>();
 
-        public static void RegisterTileStructure(TileStructure _instance)
+        public static void RegisterTileStructure(TileObject _instance)
         {
             if(structureRegistry.ContainsKey(_instance.StructureName))
             {
@@ -17,7 +17,7 @@ namespace Models.Map.Tiles
             structureRegistry.Add(_instance.StructureName, _instance);
         }
 
-        public static TileStructure GetStructure(string _structureName)
+        public static TileObject GetStructure(string _structureName)
         {
             return !structureRegistry.ContainsKey(_structureName) ? null : structureRegistry[_structureName].Clone();
         }

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Models.Entities;
 using Models.Map;
 using Models.Map.Pathing;
-using Models.Map.Structures;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -39,18 +39,18 @@ namespace Controllers
 
             SpriteDataController.LoadSpriteData();
 
-            TileStructureRegistry.RegisterTileStructure(new ConstructionStructure("Construction_Base"));
-            TileStructureRegistry.RegisterTileStructure(new WallStructure("Wood_Wall"));
-            TileStructureRegistry.RegisterTileStructure(new WallStructure("Steel_Wall"));
-            TileStructureRegistry.RegisterTileStructure(new DoorStructure("Wood_Door"));
-            TileStructureRegistry.RegisterTileStructure(new DoorStructure("Steel_Door"));
+            TileObjectRegistry.RegisterTileStructure(new ConstructionObject("Construction_Base"));
+            TileObjectRegistry.RegisterTileStructure(new WallObject("Wood_Wall"));
+            TileObjectRegistry.RegisterTileStructure(new WallObject("Steel_Wall"));
+            TileObjectRegistry.RegisterTileStructure(new DoorObject("Wood_Door"));
+            TileObjectRegistry.RegisterTileStructure(new DoorObject("Steel_Door"));
 
             NewWorld();
         }
 
         private void NewWorld()
         {
-            World.CreateWorld(worldWidth, worldHeight, OnTileTypeChange, OnTileChanged);
+            World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
             //WorldGenerator.Generate();
 
@@ -132,10 +132,8 @@ namespace Controllers
                     var uSize = 1.0f / textureTileWidth; 
                     var vSize = 1.0f / textureTileHeight;
 
-                    // Tile in sprite sheet (not 0 indexed)
-                    var tileSprite = (int)tile.Type;
                     // Get the index of the tile in the texture
-                    var tileIndex = tileSprite - 1;
+                    var tileIndex = tile.TileDefinition.TextureIndex;
 
                     // Calculate tile X and Y inside the texture
                     var tileX = tileIndex % textureTileWidth;
@@ -180,9 +178,9 @@ namespace Controllers
         {
             foreach (var tile in _tile.Neighbours)
             {
-                if (tile?.Structure != null)
+                if (tile?.Object != null)
                 {
-                    tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Structure);
+                    tileStructureRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
                 }
             }
         }
@@ -220,17 +218,17 @@ namespace Controllers
                 CreateStructureGameObject(_tile);
             }
 
-            tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Structure);
+            tileStructureRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Object);
             UpdateTileNeighbourSprites(_tile);
         }
 
         /// <summary>
-        /// Callback for when the type of a tile has been changed.
+        /// Callback for when the definition of a tile has been changed.
         /// </summary>
         /// <param name="_tile"></param>
-        public void OnTileTypeChange(Tile _tile)
+        public void OnTileDefinitionChanged(Tile _tile)
         {
-            // TODO: Update just this tiles mesh to the new texture
+            // TODO: Update world mesh
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿using Models.Map;
-using Models.Map.Structures;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 
 namespace Controllers
 {
@@ -20,7 +20,7 @@ namespace Controllers
         /// <summary>
         /// If the build mode is set to structure, this is instance of the structure to build
         /// </summary>
-        public TileStructure Structure { get; set; }
+        public TileObject Object { get; set; }
 
         public BuildModeController()
         {
@@ -47,17 +47,17 @@ namespace Controllers
 
         private void HandleStructureBuild(Tile _tile)
         {
-            if (Structure == null)
+            if (Object == null)
             {
                 return;
             }
 
-            if (World.Instance.IsStructurePositionValid(Structure, _tile))
+            if (World.Instance.IsStructurePositionValid(Object, _tile))
             {
                 // TODO: Add Job to build structure, rather than this instant build.
                 //_tile.InstallStructure(Structure.Clone());
                 // Set the tile as a construction base until the job is completed, which should then change the structure.
-                _tile.InstallStructure(TileStructureRegistry.GetStructure("Construction_Base"));
+                _tile.InstallStructure(TileObjectRegistry.GetStructure("Construction_Base"));
             }
         }
 
@@ -65,7 +65,7 @@ namespace Controllers
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Structure;
-            Structure = TileStructureRegistry.GetStructure(_structureName);
+            Object = TileObjectRegistry.GetStructure(_structureName);
         }
 
         public void StartDemolishBuild()

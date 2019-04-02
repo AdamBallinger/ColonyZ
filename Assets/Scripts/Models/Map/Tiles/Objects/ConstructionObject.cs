@@ -2,28 +2,28 @@
 using Models.Map.Tiles;
 using UnityEngine;
 
-namespace Models.Map.Structures
+namespace Models.Map.Tiles.Objects
 {
-    public class ConstructionStructure : TileStructure
+    public class ConstructionObject : TileObject
     {
-        public ConstructionStructure(string _structureName) : base(_structureName)
+        public ConstructionObject(string _structureName) : base(_structureName)
         {
-            Type = TileStructureType.Multi_Tile;
+            Type = TileObjectType.Multi_Tile;
             Enterability = TileEnterability.Immediate;
             MovementModifier = 1.0f;
             ConnectsToSelf = true;
         }
         
-        public override TileStructure Clone()
+        public override TileObject Clone()
         {
-            var clone = new ConstructionStructure(StructureName);
+            var clone = new ConstructionObject(StructureName);
             CopyInto(clone);
             return clone;
         }
 
         public override bool CanPlace(Tile _tile)
         {
-            return _tile?.Structure == null;
+            return _tile?.Object == null;
         }
 
         public override Sprite GetIcon()

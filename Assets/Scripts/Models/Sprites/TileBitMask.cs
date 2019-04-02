@@ -112,12 +112,12 @@ namespace Models.Sprites
         {
             if (Type == BitmaskEvaluationType.Tile_Structure)
             {
-                if (tile?.Structure == null || _neighbour?.Structure == null)
+                if (tile?.Object == null || _neighbour?.Object == null)
                 {
                     return false;
                 }
 
-                return tile.Structure.ConnectsWith(_neighbour.Structure);
+                return tile.Object.ConnectsWith(_neighbour.Object);
             }          
 
             return false;

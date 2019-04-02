@@ -31,7 +31,7 @@ namespace Models.AI
 
         public override void OnUpdate()
         {
-            if (path == null) return;
+            if (path == null || nextTile == null) return;
 
             if (nextTile?.GetEnterability() == TileEnterability.Delayed)
             {
@@ -40,7 +40,7 @@ namespace Models.AI
             }
 
             // TODO: Change Time.deltaTime to a custom Time tracking class.
-            distThisFrame = character.MovementSpeed * nextTile.MovementCost * Time.deltaTime;
+            distThisFrame = character.MovementSpeed * nextTile.TileDefinition.MovementModifier * Time.deltaTime;
             percentThisFrame = distThisFrame / distToTravel;
             movementPercentage += percentThisFrame;
 

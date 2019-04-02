@@ -1,29 +1,28 @@
 ﻿using Controllers;
-using Models.Map.Tiles;
 using UnityEngine;
 
-namespace Models.Map.Structures
+namespace Models.Map.Tiles.Objects
 {
-    public class WallStructure : TileStructure
+    public class WallObject : TileObject
     {
-        public WallStructure(string _structureName, params string[] _connectsTo) : base(_structureName)
+        public WallObject(string _structureName, params string[] _connectsTo) : base(_structureName)
         {
-            Type = TileStructureType.Multi_Tile;
+            Type = TileObjectType.Multi_Tile;
             ConnectsToSelf = true;
 
             Connectables.AddRange(_connectsTo);
         }
 
-        public override TileStructure Clone()
+        public override TileObject Clone()
         {
-            var clone = new WallStructure(StructureName);
+            var clone = new WallObject(StructureName);
             CopyInto(clone);
             return clone;
         }
 
         public override bool CanPlace(Tile _tile)
         {
-            return _tile.Structure == null;
+            return _tile.Object == null;
         }
 
         public override Sprite GetIcon()
