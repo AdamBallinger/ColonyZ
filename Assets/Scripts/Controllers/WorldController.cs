@@ -39,7 +39,7 @@ namespace Controllers
 
             SpriteDataController.LoadSpriteData();
 
-            TileObjectRegistry.RegisterTileObject(new ConstructionObject("Construction_Base"));
+            TileObjectRegistry.RegisterTileObject(new FoundationObject("Foundation_Base"));
             TileObjectRegistry.RegisterTileObject(new WallObject("Wood_Wall"));
             TileObjectRegistry.RegisterTileObject(new WallObject("Steel_Wall"));
             TileObjectRegistry.RegisterTileObject(new DoorObject("Wood_Door"));

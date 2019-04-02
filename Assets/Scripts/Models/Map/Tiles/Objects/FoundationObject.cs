@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Models.Map.Tiles.Objects
 {
-    public class ConstructionObject : TileObject
+    public class FoundationObject : TileObject
     {
-        public ConstructionObject(string _objectName) : base(_objectName)
+        public FoundationObject(string _objectName) : base(_objectName)
         {
             Type = TileObjectType.Multi_Tile;
             Enterability = TileEnterability.Immediate;
@@ -16,7 +16,7 @@ namespace Models.Map.Tiles.Objects
         
         public override TileObject Clone()
         {
-            var clone = new ConstructionObject(ObjectName);
+            var clone = new FoundationObject(ObjectName);
             CopyInto(clone);
             return clone;
         }
@@ -28,7 +28,7 @@ namespace Models.Map.Tiles.Objects
 
         public override Sprite GetIcon()
         {
-            return SpriteCache.GetSprite("Construction_Base", 47);
+            return SpriteCache.GetSprite("Foundation_Base", 47);
         }
     }
 }

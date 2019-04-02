@@ -57,7 +57,7 @@ namespace Controllers
                 // TODO: Add Job to build object, rather than this instant build.
                 //_tile.SetObject(Object.Clone());
                 // Set the tile as a construction base until the job is completed, which should then change the object.
-                _tile.SetObject(TileObjectRegistry.GetObject("Construction_Base"));
+                _tile.SetObject(TileObjectRegistry.GetObject("Foundation_Base"));
             }
         }
 
