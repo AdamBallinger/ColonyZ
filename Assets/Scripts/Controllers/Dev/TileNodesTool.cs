@@ -12,7 +12,7 @@ namespace Controllers.Dev
         private MeshFilter meshFilter;
 
         [SerializeField]
-        private Texture2D nodesTexture;
+        private Texture2D nodesTexture = null;
         
         private void Start()
         {

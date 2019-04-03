@@ -25,7 +25,7 @@ namespace Controllers
         private MeshFilter meshFilter;
 
         [SerializeField]
-        private Texture2D tileTypesTexture;
+        private Texture2D tileTypesTexture = null;
 
         private Transform _transform;
 
