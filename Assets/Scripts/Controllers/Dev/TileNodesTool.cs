@@ -64,7 +64,7 @@ namespace Controllers.Dev
             {
                 for (var y = 0; y < NodeGraph.Instance.Height; y++)
                 {
-                    var node = NodeGraph.Instance.GetNodeAt(x, y);
+                    var tile = World.Instance.GetTileAt(x, y);
 
                     var nodesMesh = new Mesh();
                     
@@ -83,7 +83,7 @@ namespace Controllers.Dev
                     var uSize = 1.0f / texturesX; 
                     var vSize = 1.0f / texturesY;
 
-                    var nodeTextureIndex = node.Pathable ? 0 : 1;
+                    var nodeTextureIndex = (int)tile.GetEnterability();
 
                     // Calculate nodes X and Y inside the texture
                     var nodeX = nodeTextureIndex % texturesX;

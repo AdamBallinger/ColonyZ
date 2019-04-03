@@ -8,6 +8,7 @@ namespace Models.Map.Tiles.Objects
         public DoorObject(string _objectName) : base(_objectName)
         {
             Type = TileObjectType.Single_Tile;
+            Enterability = TileEnterability.Delayed;
         }
 
         public override TileObject Clone()

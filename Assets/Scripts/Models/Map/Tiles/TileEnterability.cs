@@ -2,8 +2,8 @@ namespace Models.Map.Tiles
 {
     public enum TileEnterability
     {
-        Immediate,
-        Delayed,
-        None 
+        Immediate = 0,
+        None = 1,
+        Delayed = 2
     }
 }
