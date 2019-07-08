@@ -1,5 +1,4 @@
 ﻿using Models.Entities;
-using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
 using UnityEngine;
@@ -110,14 +109,9 @@ namespace Models.AI
             character.TileOffset = Vector2.zero;
         }
 
-        private float CalculatePathDistance()
-        {
-            return 0.0f;
-        }
-
         private bool HasReachedPathDestination()
         {
-            return path?.Size == 0 || path.EndTile == character.CurrentTile;
+            return path?.Size == 0 || path?.EndTile == character.CurrentTile;
         }
 
         public override bool HasFinished()
