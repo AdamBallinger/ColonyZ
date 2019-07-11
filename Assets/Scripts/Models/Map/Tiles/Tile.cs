@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Models.Entities;
-using Models.Extensions;
 using Models.Map.Tiles.Objects;
 using Models.Sprites;
 

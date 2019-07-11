@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4156f9033d2240438872d4e8a66b729, type: 3}
+  m_Name: TileObject_Door_Wood
+  m_EditorClassIdentifier: 
+  objectSpriteData: {fileID: 11400000, guid: b6ef022f09ea6fb45a763b84c085c167, type: 2}
+  objectName: Wooden Door
+  objectWidth: 1
+  objectHeight: 1
+  objectEnterability: 2

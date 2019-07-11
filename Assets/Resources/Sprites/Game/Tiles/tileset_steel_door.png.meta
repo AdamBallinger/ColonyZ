@@ -1,15 +1,33 @@
 fileFormatVersion: 2
 guid: 0bc70543f8216b94b97d1394bcdf856b
-timeCreated: 1527956229
-licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: closed_0
-    21300002: open_0
-    21300004: closed_1
-    21300006: open_1
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: closed_0
+  - first:
+      213: 21300002
+    second: open_0
+  - first:
+      213: 21300004
+    second: closed_1
+  - first:
+      213: 21300006
+    second: open_1
+  - first:
+      213: 8572493322290765801
+    second: tileset_steel_door_0
+  - first:
+      213: 6676442678983847274
+    second: tileset_steel_door_1
+  - first:
+      213: -155797220903893147
+    second: tileset_steel_door_2
+  - first:
+      213: 6545967731437796114
+    second: tileset_steel_door_3
   externalObjects: {}
-  serializedVersion: 4
+  serializedVersion: 10
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -27,6 +45,8 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -37,7 +57,7 @@ TextureImporter:
     serializedVersion: 2
     filterMode: 0
     aniso: -1
-    mipBias: -1
+    mipBias: -100
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -57,11 +77,13 @@ TextureImporter:
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
+  singleChannelComponent: 0
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
   platformSettings:
-  - buildTarget: DefaultTexturePlatform
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -71,7 +93,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - buildTarget: Standalone
+  - serializedVersion: 2
+    buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -85,7 +108,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: closed_0
+      name: tileset_steel_door_0
       rect:
         serializedVersion: 2
         x: 0
@@ -98,8 +121,15 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: ea84a662a31f73e4e81316a8135b6ad1
+      internalID: 8572493322290765801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
-      name: open_0
+      name: tileset_steel_door_1
       rect:
         serializedVersion: 2
         x: 32
@@ -112,8 +142,15 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 1fb79fbc89bdd5c4f9fa6e5877cf2821
+      internalID: 6676442678983847274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
-      name: closed_1
+      name: tileset_steel_door_2
       rect:
         serializedVersion: 2
         x: 64
@@ -126,8 +163,15 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 523d5b9195590634ba7210aaf884570a
+      internalID: -155797220903893147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
-      name: open_1
+      name: tileset_steel_door_3
       rect:
         serializedVersion: 2
         x: 96
@@ -140,9 +184,26 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: 0
+      bones: []
+      spriteID: 0203e0dd9bacae840824432117e977b6
+      internalID: 6545967731437796114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
+    bones: []
+    spriteID: a3650342ffd9b9741a813f4de8fdfa3e
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
   spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

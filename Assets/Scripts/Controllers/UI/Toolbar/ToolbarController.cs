@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Controllers.Dev;
-using Models.Sprites;
 using UnityEngine;
 
 namespace Controllers.UI.Toolbar
@@ -11,31 +10,31 @@ namespace Controllers.UI.Toolbar
         public static ToolbarController Instance { get; private set; }
 
         [SerializeField]
-        private GameObject toolbarButtonPrefab = null;
+        private GameObject toolbarButtonPrefab;
 
         [SerializeField]
-        private GameObject toolbarTabButtonPrefab = null;
+        private GameObject toolbarTabButtonPrefab;
 
         [SerializeField]
-        private GameObject toolbarSubMenuItemPrefab = null;
+        private GameObject toolbarSubMenuItemPrefab;
 
         /// <summary>
         /// Reference to the gameobject that parents all of the toolbar menu buttons. E.g. Construction, Commands, etc.
         /// </summary>
         [SerializeField]
-        private GameObject toolBarButtonsParent = null;
+        private GameObject toolBarButtonsParent;
 
         /// <summary>
         /// Reference to the gameobject that parents all the sub menu buttons. E.g For construction: Structures, Areas, etc.
         /// </summary>
         [SerializeField]
-        private GameObject toolbarSubMenuParent = null;
+        private GameObject toolbarSubMenuParent;
 
         /// <summary>
         /// Reference to the gameobject that parents all the sub menu item buttons. E.g. construction -> building -> Wood Wall, Steel Wall etc.
         /// </summary>
         [SerializeField]
-        private GameObject toolbarSubMenuItemsParent = null;
+        private GameObject toolbarSubMenuItemsParent;
 
         /// <summary>
         /// Maps each root menu to its sub menu container.
@@ -68,7 +67,10 @@ namespace Controllers.UI.Toolbar
             AddSubMenu("Menu", "Exit", Application.Quit);
             AddSubMenu("Menu", "Dev");
 
-            AddSubMenuItem("Construction", "Building", "Wood Wall",
+            // TODO: Rewrite this utter garbage system to actually use TileObject SO references instead..
+            // Maybe add a icon reference to each SpriteData so it can be easily accessed? <- Done
+            
+            /*AddSubMenuItem("Construction", "Building", "Wood Wall",
                            SpriteCache.GetSprite("Wood_Wall", 47), () =>
             {
                 MouseController.Instance.BuildModeController.StartObjectBuild("Wood_Wall");
@@ -103,7 +105,7 @@ namespace Controllers.UI.Toolbar
             AddSubMenuItem("Commands", "Work", "Fell", 
                            SpriteCache.GetSprite("Overlay", "chop"), null);
             AddSubMenuItem("Commands", "Work", "Cancel", 
-                           SpriteCache.GetSprite("Overlay", "cancel"), null);
+                           SpriteCache.GetSprite("Overlay", "cancel"), null);*/
             
             AddSubMenuItem("Menu", "Dev", "Tile Nodes", null, DevToolManager.Instance.ToggleTileNodes);
         }

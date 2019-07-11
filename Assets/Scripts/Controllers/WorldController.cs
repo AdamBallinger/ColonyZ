@@ -3,7 +3,6 @@ using Models.Entities;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
-using Models.Map.Tiles.Objects;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -37,13 +36,13 @@ namespace Controllers
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
-            SpriteDataController.LoadSpriteData();
+            //SpriteDataController.LoadSpriteData();
 
-            TileObjectRegistry.RegisterTileObject(new FoundationObject("Foundation_Base"));
+            /*TileObjectRegistry.RegisterTileObject(new FoundationObject("Foundation_Base"));
             TileObjectRegistry.RegisterTileObject(new WallObject("Wood_Wall"));
             TileObjectRegistry.RegisterTileObject(new WallObject("Steel_Wall"));
             TileObjectRegistry.RegisterTileObject(new DoorObject("Wood_Door"));
-            TileObjectRegistry.RegisterTileObject(new DoorObject("Steel_Door"));
+            TileObjectRegistry.RegisterTileObject(new DoorObject("Steel_Door"));*/
 
             NewWorld();
         }

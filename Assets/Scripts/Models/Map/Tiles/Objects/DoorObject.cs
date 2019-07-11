@@ -1,23 +1,10 @@
-﻿using Controllers;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Models.Map.Tiles.Objects
 {
+    [CreateAssetMenu(fileName = "TileObject_Door_", menuName = "ColonyZ/Door Object", order = 51)]
     public class DoorObject : TileObject
-    {
-        public DoorObject(string _objectName) : base(_objectName)
-        {
-            Type = TileObjectType.Single_Tile;
-            Enterability = TileEnterability.Delayed;
-        }
-
-        public override TileObject Clone()
-        {
-            var clone = new DoorObject(ObjectName);
-            CopyInto(clone);
-            return clone;
-        }
-
+    {   
         public override int GetSpriteIndex()
         {
             var east = World.Instance.GetTileAt(Tile.X + 1, Tile.Y);
@@ -79,11 +66,6 @@ namespace Models.Map.Tiles.Objects
             }
 
             return false;
-        }
-
-        public override Sprite GetIcon()
-        {
-            return SpriteCache.GetSprite(SpriteData.SpriteGroup, 0);
         }
     }
 }

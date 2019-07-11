@@ -1,30 +1,32 @@
-﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using Controllers;
+using UnityEngine;
 
 namespace Models.Sprites
 {
-    [Serializable]
-    public enum SpriteType
+    [CreateAssetMenu(fileName = "Sprite_Data_", menuName = "ColonyZ/Sprite Data")]
+    public class SpriteData : ScriptableObject
     {
-        Single,
-        Tileset
-    }
+        public Sprite[] Sprites => sprites;
 
-    [Serializable]
-    public class SpriteData
-    {
-        [JsonProperty]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public SpriteType SpriteType { get; private set; } = SpriteType.Single;
+        public int SpriteCount => Sprites.Length;
 
-        [JsonProperty]
-        public string ResourcePath { get; private set; }
+        public string SpriteGroup => spriteGroupName;
 
-        [JsonProperty]
-        public string SpriteGroup { get; private set; } = "default";
+        public int IconIndex => Sprites.Length > 1 ? uiIconIndex : 0;
 
-        [JsonProperty]
-        public string SpriteGroupPrefix { get; private set; } = "";
+        [SerializeField, Tooltip("The group the sprites will be stored in for the sprite cache.")]
+        private string spriteGroupName = "default";
+
+        [SerializeField]
+        private Sprite[] sprites;
+
+        [SerializeField, HideInInspector]
+        private int uiIconIndex;
+        
+        public void Load()
+        {
+            // TODO: Add sprite loading once for each scriptable object in resources.
+            SpriteCache.AddSprites(SpriteGroup, Sprites);
+        }
     }
 }

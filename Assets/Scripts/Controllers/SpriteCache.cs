@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Models.Map;
-using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using Models.Sprites;
 using UnityEngine;
@@ -10,27 +8,6 @@ namespace Controllers
     public static class SpriteCache
     {
         private static Dictionary<string, List<Sprite>> spriteCache = new Dictionary<string, List<Sprite>>();
-
-        public static Sprite GetSprite(string _spriteName)
-        {
-            return GetSprite("default", _spriteName);
-        }
-
-        public static Sprite GetSprite(string _spriteGroup, string _spriteName)
-        {
-            if(spriteCache.ContainsKey(_spriteGroup))
-            {
-                foreach (var sprite in spriteCache[_spriteGroup])
-                {
-                    if (sprite.name.Equals(_spriteName))
-                    {
-                        return sprite;
-                    }
-                }
-            }
-
-            return null;
-        }
 
         public static Sprite GetSprite(string _spriteGroup, int _groupIndex)
         {
@@ -52,16 +29,17 @@ namespace Controllers
                 return null;
             }
 
+            // TODO: Untested
             if(spriteCache.ContainsKey(_object.SpriteData.SpriteGroup))
             {
                 var spriteData = _object.SpriteData;
 
-                if(spriteData.SpriteType == SpriteType.Single)
+                if(spriteData.SpriteCount == 1)
                 {
                     return spriteCache[spriteData.SpriteGroup][0];
                 }
 
-                var index = _object.Type == TileObjectType.Single_Tile ? _object.GetSpriteIndex() : 
+                var index = !_object.DynamicSprite ? _object.GetSpriteIndex() : 
                     TileBitMask.ComputeBitmaskValue(_object.Tile, BitmaskEvaluationType.Object);
                 return spriteCache[spriteData.SpriteGroup][index];
             }
@@ -73,7 +51,6 @@ namespace Controllers
         {
             if(_sprite == null)
             {
-                // Don't add null sprites to the cache
                 return;
             }
 
@@ -89,6 +66,14 @@ namespace Controllers
             }
 
             spriteCache[_spriteGroup].Add(_sprite);
+        }
+        
+        public static void AddSprites(string _spriteGroup, IEnumerable<Sprite> _sprites)
+        {
+            foreach (var sprite in _sprites)
+            {
+                AddSprite(_spriteGroup, sprite);
+            }
         }
     }
 }
