@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Models.Map.Tiles
 {
     public static class TileManager
     {
-        private static readonly string dataRoot = "Game_Data/Defs/Tiles/";
+        private static readonly string dataRoot = "TileDefs/";
 
         private static Dictionary<string, TileDefinition> tileDefinitions = new Dictionary<string, TileDefinition>();
 
@@ -25,19 +24,17 @@ namespace Models.Map.Tiles
         {
             tileDefinitions.Clear();
 
-            var data = Resources.LoadAll<TextAsset>(dataRoot);
+            var definitions = Resources.LoadAll<TileDefinition>(dataRoot);
 
-            foreach (var asset in data)
+            foreach (var def in definitions)
             {
-                var def = JsonConvert.DeserializeObject<TileDefinition>(asset.text);
-
-                if (tileDefinitions.ContainsKey(def.Name))
+                if (tileDefinitions.ContainsKey(def.TileName))
                 {
-                    Debug.LogWarning($"Skipping tile def: {def.Name} as it was already loaded.");
+                    Debug.LogWarning($"Skipping tile definition: {def.TileName} as it was already loaded.");
                     continue;
                 }
                 
-                tileDefinitions.Add(def.Name, def);
+                tileDefinitions.Add(def.TileName, def);
             }
         }
     }

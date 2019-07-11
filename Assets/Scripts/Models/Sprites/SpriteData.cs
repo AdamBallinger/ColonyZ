@@ -25,7 +25,6 @@ namespace Models.Sprites
         
         public void Load()
         {
-            // TODO: Add sprite loading once for each scriptable object in resources.
             SpriteCache.AddSprites(SpriteGroup, Sprites);
         }
     }

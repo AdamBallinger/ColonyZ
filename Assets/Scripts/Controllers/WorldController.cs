@@ -36,14 +36,6 @@ namespace Controllers
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
 
-            //SpriteDataController.LoadSpriteData();
-
-            /*TileObjectRegistry.RegisterTileObject(new FoundationObject("Foundation_Base"));
-            TileObjectRegistry.RegisterTileObject(new WallObject("Wood_Wall"));
-            TileObjectRegistry.RegisterTileObject(new WallObject("Steel_Wall"));
-            TileObjectRegistry.RegisterTileObject(new DoorObject("Wood_Door"));
-            TileObjectRegistry.RegisterTileObject(new DoorObject("Steel_Door"));*/
-
             NewWorld();
         }
 
@@ -237,12 +229,13 @@ namespace Controllers
         {
             if (_entity is CharacterEntity)
             {
-                var char_GO = Instantiate(Resources.Load<GameObject>("Prefabs/Game/Entity_Character"), _transform);
+                // TODO: Refactor this as prefabs are not loaded from resources anymore.
+                /*var char_GO = Instantiate(Resources.Load<GameObject>("Prefabs/Game/Entity_Character"), _transform);
                 char_GO.transform.position = new Vector2(_entity.X, _entity.Y);
 
                 // TODO: Set sprites for character GameObject.
 
-                characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);
+                characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);*/
             }
         }
     }

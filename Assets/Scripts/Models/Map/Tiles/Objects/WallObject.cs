@@ -9,5 +9,10 @@ namespace Models.Map.Tiles.Objects
         {
             return _tile.Object == null;
         }
+
+        public override bool ConnectsWith(TileObject _other)
+        {
+            return _other.ObjectName == ObjectName;
+        }
     }
 }

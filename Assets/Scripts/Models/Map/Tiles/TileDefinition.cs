@@ -1,28 +1,23 @@
-using System;
-using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Models.Map.Tiles
 {
-    [Serializable]
-    public class TileDefinition
-    {        
-        /// <summary>
-        /// The texture index for this definition.
-        /// </summary>
-        [JsonProperty]
-        public int TextureIndex { get; private set; }
+    [CreateAssetMenu(fileName = "Tile_Definition_", menuName = "ColonyZ/Tile Definition", order = 101)]
+    public class TileDefinition : ScriptableObject
+    {
+        public string TileName => tileName;
+
+        public int TextureIndex => textureIndex;
+
+        public float MovementModifier => movementModifier;
+
+        [SerializeField]
+        private string tileName;
+
+        [SerializeField, Tooltip("Percentage modifier applied to units walking over this tile.")]
+        private float movementModifier;
         
-        /// <summary>
-        /// The name of the tile.
-        /// </summary>
-        [JsonProperty]
-        public string Name { get; private set; }
-        
-        /// <summary>
-        /// Movement modifier for characters moving over this tile.
-        /// A higher value increases movement speed; a lower value reduces.
-        /// </summary>
-        [JsonProperty]
-        public float MovementModifier { get; set; }
+        [SerializeField, Tooltip("The texture index for this tile in the world mesh texture.")]
+        private int textureIndex;
     }
 }

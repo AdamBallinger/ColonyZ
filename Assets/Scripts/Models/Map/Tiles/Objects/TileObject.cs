@@ -66,6 +66,7 @@ namespace Models.Map.Tiles.Objects
         /// <returns></returns>
         public virtual bool ConnectsWith(TileObject _other)
         {
+            // TODO: Implement this in appropriate object classes so dynamic sprites work.
             return false;
         }
 

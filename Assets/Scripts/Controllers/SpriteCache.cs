@@ -29,7 +29,6 @@ namespace Controllers
                 return null;
             }
 
-            // TODO: Untested
             if(spriteCache.ContainsKey(_object.SpriteData.SpriteGroup))
             {
                 var spriteData = _object.SpriteData;

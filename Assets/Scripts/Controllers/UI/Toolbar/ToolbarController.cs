@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Controllers.Dev;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Controllers.UI.Toolbar
 {
     public class ToolbarController : MonoBehaviour
     {
-        public static ToolbarController Instance { get; private set; }
-
-        [SerializeField]
+        /*[SerializeField]
         private GameObject toolbarButtonPrefab;
 
         [SerializeField]
@@ -46,16 +41,11 @@ namespace Controllers.UI.Toolbar
         /// </summary>
         private string currentRootMenu = string.Empty;
 
-        private string currentSubMenu = string.Empty;
-
-        private void Awake()
-        {
-            Instance = this;           
-        }
+        private string currentSubMenu = string.Empty;*/
 
         private void Start()
         {
-            AddRootMenu("Construction");
+            /*AddRootMenu("Construction");
             AddRootMenu("Commands");
             AddRootMenu("Menu");
 
@@ -65,7 +55,7 @@ namespace Controllers.UI.Toolbar
             AddSubMenu("Commands", "Work");
 
             AddSubMenu("Menu", "Exit", Application.Quit);
-            AddSubMenu("Menu", "Dev");
+            AddSubMenu("Menu", "Dev");*/
 
             // TODO: Rewrite this utter garbage system to actually use TileObject SO references instead..
             // Maybe add a icon reference to each SpriteData so it can be easily accessed? <- Done
@@ -105,12 +95,12 @@ namespace Controllers.UI.Toolbar
             AddSubMenuItem("Commands", "Work", "Fell", 
                            SpriteCache.GetSprite("Overlay", "chop"), null);
             AddSubMenuItem("Commands", "Work", "Cancel", 
-                           SpriteCache.GetSprite("Overlay", "cancel"), null);*/
+                           SpriteCache.GetSprite("Overlay", "cancel"), null);
             
-            AddSubMenuItem("Menu", "Dev", "Tile Nodes", null, DevToolManager.Instance.ToggleTileNodes);
+            AddSubMenuItem("Menu", "Dev", "Tile Nodes", null, DevToolManager.Instance.ToggleTileNodes);*/
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Add a new button to the root of the UI toolbar.
         /// </summary>
         /// <param name="_menuName">Button text.</param>
@@ -234,6 +224,6 @@ namespace Controllers.UI.Toolbar
             buttonController.AddButtonClickAction(_clickAction);
 
             subMenuMap[_rootMenuName].AddSubMenuItem(_subMenuName, buttonController);
-        }
+        }*/
     }
 }

@@ -774,6 +774,7 @@ MonoBehaviour:
   toolBarButtonsParent: {fileID: 283091895}
   toolbarSubMenuParent: {fileID: 571045783}
   toolbarSubMenuItemsParent: {fileID: 633259236}
+  buildTest: {fileID: 11400000, guid: bd316b4cadb0df0409defdb5ed20cef7, type: 2}
 --- !u!1 &1450586760
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,8 +972,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cee140ee272f24ba4a9e3dfdb4d706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 16
-  worldHeight: 16
+  worldWidth: 64
+  worldHeight: 64
   tileSortingLayerName: Tiles
   tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
 --- !u!23 &1920970006
