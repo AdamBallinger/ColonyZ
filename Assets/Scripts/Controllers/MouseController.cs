@@ -3,6 +3,7 @@ using EzPool;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
+using Models.Sprites;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

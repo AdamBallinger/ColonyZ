@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Models.Map.Tiles.Objects;
-using Models.Sprites;
 using UnityEngine;
 
-namespace Controllers
+namespace Models.Sprites
 {
     public static class SpriteCache
     {
@@ -39,7 +38,7 @@ namespace Controllers
                 }
 
                 var index = !_object.DynamicSprite ? _object.GetSpriteIndex() : 
-                    TileBitMask.ComputeBitmaskValue(_object.Tile, BitmaskEvaluationType.Object);
+                    SpriteBitMask.ComputeBitmaskValue(_object.Tile);
                 return spriteCache[spriteData.SpriteGroup][index];
             }
 
@@ -60,7 +59,6 @@ namespace Controllers
 
             if(spriteCache[_spriteGroup].Contains(_sprite))
             {
-                // Sprite already exists in the cache for this group
                 return;
             }
 

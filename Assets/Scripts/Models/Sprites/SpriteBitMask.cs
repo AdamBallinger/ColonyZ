@@ -18,13 +18,7 @@ namespace Models.Sprites
         South_East = 1 << 7
     }
 
-    public enum BitmaskEvaluationType
-    {
-        Tile,
-        Object
-    }
-
-    public static class TileBitMask
+    public static class SpriteBitMask
     {
         /// <summary>
         /// Bit masking dictionary that maps different bitmask values to the matching index of a tileset
@@ -41,20 +35,17 @@ namespace Models.Sprites
         };
 
         private static Tile tile;
-        private static BitmaskEvaluationType Type;
 
         /// <summary>
-        /// Returns the bitmask tileset value for a given tile based on its surrounding tiles according to the evaluation type.
+        /// Returns the bitmask tileset value for a given tile based on its surrounding tiles.
         /// </summary>
         /// <param name="_tile"></param>
-        /// <param name="_evalType"></param>
         /// <returns></returns>
-        public static int ComputeBitmaskValue(Tile _tile, BitmaskEvaluationType _evalType)
+        public static int ComputeBitmaskValue(Tile _tile)
         {
             var bitmaskValue = 0;
 
             tile = _tile;
-            Type = _evalType;
 
             var tile_NW = World.Instance.GetTileAt(tile.X - 1, tile.Y + 1);
             var tile_N = World.Instance.GetTileAt(tile.X, tile.Y + 1);
@@ -110,17 +101,12 @@ namespace Models.Sprites
 
         private static bool Connects(Tile _neighbour)
         {
-            if (Type == BitmaskEvaluationType.Object)
+            if (tile?.Object == null || _neighbour?.Object == null)
             {
-                if (tile?.Object == null || _neighbour?.Object == null)
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                return tile.Object.ConnectsWith(_neighbour.Object);
-            }          
-
-            return false;
+            return tile.Object.ConnectsWith(_neighbour.Object);
         }
     }
 }
