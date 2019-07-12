@@ -1,4 +1,3 @@
-using Controllers;
 using Models.Sprites;
 using UnityEngine;
 
@@ -87,7 +86,7 @@ namespace Models.Map.Tiles.Objects
         public abstract bool CanPlace(Tile _tile);
 
         /// <summary>
-        /// Return an icon sprite for this tile structure. This is used for display the structure in UI.
+        /// Return an icon sprite for this tile structure. This is used to display the structure in UI.
         /// </summary>
         /// <returns></returns>
         public Sprite GetIcon()
