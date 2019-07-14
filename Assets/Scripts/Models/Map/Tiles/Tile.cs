@@ -75,6 +75,8 @@ namespace Models.Map.Tiles
                     t.onTileChanged?.Invoke(t);
                 }
             }
+            
+            World.Instance.Objects.Add(_object);
 
             onTileChanged?.Invoke(this);
         }
@@ -85,6 +87,8 @@ namespace Models.Map.Tiles
             {
                 return;
             }
+
+            World.Instance.Objects.Remove(Object);
 
             Object = null;
 

@@ -362,7 +362,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 3
-  m_Spacing: 1
+  m_Spacing: 0.8
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -2262,6 +2262,7 @@ MonoBehaviour:
   tileObjects:
   - {fileID: 11400000, guid: bd316b4cadb0df0409defdb5ed20cef7, type: 2}
   - {fileID: 11400000, guid: e399c29c4324be54f87f93cf3b8c3d89, type: 2}
+  - {fileID: 11400000, guid: 8b137ff655fdd664dba9981a9d73144a, type: 2}
 --- !u!1 &1580058173
 GameObject:
   m_ObjectHideFlags: 0

@@ -55,9 +55,11 @@ namespace Controllers
 
             if (World.Instance.IsObjectPositionValid(ObjectToBuild, _tile))
             {
-                // TODO: Add Job to build object, rather than this instant build.
-                // Set the tile as a construction base until the job is completed, which should then change the object.
-                _tile.SetObject(Object.Instantiate(ObjectToBuild));
+                // TODO: Change to a Job when implemented.
+                var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
+                var obj = Object.Instantiate(ObjectToBuild);
+                foundation.SetBuilding(obj);
+                _tile.SetObject(foundation);
             }
         }
 
