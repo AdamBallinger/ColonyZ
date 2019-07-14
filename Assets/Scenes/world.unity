@@ -1374,8 +1374,6 @@ MonoBehaviour:
   buttonPrefab: {fileID: 1939952103592664, guid: d3f2558043fced44db5b11c70870e7a7,
     type: 3}
   buttonsContainer: {fileID: 661795780}
-  objects:
-  - {fileID: 11400000, guid: bd316b4cadb0df0409defdb5ed20cef7, type: 2}
 --- !u!1 &1110402560
 GameObject:
   m_ObjectHideFlags: 0
@@ -2210,6 +2208,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1523355954}
   - component: {fileID: 1523355955}
+  - component: {fileID: 1523355956}
   m_Layer: 0
   m_Name: Loaders
   m_TagString: Untagged
@@ -2248,6 +2247,21 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6ef022f09ea6fb45a763b84c085c167, type: 2}
   - {fileID: 11400000, guid: ecfda6801bf6a4f43a48ceed825cdb1f, type: 2}
   - {fileID: 11400000, guid: dd0b244d09aa09648aff41e72399ab14, type: 2}
+--- !u!114 &1523355956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523355953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd4f293f84d38f0438ac6e631e4a7bbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileObjects:
+  - {fileID: 11400000, guid: bd316b4cadb0df0409defdb5ed20cef7, type: 2}
+  - {fileID: 11400000, guid: e399c29c4324be54f87f93cf3b8c3d89, type: 2}
 --- !u!1 &1580058173
 GameObject:
   m_ObjectHideFlags: 0

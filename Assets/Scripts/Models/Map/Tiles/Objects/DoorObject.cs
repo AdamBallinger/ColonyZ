@@ -4,7 +4,9 @@ namespace Models.Map.Tiles.Objects
 {
     [CreateAssetMenu(fileName = "TileObject_Door_", menuName = "ColonyZ/Door Object", order = 51)]
     public class DoorObject : TileObject
-    {   
+    {           
+        private bool isOpen = false;
+        
         public override int GetSpriteIndex()
         {
             var east = World.Instance.GetTileAt(Tile.X + 1, Tile.Y);
@@ -15,7 +17,7 @@ namespace Models.Map.Tiles.Objects
                 if (east.Object != null && east.Object.GetType() == typeof(WallObject) &&
                    west.Object != null && west.Object.GetType() == typeof(WallObject))
                 {
-                    return 0;
+                    return isOpen ? 1 : 0;
                 }
             }
 
@@ -27,7 +29,7 @@ namespace Models.Map.Tiles.Objects
                 if (north.Object != null && north.Object.GetType() == typeof(WallObject) &&
                    south.Object != null && south.Object.GetType() == typeof(WallObject))
                 {
-                    return 1;
+                    return isOpen ? 3 : 2;
                 }
             }
 
