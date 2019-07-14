@@ -38,7 +38,7 @@ namespace Models.Sprites
                 }
 
                 var index = !_object.DynamicSprite ? _object.GetSpriteIndex() : 
-                    SpriteBitMask.ComputeBitmaskValue(_object.Tile);
+                    SpriteBitMask.GetObjectWorldIndex(_object.Tile);
                 return spriteCache[spriteData.SpriteGroup][index];
             }
 

@@ -41,7 +41,7 @@ namespace Models.Sprites
         /// </summary>
         /// <param name="_tile"></param>
         /// <returns></returns>
-        public static int ComputeBitmaskValue(Tile _tile)
+        public static int GetObjectWorldIndex(Tile _tile)
         {
             var bitmaskValue = 0;
 
@@ -95,7 +95,7 @@ namespace Models.Sprites
             {
                 bitmaskValue += 128;
             }
-
+            
             return bitMaskMap[bitmaskValue];
         }
 
