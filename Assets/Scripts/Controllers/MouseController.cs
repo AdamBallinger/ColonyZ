@@ -172,7 +172,7 @@ namespace Controllers
 
                             // Tint the preview color based on if the structure position is valid.
                             previewRenderer.color = !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, tile)
-                                ? new Color(1.0f, 0.3f, 0.3f, 0.6f) : new Color(0.3f, 1.0f, 0.3f, 0.6f);
+                                ? new Color(1.0f, 0.3f, 0.3f, 0.4f) : new Color(0.3f, 1.0f, 0.3f, 0.4f);
                         }
 
                         if (BuildModeController.Mode == BuildMode.Demolish)
