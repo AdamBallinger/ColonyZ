@@ -111,6 +111,7 @@ namespace Controllers
         /// <param name="_dragData"></param>
         private void UpdateDragPreview(DragData _dragData)
         {
+            // TODO: Dragging probably needs to be rewritten as it causes massive frame drops with large drag areas.
             ClearPreviewObjects();
 
             // Hide selection graphic if mouse is off the map.
@@ -262,11 +263,6 @@ namespace Controllers
 
     public struct DragData
     {
-        public int RealStartX { get; private set; }
-        public int RealStartY { get; private set; }
-        public int RealEndX { get; private set; }
-        public int RealEndY { get; private set; }
-
         public int StartX { get; private set; }
         public int StartY { get; private set; }
         public int EndX { get; private set; }
@@ -274,11 +270,6 @@ namespace Controllers
 
         public void Build(int _startX, int _endX, int _startY, int _endY)
         {
-            RealStartX = _startX;
-            RealStartY = _startY;
-            RealEndX = _endX;
-            RealEndY = _endY;
-
             StartX = Mathf.Min(_startX, _endX);
             StartY = Mathf.Min(_startY, _endY);
             EndX = Mathf.Max(_startX, _endX);

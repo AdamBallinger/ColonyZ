@@ -12,7 +12,7 @@ namespace Models.Map.Tiles.Objects
 
         public override bool ConnectsWith(TileObject _other)
         {
-            return _other.ObjectName == ObjectName;
+            return string.CompareOrdinal(_other.ObjectName, ObjectName) == 0;
         }
     }
 }

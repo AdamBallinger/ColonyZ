@@ -47,7 +47,7 @@ namespace Models.Map.Tiles.Objects
 
             // Only connect with other foundations that are building the same object.
             var foundation = _other as FoundationObject;
-            return foundation != null && foundation.Building?.ObjectName == Building?.ObjectName;
+            return foundation != null && string.CompareOrdinal(foundation.Building?.ObjectName, Building?.ObjectName) == 0;
         }
     }
 }
