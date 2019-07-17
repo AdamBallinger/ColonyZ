@@ -547,11 +547,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 344496807}
+      objectReference: {fileID: 923033497}
     - target: {fileID: 114199099995395078, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClick
+      value: OnMenuClick
       objectReference: {fileID: 0}
     - target: {fileID: 114038449034679424, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
@@ -606,18 +606,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 344496805}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &344496807 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3991612440397122401, guid: 79ca2d5c507e2884197d3a58d2d09997,
-    type: 3}
-  m_PrefabInstance: {fileID: 344496805}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 923033496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb0ac2b98ea36e4a994af54abfa53d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &348584756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1249,11 +1237,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 951663746}
+      objectReference: {fileID: 453376328}
     - target: {fileID: 114199099995395078, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClick
+      value: OnMenuClick
       objectReference: {fileID: 0}
     - target: {fileID: 114038449034679424, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
@@ -1283,18 +1271,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 951663744}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &951663746 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3991612440397122401, guid: 79ca2d5c507e2884197d3a58d2d09997,
-    type: 3}
-  m_PrefabInstance: {fileID: 951663744}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 453376327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb0ac2b98ea36e4a994af54abfa53d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &974394235
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,11 +1782,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1232033987}
+      objectReference: {fileID: 1500398772}
     - target: {fileID: 114199099995395078, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClick
+      value: OnMenuClick
       objectReference: {fileID: 0}
     - target: {fileID: 114199099995395078, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
@@ -1875,18 +1851,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1232033985}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1232033987 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3991612440397122401, guid: 79ca2d5c507e2884197d3a58d2d09997,
-    type: 3}
-  m_PrefabInstance: {fileID: 1232033985}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1500398771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb0ac2b98ea36e4a994af54abfa53d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1362517527
 GameObject:
   m_ObjectHideFlags: 0
@@ -2674,11 +2638,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1935454379}
+      objectReference: {fileID: 22189010}
     - target: {fileID: 114199099995395078, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClick
+      value: OnMenuClick
       objectReference: {fileID: 0}
     - target: {fileID: 114038449034679424, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
@@ -2733,18 +2697,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1935454377}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1935454379 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3991612440397122401, guid: 79ca2d5c507e2884197d3a58d2d09997,
-    type: 3}
-  m_PrefabInstance: {fileID: 1935454377}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 22189009}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcb0ac2b98ea36e4a994af54abfa53d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1988782199
 GameObject:
   m_ObjectHideFlags: 0

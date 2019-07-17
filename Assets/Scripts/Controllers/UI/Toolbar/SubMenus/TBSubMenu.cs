@@ -27,7 +27,6 @@ namespace Controllers.UI.Toolbar.SubMenus
         
         public void Enable()
         {
-            menuController.SetOpenMenu(this);
             Open = true;
             menuController.SubMenuItemContainer.SetActive(true);
             OnEnabled();
@@ -39,6 +38,11 @@ namespace Controllers.UI.Toolbar.SubMenus
             Open = false;
             menuController.SubMenuItemContainer.SetActive(false);
             OnDisabled();
+        }
+        
+        public void OnMenuClick()
+        {
+            menuController.SetOpenMenu(this);
         }
         
         private void ClearContainer()

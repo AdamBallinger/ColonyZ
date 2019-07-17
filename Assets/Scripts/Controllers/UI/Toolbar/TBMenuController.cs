@@ -19,20 +19,44 @@ namespace Controllers.UI.Toolbar
         
         public void Enable()
         {
-            openSubMenu?.Enable();
+            SetOpenMenu(null);
             gameObject.SetActive(true);
         }
         
         public void Disable()
         {
-            openSubMenu?.Disable();
+            SetOpenMenu(null);
             gameObject.SetActive(false);
         }
         
         public void SetOpenMenu(TBSubMenu _menu)
         {
-            openSubMenu?.Disable();
+            if (_menu == null)
+            {
+                CloseSubMenu();
+                return;
+            }
+            
+            if (_menu == openSubMenu)
+            {
+                CloseSubMenu();
+                return;
+            }
+            
+            CloseSubMenu();
+            OpenSubMenu(_menu);
+        }
+        
+        private void OpenSubMenu(TBSubMenu _menu)
+        {
             openSubMenu = _menu;
+            openSubMenu?.Enable();
+        }
+        
+        private void CloseSubMenu()
+        {
+            openSubMenu?.Disable();
+            openSubMenu = null;
         }
     }
 }
