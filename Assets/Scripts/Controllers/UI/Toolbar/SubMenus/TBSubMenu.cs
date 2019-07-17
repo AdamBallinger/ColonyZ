@@ -36,7 +36,6 @@ namespace Controllers.UI.Toolbar.SubMenus
         public void Disable()
         {
             ClearContainer();
-            menuController.SetOpenMenu(null);
             Open = false;
             menuController.SubMenuItemContainer.SetActive(false);
             OnDisabled();

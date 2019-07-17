@@ -31,6 +31,7 @@ namespace Controllers.UI.Toolbar
         
         public void SetOpenMenu(TBSubMenu _menu)
         {
+            openSubMenu?.Disable();
             openSubMenu = _menu;
         }
     }
