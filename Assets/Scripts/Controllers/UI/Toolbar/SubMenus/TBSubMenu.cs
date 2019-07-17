@@ -59,6 +59,10 @@ namespace Controllers.UI.Toolbar.SubMenus
         }
 
         protected abstract void OnEnabled();
-        protected abstract void OnDisabled();
+        
+        protected virtual void OnDisabled()
+        {
+            MouseController.Instance.Mode = MouseMode.Select;
+        }
     }
 }

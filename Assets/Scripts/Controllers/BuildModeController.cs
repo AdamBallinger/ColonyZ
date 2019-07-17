@@ -63,14 +63,21 @@ namespace Controllers
             }
         }
 
-        public void StartObjectBuild(TileObject _object)
+        /// <summary>
+        /// Sets the controller to build the provided tile object.
+        /// </summary>
+        /// <param name="_object"></param>
+        public void SetBuildMode(TileObject _object)
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Object;
             ObjectToBuild = _object;
         }
 
-        public void StartDemolishBuild()
+        /// <summary>
+        /// Sets the controller into demolish mode.
+        /// </summary>
+        public void SetDemolishMode()
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Demolish;

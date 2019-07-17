@@ -264,6 +264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 254985420}
   - component: {fileID: 254985421}
+  - component: {fileID: 254985422}
   m_Layer: 5
   m_Name: Commands
   m_TagString: Untagged
@@ -303,6 +304,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4366bd97884b79944808d783b3679696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &254985422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254985419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48eeceb0a09513342842d37ff798146f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonPrefab: {fileID: 1939952103592664, guid: d3f2558043fced44db5b11c70870e7a7,
+    type: 3}
+  buttonsContainer: {fileID: 661795780}
 --- !u!1 &283091895
 GameObject:
   m_ObjectHideFlags: 0
@@ -2645,6 +2661,11 @@ PrefabInstance:
       propertyPath: buttonContainer
       value: 
       objectReference: {fileID: 661795780}
+    - target: {fileID: 3991612440397122401, guid: 79ca2d5c507e2884197d3a58d2d09997,
+        type: 3}
+      propertyPath: subMenu
+      value: 
+      objectReference: {fileID: 254985422}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79ca2d5c507e2884197d3a58d2d09997, type: 3}
 --- !u!224 &1935454378 stripped

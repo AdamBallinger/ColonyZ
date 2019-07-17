@@ -8,13 +8,8 @@ namespace Controllers.UI.Toolbar.SubMenus
         {
             foreach(var to in TileObjectCache.TileObjects)
             {
-                AddItem(to.ObjectName, to.GetIcon(), () => MouseController.Instance.BuildModeController.StartObjectBuild(to));
+                AddItem(to.ObjectName, to.GetIcon(), () => MouseController.Instance.BuildModeController.SetBuildMode(to));
             }
-        }
-        
-        protected override void OnDisabled()
-        {
-            MouseController.Instance.Mode = MouseMode.Select;
         }
     }
 }
