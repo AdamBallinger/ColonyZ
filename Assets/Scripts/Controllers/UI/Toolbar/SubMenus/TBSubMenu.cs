@@ -7,12 +7,6 @@ namespace Controllers.UI.Toolbar.SubMenus
     public abstract class TBSubMenu : MonoBehaviour
     {
         public bool Open { get; protected set; }
-        
-        [SerializeField]
-        private GameObject buttonPrefab;
-        
-        [SerializeField, Tooltip("The container gameobject for this submenus items.")]
-        private GameObject buttonsContainer;
 
         private List<GameObject> itemButtons;
 
@@ -26,7 +20,7 @@ namespace Controllers.UI.Toolbar.SubMenus
         
         protected void AddItem(string _buttonText, Sprite _buttonIcon, Action _onClick)
         {
-            var button = Instantiate(buttonPrefab, buttonsContainer.transform);
+            var button = Instantiate(menuController.SubMenuItemPrefab, menuController.SubMenuItemContainer.transform);
             button.GetComponent<TBSubMenuItemButton>().Set(_buttonText, _buttonIcon, _onClick);
             itemButtons.Add(button);
         }
@@ -35,7 +29,7 @@ namespace Controllers.UI.Toolbar.SubMenus
         {
             menuController.SetOpenMenu(this);
             Open = true;
-            buttonsContainer.SetActive(true);
+            menuController.SubMenuItemContainer.SetActive(true);
             OnEnabled();
         }
         
@@ -44,7 +38,7 @@ namespace Controllers.UI.Toolbar.SubMenus
             ClearContainer();
             menuController.SetOpenMenu(null);
             Open = false;
-            buttonsContainer.SetActive(false);
+            menuController.SubMenuItemContainer.SetActive(false);
             OnDisabled();
         }
         
