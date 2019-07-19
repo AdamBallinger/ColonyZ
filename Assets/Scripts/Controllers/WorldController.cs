@@ -22,15 +22,16 @@ namespace Controllers
         [SerializeField]
         private GameObject characterPrefab;
 
-        public string tileSortingLayerName = "Tiles";
+        [SerializeField]
+        private string tileSortingLayerName = "Tiles";
 
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
-        private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
+        private Dictionary<CharacterEntity, GameObject> characterGameObjects;
 
         private MeshFilter meshFilter;
 
         [SerializeField]
-        private Texture2D tileTypesTexture = null;
+        private Texture2D tileTypesTexture;
 
         private Transform _transform;
 
@@ -40,7 +41,7 @@ namespace Controllers
             Instance._transform = Instance.transform;
 
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
-            Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
+            Instance.characterGameObjects = new Dictionary<CharacterEntity, GameObject>();
 
             NewWorld();
         }
@@ -61,7 +62,7 @@ namespace Controllers
         {
             World.Instance?.Update();
             
-            foreach (var pair in characterEntityGameObjectMap)
+            foreach (var pair in characterGameObjects)
             {
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
             }
@@ -238,7 +239,7 @@ namespace Controllers
 
                 // TODO: Set sprites for character GameObject.
 
-                characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);
+                characterGameObjects.Add((CharacterEntity) _entity, char_GO);
             }
         }
     }
