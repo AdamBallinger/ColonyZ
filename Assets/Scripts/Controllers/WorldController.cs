@@ -14,8 +14,13 @@ namespace Controllers
     {
         public static WorldController Instance { get; private set; }
 
-        public int worldWidth = 100;
-        public int worldHeight = 100;
+        [SerializeField]
+        private int worldWidth = 100;
+        [SerializeField]
+        private int worldHeight = 100;
+
+        [SerializeField]
+        private GameObject characterPrefab;
 
         public string tileSortingLayerName = "Tiles";
 
@@ -55,9 +60,7 @@ namespace Controllers
         private void Update()
         {
             World.Instance?.Update();
-
-            // TODO: Possibly change this as it could be inefficient for large amounts of characters. For now it will do.
-            // TODO: Maybe create a single gameobject->transform dict to remove the large amount of GetComponent calls.
+            
             foreach (var pair in characterEntityGameObjectMap)
             {
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
@@ -230,13 +233,12 @@ namespace Controllers
         {
             if (_entity is CharacterEntity)
             {
-                // TODO: Refactor this as prefabs are not loaded from resources anymore.
-                /*var char_GO = Instantiate(Resources.Load<GameObject>("Prefabs/Game/Entity_Character"), _transform);
+                var char_GO = Instantiate(characterPrefab, _transform);
                 char_GO.transform.position = new Vector2(_entity.X, _entity.Y);
 
                 // TODO: Set sprites for character GameObject.
 
-                characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);*/
+                characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);
             }
         }
     }

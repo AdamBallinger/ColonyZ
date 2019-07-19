@@ -2471,6 +2471,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldWidth: 64
   worldHeight: 64
+  characterPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
+    type: 3}
   tileSortingLayerName: Tiles
   tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
 --- !u!23 &1920970006
