@@ -7,53 +7,54 @@ namespace Models.Map.Pathing
 	{
 	    public bool IsValid { get; }
 
+	    /// <summary>
+	    /// Returns the time in milliseconds taken to compute the path.
+	    /// </summary>
 	    public float ComputeTime { get; }
+	    
+	    public int Size => TilePath.Count;
+	    
+	    /// <summary>
+	    /// The list of remaining tiles in the path.
+	    /// </summary>
+	    public List<Tile> TilePath { get; }
+	    
+	    public Tile EndTile => TilePath?[TilePath.Count - 1];
 
-	    public Tile EndTile => World.Instance?.GetTileAt(NodePath[NodePath.Count - 1].X, NodePath[NodePath.Count - 1].Y);
+	    /// <summary>
+	    /// Returns the current tile at the start of the path list.
+	    /// </summary>
+	    public Tile CurrentTile { get; private set; }
 
-	    public int Size => NodePath.Count;
-
-	    public List<Tile> TilePath
-	    {
-	        get
-	        {
-	            tilePath.Clear();
-                
-                foreach(var node in NodePath)
-                {
-                    tilePath.Add(World.Instance?.GetTileAt(node.X, node.Y));
-                }
-
-	            return tilePath;
-	        }
-	    }
-
-        private List<Node> NodePath { get; }
-	    private List<Tile> tilePath;
-
-		public Path(List<Node> _nodePath, bool _isValid, float _computeTime)
+	    public Path(IEnumerable<Node> _nodePath, bool _isValid, float _computeTime)
 		{
-		    NodePath = _nodePath;
-		    IsValid = _isValid;
+			TilePath = new List<Tile>();
+			IsValid = _isValid;
 		    ComputeTime = _computeTime;
 
-            tilePath = new List<Tile>();
+		    foreach (var node in _nodePath)
+            {
+	            TilePath.Add(World.Instance.GetTileAt(node.X, node.Y));
+            }
+
+		    // Remove the starting tile as it the tile that an entity will start from.
+		    TilePath.RemoveAt(0);
+		    Next();
 		}
 
         /// <summary>
-        /// Gets the next tile in the path.
+        /// Sets the current tile to the first tile of the path then removes it.
         /// </summary>
-        /// <returns></returns>
-        public Tile Next()
+        public void Next()
         {
-            if(NodePath != null && NodePath.Count > 0)
+            if(Size > 0)
             {
-                var nextTile = World.Instance?.GetTileAt(NodePath[0].X, NodePath[0].Y);
-                NodePath.RemoveAt(0);
-                return nextTile;
+	            CurrentTile = TilePath[0];
+	            TilePath.RemoveAt(0);
+	            return;
             }
 
-            return null;
+            CurrentTile = null;
         }
 	}
 }

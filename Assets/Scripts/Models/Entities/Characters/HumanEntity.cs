@@ -1,5 +1,4 @@
-﻿using Models.AI.Actions;
-using Models.Map;
+﻿using Models.Map;
 using Models.Map.Tiles;
 
 namespace Models.Entities.Characters
@@ -8,15 +7,16 @@ namespace Models.Entities.Characters
     {
         public HumanEntity(Tile _tile) : base(_tile)
         {
-            actionManager.RegisterActionFinishCallback(OnActionFinish);
-            actionManager.Queue(new MoveAction(this, World.Instance.GetRandomTile()));
+            motor.SetTargetTile(World.Instance.GetRandomTile());
         }
 
-        public void OnActionFinish(BaseAction _action)
+        public override void Update()
         {
-            if(_action is MoveAction)
+            base.Update();
+            
+            if (!motor.Working)
             {
-                actionManager.Queue(new MoveAction(this, World.Instance.GetRandomTile()));
+                motor.SetTargetTile(World.Instance.GetRandomTile());
             }
         }
     }

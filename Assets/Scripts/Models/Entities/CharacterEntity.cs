@@ -1,3 +1,4 @@
+using Models.AI;
 using Models.AI.Actions;
 using Models.Map.Tiles;
 
@@ -9,15 +10,19 @@ namespace Models.Entities
 
         protected ActionManager actionManager;
 
+        protected AIMotor motor;
+
         protected CharacterEntity(Tile _tile) : base(_tile)
         {
             MovementSpeed = 1.0f;
             actionManager = new ActionManager();
+            motor = new AIMotor(this);
         }
 
         public override void Update()
         {
             actionManager.Update();
+            motor.Update();
         }
     }
 }

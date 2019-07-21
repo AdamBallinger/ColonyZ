@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Models.Map.Tiles.Objects;
 using Models.Sprites;
+using UnityEngine;
 
 namespace Models.Map.Tiles
 {
@@ -9,6 +10,8 @@ namespace Models.Map.Tiles
     {
         public int X { get; }
         public int Y { get; }
+
+        public Vector2 Position => new Vector2(X, Y);
 
         /// <summary>
         /// The definition of this tile.

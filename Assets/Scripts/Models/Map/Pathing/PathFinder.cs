@@ -161,8 +161,9 @@ namespace Models.Map.Pathing
         /// Returns a list of nodes from path Start to End.
         /// </summary>
         /// <param name="_lastNode"></param>
+        /// <param name="_parents"></param>
         /// <returns></returns>
-        private List<Node> Retrace(Node _lastNode, Node[] _parents)
+        private List<Node> Retrace(Node _lastNode, IReadOnlyList<Node> _parents)
         {
             var list = new List<Node>
             {
@@ -171,9 +172,7 @@ namespace Models.Map.Pathing
 
             while (_parents[_lastNode.ID] != null)
             {
-                //list.Add(_lastNode.Parent);
                 list.Add(_parents[_lastNode.ID]);
-                //_lastNode = _lastNode.Parent;
                 _lastNode = _parents[_lastNode.ID];
             }
 
