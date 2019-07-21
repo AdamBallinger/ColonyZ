@@ -1,4 +1,4 @@
-﻿namespace Models.AI
+﻿namespace Models.AI.Actions
 {
     public abstract class BaseAction 
     {

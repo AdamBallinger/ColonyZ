@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Entities;
 
-namespace Models.AI
+namespace Models.AI.Actions
 {
     public class ActionManager
     {

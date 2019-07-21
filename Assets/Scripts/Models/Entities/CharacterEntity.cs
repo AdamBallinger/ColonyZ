@@ -1,5 +1,4 @@
-using Models.AI;
-using Models.Map;
+using Models.AI.Actions;
 using Models.Map.Tiles;
 
 namespace Models.Entities

@@ -1,4 +1,4 @@
-﻿using Models.AI;
+﻿using Models.AI.Actions;
 using Models.Map;
 using Models.Map.Tiles;
 
@@ -6,7 +6,6 @@ namespace Models.Entities.Characters
 {
     public class HumanEntity : CharacterEntity
     {
-
         public HumanEntity(Tile _tile) : base(_tile)
         {
             actionManager.RegisterActionFinishCallback(OnActionFinish);

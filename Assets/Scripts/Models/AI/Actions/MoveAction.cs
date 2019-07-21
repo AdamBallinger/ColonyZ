@@ -3,7 +3,7 @@ using Models.Map.Pathing;
 using Models.Map.Tiles;
 using UnityEngine;
 
-namespace Models.AI
+namespace Models.AI.Actions
 {
     public class MoveAction : BaseAction
     {
