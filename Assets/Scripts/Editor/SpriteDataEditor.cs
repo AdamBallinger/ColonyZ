@@ -6,7 +6,7 @@ namespace Editor
     [CustomEditor(typeof(SpriteData))]
     public class SpriteDataEditor : UnityEditor.Editor
     {
-        private SpriteData Target => (SpriteData) target;
+        private SpriteData Target => (SpriteData) serializedObject.targetObject;
 
         public override void OnInspectorGUI()
         {
@@ -14,7 +14,7 @@ namespace Editor
             
             DrawDefaultInspector();
             
-            if (Target.SpriteCount > 1)
+            if (Target.Sprites != null && Target.SpriteCount > 1)
             {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("uiIconIndex"));
             }
