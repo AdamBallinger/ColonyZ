@@ -17,16 +17,16 @@ namespace Models.Map.Pathing
 
         private SimplePriorityQueue<PathRequest> RequestQueue { get; set; }
 
-        private volatile bool IsBusy;
+        private bool IsBusy;
 
-        private volatile HashSet<Node> NodeClosedSet;
-        private volatile FastPriorityQueue<Node> NodeOpenList;
+        private HashSet<Node> NodeClosedSet;
+        private FastPriorityQueue<Node> NodeOpenList;
 
-        private volatile Path path;
+        private Path path;
 
-        private volatile PathRequest currentRequest;
+        private PathRequest currentRequest;
 
-        private volatile bool FoundPath;
+        private bool FoundPath;
 
         private PathFinder() { }
 
