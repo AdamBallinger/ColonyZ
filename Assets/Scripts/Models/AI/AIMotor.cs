@@ -1,6 +1,7 @@
 using Models.Entities;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
+using Models.TimeSystem;
 using UnityEngine;
 
 namespace Models.AI
@@ -65,7 +66,7 @@ namespace Models.AI
             }
 
             // The amount the entity will move this frame.
-            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * Time.deltaTime;
+            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * TimeManager.DeltaTime;
             var travelPercentageThisFrame = movementDelta / distance;
             travelProgress += travelPercentageThisFrame;
             
