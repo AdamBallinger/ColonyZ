@@ -15,9 +15,6 @@ namespace Models.Map.Pathing
         private const float STRAIGHT_MOVEMENT_COST = 1.0f;
         private const float DIAGONAL_MOVEMENT_COST = 1.415746543f;
 
-        private HashSet<Node> nodeClosedSet;
-        private FastPriorityQueue<Node> nodeOpenSet;
-
         private List<Task<PathResult>> taskList;
 
         private PathFinder() { }
@@ -29,8 +26,6 @@ namespace Models.Map.Pathing
         {
             Instance = new PathFinder
             {
-                nodeClosedSet = new HashSet<Node>(),
-                nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height),
                 taskList = new List<Task<PathResult>>()
             };
         }
@@ -62,7 +57,7 @@ namespace Models.Map.Pathing
         {
             if (taskList.Count == 0) return;
             
-            var task = await Task.WhenAny(taskList);
+            var task = await Task.WhenAny(taskList.ToArray());
             taskList.Remove(task);
             var result = task.Result;
             result.request.onPathCompleteCallback?.Invoke(result.path);
@@ -81,8 +76,8 @@ namespace Models.Map.Pathing
                 request = _request
             };
 
-            nodeClosedSet.Clear();
-            nodeOpenSet.Clear();
+            var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
+            var nodeClosedSet = new HashSet<Node>();
 
             var gCosts = new float[World.Instance.Size];
             var hCosts = new float[World.Instance.Size];
