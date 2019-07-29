@@ -4,6 +4,7 @@ using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
 using Models.Sprites;
+using Models.TimeSystem;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -78,6 +79,11 @@ namespace Controllers
                 {
                     World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
                 }
+            }
+            
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                TimeManager.TimeMode = TimeManager.TimeMode == TimeMode.x1 ? TimeMode.x8 : TimeMode.x1;
             }
         }
 
