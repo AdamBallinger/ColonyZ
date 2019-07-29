@@ -32,14 +32,17 @@ namespace Models.Map.Pathing
 			IsValid = _isValid;
 		    ComputeTime = _computeTime;
 
-		    foreach (var node in _nodePath)
-            {
-	            TilePath.Add(World.Instance.GetTileAt(node.X, node.Y));
-            }
+		    if (IsValid)
+		    {
+			    foreach (var node in _nodePath)
+			    {
+				    TilePath.Add(World.Instance.GetTileAt(node.X, node.Y));
+			    }
 
-		    // Remove the starting tile as it the tile that an entity will start from.
-		    TilePath.RemoveAt(0);
-		    Next();
+			    // Remove the starting tile as it the tile that an entity will start from.
+			    TilePath.RemoveAt(0);
+			    Next();
+		    }
 		}
 
         /// <summary>
