@@ -175,11 +175,11 @@ namespace Models.Map.Pathing
 
             return DIAGONAL_MOVEMENT_COST * dx + STRAIGHT_MOVEMENT_COST * (dy - dx);
         }
-    }
-    
-    internal struct PathResult
-    {
-        public PathRequest request;
-        public Path path;
+        
+        private struct PathResult
+        {
+            public PathRequest request;
+            public Path path;
+        }
     }
 }
