@@ -141,7 +141,7 @@ namespace Models.Map.Pathing
         /// <param name="_lastNode"></param>
         /// <param name="_parents"></param>
         /// <returns></returns>
-        private IEnumerable<Node> Retrace(Node _lastNode, IReadOnlyList<Node> _parents)
+        private List<Node> Retrace(Node _lastNode, IReadOnlyList<Node> _parents)
         {
             var list = new List<Node>
             {
