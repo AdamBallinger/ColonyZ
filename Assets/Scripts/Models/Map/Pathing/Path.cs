@@ -13,24 +13,24 @@ namespace Models.Map.Pathing
 	    public float ComputeTime { get; }
 	    
 	    public int Size => TilePath.Count;
+
+	    public Tile CurrentTile => currentIndex < Size ? TilePath?[currentIndex] : null;
 	    
 	    /// <summary>
 	    /// The list of remaining tiles in the path.
 	    /// </summary>
 	    public List<Tile> TilePath { get; }
 
-	    /// <summary>
-	    /// Returns the current tile at the start of the path list.
-	    /// </summary>
-	    public Tile CurrentTile { get; private set; }
-	    
 	    private List<Node> Nodes { get; }
+
+	    private int currentIndex;
 
 	    public Path(List<Node> _nodePath, bool _isValid, float _computeTime)
 		{
 			TilePath = new List<Tile>();
 			IsValid = _isValid;
 		    ComputeTime = _computeTime;
+		    currentIndex = 0;
 
 		    if (IsValid)
 		    {
@@ -42,30 +42,14 @@ namespace Models.Map.Pathing
 				    TilePath.Add(World.Instance.GetTileAt(node.X, node.Y));
 			    }
 
-			    Nodes[0].Paths.Remove(this);
-
-			    // Remove the starting tile as it the tile that an entity will start from.
-			    Nodes.RemoveAt(0);
-			    TilePath.RemoveAt(0);
 			    Next();
 		    }
 		}
 
-        /// <summary>
-        /// Sets the current tile to the first tile of the path then removes it.
-        /// </summary>
-        public void Next()
+	    public void Next()
         {
-            if(Size > 0)
-            {
-	            CurrentTile = TilePath[0];
-	            Nodes[0].Paths.Remove(this);
-	            Nodes.RemoveAt(0);
-	            TilePath.RemoveAt(0);
-	            return;
-            }
-
-            CurrentTile = null;
+	        Nodes[currentIndex].Paths.Remove(this);
+	        currentIndex++;
         }
         
         public void Invalidate()
