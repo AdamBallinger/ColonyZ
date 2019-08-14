@@ -100,7 +100,7 @@ namespace Models.Map.Tiles
 
         public TileEnterability GetEnterability()
         {
-            return Object?.Enterability ?? TileEnterability.Immediate;
+            return Object != null ? Object.Enterability : TileEnterability.Immediate;
         }
 
         public Tile GetNeighbour(Cardinals _direction)
