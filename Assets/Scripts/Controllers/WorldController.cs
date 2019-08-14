@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Models.Entities;
+using Models.Entities.Living;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
@@ -27,7 +28,7 @@ namespace Controllers
         private string tileSortingLayerName = "Tiles";
 
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
-        private Dictionary<CharacterEntity, GameObject> characterGameObjects;
+        private Dictionary<LivingEntity, GameObject> livingEntityObjects;
 
         private MeshFilter meshFilter;
 
@@ -42,7 +43,7 @@ namespace Controllers
             Instance._transform = Instance.transform;
 
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
-            Instance.characterGameObjects = new Dictionary<CharacterEntity, GameObject>();
+            Instance.livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
 
             NewWorld();
         }
@@ -66,7 +67,7 @@ namespace Controllers
             TimeManager.Instance.Update();
             World.Instance.Update();
             
-            foreach (var pair in characterGameObjects)
+            foreach (var pair in livingEntityObjects)
             {
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
             }
@@ -236,14 +237,14 @@ namespace Controllers
         /// <param name="_entity"></param>
         public void OnEntitySpawn(Entity _entity)
         {
-            if (_entity is CharacterEntity)
+            if (_entity is HumanEntity)
             {
-                var char_GO = Instantiate(characterPrefab, _transform);
-                char_GO.transform.position = new Vector2(_entity.X, _entity.Y);
+                var entity_GO = Instantiate(characterPrefab, _transform);
+                entity_GO.transform.position = new Vector2(_entity.X, _entity.Y);
 
                 // TODO: Set sprites for character GameObject.
 
-                characterGameObjects.Add((CharacterEntity) _entity, char_GO);
+                livingEntityObjects.Add((HumanEntity) _entity, entity_GO);
             }
         }
     }

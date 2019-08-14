@@ -13,7 +13,7 @@ namespace Models.AI
         /// </summary>
         public bool Working { get; private set; }
         
-        private CharacterEntity Entity { get; }
+        private LivingEntity Entity { get; }
 
         /// <summary>
         /// The tile the motor is moving the entity towards.
@@ -35,7 +35,7 @@ namespace Models.AI
         /// </summary>
         private float travelProgress;
         
-        public AIMotor(CharacterEntity _entity)
+        public AIMotor(LivingEntity _entity)
         {
             Working = false;
             Entity = _entity;

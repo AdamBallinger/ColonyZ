@@ -1,9 +1,9 @@
 ﻿using Models.Map;
 using Models.Map.Tiles;
 
-namespace Models.Entities.Characters
+namespace Models.Entities.Living
 {
-    public class HumanEntity : CharacterEntity
+    public class HumanEntity : LivingEntity
     {
         public HumanEntity(Tile _tile) : base(_tile)
         {

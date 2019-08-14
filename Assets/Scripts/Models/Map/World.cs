@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Models.Entities;
-using Models.Entities.Characters;
+using Models.Entities.Living;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
@@ -24,7 +24,7 @@ namespace Models.Map
 
         private Tile[] Tiles { get; set; }
 
-        public List<CharacterEntity> Characters { get; private set; }
+        public List<LivingEntity> Characters { get; private set; }
         
         public List<TileObject> Objects { get; private set; }
 
@@ -47,7 +47,7 @@ namespace Models.Map
                 Width = _width,
                 Height = _height,
                 Tiles = new Tile[_width * _height],
-                Characters = new List<CharacterEntity>(),
+                Characters = new List<LivingEntity>(),
                 Objects = new List<TileObject>()
             };
             
