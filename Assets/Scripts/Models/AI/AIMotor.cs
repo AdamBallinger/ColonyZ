@@ -66,7 +66,7 @@ namespace Models.AI
             }
 
             // The amount the entity will move this frame.
-            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * TimeManager.DeltaTime;
+            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * TimeManager.Instance.DeltaTime;
             var travelPercentageThisFrame = movementDelta / distance;
             travelProgress += travelPercentageThisFrame;
             

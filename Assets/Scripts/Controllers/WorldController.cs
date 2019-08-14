@@ -51,6 +51,8 @@ namespace Controllers
         {
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
+            
+            TimeManager.Create(8, 0, 1);
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
             
@@ -61,7 +63,8 @@ namespace Controllers
 
         private void Update()
         {
-            World.Instance?.Update();
+            TimeManager.Instance.Update();
+            World.Instance.Update();
             
             foreach (var pair in characterGameObjects)
             {
@@ -70,20 +73,15 @@ namespace Controllers
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
+                World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
             }
 
             if (Input.GetKeyDown(KeyCode.X))
             {
                 for (var i = 0; i < 100; i++)
                 {
-                    World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
+                    World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
                 }
-            }
-            
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                TimeManager.TimeMode = TimeManager.TimeMode == TimeMode.x1 ? TimeMode.x8 : TimeMode.x1;
             }
         }
 
