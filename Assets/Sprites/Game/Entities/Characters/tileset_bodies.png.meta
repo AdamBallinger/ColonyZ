@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: 21300004
     second: tileset_bodies_0
+  - first:
+      213: -94387578618734894
+    second: tileset_bodies_1
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -54,7 +57,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -98,8 +101,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -107,8 +110,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d290fa2556a3cfa4bb6bea640bfa874e
+      spriteID: f923949ea4b58744ab08b3556424028c
       internalID: 21300004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tileset_bodies_1
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2b380b12e8c4974dbcdd991525c8c2c
+      internalID: -94387578618734894
       vertices: []
       indices: 
       edges: []
@@ -116,7 +140,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: c953badbbbe86304e81df07f430e4230
     internalID: 0
     vertices: []
     indices: 
