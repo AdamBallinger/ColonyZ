@@ -1,4 +1,4 @@
-using Models.Entities;
+using Models.Entities.Living;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
 using Models.TimeSystem;

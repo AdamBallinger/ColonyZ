@@ -2,7 +2,7 @@ using Models.AI;
 using Models.AI.Actions;
 using Models.Map.Tiles;
 
-namespace Models.Entities
+namespace Models.Entities.Living
 {
     public abstract class LivingEntity : Entity
     {
