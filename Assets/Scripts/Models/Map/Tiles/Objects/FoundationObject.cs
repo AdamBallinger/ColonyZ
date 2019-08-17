@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Models.TimeSystem;
+using UnityEngine;
 
 namespace Models.Map.Tiles.Objects
 {
@@ -22,7 +23,7 @@ namespace Models.Map.Tiles.Objects
 
         public override void Update()
         {
-            Progress += 0.6f * Time.deltaTime;
+            Progress += 0.6f * TimeManager.Instance.DeltaTime;
             
             if (Progress >= 1.0f)
             {
