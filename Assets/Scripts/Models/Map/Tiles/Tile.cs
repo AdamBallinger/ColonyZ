@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Models.Entities;
-using Models.Extensions;
 using Models.Map.Tiles.Objects;
 using Models.Sprites;
+using UnityEngine;
 
 namespace Models.Map.Tiles
 {
@@ -11,6 +10,8 @@ namespace Models.Map.Tiles
     {
         public int X { get; }
         public int Y { get; }
+
+        public Vector2 Position => new Vector2(X, Y);
 
         /// <summary>
         /// The definition of this tile.
@@ -77,6 +78,8 @@ namespace Models.Map.Tiles
                     t.onTileChanged?.Invoke(t);
                 }
             }
+            
+            World.Instance.Objects.Add(_object);
 
             onTileChanged?.Invoke(this);
         }
@@ -88,6 +91,8 @@ namespace Models.Map.Tiles
                 return;
             }
 
+            World.Instance.Objects.Remove(Object);
+
             Object = null;
 
             onTileChanged?.Invoke(this);
@@ -95,7 +100,7 @@ namespace Models.Map.Tiles
 
         public TileEnterability GetEnterability()
         {
-            return Object?.Enterability ?? TileEnterability.Immediate;
+            return Object != null ? Object.Enterability : TileEnterability.Immediate;
         }
 
         public Tile GetNeighbour(Cardinals _direction)

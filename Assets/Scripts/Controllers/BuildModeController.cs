@@ -1,6 +1,7 @@
 ﻿using Models.Map;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
+using UnityEngine;
 
 namespace Controllers
 {
@@ -18,9 +19,9 @@ namespace Controllers
         public BuildMode Mode { get; private set; }
 
         /// <summary>
-        /// If the build mode is set to object, this is instance of the object to build
+        /// Reference to the object that will be built on a tile when in Object build mode.
         /// </summary>
-        public TileObject Object { get; set; }
+        public TileObject ObjectToBuild { get; set; }
 
         public BuildModeController()
         {
@@ -47,28 +48,36 @@ namespace Controllers
 
         private void HandleObjectBuild(Tile _tile)
         {
-            if (Object == null)
+            if (ObjectToBuild == null)
             {
                 return;
             }
 
-            if (World.Instance.IsObjectPositionValid(Object, _tile))
+            if (World.Instance.IsObjectPositionValid(ObjectToBuild, _tile))
             {
-                // TODO: Add Job to build object, rather than this instant build.
-                //_tile.SetObject(Object.Clone());
-                // Set the tile as a construction base until the job is completed, which should then change the object.
-                _tile.SetObject(TileObjectRegistry.GetObject("Foundation_Base"));
+                // TODO: Change to a Job when implemented.
+                var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
+                var obj = Object.Instantiate(ObjectToBuild);
+                foundation.SetBuilding(obj);
+                _tile.SetObject(foundation);
             }
         }
 
-        public void StartObjectBuild(string _objectName)
+        /// <summary>
+        /// Sets the controller to build the provided tile object.
+        /// </summary>
+        /// <param name="_object"></param>
+        public void SetBuildMode(TileObject _object)
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Object;
-            Object = TileObjectRegistry.GetObject(_objectName);
+            ObjectToBuild = _object;
         }
 
-        public void StartDemolishBuild()
+        /// <summary>
+        /// Sets the controller into demolish mode.
+        /// </summary>
+        public void SetDemolishMode()
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Demolish;

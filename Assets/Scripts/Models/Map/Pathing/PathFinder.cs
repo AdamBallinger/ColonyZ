@@ -12,21 +12,12 @@ namespace Models.Map.Pathing
     {
         public static PathFinder Instance { get; private set; }
 
+        public int TaskCount => taskList.Count;
+        
         private const float STRAIGHT_MOVEMENT_COST = 1.0f;
         private const float DIAGONAL_MOVEMENT_COST = 1.415746543f;
 
-        private SimplePriorityQueue<PathRequest> RequestQueue { get; set; }
-
-        private volatile bool IsBusy;
-
-        private volatile HashSet<Node> NodeClosedSet;
-        private volatile FastPriorityQueue<Node> NodeOpenList;
-
-        private volatile Path path;
-
-        private volatile PathRequest currentRequest;
-
-        private volatile bool FoundPath;
+        private List<Task<PathResult>> taskList;
 
         private PathFinder() { }
 
@@ -37,35 +28,28 @@ namespace Models.Map.Pathing
         {
             Instance = new PathFinder
             {
-                RequestQueue = new SimplePriorityQueue<PathRequest>(),
-                IsBusy = false,
-                NodeClosedSet = new HashSet<Node>(),
-                NodeOpenList = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height)
+                taskList = new List<Task<PathResult>>()
             };
         }
 
         /// <summary>
         /// Create a new pathfinding request for the PathFinder. The path will be passed back to the onCompleteCallback given.
-        /// An optional parameter for the priority can be given if the path request should be processed with a higher
-        /// priority. Lower priority value = quicker processing of request.
         /// </summary>
         /// <param name="_start"></param>
         /// <param name="_end"></param>
         /// <param name="_onCompleteCallback"></param>
-        /// <param name="_priority"></param>
-        public static void NewRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback, uint _priority = 10)
+        public static void NewRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback)
         {
-            Instance?.Queue(new PathRequest(_start, _end, _onCompleteCallback), _priority);
+            Instance?.Queue(new PathRequest(_start, _end, _onCompleteCallback));
         }
 
         /// <summary>
         /// Adds a path request to the path finding queue.
         /// </summary>
         /// <param name="_request"></param>
-        /// <param name="_priority"></param>
-        private void Queue(PathRequest _request, uint _priority)
+        private void Queue(PathRequest _request)
         {
-            RequestQueue.Enqueue(_request, _priority);
+            taskList.Add(Search(_request));
         }
 
         /// <summary>
@@ -73,32 +57,29 @@ namespace Models.Map.Pathing
         /// </summary>
         public async void ProcessNext()
         {
-            if (RequestQueue.Count == 0 || IsBusy) return;
-
-            currentRequest = RequestQueue.Dequeue();
-
-            if (currentRequest != null)
-            {
-                IsBusy = true;
-                await Task.Run(() => Search(currentRequest));
-                currentRequest.onPathCompleteCallback?.Invoke(path);
-                IsBusy = false;
-                currentRequest = null;
-            }
+            if (taskList.Count == 0) return;
+            
+            var task = await Task.WhenAny(taskList.ToArray());
+            taskList.Remove(task);
+            var result = task.Result;
+            result.request.onPathCompleteCallback?.Invoke(result.path);
         }
 
         /// <summary>
         /// Performs A* search for a given path request.
         /// </summary>
-        private void Search(PathRequest _request)
+        private Task<PathResult> Search(PathRequest _request)
         {
             var sw = new Stopwatch();
             sw.Start();
 
-            FoundPath = false;
+            var pathResult = new PathResult
+            {
+                request = _request
+            };
 
-            NodeClosedSet.Clear();
-            NodeOpenList.Clear();
+            var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
+            var nodeClosedSet = new HashSet<Node>();
 
             var gCosts = new float[World.Instance.Size];
             var hCosts = new float[World.Instance.Size];
@@ -107,62 +88,60 @@ namespace Models.Map.Pathing
 
             hCosts[_request.Start.ID] = Heuristic(_request.Start, _request.End);
 
-            NodeOpenList.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
+            nodeOpenSet.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
 
-            while (NodeOpenList.Count != 0)
+            while (nodeOpenSet.Count != 0)
             {
-                var currentNode = NodeOpenList.Dequeue();
+                var currentNode = nodeOpenSet.Dequeue();
 
-                NodeClosedSet.Add(currentNode);
+                nodeClosedSet.Add(currentNode);
 
                 if (currentNode == _request.End)
                 {
                     sw.Stop();
-                    FoundPath = true;
-                    path = new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds);
-                    break;
+                    pathResult.path = new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds);
+                    return Task.FromResult(pathResult);
                 }
 
                 foreach(var node in currentNode.Neighbours)
                 {
-                    if(!node.Pathable || NodeClosedSet.Contains(node))
+                    if(!node.Pathable || nodeClosedSet.Contains(node))
                     {
                         continue;
                     }
 
                     var movementCostToNeighbour = gCosts[currentNode.ID] + Heuristic(currentNode, node) + node.MovementCost;
 
-                    if(movementCostToNeighbour < gCosts[node.ID] || !NodeOpenList.Contains(node))
+                    if(movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
                     {
                         gCosts[node.ID] = movementCostToNeighbour;
                         hCosts[node.ID] = Heuristic(node, _request.End);
                         parents[node.ID] = currentNode;
 
-                        if(!NodeOpenList.Contains(node))
+                        if(!nodeOpenSet.Contains(node))
                         {
-                            NodeOpenList.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
+                            nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
                         }
                         else
                         {
-                            NodeOpenList.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
+                            nodeOpenSet.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
                         }
                     }
                 }
             }
 
             // If every node was evaluated and the end node wasn't found, then invoke the callback with an invalid empty path.
-            if (!FoundPath)
-            {
-                path = new Path(null, false, 0.0f);
-            }
+            pathResult.path = new Path(null, false, 0.0f);
+            return Task.FromResult(pathResult);
         }
 
         /// <summary>
         /// Returns a list of nodes from path Start to End.
         /// </summary>
         /// <param name="_lastNode"></param>
+        /// <param name="_parents"></param>
         /// <returns></returns>
-        private List<Node> Retrace(Node _lastNode, Node[] _parents)
+        private List<Node> Retrace(Node _lastNode, IReadOnlyList<Node> _parents)
         {
             var list = new List<Node>
             {
@@ -171,9 +150,7 @@ namespace Models.Map.Pathing
 
             while (_parents[_lastNode.ID] != null)
             {
-                //list.Add(_lastNode.Parent);
                 list.Add(_parents[_lastNode.ID]);
-                //_lastNode = _lastNode.Parent;
                 _lastNode = _parents[_lastNode.ID];
             }
 
@@ -197,6 +174,12 @@ namespace Models.Map.Pathing
                 return DIAGONAL_MOVEMENT_COST * dy + STRAIGHT_MOVEMENT_COST * (dx - dy);
 
             return DIAGONAL_MOVEMENT_COST * dx + STRAIGHT_MOVEMENT_COST * (dy - dx);
+        }
+        
+        private struct PathResult
+        {
+            public PathRequest request;
+            public Path path;
         }
     }
 }

@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using Controllers;
 using Models.Sprites;
 using UnityEngine;
 
 namespace Models.Map.Tiles.Objects
 {
-    public abstract class TileObject
+    public abstract class TileObject : ScriptableObject
     {
         /// <summary>
         /// The Tile this object originates from. If the object is a multi tile object, then this is the "base" tile
@@ -15,83 +13,64 @@ namespace Models.Map.Tiles.Objects
 
         /// <summary>
         /// The Tile this part of a object occupies. If the object is a single type, then this will be the same as OriginTile.
-        /// If the object is a multi tile object, then it will point to the tile each part of the object is placed on.
         /// </summary>
         public Tile Tile { get; set; }
 
-        /// <summary>
-        /// The type of this object (Single or multi tile).
-        /// </summary>
-        public TileObjectType Type { get; protected set; }
+        public SpriteData SpriteData => objectSpriteData;
 
-        public SpriteData SpriteData { get; protected set; }
+        public bool DynamicSprite => dynamicSprite;
 
         /// <summary>
-        /// Name of the object. This refers to the name associated with this object in the TileStructureRegistry.
+        /// Name of the object.
         /// </summary>
-        public string ObjectName { get; protected set; }
+        public string ObjectName => objectName;
 
-        public int Width { get; protected set; }
-        public int Height { get; protected set; }
-        
-        public TileEnterability Enterability { get; protected set; }
-        
-        public float MovementModifier { get; protected set; }
+        public int Width => objectWidth;
+        public int Height => objectHeight;
+
+        public TileEnterability Enterability => objectEnterability;
 
         /// <summary>
         /// Returns whether this object occupies more than 1 tile.
         /// </summary>
         public bool MultiTile => Width > 1 || Height > 1;
 
-        protected bool ConnectsToSelf { get; set; }
+        #region Serialized fields
 
-        protected List<string> Connectables { get; set; }
+        [SerializeField]
+        private SpriteData objectSpriteData;
 
-        protected TileObject(string _objectName)
-        {
-            ObjectName = _objectName;
-            Type = TileObjectType.Single_Tile;
-            Width = 1;
-            Height = 1;
-            Enterability = TileEnterability.None;
-            MovementModifier = 0.0f;
-            SpriteData = SpriteDataController.GetSpriteData(ObjectName);
-            ConnectsToSelf = false;
-            Connectables = new List<string>();
-        }
+        [SerializeField, Tooltip("Used for tiles that are 1,1 in size, but have dynamically changing sprites based on surroundings.")]
+        private bool dynamicSprite;
 
-        protected void CopyInto(TileObject _clone)
-        {
-            _clone.SpriteData = SpriteData;
-            _clone.Type = Type;
-            _clone.ObjectName = ObjectName;
-            _clone.Width = Width;
-            _clone.Height = Height;
-            _clone.Enterability = Enterability;
-            _clone.MovementModifier = MovementModifier;
-            _clone.ConnectsToSelf = ConnectsToSelf;
-            _clone.Connectables = Connectables;
-        }
+        [SerializeField]
+        private string objectName;
 
-        public abstract TileObject Clone();
+        [SerializeField]
+        private int objectWidth = 1;
+        [SerializeField]
+        private int objectHeight = 1;
+        
+        [SerializeField, Tooltip("Controls how this object affects AI pathing of the tile it occupies.")]
+        private TileEnterability objectEnterability;
+        
+        #endregion
+        
+        public virtual void Update() {}
 
         /// <summary>
         /// Returns if this structure connects to a given structure.
         /// </summary>
         /// <param name="_other"></param>
         /// <returns></returns>
-        public bool ConnectsWith(TileObject _other)
+        public virtual bool ConnectsWith(TileObject _other)
         {
-            if(_other == null)
-            {
-                return false;
-            }
-
-            return ConnectsToSelf && _other.ObjectName.Equals(ObjectName) || Connectables.Contains(_other.ObjectName);
+            // TODO: Implement this in appropriate object classes so dynamic sprites work.
+            return false;
         }
 
         /// <summary>
-        /// Returns the sprite index to use for single tile structures.
+        /// Returns the sprite index to use for single tile structures. This does nothing for multi tile or dynamic tile objects.
         /// </summary>
         /// <returns></returns>
         public virtual int GetSpriteIndex()
@@ -107,9 +86,12 @@ namespace Models.Map.Tiles.Objects
         public abstract bool CanPlace(Tile _tile);
 
         /// <summary>
-        /// Return an icon sprite for this tile structure. This is used for display the structure in UI.
+        /// Return an icon sprite for this tile structure. This is used to display the structure in UI.
         /// </summary>
         /// <returns></returns>
-        public abstract Sprite GetIcon();
+        public Sprite GetIcon()
+        {
+            return SpriteCache.GetSprite(SpriteData.SpriteGroup, SpriteData.IconIndex);
+        }
     }
 }

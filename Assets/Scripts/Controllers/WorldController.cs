@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using Models.Entities;
+using Models.Entities.Living;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
-using Models.Map.Tiles.Objects;
+using Models.Sprites;
+using Models.TimeSystem;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -14,18 +16,24 @@ namespace Controllers
     {
         public static WorldController Instance { get; private set; }
 
-        public int worldWidth = 100;
-        public int worldHeight = 100;
+        [SerializeField]
+        private int worldWidth = 100;
+        [SerializeField]
+        private int worldHeight = 100;
 
-        public string tileSortingLayerName = "Tiles";
+        [SerializeField]
+        private GameObject characterPrefab;
+
+        [SerializeField]
+        private string tileSortingLayerName = "Tiles";
 
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
-        private Dictionary<CharacterEntity, GameObject> characterEntityGameObjectMap;
+        private Dictionary<LivingEntity, GameObject> livingEntityObjects;
 
         private MeshFilter meshFilter;
 
         [SerializeField]
-        private Texture2D tileTypesTexture = null;
+        private Texture2D tileTypesTexture;
 
         private Transform _transform;
 
@@ -35,15 +43,7 @@ namespace Controllers
             Instance._transform = Instance.transform;
 
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
-            Instance.characterEntityGameObjectMap = new Dictionary<CharacterEntity, GameObject>();
-
-            SpriteDataController.LoadSpriteData();
-
-            TileObjectRegistry.RegisterTileObject(new FoundationObject("Foundation_Base"));
-            TileObjectRegistry.RegisterTileObject(new WallObject("Wood_Wall"));
-            TileObjectRegistry.RegisterTileObject(new WallObject("Steel_Wall"));
-            TileObjectRegistry.RegisterTileObject(new DoorObject("Wood_Door"));
-            TileObjectRegistry.RegisterTileObject(new DoorObject("Steel_Door"));
+            Instance.livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
 
             NewWorld();
         }
@@ -52,6 +52,8 @@ namespace Controllers
         {
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
+            
+            TimeManager.Create(8, 0, 1);
 
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
             
@@ -62,25 +64,24 @@ namespace Controllers
 
         private void Update()
         {
-            World.Instance?.Update();
-
-            // TODO: Possibly change this as it could be inefficient for large amounts of characters. For now it will do.
-            // TODO: Maybe create a single gameobject->transform dict to remove the large amount of GetComponent calls.
-            foreach (var pair in characterEntityGameObjectMap)
+            TimeManager.Instance.Update();
+            World.Instance.Update();
+            
+            foreach (var pair in livingEntityObjects)
             {
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
             }
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
+                World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
             }
 
             if (Input.GetKeyDown(KeyCode.X))
             {
                 for (var i = 0; i < 100; i++)
                 {
-                    World.Instance?.SpawnCharacter(World.Instance.GetRandomTile());
+                    World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
                 }
             }
         }
@@ -236,14 +237,14 @@ namespace Controllers
         /// <param name="_entity"></param>
         public void OnEntitySpawn(Entity _entity)
         {
-            if (_entity is CharacterEntity)
+            if (_entity is HumanEntity)
             {
-                var char_GO = Instantiate(Resources.Load<GameObject>("Prefabs/Game/Entity_Character"), _transform);
-                char_GO.transform.position = new Vector2(_entity.X, _entity.Y);
+                var entity_GO = Instantiate(characterPrefab, _transform);
+                entity_GO.transform.position = new Vector2(_entity.X, _entity.Y);
 
                 // TODO: Set sprites for character GameObject.
 
-                characterEntityGameObjectMap.Add((CharacterEntity) _entity, char_GO);
+                livingEntityObjects.Add((HumanEntity) _entity, entity_GO);
             }
         }
     }

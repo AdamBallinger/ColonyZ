@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Models.Entities;
 using System.Collections;
-using Models.Entities.Characters;
+using System.Collections.Generic;
+using Models.Entities;
+using Models.Entities.Living;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
+using UnityEngine;
 
 namespace Models.Map
 {
@@ -24,7 +24,9 @@ namespace Models.Map
 
         private Tile[] Tiles { get; set; }
 
-        public List<CharacterEntity> Characters { get; private set; }
+        public List<LivingEntity> Characters { get; private set; }
+        
+        public List<TileObject> Objects { get; private set; }
 
         private Action<Entity> onEntitySpawnCallback;
 
@@ -43,14 +45,13 @@ namespace Models.Map
             Instance = new World
             {
                 Width = _width,
-                Height = _height
+                Height = _height,
+                Tiles = new Tile[_width * _height],
+                Characters = new List<LivingEntity>(),
+                Objects = new List<TileObject>()
             };
             
             TileManager.LoadDefinitions();
-
-            Instance.Tiles = new Tile[Instance.Width * Instance.Height];
-            Instance.Characters = new List<CharacterEntity>();
-
             Instance.PopulateTileArray(_tileTypeChangedCallback, _tileChangedCallback);
         }
 
@@ -59,6 +60,11 @@ namespace Models.Map
             foreach (var character in Characters)
             {
                 character.Update();
+            }
+            
+            for(var i = Objects.Count - 1; i >= 0; i--)
+            {
+                Objects[i].Update();
             }
 
             PathFinder.Instance?.ProcessNext();

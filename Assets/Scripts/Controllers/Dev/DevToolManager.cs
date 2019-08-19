@@ -19,5 +19,10 @@ namespace Controllers.Dev
         {
             tileNodesTool.enabled = !tileNodesTool.enabled;
         }
+        
+        public void DisableTileNodes()
+        {
+            tileNodesTool.enabled = false;
+        }
     }
 }

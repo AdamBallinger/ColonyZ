@@ -3,8 +3,8 @@ using Priority_Queue;
 
 namespace Models.Map.Pathing
 {
-	public class Node : FastPriorityQueueNode
-	{
+    public class Node : FastPriorityQueueNode
+    {
         /// <summary>
         /// ID of the node in the node graph. Used for fetching node costs during search.
         /// </summary>
@@ -23,15 +23,20 @@ namespace Models.Map.Pathing
         /// <summary>
         /// The cost of moving into this node.
         /// </summary>
-	    public float MovementCost { get; }
+        public float MovementCost { get; }
+        
+        /// <summary>
+        /// List of paths that contain this node.
+        /// </summary>
+        public List<Path> Paths { get; }
 
-	    private bool _pathable = true;
-	    /// <summary>
-	    /// Is this node a pathable node?
-	    /// </summary>
-	    public bool Pathable
-	    {
-	        get { return _pathable; }
+        private bool _pathable = true;
+        /// <summary>
+        /// Is this node a pathable node?
+        /// </summary>
+        public bool Pathable
+        {
+            get => _pathable;
             set
             {
                 if(value != _pathable)
@@ -40,14 +45,12 @@ namespace Models.Map.Pathing
                     OnModify();
                 }
             }
-	    }
-
-        public Node Parent { get; set; }
+        }
 
         /// <summary>
         /// A list of all neighbouring nodes adjacent to this node.
         /// </summary>
-        public List<Node> Neighbours { get; set; }
+        public List<Node> Neighbours { get; }
 
         public Node(int _id, int _x, int _y, float _movementCost, bool _pathable)
         {
@@ -55,8 +58,8 @@ namespace Models.Map.Pathing
             X = _x;
             Y = _y;
             MovementCost = _movementCost;
+            Paths = new List<Path>();
             Pathable = _pathable;
-            Parent = null;
             Neighbours = new List<Node>();
         }
 
@@ -112,6 +115,16 @@ namespace Models.Map.Pathing
         /// </summary>
         private void OnModify()
         {
+            if (!Pathable)
+            {
+                foreach (var path in Paths)
+                {
+                    path?.Invalidate();
+                }
+            
+                Paths.Clear();
+            }
+
             ComputeNeighbours();
             NotifyNeighboursToUpdate();
         }
@@ -123,5 +136,5 @@ namespace Models.Map.Pathing
                 node?.ComputeNeighbours();
             }
         }
-	}
+    }
 }

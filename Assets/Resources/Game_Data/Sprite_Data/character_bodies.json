@@ -1,6 +1,0 @@
-{
-	"SpriteType": "Tileset",
-	"ResourcePath": "Sprites/Game/Entities/character_bodies",
-	"SpriteGroup": "Character_Bodies",
-	"SpriteGroupPrefix": "body_"
-}

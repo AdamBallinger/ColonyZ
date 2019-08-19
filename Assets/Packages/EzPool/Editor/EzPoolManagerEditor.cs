@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EzPool
 {
     [CustomEditor(typeof(EzPoolManager))]
-    public class EzPoolManagerEditor : Editor
+    public class EzPoolManagerEditor : UnityEditor.Editor
     {
         private EzPoolManager Target => (EzPoolManager)target;
 

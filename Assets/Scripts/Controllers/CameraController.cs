@@ -13,7 +13,9 @@ namespace Controllers
         public float cameraMoveSpeed = 1.0f;
 
         private new Camera camera;
-        private Transform cameraTransform;
+
+        [SerializeField]
+        private Transform cameraPivot;
 
         private Vector2 currentMousePosition;
         private Vector2 previousMousePosition;
@@ -26,12 +28,11 @@ namespace Controllers
         private void Start()
         {
             camera = Camera.main;
-            cameraTransform = camera.GetComponent<Transform>();
 
             maxCameraX = World.Instance.Width;
             maxCameraY = World.Instance.Height;
 
-            cameraTransform.position = new Vector3(maxCameraX / 2, maxCameraY / 2, cameraTransform.position.z);
+            cameraPivot.position = new Vector3(maxCameraX / 2, maxCameraY / 2, cameraPivot.position.z);
         }
 
         private void LateUpdate()
@@ -43,27 +44,40 @@ namespace Controllers
 
             previousMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
 
-            cameraPosition = cameraTransform.position;
+            cameraPosition = cameraPivot.position;
             cameraPosition.x = Mathf.Clamp(cameraPosition.x, minCameraX, maxCameraX);
             cameraPosition.y = Mathf.Clamp(cameraPosition.y, minCameraY, maxCameraY);
-            cameraTransform.position = cameraPosition;
+            cameraPivot.position = cameraPosition;
         }
 
         private void HandleCameraMovement()
         {
             if (Input.GetMouseButton(1) || Input.GetMouseButton(2))
             {
-                cameraTransform.Translate(previousMousePosition - currentMousePosition);
+                cameraPivot.Translate(previousMousePosition - currentMousePosition);
             }
 
-            cameraTransform.Translate(Vector3.right * (Input.GetAxis("Horizontal") * (cameraMoveSpeed * camera.orthographicSize * Time.deltaTime)));
-            cameraTransform.Translate(Vector3.up * (Input.GetAxis("Vertical") * (cameraMoveSpeed * camera.orthographicSize * Time.deltaTime)));
+            cameraPivot.Translate(Vector3.right * (Input.GetAxis("Horizontal") * 
+                                                   (cameraMoveSpeed * camera.orthographicSize * Time.deltaTime)));
+            cameraPivot.Translate(Vector3.up * (Input.GetAxis("Vertical") * 
+                                                (cameraMoveSpeed * camera.orthographicSize * Time.deltaTime)));
         }
 
         private void HandleCameraZoom()
         {
             camera.orthographicSize -= camera.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * (zoomSpeed * Time.deltaTime);
             camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, maxZoom, minZoom);
+            
+            /*
+             * Experimental zoom for the pixel perfect camera.
+             * Bug: Pixel perfect doesn't play nice with zooming and panning the camera. Needs looking at again at some point.
+             */
+            /*var scale = cameraPivot.localScale;
+            scale -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime * cameraPivot.localScale;
+            scale.x = Mathf.Clamp(scale.x, maxZoom, minZoom);
+            scale.y = Mathf.Clamp(scale.y, maxZoom, minZoom);
+            scale.z = 1;
+            cameraPivot.localScale = scale;*/
         }
     }
 }

@@ -1,4 +1,3 @@
-using Models.Map;
 using Models.Map.Tiles;
 using Models.Sprites;
 using UnityEngine;
@@ -16,11 +15,6 @@ namespace Models.Entities
         /// Precise Y coordinate of entity.
         /// </summary>
         public float Y => CurrentTile.Y + TileOffset.y;
-
-        /// <summary>
-        /// Current entity health.
-        /// </summary>
-        public int Health { get; private set; }
 
         /// <summary>
         /// Entity's name.
@@ -43,16 +37,6 @@ namespace Models.Entities
         {
             CurrentTile = _tile;
             TileOffset = Vector2.zero;
-        }
-
-        public void HealEntity(int _damage)
-        {
-            Health += _damage;
-        }
-
-        public void DamageEntity(int _damage)
-        {
-            Health -= _damage;
         }
 
         public abstract void Update();
