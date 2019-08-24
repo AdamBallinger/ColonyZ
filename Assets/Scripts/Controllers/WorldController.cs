@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Models.Entities;
 using Models.Entities.Living;
+using Models.Jobs;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
@@ -54,7 +55,7 @@ namespace Controllers
             World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
             
             TimeManager.Create(8, 0, 1);
-
+            JobManager.Create();
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
             
             GenerateWorldMesh();
@@ -65,6 +66,7 @@ namespace Controllers
         private void Update()
         {
             TimeManager.Instance.Update();
+            JobManager.Instance.Update();
             World.Instance.Update();
             
             foreach (var pair in livingEntityObjects)

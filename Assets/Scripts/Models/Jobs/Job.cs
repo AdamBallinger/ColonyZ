@@ -1,0 +1,27 @@
+using Models.Map.Tiles;
+
+namespace Models.Jobs
+{
+    public abstract class Job
+    {
+        /// <summary>
+        /// Name of the job as it appears. E.g "Build Job"
+        /// </summary>
+        public string JobName { get; }
+        
+        /// <summary>
+        /// The tile the job is modifying.
+        /// </summary>
+        protected Tile TargetTile { get; }
+        
+        /// <summary>
+        /// The tile the entity will move to to work on the job.
+        /// </summary>
+        protected Tile WorkingTile { get; set; }
+        
+        protected Job(Tile _targetTile)
+        {
+            TargetTile = _targetTile;
+        }
+    }
+}
