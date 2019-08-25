@@ -1,3 +1,4 @@
+using Models.Entities.Living;
 using Models.Map.Tiles;
 
 namespace Models.Jobs
@@ -8,20 +9,27 @@ namespace Models.Jobs
         /// Name of the job as it appears. E.g "Build Job"
         /// </summary>
         public string JobName { get; }
+
+        /// <summary>
+        /// Reference to the entity assigned to complete this job.
+        /// </summary>
+        public HumanEntity AssignedEntity { get; set; }
         
         /// <summary>
         /// The tile the job is modifying.
         /// </summary>
-        protected Tile TargetTile { get; }
+        public Tile TargetTile { get; }
         
         /// <summary>
         /// The tile the entity will move to to work on the job.
         /// </summary>
-        protected Tile WorkingTile { get; set; }
+        public Tile WorkingTile { get; set; }
         
         protected Job(Tile _targetTile)
         {
             TargetTile = _targetTile;
         }
+
+        public abstract void Update();
     }
 }

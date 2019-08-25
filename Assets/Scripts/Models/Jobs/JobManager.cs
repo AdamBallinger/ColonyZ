@@ -63,7 +63,12 @@ namespace Models.Jobs
         
         private void AssignEntityJob(HumanEntity _entity, Job _job)
         {
-            // TODO: Check if job is completable, set entity job if true then move job into appropriate list.
+            // TODO: Check if job is completable before setting a job.
+            if(_entity.SetJob(_job))
+            {
+                InactiveJobs.Remove(_job);
+                ActiveJobs.Add(_job);
+            }
         }
         
         public void Update()
