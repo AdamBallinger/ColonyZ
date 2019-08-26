@@ -75,7 +75,7 @@ namespace Controllers.UI.Time
         {
             var tm = TimeManager.Instance;
             tm.TimeMode = tm.TimeMode == TimeMode.x0 ? TimeMode.x1 : TimeMode.x0;
-            increaseButton.interactable = tm.TimeMode != TimeMode.x4;
+            increaseButton.interactable = tm.TimeMode != TimeMode.x0;
             decreaseButton.interactable = tm.TimeMode != TimeMode.x0;
             playPauseImage.sprite = tm.TimeMode == TimeMode.x0 ? playPauseSprites[0] : playPauseSprites[1];
         }
