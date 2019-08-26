@@ -39,6 +39,7 @@ namespace Controllers.UI.Time
                     break;
                 case TimeMode.x1:
                     tm.TimeMode = TimeMode.x2;
+                    decreaseButton.interactable = true;
                     break;
                 case TimeMode.x2:
                     tm.TimeMode = TimeMode.x4;
