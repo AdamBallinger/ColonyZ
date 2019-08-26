@@ -48,6 +48,7 @@ namespace Models.Jobs
         /// <param name="_completedJob"></param>
         private void OnJobFinished(Job _completedJob)
         {
+            _completedJob.OnComplete();
             ActiveJobs.Remove(_completedJob);
             
             EvaluateInvalidJobs();
@@ -73,6 +74,14 @@ namespace Models.Jobs
         
         public void Update()
         {
+            foreach(var job in ActiveJobs)
+            {
+                if (job.Progress >= 1.0f)
+                {
+                    OnJobFinished(job);
+                }
+            }
+            
             // TODO: Distribute jobs to available entities.
         }
         

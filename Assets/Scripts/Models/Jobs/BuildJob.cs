@@ -18,12 +18,11 @@ namespace Models.Jobs
             if (Progress >= 1.0f) return;
             
             Progress += TimeManager.Instance.DeltaTime;
-            
-            // TODO: Change to an OnComplete event.
-            if (Progress >= 1.0f)
-            {
-                TargetTile.SetObject(tileObject);
-            }
+        }
+
+        public override void OnComplete()
+        {
+            TargetTile.SetObject(tileObject);
         }
     }
 }

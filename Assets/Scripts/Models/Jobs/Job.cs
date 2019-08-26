@@ -36,5 +36,7 @@ namespace Models.Jobs
         }
 
         public abstract void Update();
+        
+        public virtual void OnComplete() {}
     }
 }
