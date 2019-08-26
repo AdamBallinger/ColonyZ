@@ -61,11 +61,6 @@ namespace Models.Map.Tiles
 
         public void SetObject(TileObject _object)
         {
-            if (Object != null)
-            {
-                return;
-            }
-
             for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             {
                 for (var yOffset = 0; yOffset < _object.Height; yOffset++)

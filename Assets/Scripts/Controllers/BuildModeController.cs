@@ -1,4 +1,5 @@
-﻿using Models.Map;
+﻿using Models.Jobs;
+using Models.Map;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
@@ -48,18 +49,17 @@ namespace Controllers
 
         private void HandleObjectBuild(Tile _tile)
         {
-            if (ObjectToBuild == null)
+            /*if (ObjectToBuild == null)
             {
                 return;
-            }
+            }*/
 
             if (World.Instance.IsObjectPositionValid(ObjectToBuild, _tile))
             {
-                // TODO: Change to a Job when implemented.
                 var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
                 var obj = Object.Instantiate(ObjectToBuild);
-                foundation.SetBuilding(obj);
                 _tile.SetObject(foundation);
+                JobManager.Instance.AddJob(new BuildJob(_tile, obj));
             }
         }
 

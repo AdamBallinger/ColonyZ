@@ -38,7 +38,7 @@ namespace Models.Jobs
         private void Init()
         {
             InactiveJobs = new List<Job>();
-            ActiveJobs = new List<Job>();
+            ActiveJobs = new List<Job>();  
             InvalidJobs = new List<Job>();
         }
         

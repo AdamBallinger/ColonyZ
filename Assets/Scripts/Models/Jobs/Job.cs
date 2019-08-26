@@ -9,6 +9,11 @@ namespace Models.Jobs
         /// Name of the job as it appears. E.g "Build Job"
         /// </summary>
         public string JobName { get; }
+        
+        /// <summary>
+        /// Current progress of the job. Value >= 1.0f is completed.
+        /// </summary>
+        public float Progress { get; protected set; }
 
         /// <summary>
         /// Reference to the entity assigned to complete this job.
