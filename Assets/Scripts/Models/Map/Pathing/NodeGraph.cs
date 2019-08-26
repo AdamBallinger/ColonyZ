@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using UnityEngine;
 
 namespace Models.Map.Pathing
 {
@@ -112,6 +113,11 @@ namespace Models.Map.Pathing
             if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
 
             return Nodes[_x, _y];
+        }
+        
+        public Node GetNodeAt(Vector2 _position)
+        {
+            return GetNodeAt(Mathf.FloorToInt(_position.x), Mathf.FloorToInt(_position.y));
         }
         
         public void RegisterGraphBuildCallback(Action _callback)

@@ -134,6 +134,71 @@ namespace Models.Map.Pathing
             pathResult.path = new Path(null, false, 0.0f);
             return Task.FromResult(pathResult);
         }
+        
+        /// <summary>
+        /// Returns if a valid path can be made from a starting tile to an end tile.
+        /// Should not be called frequently as this is not done asynchronously.
+        /// </summary>
+        /// <param name="_start"></param>
+        /// <param name="_end"></param>
+        /// <returns></returns>
+        public static bool TestPath(Tile _start, Tile _end)
+        {
+            var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
+            var nodeClosedSet = new HashSet<Node>();
+
+            var gCosts = new float[World.Instance.Size];
+            var hCosts = new float[World.Instance.Size];
+
+            var parents = new Node[World.Instance.Size];
+
+            var startNode = NodeGraph.Instance.GetNodeAt(_start.Position);
+            var endNode = NodeGraph.Instance.GetNodeAt(_end.Position);
+
+            hCosts[startNode.ID] = Instance.Heuristic(startNode, endNode);
+
+            nodeOpenSet.Enqueue(startNode, hCosts[endNode.ID] + gCosts[startNode.ID]);
+
+            while (nodeOpenSet.Count != 0)
+            {
+                var currentNode = nodeOpenSet.Dequeue();
+
+                nodeClosedSet.Add(currentNode);
+
+                if (currentNode == endNode)
+                {
+                    return true;
+                }
+
+                foreach(var node in currentNode.Neighbours)
+                {
+                    if(!node.Pathable || nodeClosedSet.Contains(node))
+                    {
+                        continue;
+                    }
+
+                    var movementCostToNeighbour = gCosts[currentNode.ID] + Instance.Heuristic(currentNode, node) + node.MovementCost;
+
+                    if(movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
+                    {
+                        gCosts[node.ID] = movementCostToNeighbour;
+                        hCosts[node.ID] = Instance.Heuristic(node, endNode);
+                        parents[node.ID] = currentNode;
+
+                        if(!nodeOpenSet.Contains(node))
+                        {
+                            nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
+                        }
+                        else
+                        {
+                            nodeOpenSet.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Returns a list of nodes from path Start to End.
