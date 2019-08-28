@@ -37,6 +37,9 @@ namespace Models.Jobs
 
         public abstract void Update();
         
-        public virtual void OnComplete() {}
+        public virtual void OnComplete()
+        {
+            AssignedEntity.SetJob(null);
+        }
     }
 }

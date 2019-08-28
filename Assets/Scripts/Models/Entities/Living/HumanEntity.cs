@@ -6,18 +6,18 @@ namespace Models.Entities.Living
 {
     public class HumanEntity : LivingEntity
     {
-        public Job Job { get; private set; }
+        public Job CurrentJob { get; private set; }
         
         public HumanEntity(Tile _tile) : base(_tile)
         {
-            motor.SetTargetTile(World.Instance.GetRandomTile());
+            
         }
         
         public bool SetJob(Job _job)
         {
-            if (Job != null) return false;
+            if (CurrentJob != null && CurrentJob.Progress < 1.0f) return false;
 
-            Job = _job;
+            CurrentJob = _job;
             return true;
         }
 
@@ -25,12 +25,12 @@ namespace Models.Entities.Living
         {
             base.Update();
             
-            if (!motor.Working && Job == null)
+            if (!Motor.Working && CurrentJob == null)
             {
-                motor.SetTargetTile(World.Instance.GetRandomTile());
+                Motor.SetTargetTile(World.Instance.GetRandomTile());
             }
-
-            Job?.Update();
+            
+            CurrentJob?.Update();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Models.Entities.Living;
+using Models.Map;
 
 namespace Models.Jobs
 {
@@ -50,7 +51,7 @@ namespace Models.Jobs
         {
             _completedJob.OnComplete();
             ActiveJobs.Remove(_completedJob);
-            
+
             EvaluateInvalidJobs();
         }
         
@@ -67,6 +68,7 @@ namespace Models.Jobs
             // TODO: Check if job is completable before setting a job.
             if(_entity.SetJob(_job))
             {
+                _job.AssignedEntity = _entity;
                 InactiveJobs.Remove(_job);
                 ActiveJobs.Add(_job);
             }
@@ -74,15 +76,33 @@ namespace Models.Jobs
         
         public void Update()
         {
-            foreach(var job in ActiveJobs)
+            for(var i = ActiveJobs.Count - 1; i >= 0; i--)
             {
+                var job = ActiveJobs[i];
                 if (job.Progress >= 1.0f)
                 {
                     OnJobFinished(job);
                 }
             }
             
+            if (InactiveJobs.Count == 0)
+            {
+                return;
+            }
+            
             // TODO: Distribute jobs to available entities.
+            var entities = World.Instance.Characters; // TODO: For now this will work, but in future need to get only players human entities.
+
+            foreach (var livingEntity in entities)
+            {
+                var entity = (HumanEntity) livingEntity;
+                if (entity.CurrentJob != null)
+                {
+                    continue;
+                }
+                
+                AssignEntityJob(entity, InactiveJobs[0]);
+            }
         }
         
         public void AddJob(Job _job)
