@@ -176,20 +176,29 @@ namespace Models.Map
         /// Returns a list of neighbour tiles for the given tile.
         /// </summary>
         /// <param name="_tile"></param>
+        /// <param name="_includeDiagonal"></param>
         /// <returns></returns>
-        private IEnumerable<Tile> GetTileNeighbours(Tile _tile)
+        public List<Tile> GetTileNeighbours(Tile _tile, bool _includeDiagonal = true)
         {
-            var neighbours = new List<Tile>(8)
+            var neighbours = new List<Tile>
             {
-                GetTileAt(_tile.X - 1, _tile.Y + 1),
                 GetTileAt(_tile.X, _tile.Y + 1),
-                GetTileAt(_tile.X + 1, _tile.Y + 1),
                 GetTileAt(_tile.X - 1, _tile.Y),
                 GetTileAt(_tile.X + 1, _tile.Y),
-                GetTileAt(_tile.X - 1, _tile.Y - 1),
                 GetTileAt(_tile.X, _tile.Y - 1),
-                GetTileAt(_tile.X + 1, _tile.Y - 1)
+                
             };
+
+            if (_includeDiagonal)
+            {
+                neighbours.AddRange(new[]
+                {
+                    GetTileAt(_tile.X - 1, _tile.Y + 1),
+                    GetTileAt(_tile.X + 1, _tile.Y + 1),
+                    GetTileAt(_tile.X - 1, _tile.Y - 1),
+                    GetTileAt(_tile.X + 1, _tile.Y - 1)
+                }); 
+            }
 
             neighbours.RemoveAll(tile => tile == null);
 

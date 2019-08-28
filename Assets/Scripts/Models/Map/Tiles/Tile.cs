@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Map.Tiles.Objects;
-using Models.Sprites;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Models.Map.Tiles
 {
@@ -97,30 +98,17 @@ namespace Models.Map.Tiles
         {
             return Object != null ? Object.Enterability : TileEnterability.Immediate;
         }
-
-        public Tile GetNeighbour(Cardinals _direction)
+        
+        /// <summary>
+        /// Returns a random neighbour tile for this tile.
+        /// </summary>
+        /// <param name="_includeDiagonals"></param>
+        /// <returns></returns>
+        public Tile GetRandomNeighbour(bool _includeDiagonals = false)
         {
-            switch (_direction)
-            {
-                case Cardinals.North:
-                    return World.Instance.GetTileAt(X, Y + 1);
-                case Cardinals.North_East:
-                    return World.Instance.GetTileAt(X + 1, Y + 1);
-                case Cardinals.East:
-                    return World.Instance.GetTileAt(X + 1, Y);
-                case Cardinals.South_East:
-                    return World.Instance.GetTileAt(X + 1, Y - 1);
-                case Cardinals.South:
-                    return World.Instance.GetTileAt(X, Y - 1);
-                case Cardinals.South_West:
-                    return World.Instance.GetTileAt(X - 1, Y - 1);
-                case Cardinals.West:
-                    return World.Instance.GetTileAt(X - 1, Y);
-                case Cardinals.North_West:
-                    return World.Instance.GetTileAt(X - 1, Y + 1);
-            }
-
-            return null;
+            var neighbours = World.Instance.GetTileNeighbours(this, _includeDiagonals);
+            var rand = Random.Range(0, neighbours.Count());
+            return neighbours[rand];
         }
 
         /// <summary>
