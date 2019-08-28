@@ -8,7 +8,7 @@ namespace Models.Jobs
         /// <summary>
         /// Name of the job as it appears. E.g "Build Job"
         /// </summary>
-        public string JobName { get; }
+        public string JobName { get; protected set; }
         
         /// <summary>
         /// Current progress of the job. Value >= 1.0f is completed.
@@ -21,15 +21,10 @@ namespace Models.Jobs
         public HumanEntity AssignedEntity { get; set; }
         
         /// <summary>
-        /// The tile the job is modifying.
+        /// The tile the job is modifying. This is also the tile the entity will move to do complete the job.
         /// </summary>
         public Tile TargetTile { get; }
-        
-        /// <summary>
-        /// The tile the entity will move to to work on the job.
-        /// </summary>
-        public Tile WorkingTile { get; set; }
-        
+
         protected Job(Tile _targetTile)
         {
             TargetTile = _targetTile;

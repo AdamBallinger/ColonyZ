@@ -58,6 +58,11 @@ namespace Models.AI
             PathFinder.NewRequest(Entity.CurrentTile, targetTile, OnPathReceived);
         }
         
+        public void Stop()
+        {
+            // TODO: Find a way to end a path without breaking the motor or causing the entity to teleport because of the tile offset.
+        }
+        
         public void Update()
         {
             if (path == null)

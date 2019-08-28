@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Models.Map.Tiles;
 using UnityEngine;
 
 namespace Models.Map.Pathing
@@ -85,7 +86,8 @@ namespace Models.Map.Pathing
                 {
                     if (y < 0 || y >= Height) continue;
 
-                    Nodes[x, y].Pathable = World.Instance?.GetTileAt(x, y).Object == null;
+                    var tile = World.Instance.GetTileAt(x, y);
+                    Nodes[x, y].Pathable = tile.GetEnterability() != TileEnterability.None;
                 }
             }
 

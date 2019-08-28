@@ -66,9 +66,11 @@ namespace Models.Jobs
         private void AssignEntityJob(HumanEntity _entity, Job _job)
         {
             // TODO: Check if job is completable before setting a job.
+            // TODO: Set the working tile for the job based on the surrounding tiles.
             if(_entity.SetJob(_job))
-            {
+            { 
                 _job.AssignedEntity = _entity;
+                _entity.Motor.SetTargetTile(_job.TargetTile); // TODO: This is a bit messy.
                 InactiveJobs.Remove(_job);
                 ActiveJobs.Add(_job);
             }
