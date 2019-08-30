@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.Map.Pathing;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -76,7 +77,8 @@ namespace Models.Map.Tiles
             }
             
             World.Instance.Objects.Add(_object);
-
+            NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
+            
             onTileChanged?.Invoke(this);
         }
 
