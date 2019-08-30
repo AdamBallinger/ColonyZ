@@ -73,6 +73,7 @@ namespace Models.AI
             if (!path.IsValid)
             {
                 // Find a new path if the current one was invalidated.
+                FinishPath();
                 SetTargetTile(targetTile);
                 return;
             }
