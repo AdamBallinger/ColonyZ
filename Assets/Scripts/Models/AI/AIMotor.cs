@@ -70,6 +70,13 @@ namespace Models.AI
                 return;
             }
 
+            if (!path.IsValid)
+            {
+                // Find a new path if the current one was invalidated.
+                SetTargetTile(targetTile);
+                return;
+            }
+
             // The amount the entity will move this frame.
             var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * TimeManager.Instance.DeltaTime;
             var travelPercentageThisFrame = movementDelta / distance;
@@ -80,8 +87,8 @@ namespace Models.AI
                 Entity.CurrentTile = path.CurrentTile;
                 path.Next();
                 
-                // Check if at the end of the path, or if it was invalidated.
-                if (path.CurrentTile == null || !path.IsValid)
+                // Check if at the end of the path.
+                if (path.CurrentTile == null)
                 {
                     FinishPath();
                     return;
