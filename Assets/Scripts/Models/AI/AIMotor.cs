@@ -18,7 +18,7 @@ namespace Models.AI
         /// <summary>
         /// The tile the motor is moving the entity towards.
         /// </summary>
-        private Tile targetTile;
+        public Tile TargetTile { get; private set; }
 
         /// <summary>
         /// The path the motor is currently navigating.
@@ -54,8 +54,8 @@ namespace Models.AI
             }
 
             Working = true;
-            targetTile = _tile;
-            PathFinder.NewRequest(Entity.CurrentTile, targetTile, OnPathReceived);
+            TargetTile = _tile;
+            PathFinder.NewRequest(Entity.CurrentTile, TargetTile, OnPathReceived);
         }
         
         public void Stop()
@@ -74,7 +74,7 @@ namespace Models.AI
             {
                 // Find a new path if the current one was invalidated.
                 FinishPath();
-                SetTargetTile(targetTile);
+                SetTargetTile(TargetTile);
                 return;
             }
 
@@ -87,7 +87,7 @@ namespace Models.AI
             {
                 Entity.CurrentTile = path.CurrentTile;
                 path.Next();
-                
+
                 // Check if at the end of the path.
                 if (path.CurrentTile == null)
                 {
@@ -99,7 +99,7 @@ namespace Models.AI
 
                 var overlap = Mathf.Clamp01(travelProgress - 1.0f);
                 travelProgress = overlap;
-                
+
                 // TODO: only set travel progress to overlap if the next tile in the path is actually pathable. Otherwise path ends.
             }
 
