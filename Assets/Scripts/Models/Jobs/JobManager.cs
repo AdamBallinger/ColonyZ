@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Models.Entities.Living;
 using Models.Map;
+using Models.Map.Pathing;
 
 namespace Models.Jobs
 {
@@ -102,8 +103,14 @@ namespace Models.Jobs
                 {
                     continue;
                 }
+
+                var job = InactiveJobs[0];
                 
-                AssignEntityJob(entity, InactiveJobs[0]);
+                // TODO: This will be very slow when creating a lot of jobs.
+                if (PathFinder.TestPath(entity.CurrentTile, job.TargetTile))
+                {
+                    AssignEntityJob(entity, InactiveJobs[0]);
+                }
             }
         }
         
