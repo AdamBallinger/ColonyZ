@@ -105,11 +105,10 @@ namespace Models.Jobs
                 }
 
                 var job = InactiveJobs[0];
-                
-                // TODO: This will be very slow when creating a lot of jobs.
+
                 if (PathFinder.TestPath(entity.CurrentTile, job.TargetTile))
                 {
-                    AssignEntityJob(entity, InactiveJobs[0]);
+                    AssignEntityJob(entity, job);
                 }
             }
         }
