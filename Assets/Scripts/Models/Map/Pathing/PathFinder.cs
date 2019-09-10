@@ -14,8 +14,8 @@ namespace Models.Map.Pathing
 
         public int TaskCount => taskList.Count;
         
-        private const float STRAIGHT_MOVEMENT_COST = 1.0f;
-        private const float DIAGONAL_MOVEMENT_COST = 1.415746543f;
+        private const float STRAIGHT_MOVEMENT_COST = 10.0f;
+        private const float DIAGONAL_MOVEMENT_COST = 14.15746543f;
 
         private List<Task<PathResult>> taskList;
 
