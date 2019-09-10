@@ -31,7 +31,6 @@ namespace Controllers
 
         /// <summary>
         /// Performs a build on a given tile.
-        /// TODO: This function in future should create the job based on the build mode, check if placement is valid etc.
         /// </summary>
         /// <param name="_tile"></param>
         public void Build(Tile _tile)
@@ -42,24 +41,27 @@ namespace Controllers
                     HandleObjectBuild(_tile);
                     break;
                 case BuildMode.Demolish:
-                    _tile.RemoveObject();
+                    HandleObjectDemolish(_tile);
                     break;
             }
         }
 
         private void HandleObjectBuild(Tile _tile)
         {
-            /*if (ObjectToBuild == null)
-            {
-                return;
-            }*/
-
             if (World.Instance.IsObjectPositionValid(ObjectToBuild, _tile))
             {
                 var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
                 var obj = Object.Instantiate(ObjectToBuild);
                 _tile.SetObject(foundation);
                 JobManager.Instance.AddJob(new BuildJob(_tile, obj));
+            }
+        }
+        
+        private void HandleObjectDemolish(Tile _tile)
+        {
+            if (_tile.Object != null)
+            {
+                JobManager.Instance.AddJob(new DemolishJob(_tile));
             }
         }
 

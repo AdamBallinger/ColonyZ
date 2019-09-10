@@ -50,8 +50,8 @@ namespace Models.Jobs
         /// <param name="_completedJob"></param>
         private void OnJobFinished(Job _completedJob)
         {
-            _completedJob.OnComplete();
             ActiveJobs.Remove(_completedJob);
+            _completedJob.OnComplete();
 
             EvaluateInvalidJobs();
         }
@@ -61,17 +61,35 @@ namespace Models.Jobs
         /// </summary>
         private void EvaluateInvalidJobs()
         {
+            var entities = World.Instance.Characters;
             
+            for (var i = InvalidJobs.Count - 1; i >= 0; i--)
+            {
+                var job = InvalidJobs[i];
+
+                foreach (var livingEntity in entities)
+                {
+                    var humanEntity = livingEntity as HumanEntity;
+                    
+                    foreach (var tile in job.TargetTile.DirectNeighbours)
+                    {
+                        if (PathFinder.TestPath(humanEntity?.CurrentTile, tile))
+                        {
+                            RemoveInvalidJob(job);
+                            break;
+                        }
+                    }
+                }
+            }
         }
         
         private void AssignEntityJob(HumanEntity _entity, Job _job)
         {
-            // TODO: Check if job is completable before setting a job.
-            // TODO: Set the working tile for the job based on the surrounding tiles.
+            // TODO: Check if job is completable before setting a job (resources etc.).
             if(_entity.SetJob(_job))
             { 
                 _job.AssignedEntity = _entity;
-                _entity.Motor.SetTargetTile(_job.TargetTile); // TODO: This is a bit messy.
+                _entity.Motor.SetTargetTile(_job.WorkingTile);
                 InactiveJobs.Remove(_job);
                 ActiveJobs.Add(_job);
             }
@@ -92,25 +110,60 @@ namespace Models.Jobs
             {
                 return;
             }
-            
-            // TODO: Distribute jobs to available entities.
-            var entities = World.Instance.Characters; // TODO: For now this will work, but in future need to get only players human entities.
 
-            foreach (var livingEntity in entities)
+            // TODO: Only get players entities in future.
+            var entities = World.Instance.Characters;
+
+            for (var i = 0; i < entities.Count; i++)
             {
-                var entity = (HumanEntity) livingEntity;
-                if (entity.CurrentJob != null)
+                var entity = entities[i] as HumanEntity;
+                if (entity?.CurrentJob != null)
                 {
                     continue;
                 }
 
                 var job = InactiveJobs[0];
-
-                if (PathFinder.TestPath(entity.CurrentTile, job.TargetTile))
+                var jobAssigned = false;
+                
+                foreach (var tile in job.TargetTile.DirectNeighbours)
                 {
-                    AssignEntityJob(entity, job);
+                    if (PathFinder.TestPath(entity?.CurrentTile, tile))
+                    {
+                        job.WorkingTile = tile;
+                        AssignEntityJob(entity, job);
+                        jobAssigned = true;
+                        break;
+                    }
+                }
+
+                if (jobAssigned) break;
+
+                // If the last entity can't reach the job, then the job must be unreachable.
+                if (i == entities.Count - 1)
+                {
+                    AddInvalidJob(job);
                 }
             }
+        }
+        
+        /// <summary>
+        /// Adds a job to the invalid job list, and removes it from the inactive list.
+        /// </summary>
+        /// <param name="_job"></param>
+        private void AddInvalidJob(Job _job)
+        {
+            InvalidJobs.Add(_job);
+            InactiveJobs.Remove(_job);
+        }
+        
+        /// <summary>
+        /// Removes a job from the invalid job list and adds it back into the inactive list.
+        /// </summary>
+        /// <param name="_job"></param>
+        private void RemoveInvalidJob(Job _job)
+        {
+            InvalidJobs.Remove(_job);
+            InactiveJobs.Add(_job);
         }
         
         public void AddJob(Job _job)

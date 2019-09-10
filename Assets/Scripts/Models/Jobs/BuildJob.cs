@@ -1,6 +1,5 @@
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
-using Models.TimeSystem;
 
 namespace Models.Jobs
 {
@@ -14,22 +13,10 @@ namespace Models.Jobs
             tileObject = _object;
         }
 
-        public override void Update()
-        {
-            if (Progress >= 1.0f) return;
-
-            if (AssignedEntity == null) return;
-
-            if (AssignedEntity.CurrentTile == TargetTile)
-            {
-                Progress += TimeManager.Instance.DeltaTime;
-            }
-        }
-
         public override void OnComplete()
         {
             base.OnComplete();
-            
+
             TargetTile.SetObject(tileObject);
         }
     }

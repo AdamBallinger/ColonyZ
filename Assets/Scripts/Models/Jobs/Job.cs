@@ -1,12 +1,13 @@
 using Models.Entities.Living;
 using Models.Map.Tiles;
+using Models.TimeSystem;
 
 namespace Models.Jobs
 {
     public abstract class Job
     {
         /// <summary>
-        /// Name of the job as it appears. E.g "Build Job"
+        /// Name of the job that is displayed on the UI.
         /// </summary>
         public string JobName { get; protected set; }
         
@@ -21,16 +22,32 @@ namespace Models.Jobs
         public HumanEntity AssignedEntity { get; set; }
         
         /// <summary>
-        /// The tile the job is modifying. This is also the tile the entity will move to do complete the job.
+        /// The tile the job is modifying.
         /// </summary>
         public Tile TargetTile { get; }
+        
+        /// <summary>
+        /// The tile the entity will complete the job on. Defaults to the target tile.
+        /// </summary>
+        public Tile WorkingTile { get; set; }
 
         protected Job(Tile _targetTile)
         {
             TargetTile = _targetTile;
+            WorkingTile = _targetTile;
         }
 
-        public abstract void Update();
+        public virtual void Update()
+        {
+            if (Progress >= 1.0f) return;
+
+            if (AssignedEntity == null) return;
+
+            if (AssignedEntity.CurrentTile == WorkingTile)
+            {
+                Progress += TimeManager.Instance.DeltaTime;
+            }
+        }
         
         public virtual void OnComplete()
         {
