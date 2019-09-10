@@ -61,6 +61,7 @@ namespace Models.AI
         public void Stop()
         {
             // TODO: Find a way to end a path without breaking the motor or causing the entity to teleport because of the tile offset.
+            FinishPath();
         }
         
         public void Update()
