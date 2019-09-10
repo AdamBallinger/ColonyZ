@@ -208,6 +208,7 @@ namespace Models.Map
         private void SetTileNeighbours(Tile _tile)
         {
             _tile.Neighbours.AddRange(GetTileNeighbours(_tile));
+            _tile.DirectNeighbours.AddRange(GetTileNeighbours(_tile, false));
         }
 
         public void SpawnCharacter(Tile _tile)

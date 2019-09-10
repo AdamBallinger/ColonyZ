@@ -32,9 +32,14 @@ namespace Models.Map.Tiles
         }
 
         /// <summary>
-        /// Contains a list of tiles that surround this tile.
+        /// Contains all neighbours for this tile. (N, NE, E, SE, S, SW, W, NW)
         /// </summary>
         public List<Tile> Neighbours { get; }
+        
+        /// <summary>
+        /// Contains all directly connected neighbours for this tile. (N, E, S, W)
+        /// </summary>
+        public List<Tile> DirectNeighbours { get; }
 
         /// <summary>
         /// Installed tile object for this tile.
@@ -59,6 +64,7 @@ namespace Models.Map.Tiles
             Y = _y;
             TileDefinition = _definition;
             Neighbours = new List<Tile>();
+            DirectNeighbours = new List<Tile>();
         }
 
         public void SetObject(TileObject _object)
@@ -90,9 +96,8 @@ namespace Models.Map.Tiles
             }
 
             World.Instance.Objects.Remove(Object);
-
             Object = null;
-
+            NodeGraph.Instance.UpdateGraph(X, Y);
             onTileChanged?.Invoke(this);
         }
 
