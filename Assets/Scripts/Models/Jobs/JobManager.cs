@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Models.Entities.Living;
 using Models.Map;
@@ -14,7 +15,7 @@ namespace Models.Jobs
         /// List of all the current jobs needing to be carried out and have not been assigned to an entity.
         /// This list doesn't know if a job is completable or not.
         /// </summary>
-        private List<Job> InactiveJobs { get; set; }
+        public List<Job> InactiveJobs { get; private set; }
         
         /// <summary>
         /// List of all jobs currently being worked on by an entity.
@@ -25,7 +26,22 @@ namespace Models.Jobs
         /// List of all the jobs that are not able to be completed due to either resources missing or
         /// the jobs working tile is not reachable by any available entity.
         /// </summary>
-        private List<Job> InvalidJobs { get; set; }
+        public List<Job> InvalidJobs { get; private set; }
+
+        /// <summary>
+        /// Event called when a new job is added to the job manager.
+        /// </summary>
+        public event Action<Job> jobCreatedEvent;
+        
+        /// <summary>
+        /// Event called when the status of a job changes. E.g. A job being marked as invalid and vice versa.
+        /// </summary>
+        public event Action<Job> jobStateChangedEvent;
+        
+        /// <summary>
+        /// Event called when a job has been completed.
+        /// </summary>
+        public event Action<Job> jobCompletedEvent;
 
         private JobManager() {}
 
@@ -53,6 +69,7 @@ namespace Models.Jobs
         {
             ActiveJobs.Remove(_completedJob);
             _completedJob.OnComplete();
+            jobCompletedEvent?.Invoke(_completedJob);
 
             EvaluateInvalidJobs();
         }
@@ -155,8 +172,9 @@ namespace Models.Jobs
         public void AddJob(Job _job)
         {
             if (_job == null) return;
-            
+
             InactiveJobs.Add(_job);
+            jobCreatedEvent?.Invoke(_job);
         }
         
         /// <summary>
@@ -169,6 +187,7 @@ namespace Models.Jobs
 
             ActiveJobs.Remove(_job);
             InvalidJobs.Add(_job);
+            jobStateChangedEvent?.Invoke(_job);
         }
         
         /// <summary>
@@ -179,6 +198,7 @@ namespace Models.Jobs
         {
             InvalidJobs.Add(_job);
             InactiveJobs.Remove(_job);
+            jobStateChangedEvent?.Invoke(_job);
         }
         
         /// <summary>
@@ -189,6 +209,7 @@ namespace Models.Jobs
         {
             InvalidJobs.Remove(_job);
             InactiveJobs.Add(_job);
+            jobStateChangedEvent?.Invoke(_job);
         }
     }
 }
