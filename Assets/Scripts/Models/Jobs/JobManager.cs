@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Models.Entities.Living;
 using Models.Map;
 using Models.Map.Pathing;
+using UnityEngine;
 
 namespace Models.Jobs
 {
@@ -18,7 +19,7 @@ namespace Models.Jobs
         /// <summary>
         /// List of all jobs currently being worked on by an entity.
         /// </summary>
-        private List<Job> ActiveJobs { get; set; }
+        public List<Job> ActiveJobs { get; private set; }
         
         /// <summary>
         /// List of all the jobs that are not able to be completed due to either resources missing or
@@ -65,7 +66,9 @@ namespace Models.Jobs
             
             for (var i = InvalidJobs.Count - 1; i >= 0; i--)
             {
+                Debug.Log($"{i} : {InvalidJobs.Count}");
                 var job = InvalidJobs[i];
+                var jobNowValid = false;
 
                 foreach (var livingEntity in entities)
                 {
@@ -75,10 +78,13 @@ namespace Models.Jobs
                     {
                         if (PathFinder.TestPath(humanEntity?.CurrentTile, tile))
                         {
+                            jobNowValid = true;
                             RemoveInvalidJob(job);
                             break;
                         }
                     }
+
+                    if (jobNowValid) break;
                 }
             }
         }
@@ -145,6 +151,25 @@ namespace Models.Jobs
                 }
             }
         }
+
+        public void AddJob(Job _job)
+        {
+            if (_job == null) return;
+            
+            InactiveJobs.Add(_job);
+        }
+        
+        /// <summary>
+        /// Notifies the job manager that an active job has become invalid.
+        /// </summary>
+        /// <param name="_job"></param>
+        public void NotifyActiveJobInvalid(Job _job)
+        {
+            if (!ActiveJobs.Contains(_job)) return;
+
+            ActiveJobs.Remove(_job);
+            InvalidJobs.Add(_job);
+        }
         
         /// <summary>
         /// Adds a job to the invalid job list, and removes it from the inactive list.
@@ -163,13 +188,6 @@ namespace Models.Jobs
         private void RemoveInvalidJob(Job _job)
         {
             InvalidJobs.Remove(_job);
-            InactiveJobs.Add(_job);
-        }
-        
-        public void AddJob(Job _job)
-        {
-            if (_job == null) return;
-            
             InactiveJobs.Add(_job);
         }
     }
