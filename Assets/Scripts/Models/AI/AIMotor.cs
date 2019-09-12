@@ -47,6 +47,7 @@ namespace Models.AI
         /// <param name="_tile"></param>
         public void SetTargetTile(Tile _tile)
         {
+            Stop();
             // Don't try move to the same tile the entity is currently on.
             if (Entity.CurrentTile.Position == _tile.Position)
             {
