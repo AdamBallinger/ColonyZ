@@ -83,7 +83,7 @@ namespace Models.Jobs
             
             for (var i = InvalidJobs.Count - 1; i >= 0; i--)
             {
-                Debug.Log($"{i} : {InvalidJobs.Count}");
+                Debug.Log($"Current: {i} of {InvalidJobs.Count} invalid jobs.");
                 var job = InvalidJobs[i];
                 var jobNowValid = false;
 

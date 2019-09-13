@@ -43,7 +43,7 @@ namespace Models.Jobs
 
             if (AssignedEntity == null) return;
 
-            if (AssignedEntity.CurrentTile == WorkingTile)
+            if (AssignedEntity.CurrentTile == WorkingTile && TargetTile.LivingEntities.Count == 0)
             {
                 Progress += TimeManager.Instance.DeltaTime;
             }

@@ -42,15 +42,20 @@ namespace Models.Entities.Living
             
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
             {
+                var newTileFound = false;
                 foreach (var tile in CurrentJob.TargetTile.DirectNeighbours)
                 {
                     if (PathFinder.TestPath(CurrentTile, tile))
                     {
                         CurrentJob.WorkingTile = tile;
                         Motor.SetTargetTile(CurrentJob.WorkingTile);
+                        newTileFound = true;
                         break;
                     }
-
+                }
+                
+                if (!newTileFound)
+                {
                     JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
                     SetJob(null);
                     return;
