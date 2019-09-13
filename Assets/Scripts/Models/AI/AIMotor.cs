@@ -87,7 +87,9 @@ namespace Models.AI
             
             if (travelProgress >= 1.0f)
             {
+                Entity.CurrentTile.LivingEntities.Remove(Entity);
                 Entity.CurrentTile = path.CurrentTile;
+                Entity.CurrentTile.LivingEntities.Add(Entity);
                 path.Next();
 
                 // Check if at the end of the path.

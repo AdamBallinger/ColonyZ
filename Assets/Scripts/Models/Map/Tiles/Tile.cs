@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.Entities.Living;
 using Models.Map.Pathing;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
@@ -14,6 +15,11 @@ namespace Models.Map.Tiles
         public int Y { get; }
 
         public Vector2 Position => new Vector2(X, Y);
+        
+        /// <summary>
+        /// List of living entities currently occupying this tile.
+        /// </summary>
+        public List<LivingEntity> LivingEntities { get; private set; }
 
         /// <summary>
         /// The definition of this tile.
@@ -63,6 +69,7 @@ namespace Models.Map.Tiles
             X = _x;
             Y = _y;
             TileDefinition = _definition;
+            LivingEntities = new List<LivingEntity>();
             Neighbours = new List<Tile>();
             DirectNeighbours = new List<Tile>();
         }

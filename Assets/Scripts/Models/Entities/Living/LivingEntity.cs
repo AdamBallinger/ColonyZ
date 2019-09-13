@@ -20,6 +20,7 @@ namespace Models.Entities.Living
             Health = 100.0f;
             actionManager = new ActionManager();
             Motor = new AIMotor(this);
+            //CurrentTile.LivingEntities.Add(this);
         }
 
         public override void Update()
