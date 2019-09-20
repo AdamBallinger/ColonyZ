@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Models.Entities.Living;
 using Models.Map;
 using Models.Map.Pathing;
-using UnityEngine;
 
 namespace Models.Jobs
 {
@@ -83,7 +82,7 @@ namespace Models.Jobs
             
             for (var i = InvalidJobs.Count - 1; i >= 0; i--)
             {
-                Debug.Log($"Current: {i} of {InvalidJobs.Count} invalid jobs.");
+                //Debug.Log($"Current: {i} of {InvalidJobs.Count} invalid jobs.");
                 var job = InvalidJobs[i];
                 var jobNowValid = false;
 

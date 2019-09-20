@@ -35,6 +35,8 @@ namespace Models.Jobs
         {
             TargetTile = _targetTile;
             WorkingTile = _targetTile;
+
+            TargetTile.CurrentJob = this;
         }
 
         public virtual void Update()
@@ -51,7 +53,8 @@ namespace Models.Jobs
         
         public virtual void OnComplete()
         {
-            AssignedEntity.SetJob(null);
+            AssignedEntity.SetJob(null, true);
+            TargetTile.CurrentJob = null;
         }
     }
 }

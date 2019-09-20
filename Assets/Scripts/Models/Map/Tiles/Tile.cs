@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Entities.Living;
+using Models.Jobs;
 using Models.Map.Pathing;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
@@ -20,6 +21,11 @@ namespace Models.Map.Tiles
         /// List of living entities currently occupying this tile.
         /// </summary>
         public List<LivingEntity> LivingEntities { get; private set; }
+        
+        /// <summary>
+        /// Reference to the current job for this tile.
+        /// </summary>
+        public Job CurrentJob { get; set; }
 
         /// <summary>
         /// The definition of this tile.
