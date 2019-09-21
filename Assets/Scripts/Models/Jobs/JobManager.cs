@@ -173,6 +173,9 @@ namespace Models.Jobs
         {
             if (_job == null) return;
 
+            // TODO: Move to mouse controller to visualise duplication for demolish jobs etc.
+            if (_job.TargetTile.CurrentJob != null) return;
+
             _job.TargetTile.CurrentJob = _job;
             InactiveJobs.Add(_job);
             jobCreatedEvent?.Invoke(_job);
