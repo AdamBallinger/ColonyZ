@@ -67,6 +67,7 @@ namespace Models.Jobs
         private void OnJobFinished(Job _completedJob)
         {
             ActiveJobs.Remove(_completedJob);
+            _completedJob.TargetTile.CurrentJob = null;
             _completedJob.OnComplete();
             jobCompletedEvent?.Invoke(_completedJob);
 
@@ -172,6 +173,7 @@ namespace Models.Jobs
         {
             if (_job == null) return;
 
+            _job.TargetTile.CurrentJob = _job;
             InactiveJobs.Add(_job);
             jobCreatedEvent?.Invoke(_job);
         }
@@ -183,7 +185,7 @@ namespace Models.Jobs
         public void NotifyActiveJobInvalid(Job _job)
         {
             if (!ActiveJobs.Contains(_job)) return;
-
+            
             ActiveJobs.Remove(_job);
             InvalidJobs.Add(_job);
             jobStateChangedEvent?.Invoke(_job);

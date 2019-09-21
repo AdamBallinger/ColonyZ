@@ -40,9 +40,11 @@ namespace Models.Entities.Living
                 Motor.SetTargetTile(CurrentJob.WorkingTile);
             }
             
+            // TODO: Fix this if the working tile is enterable but not pathable.
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
             {
                 var newTileFound = false;
+                // TODO: If the only pathable tile has an active job, set the job for that tile as invalid.
                 foreach (var tile in CurrentJob.TargetTile.DirectNeighbours)
                 {
                     if (PathFinder.TestPath(CurrentTile, tile))
@@ -57,7 +59,7 @@ namespace Models.Entities.Living
                 if (!newTileFound)
                 {
                     JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
-                    SetJob(null);
+                    SetJob(null, true);
                     return;
                 }
             }

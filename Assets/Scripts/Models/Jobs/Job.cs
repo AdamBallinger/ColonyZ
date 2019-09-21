@@ -35,8 +35,6 @@ namespace Models.Jobs
         {
             TargetTile = _targetTile;
             WorkingTile = _targetTile;
-
-            TargetTile.CurrentJob = this;
         }
 
         public virtual void Update()

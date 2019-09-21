@@ -23,7 +23,7 @@ namespace Models.Map.Tiles
         public List<LivingEntity> LivingEntities { get; private set; }
         
         /// <summary>
-        /// Reference to the current job for this tile.
+        /// Reference to any job for this tile.
         /// </summary>
         public Job CurrentJob { get; set; }
 
