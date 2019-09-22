@@ -37,16 +37,28 @@ namespace Models.Entities.Living
             
             if (!Motor.Working)
             {
-                Motor.SetTargetTile(CurrentJob.WorkingTile);
+                // Checks if the working tile can be reached before requesting a path.
+                if (PathFinder.TestPath(CurrentTile, CurrentJob.WorkingTile))
+                {
+                    Motor.SetTargetTile(CurrentJob.WorkingTile);
+                }
+                else
+                {
+                    // Mark the job as invalid if the path can't be reached. TODO: Don't flag as invalid if other entity can reach job.
+                    JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
+                    SetJob(null, true);
+                    return;
+                }
             }
-            
-            // TODO: Fix this if the working tile is enterable but not pathable.
+
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
             {
                 var newTileFound = false;
                 // TODO: If the only pathable tile has an active job, set the job for that tile as invalid.
                 foreach (var tile in CurrentJob.TargetTile.DirectNeighbours)
                 {
+                    if (tile.CurrentJob != null) continue;
+                    
                     if (PathFinder.TestPath(CurrentTile, tile))
                     {
                         CurrentJob.WorkingTile = tile;
