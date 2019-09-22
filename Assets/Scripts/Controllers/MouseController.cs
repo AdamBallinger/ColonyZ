@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using EzPool;
 using Models.Map;
@@ -225,7 +226,8 @@ namespace Controllers
             {
                 return;
             }
-
+            
+            var tiles = new Tile[_dragData.SizeX, _dragData.SizeY];
             for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
             {
                 for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
@@ -245,7 +247,18 @@ namespace Controllers
                         continue;
                     }
 
-                    BuildModeController.Build(tile);
+                    tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
+                }
+            }
+            
+            // Diagonally build over the drag area.
+            for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)
+            {
+                var startCol = Math.Max(0, line - _dragData.SizeX);
+                var count = Math.Min(line, Math.Min((_dragData.SizeY - startCol), _dragData.SizeX));
+                for (var i = 0; i < count; i++)
+                {
+                    BuildModeController.Build(tiles[Math.Min(_dragData.SizeX, line) - i - 1, startCol + i]);
                 }
             }
 
@@ -267,6 +280,9 @@ namespace Controllers
         public int StartY { get; private set; }
         public int EndX { get; private set; }
         public int EndY { get; private set; }
+
+        public int SizeX => EndX - StartX + 1;
+        public int SizeY => EndY - StartY + 1;
 
         public void Build(int _startX, int _endX, int _startY, int _endY)
         {
