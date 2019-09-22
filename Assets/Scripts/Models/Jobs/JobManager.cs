@@ -188,6 +188,8 @@ namespace Models.Jobs
         public void NotifyActiveJobInvalid(Job _job)
         {
             if (!ActiveJobs.Contains(_job)) return;
+
+            _job.AssignedEntity.SetJob(null, true);
             
             ActiveJobs.Remove(_job);
             InvalidJobs.Add(_job);

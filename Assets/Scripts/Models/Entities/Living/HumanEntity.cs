@@ -46,7 +46,6 @@ namespace Models.Entities.Living
                 {
                     // Mark the job as invalid if the path can't be reached. TODO: Don't flag as invalid if other entity can reach job.
                     JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
-                    SetJob(null, true);
                     return;
                 }
             }
@@ -71,7 +70,6 @@ namespace Models.Entities.Living
                 if (!newTileFound)
                 {
                     JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
-                    SetJob(null, true);
                     return;
                 }
             }
