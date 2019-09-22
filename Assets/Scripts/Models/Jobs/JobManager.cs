@@ -83,16 +83,16 @@ namespace Models.Jobs
             
             for (var i = InvalidJobs.Count - 1; i >= 0; i--)
             {
-                //Debug.Log($"Current: {i} of {InvalidJobs.Count} invalid jobs.");
                 var job = InvalidJobs[i];
                 var jobNowValid = false;
 
                 foreach (var livingEntity in entities)
                 {
                     var humanEntity = livingEntity as HumanEntity;
-                    
+
                     foreach (var tile in job.TargetTile.DirectNeighbours)
                     {
+                        // TODO: This is way too slow for large maps and large amount of entities.
                         if (PathFinder.TestPath(humanEntity?.CurrentTile, tile))
                         {
                             jobNowValid = true;

@@ -34,21 +34,6 @@ namespace Models.Entities.Living
 
             // TODO: Should maybe use action system for handling jobs?
             if (CurrentJob == null) return;
-            
-            if (!Motor.Working)
-            {
-                // Checks if the working tile can be reached before requesting a path.
-                if (PathFinder.TestPath(CurrentTile, CurrentJob.WorkingTile))
-                {
-                    Motor.SetTargetTile(CurrentJob.WorkingTile);
-                }
-                else
-                {
-                    // Mark the job as invalid if the path can't be reached. TODO: Don't flag as invalid if other entity can reach job.
-                    JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
-                    return;
-                }
-            }
 
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
             {
@@ -56,8 +41,10 @@ namespace Models.Entities.Living
                 // TODO: If the only pathable tile has an active job, set the job for that tile as invalid.
                 foreach (var tile in CurrentJob.TargetTile.DirectNeighbours)
                 {
-                    if (tile.CurrentJob != null) continue;
+                    // Don't consider tiles that have a job, or are not enterable.
+                    if (tile.CurrentJob != null || tile.GetEnterability() != TileEnterability.Immediate) continue;
                     
+                    // TODO: Change this as it is very slow on large maps, especially with a lot of entities.
                     if (PathFinder.TestPath(CurrentTile, tile))
                     {
                         CurrentJob.WorkingTile = tile;
@@ -75,6 +62,15 @@ namespace Models.Entities.Living
             }
             
             CurrentJob?.Update();
+        }
+
+        public override void OnPathFailed()
+        {
+            // If the last path request failed for the ai motor, then the entity can't reach the working tile for this job.
+            if (CurrentJob != null)
+            {
+                JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
+            }
         }
     }
 }

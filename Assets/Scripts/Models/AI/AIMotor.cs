@@ -12,7 +12,7 @@ namespace Models.AI
         /// Determines if the motor is currently moving the entity, or waiting for a path to be returned by the Path finder.
         /// </summary>
         public bool Working { get; private set; }
-        
+
         private LivingEntity Entity { get; }
 
         /// <summary>
@@ -48,6 +48,7 @@ namespace Models.AI
         public void SetTargetTile(Tile _tile)
         {
             Stop();
+            
             // Don't try move to the same tile the entity is currently on.
             if (Entity.CurrentTile.Position == _tile.Position)
             {
@@ -123,6 +124,7 @@ namespace Models.AI
             else
             {
                 FinishPath();
+                Entity.OnPathFailed();
             }
         }
         

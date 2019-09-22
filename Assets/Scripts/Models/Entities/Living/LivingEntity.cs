@@ -28,5 +28,10 @@ namespace Models.Entities.Living
             actionManager.Update();
             Motor.Update();
         }
+
+        /// <summary>
+        /// Event called when the ai motor fails to find a path to its provided target tile.
+        /// </summary>
+        public virtual void OnPathFailed() {}
     }
 }
