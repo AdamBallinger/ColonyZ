@@ -4774,7 +4774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxZoom: 0.5
-  minZoom: 12
+  minZoom: 18
   zoomSpeed: 65
   cameraMoveSpeed: 2.5
   cameraPivot: {fileID: 740356067}
