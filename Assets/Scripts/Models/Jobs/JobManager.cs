@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Models.Entities;
 using Models.Entities.Living;
 using Models.Map;
 using Models.Map.Pathing;
@@ -85,25 +86,16 @@ namespace Models.Jobs
             for (var i = InvalidJobs.Count - 1; i >= 0; i--)
             {
                 var job = InvalidJobs[i];
-                var jobNowValid = false;
 
                 foreach (var livingEntity in entities)
                 {
                     var humanEntity = livingEntity as HumanEntity;
 
-                    foreach (var tile in job.TargetTile.DirectNeighbours)
+                    if (CanEntityReachJob(humanEntity, job))
                     {
-                        if (tile.GetEnterability() != TileEnterability.Immediate) continue;
-
-                        if (PathFinder.TestPath(humanEntity?.CurrentTile, tile))
-                        {
-                            jobNowValid = true;
-                            RemoveInvalidJob(job);
-                            break;
-                        }
+                        RemoveInvalidJob(job);
+                        break;
                     }
-
-                    if (jobNowValid) break;
                 }
             }
         }
@@ -148,20 +140,14 @@ namespace Models.Jobs
                 }
 
                 var job = InactiveJobs[0];
-                var jobAssigned = false;
+                var closestTile = GetClosestEnterableNeighbour(entity, job.TargetTile.DirectNeighbours);
                 
-                foreach (var tile in job.TargetTile.DirectNeighbours)
+                if (closestTile != null && PathFinder.TestPath(entity?.CurrentTile, closestTile))
                 {
-                    if (PathFinder.TestPath(entity?.CurrentTile, tile))
-                    {
-                        job.WorkingTile = tile;
-                        AssignEntityJob(entity, job);
-                        jobAssigned = true;
-                        break;
-                    }
+                    job.WorkingTile = closestTile;
+                    AssignEntityJob(entity, job);
+                    break;
                 }
-
-                if (jobAssigned) break;
 
                 // If the last entity can't reach the job, then the job must be unreachable.
                 if (i == entities.Count - 1)
@@ -169,6 +155,15 @@ namespace Models.Jobs
                     AddInvalidJob(job);
                 }
             }
+        }
+        
+        public bool CanEntityReachJob(Entity _entity, Job _job)
+        {
+            if (_entity == null || _job == null) return false;
+
+            var closestTile = GetClosestEnterableNeighbour(_entity, _job.TargetTile.DirectNeighbours);
+
+            return closestTile != null && PathFinder.TestPath(_entity.CurrentTile, closestTile);
         }
 
         public void AddJob(Job _job)
@@ -218,6 +213,37 @@ namespace Models.Jobs
             InvalidJobs.Remove(_job);
             InactiveJobs.Add(_job);
             jobStateChangedEvent?.Invoke(_job);
+        }
+        
+        /// <summary>
+        /// Returns the closest enterable tile from the given tiles for the given entity.
+        /// </summary>
+        /// <param name="_entity"></param>
+        /// <param name="_tiles"></param>
+        /// <returns></returns>
+        private Tile GetClosestEnterableNeighbour(Entity _entity, IReadOnlyCollection<Tile> _tiles)
+        {
+            if (_entity == null || _tiles == null || _tiles.Count <= 0) return null;
+            
+            Tile closest = null;
+            var closestDist = float.MaxValue;
+
+            var entityTile = _entity.CurrentTile;
+                
+            foreach(var tile in _tiles)
+            {
+                if (tile.GetEnterability() != TileEnterability.Immediate) continue;
+                    
+                var dist = (entityTile.Position - tile.Position).sqrMagnitude;
+
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closest = tile;
+                }
+            }
+
+            return closest;
         }
     }
 }
