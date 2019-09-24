@@ -8,24 +8,30 @@ namespace Models.Entities.Living
     {
         public float MovementSpeed { get; set; }
         
+        public AIMotor Motor { get; }
+        
         protected float Health { get; set; }
 
         protected ActionManager actionManager;
-
-        protected AIMotor motor;
 
         protected LivingEntity(Tile _tile) : base(_tile)
         {
             MovementSpeed = 1.0f;
             Health = 100.0f;
             actionManager = new ActionManager();
-            motor = new AIMotor(this);
+            Motor = new AIMotor(this);
+            //CurrentTile.LivingEntities.Add(this);
         }
 
         public override void Update()
         {
             actionManager.Update();
-            motor.Update();
+            Motor.Update();
         }
+
+        /// <summary>
+        /// Event called when the ai motor fails to find a path to its provided target tile.
+        /// </summary>
+        public virtual void OnPathFailed() {}
     }
 }

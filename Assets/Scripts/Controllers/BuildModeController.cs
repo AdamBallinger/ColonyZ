@@ -1,4 +1,7 @@
-﻿using Models.Map;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Models.Jobs;
+using Models.Map;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
@@ -30,37 +33,44 @@ namespace Controllers
 
         /// <summary>
         /// Performs a build on a given tile.
-        /// TODO: This function in future should create the job based on the build mode, check if placement is valid etc.
         /// </summary>
-        /// <param name="_tile"></param>
-        public void Build(Tile _tile)
+        /// <param name="_tiles"></param>
+        public void Build(Tile[] _tiles)
         {
             switch (Mode)
             {
                 case BuildMode.Object:
-                    HandleObjectBuild(_tile);
+                    HandleObjectBuild(_tiles);
                     break;
                 case BuildMode.Demolish:
-                    _tile.RemoveObject();
+                    HandleObjectDemolish(_tiles);
                     break;
             }
         }
 
-        private void HandleObjectBuild(Tile _tile)
+        private void HandleObjectBuild(IEnumerable<Tile> _tiles)
         {
-            if (ObjectToBuild == null)
+            var jobs = new List<Job>();
+            
+            foreach (var tile in _tiles)
             {
-                return;
+                if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile))
+                {
+                    var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
+                    var obj = Object.Instantiate(ObjectToBuild);
+                    tile.SetObject(foundation);
+                    jobs.Add(new BuildJob(tile, obj));
+                }
             }
+            
+            JobManager.Instance.AddJobs(jobs);
+        }
+        
+        private void HandleObjectDemolish(IEnumerable<Tile> _tiles)
+        {
+            var jobs = (from tile in _tiles where tile.Object != null select new DemolishJob(tile)).Cast<Job>().ToList();
 
-            if (World.Instance.IsObjectPositionValid(ObjectToBuild, _tile))
-            {
-                // TODO: Change to a Job when implemented.
-                var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
-                var obj = Object.Instantiate(ObjectToBuild);
-                foundation.SetBuilding(obj);
-                _tile.SetObject(foundation);
-            }
+            JobManager.Instance.AddJobs(jobs);
         }
 
         /// <summary>

@@ -12,13 +12,13 @@ namespace Models.AI
         /// Determines if the motor is currently moving the entity, or waiting for a path to be returned by the Path finder.
         /// </summary>
         public bool Working { get; private set; }
-        
+
         private LivingEntity Entity { get; }
 
         /// <summary>
         /// The tile the motor is moving the entity towards.
         /// </summary>
-        private Tile targetTile;
+        public Tile TargetTile { get; private set; }
 
         /// <summary>
         /// The path the motor is currently navigating.
@@ -47,6 +47,8 @@ namespace Models.AI
         /// <param name="_tile"></param>
         public void SetTargetTile(Tile _tile)
         {
+            Stop();
+            
             // Don't try move to the same tile the entity is currently on.
             if (Entity.CurrentTile.Position == _tile.Position)
             {
@@ -54,14 +56,28 @@ namespace Models.AI
             }
 
             Working = true;
-            targetTile = _tile;
-            PathFinder.NewRequest(Entity.CurrentTile, targetTile, OnPathReceived);
+            TargetTile = _tile;
+            PathFinder.NewRequest(Entity.CurrentTile, TargetTile, OnPathReceived);
+        }
+        
+        public void Stop()
+        {
+            // TODO: Find a way to end a path without breaking the motor or causing the entity to teleport because of the tile offset.
+            FinishPath();
         }
         
         public void Update()
         {
             if (path == null)
             {
+                return;
+            }
+
+            if (!path.IsValid)
+            {
+                // Find a new path if the current one was invalidated.
+                FinishPath();
+                SetTargetTile(TargetTile);
                 return;
             }
 
@@ -72,11 +88,13 @@ namespace Models.AI
             
             if (travelProgress >= 1.0f)
             {
+                Entity.CurrentTile.LivingEntities.Remove(Entity);
                 Entity.CurrentTile = path.CurrentTile;
+                Entity.CurrentTile.LivingEntities.Add(Entity);
                 path.Next();
-                
-                // Check if at the end of the path, or if it was invalidated.
-                if (path.CurrentTile == null || !path.IsValid)
+
+                // Check if at the end of the path.
+                if (path.CurrentTile == null)
                 {
                     FinishPath();
                     return;
@@ -86,7 +104,7 @@ namespace Models.AI
 
                 var overlap = Mathf.Clamp01(travelProgress - 1.0f);
                 travelProgress = overlap;
-                
+
                 // TODO: only set travel progress to overlap if the next tile in the path is actually pathable. Otherwise path ends.
             }
 
@@ -106,6 +124,7 @@ namespace Models.AI
             else
             {
                 FinishPath();
+                Entity.OnPathFailed();
             }
         }
         

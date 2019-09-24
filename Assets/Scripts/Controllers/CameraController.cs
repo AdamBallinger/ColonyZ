@@ -1,5 +1,6 @@
 using Models.Map;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Controllers
 {
@@ -65,6 +66,9 @@ namespace Controllers
 
         private void HandleCameraZoom()
         {
+            // Don't zoom camera when scrolling over UI elements.
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+            
             camera.orthographicSize -= camera.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * (zoomSpeed * Time.deltaTime);
             camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, maxZoom, minZoom);
             

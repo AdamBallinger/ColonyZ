@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Models.Map.Tiles;
 using UnityEngine;
 
 namespace Models.Map.Pathing
@@ -64,14 +65,13 @@ namespace Models.Map.Pathing
         }
 
         /// <summary>
-        /// Update the node graph around a specified are with an optional padding. By default, padding is 2 nodes.
+        /// Update the node graph for a specified area.
         /// </summary>
         /// <param name="_startX"></param>
         /// <param name="_startY"></param>
         /// <param name="_endX"></param>
         /// <param name="_endY"></param>
-        /// <param name="_padding"></param>
-        public void UpdateGraph(int _startX, int _startY, int _endX, int _endY, int _padding = 2)
+        public void UpdateGraph(int _startX, int _startY, int _endX, int _endY)
         {
             var sw = new Stopwatch();
             sw.Start();
@@ -85,13 +85,24 @@ namespace Models.Map.Pathing
                 {
                     if (y < 0 || y >= Height) continue;
 
-                    Nodes[x, y].Pathable = World.Instance?.GetTileAt(x, y).Object == null;
+                    var tile = World.Instance.GetTileAt(x, y);
+                    Nodes[x, y].Pathable = tile.GetEnterability() != TileEnterability.None;
                 }
             }
 
             sw.Stop();
             onUpdateGraphCallback?.Invoke();
             //UnityEngine.Debug.Log("Graph update time: " + sw.ElapsedMilliseconds + "ms.");
+        }
+        
+        /// <summary>
+        /// Update a given point for the graph.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        public void UpdateGraph(int _x, int _y)
+        {
+            UpdateGraph(_x, _y, _x, _y);
         }
 
         private void BuildNodeNeighbours()

@@ -14,8 +14,8 @@ namespace Models.Map.Pathing
 
         public int TaskCount => taskList.Count;
         
-        private const float STRAIGHT_MOVEMENT_COST = 1.0f;
-        private const float DIAGONAL_MOVEMENT_COST = 1.415746543f;
+        private const float STRAIGHT_MOVEMENT_COST = 10.0f;
+        private const float DIAGONAL_MOVEMENT_COST = 14.0f;
 
         private List<Task<PathResult>> taskList;
 
@@ -62,7 +62,7 @@ namespace Models.Map.Pathing
             var task = await Task.WhenAny(taskList.ToArray());
             taskList.Remove(task);
             var result = task.Result;
-            result.request.onPathCompleteCallback?.Invoke(result.path);
+            result.InvokeCallback();
         }
 
         /// <summary>
@@ -73,10 +73,7 @@ namespace Models.Map.Pathing
             var sw = new Stopwatch();
             sw.Start();
 
-            var pathResult = new PathResult
-            {
-                request = _request
-            };
+            PathResult result;
 
             var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
             var nodeClosedSet = new HashSet<Node>();
@@ -99,8 +96,8 @@ namespace Models.Map.Pathing
                 if (currentNode == _request.End)
                 {
                     sw.Stop();
-                    pathResult.path = new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds);
-                    return Task.FromResult(pathResult);
+                    result = new PathResult(_request, new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds));
+                    return Task.FromResult(result);
                 }
 
                 foreach(var node in currentNode.Neighbours)
@@ -131,8 +128,8 @@ namespace Models.Map.Pathing
             }
 
             // If every node was evaluated and the end node wasn't found, then invoke the callback with an invalid empty path.
-            pathResult.path = new Path(null, false, 0.0f);
-            return Task.FromResult(pathResult);
+            result = new PathResult(_request, new Path(null, false, 0.0f));
+            return Task.FromResult(result);
         }
         
         /// <summary>
@@ -243,8 +240,19 @@ namespace Models.Map.Pathing
         
         private struct PathResult
         {
-            public PathRequest request;
-            public Path path;
+            private PathRequest request;
+            private Path path;
+            
+            public PathResult(PathRequest _request, Path _path)
+            {
+                request = _request;
+                path = _path;
+            }
+            
+            public void InvokeCallback()
+            {
+                request?.onPathCompleteCallback?.Invoke(path);
+            }
         }
     }
 }

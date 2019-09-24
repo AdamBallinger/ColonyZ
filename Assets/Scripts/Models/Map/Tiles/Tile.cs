@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Models.Entities.Living;
+using Models.Jobs;
+using Models.Map.Pathing;
 using Models.Map.Tiles.Objects;
-using Models.Sprites;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Models.Map.Tiles
 {
@@ -12,6 +16,16 @@ namespace Models.Map.Tiles
         public int Y { get; }
 
         public Vector2 Position => new Vector2(X, Y);
+        
+        /// <summary>
+        /// List of living entities currently occupying this tile.
+        /// </summary>
+        public List<LivingEntity> LivingEntities { get; private set; }
+        
+        /// <summary>
+        /// Reference to any job for this tile.
+        /// </summary>
+        public Job CurrentJob { get; set; }
 
         /// <summary>
         /// The definition of this tile.
@@ -30,9 +44,14 @@ namespace Models.Map.Tiles
         }
 
         /// <summary>
-        /// Contains a list of tiles that surround this tile.
+        /// Contains all neighbours for this tile. (N, NE, E, SE, S, SW, W, NW)
         /// </summary>
         public List<Tile> Neighbours { get; }
+        
+        /// <summary>
+        /// Contains all directly connected neighbours for this tile. (N, E, S, W)
+        /// </summary>
+        public List<Tile> DirectNeighbours { get; }
 
         /// <summary>
         /// Installed tile object for this tile.
@@ -56,16 +75,13 @@ namespace Models.Map.Tiles
             X = _x;
             Y = _y;
             TileDefinition = _definition;
+            LivingEntities = new List<LivingEntity>();
             Neighbours = new List<Tile>();
+            DirectNeighbours = new List<Tile>();
         }
 
         public void SetObject(TileObject _object)
         {
-            if (Object != null)
-            {
-                return;
-            }
-
             for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             {
                 for (var yOffset = 0; yOffset < _object.Height; yOffset++)
@@ -80,7 +96,8 @@ namespace Models.Map.Tiles
             }
             
             World.Instance.Objects.Add(_object);
-
+            NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
+            
             onTileChanged?.Invoke(this);
         }
 
@@ -92,9 +109,8 @@ namespace Models.Map.Tiles
             }
 
             World.Instance.Objects.Remove(Object);
-
             Object = null;
-
+            NodeGraph.Instance.UpdateGraph(X, Y);
             onTileChanged?.Invoke(this);
         }
 
@@ -102,30 +118,17 @@ namespace Models.Map.Tiles
         {
             return Object != null ? Object.Enterability : TileEnterability.Immediate;
         }
-
-        public Tile GetNeighbour(Cardinals _direction)
+        
+        /// <summary>
+        /// Returns a random neighbour tile for this tile.
+        /// </summary>
+        /// <param name="_includeDiagonals"></param>
+        /// <returns></returns>
+        public Tile GetRandomNeighbour(bool _includeDiagonals = false)
         {
-            switch (_direction)
-            {
-                case Cardinals.North:
-                    return World.Instance.GetTileAt(X, Y + 1);
-                case Cardinals.North_East:
-                    return World.Instance.GetTileAt(X + 1, Y + 1);
-                case Cardinals.East:
-                    return World.Instance.GetTileAt(X + 1, Y);
-                case Cardinals.South_East:
-                    return World.Instance.GetTileAt(X + 1, Y - 1);
-                case Cardinals.South:
-                    return World.Instance.GetTileAt(X, Y - 1);
-                case Cardinals.South_West:
-                    return World.Instance.GetTileAt(X - 1, Y - 1);
-                case Cardinals.West:
-                    return World.Instance.GetTileAt(X - 1, Y);
-                case Cardinals.North_West:
-                    return World.Instance.GetTileAt(X - 1, Y + 1);
-            }
-
-            return null;
+            var neighbours = World.Instance.GetTileNeighbours(this, _includeDiagonals);
+            var rand = Random.Range(0, neighbours.Count());
+            return neighbours[rand];
         }
 
         /// <summary>
