@@ -166,16 +166,29 @@ namespace Models.Jobs
             return closestTile != null && PathFinder.TestPath(_entity.CurrentTile, closestTile);
         }
 
-        public void AddJob(Job _job)
+        private bool AddJob(Job _job)
         {
-            if (_job == null) return;
+            if (_job == null) return false;
 
             // TODO: Move to mouse controller to visualise duplication for demolish jobs etc.
-            if (_job.TargetTile.CurrentJob != null) return;
+            if (_job.TargetTile.CurrentJob != null) return false;
 
             _job.TargetTile.CurrentJob = _job;
             InactiveJobs.Add(_job);
             jobCreatedEvent?.Invoke(_job);
+
+            return true;
+        }
+        
+        public void AddJobs(IEnumerable<Job> _jobs)
+        {
+            var forceEvaluationOfInvalid = false;
+            foreach (var job in _jobs)
+            {
+                if (AddJob(job) && job is DemolishJob) forceEvaluationOfInvalid = true;
+            }
+            
+            if (forceEvaluationOfInvalid) EvaluateInvalidJobs();
         }
         
         /// <summary>

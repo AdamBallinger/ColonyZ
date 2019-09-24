@@ -215,8 +215,8 @@ namespace Controllers
             {
                 return;
             }
-            
-            //var tiles = new Tile[_dragData.SizeX, _dragData.SizeY];
+
+            var tiles = new List<Tile>();
             for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
             {
                 for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
@@ -229,11 +229,12 @@ namespace Controllers
                     {
                         continue;
                     }
-
-                    BuildModeController.Build(tile);
-                    //tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
+                    
+                    tiles.Add(tile);
                 }
             }
+            
+            BuildModeController.Build(tiles.ToArray());
             
             // Diagonally build over the drag area.
             /*for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)

@@ -1,4 +1,6 @@
-﻿using Models.Jobs;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Models.Jobs;
 using Models.Map;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
@@ -32,37 +34,43 @@ namespace Controllers
         /// <summary>
         /// Performs a build on a given tile.
         /// </summary>
-        /// <param name="_tile"></param>
-        public void Build(Tile _tile)
+        /// <param name="_tiles"></param>
+        public void Build(Tile[] _tiles)
         {
             switch (Mode)
             {
                 case BuildMode.Object:
-                    HandleObjectBuild(_tile);
+                    HandleObjectBuild(_tiles);
                     break;
                 case BuildMode.Demolish:
-                    HandleObjectDemolish(_tile);
+                    HandleObjectDemolish(_tiles);
                     break;
             }
         }
 
-        private void HandleObjectBuild(Tile _tile)
+        private void HandleObjectBuild(IEnumerable<Tile> _tiles)
         {
-            if (World.Instance.IsObjectPositionValid(ObjectToBuild, _tile))
+            var jobs = new List<Job>();
+            
+            foreach (var tile in _tiles)
             {
-                var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
-                var obj = Object.Instantiate(ObjectToBuild);
-                _tile.SetObject(foundation);
-                JobManager.Instance.AddJob(new BuildJob(_tile, obj));
+                if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile))
+                {
+                    var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
+                    var obj = Object.Instantiate(ObjectToBuild);
+                    tile.SetObject(foundation);
+                    jobs.Add(new BuildJob(tile, obj));
+                }
             }
+            
+            JobManager.Instance.AddJobs(jobs);
         }
         
-        private void HandleObjectDemolish(Tile _tile)
+        private void HandleObjectDemolish(IEnumerable<Tile> _tiles)
         {
-            if (_tile.Object != null)
-            {
-                JobManager.Instance.AddJob(new DemolishJob(_tile));
-            }
+            var jobs = (from tile in _tiles where tile.Object != null select new DemolishJob(tile)).Cast<Job>().ToList();
+
+            JobManager.Instance.AddJobs(jobs);
         }
 
         /// <summary>
