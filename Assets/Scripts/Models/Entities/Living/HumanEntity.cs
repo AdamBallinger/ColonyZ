@@ -35,29 +35,19 @@ namespace Models.Entities.Living
             // TODO: Should maybe use action system for handling jobs?
             if (CurrentJob == null) return;
 
+            // Try find a new working tile if the current tile is no longer enterable.
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
             {
-                var newTileFound = false;
-                // TODO: If the only pathable tile has an active job, set the job for that tile as invalid.
-                foreach (var tile in CurrentJob.TargetTile.DirectNeighbours)
-                {
-                    // Don't consider tiles that have a job, or are not enterable.
-                    if (tile.CurrentJob != null || tile.GetEnterability() != TileEnterability.Immediate) continue;
-                    
-                    // TODO: Change this as it is very slow on large maps, especially with a lot of entities.
-                    if (PathFinder.TestPath(CurrentTile, tile))
-                    {
-                        CurrentJob.WorkingTile = tile;
-                        Motor.SetTargetTile(CurrentJob.WorkingTile);
-                        newTileFound = true;
-                        break;
-                    }
-                }
+                var closestTile = JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
                 
-                if (!newTileFound)
+                if (closestTile != null && PathFinder.TestPath(CurrentTile, closestTile))
+                {
+                    CurrentJob.WorkingTile = closestTile;
+                    Motor.SetTargetTile(CurrentJob.WorkingTile);
+                }
+                else
                 {
                     JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
-                    return;
                 }
             }
             

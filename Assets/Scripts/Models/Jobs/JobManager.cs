@@ -221,7 +221,7 @@ namespace Models.Jobs
         /// <param name="_entity"></param>
         /// <param name="_tiles"></param>
         /// <returns></returns>
-        private Tile GetClosestEnterableNeighbour(Entity _entity, IReadOnlyCollection<Tile> _tiles)
+        public Tile GetClosestEnterableNeighbour(Entity _entity, IReadOnlyCollection<Tile> _tiles)
         {
             if (_entity == null || _tiles == null || _tiles.Count <= 0) return null;
             
@@ -235,6 +235,9 @@ namespace Models.Jobs
                 if (tile.GetEnterability() != TileEnterability.Immediate) continue;
                     
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
+
+                // Make tiles that have a job assigned appear more expensive.
+                if (tile.CurrentJob != null) dist += 1000.0f;
 
                 if (dist < closestDist)
                 {
