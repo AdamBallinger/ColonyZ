@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using EzPool;
 using Models.Map;
@@ -47,8 +46,6 @@ namespace Controllers
         private Vector2 currentMousePosition;
 
         private new Camera camera;
-
-        private bool edgeFill;
 
         private void Awake()
         {
@@ -144,21 +141,13 @@ namespace Controllers
                 // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
-                edgeFill = Input.GetKey(KeyCode.LeftShift);
-                
                 selectionObject.SetActive(Mode == MouseMode.Select);
 
                 for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
                 {
                     for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                     {
-                        if(edgeFill)
-                        {
-                            if(x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY)
-                            {
-                                continue;
-                            }
-                        }
+                        if(x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
 
                         var tile = World.Instance.GetTileAt(x, y);
 
@@ -170,7 +159,7 @@ namespace Controllers
 
                         if (BuildModeController.Mode == BuildMode.Object)
                         {
-                            previewRenderer.sprite = BuildModeController.ObjectToBuild?.GetIcon();
+                            previewRenderer.sprite = BuildModeController.ObjectToBuild.GetIcon();
 
                             // Tint the preview color based on if the structure position is valid.
                             previewRenderer.color = !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, tile)
@@ -227,19 +216,13 @@ namespace Controllers
                 return;
             }
             
-            var tiles = new Tile[_dragData.SizeX, _dragData.SizeY];
+            //var tiles = new Tile[_dragData.SizeX, _dragData.SizeY];
             for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
             {
                 for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                 {
-                    if (edgeFill)
-                    {
-                        if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY)
-                        {
-                            continue;
-                        }
-                    }
-
+                    if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
+                    
                     var tile = World.Instance?.GetTileAt(x, y);
 
                     if (tile == null)
@@ -247,12 +230,13 @@ namespace Controllers
                         continue;
                     }
 
-                    tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
+                    BuildModeController.Build(tile);
+                    //tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
                 }
             }
             
             // Diagonally build over the drag area.
-            for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)
+            /*for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)
             {
                 var startCol = Math.Max(0, line - _dragData.SizeX);
                 var count = Math.Min(line, Math.Min((_dragData.SizeY - startCol), _dragData.SizeX));
@@ -260,7 +244,7 @@ namespace Controllers
                 {
                     BuildModeController.Build(tiles[Math.Min(_dragData.SizeX, line) - i - 1, startCol + i]);
                 }
-            }
+            }*/
 
             NodeGraph.Instance?.UpdateGraph(_dragData.StartX, _dragData.StartY, _dragData.EndX, _dragData.EndY);
         }
