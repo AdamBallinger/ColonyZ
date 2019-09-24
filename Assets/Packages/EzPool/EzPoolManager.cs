@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+
 // ReSharper disable CheckNamespace
 
 namespace EzPool
@@ -8,15 +9,15 @@ namespace EzPool
     public class EzPoolManager : MonoBehaviour
     {
         [SerializeField]
-        private GameObject pooledPrefab = null;
+        private GameObject pooledPrefab;
 
         // Max number of objects that can be pooled.
         [SerializeField]
-        private int maxPoolCount = 1;
+        private int maxPoolCount;
 
         // Number of prefab instantiations to be made on start.
         [SerializeField]
-        private uint prePoolCount = 0;
+        private uint prePoolCount;
 
         // List of active objects (Enabled in scene and being used).
         [SerializeField]
@@ -47,14 +48,9 @@ namespace EzPool
         {
             var inactiveCount = inactiveObjects.Count;
 
-            if (inactiveCount == 0)
+            if (inactiveCount == 0 && GetPoolCount() < maxPoolCount)
             {
                 var obj = CreateNew();
-
-                if (obj == null)
-                {
-                    return null;
-                }
 
                 activeObjects.Add(obj);
                 obj.SetActive(true);
@@ -76,8 +72,6 @@ namespace EzPool
         /// <param name="_obj"></param>
         public void PoolObject(GameObject _obj)
         {
-            if (_obj == null) return;
-
             if (activeObjects.Contains(_obj))
             {
                 _obj.SetActive(false);
