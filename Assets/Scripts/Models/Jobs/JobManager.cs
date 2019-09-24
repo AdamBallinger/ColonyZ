@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Models.Entities.Living;
 using Models.Map;
 using Models.Map.Pathing;
+using Models.Map.Tiles;
 
 namespace Models.Jobs
 {
@@ -89,7 +90,25 @@ namespace Models.Jobs
                 foreach (var livingEntity in entities)
                 {
                     var humanEntity = livingEntity as HumanEntity;
+                    var validNeighbour = false;
 
+                    // Check if direct neighbours has at least 1 enterable tile first.
+                    foreach (var tile in job.TargetTile.DirectNeighbours)
+                    {
+                        if (tile.GetEnterability() == TileEnterability.Immediate)
+                        {
+                            validNeighbour = true;
+                            break;
+                        }
+                    }
+                    
+                    // Job is invalid if no direct neighbour tile is enterable.
+                    if (!validNeighbour)
+                    {
+                        RemoveInvalidJob(job);
+                        break;
+                    }
+                    
                     foreach (var tile in job.TargetTile.DirectNeighbours)
                     {
                         // TODO: This is way too slow for large maps and large amount of entities.
