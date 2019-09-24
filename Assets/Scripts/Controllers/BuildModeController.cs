@@ -10,11 +10,8 @@ namespace Controllers
 {
     public enum BuildMode
     {
-        Terrain,
-        Area,
         Object,
-        Demolish,
-        Harvest
+        Demolish
     }
 
     public class BuildModeController
@@ -35,7 +32,7 @@ namespace Controllers
         /// Performs a build on a given tile.
         /// </summary>
         /// <param name="_tiles"></param>
-        public void Build(Tile[] _tiles)
+        public void Build(IEnumerable<Tile> _tiles)
         {
             switch (Mode)
             {
