@@ -101,7 +101,7 @@ namespace Models.Sprites
 
         private static bool Connects(Tile _neighbour)
         {
-            if (tile?.Object == null || _neighbour?.Object == null)
+            if (!tile.HasObject || !_neighbour.HasObject)
             {
                 return false;
             }

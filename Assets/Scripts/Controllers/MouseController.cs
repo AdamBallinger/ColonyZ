@@ -168,7 +168,7 @@ namespace Controllers
 
                         if (BuildModeController.Mode == BuildMode.Demolish)
                         {
-                            if (tile.Object != null)
+                            if (tile.HasObject)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 0);
                                 previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);

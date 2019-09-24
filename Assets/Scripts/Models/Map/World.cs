@@ -227,7 +227,7 @@ namespace Models.Map
         /// <returns></returns>
         public bool IsObjectPositionValid(TileObject _object, Tile _tile)
         {
-            if (_tile == null || _tile.Object != null)
+            if (_tile == null || _tile.HasObject)
             {
                 return false;
             }

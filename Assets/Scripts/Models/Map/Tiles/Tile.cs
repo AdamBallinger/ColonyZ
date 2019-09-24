@@ -54,6 +54,11 @@ namespace Models.Map.Tiles
         public List<Tile> DirectNeighbours { get; }
 
         /// <summary>
+        /// Determines if the tile has an object installed on it.
+        /// </summary>
+        public bool HasObject { get; private set; }
+
+        /// <summary>
         /// Installed tile object for this tile.
         /// </summary>
         public TileObject Object { get; private set; }
@@ -94,7 +99,8 @@ namespace Models.Map.Tiles
                     t.onTileChanged?.Invoke(t);
                 }
             }
-            
+
+            HasObject = true;
             World.Instance.Objects.Add(_object);
             NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
             
@@ -103,20 +109,21 @@ namespace Models.Map.Tiles
 
         public void RemoveObject()
         {
-            if (Object == null)
+            if (!HasObject)
             {
                 return;
             }
 
             World.Instance.Objects.Remove(Object);
             Object = null;
+            HasObject = false;
             NodeGraph.Instance.UpdateGraph(X, Y);
             onTileChanged?.Invoke(this);
         }
 
         public TileEnterability GetEnterability()
         {
-            return Object != null ? Object.Enterability : TileEnterability.Immediate;
+            return HasObject ? Object.Enterability : TileEnterability.Immediate;
         }
         
         /// <summary>
