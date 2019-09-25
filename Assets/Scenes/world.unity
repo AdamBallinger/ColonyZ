@@ -3993,6 +3993,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6ef022f09ea6fb45a763b84c085c167, type: 2}
   - {fileID: 11400000, guid: ecfda6801bf6a4f43a48ceed825cdb1f, type: 2}
   - {fileID: 11400000, guid: dd0b244d09aa09648aff41e72399ab14, type: 2}
+  - {fileID: 11400000, guid: f282d678156fac24fa85e1a89f79b2c7, type: 2}
 --- !u!114 &1523355956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4009,6 +4010,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bd316b4cadb0df0409defdb5ed20cef7, type: 2}
   - {fileID: 11400000, guid: e399c29c4324be54f87f93cf3b8c3d89, type: 2}
   - {fileID: 11400000, guid: 8b137ff655fdd664dba9981a9d73144a, type: 2}
+  - {fileID: 11400000, guid: a63b92cceec1d774ead2263e123a483c, type: 2}
 --- !u!1 &1563564460
 GameObject:
   m_ObjectHideFlags: 0
@@ -4151,11 +4153,11 @@ MonoBehaviour:
     lineCount: 6
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -4492,11 +4494,11 @@ MonoBehaviour:
     lineCount: 2
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
