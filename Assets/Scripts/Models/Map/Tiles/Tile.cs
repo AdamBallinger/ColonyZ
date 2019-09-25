@@ -5,12 +5,13 @@ using Models.Entities.Living;
 using Models.Jobs;
 using Models.Map.Pathing;
 using Models.Map.Tiles.Objects;
+using Models.UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Models.Map.Tiles
 {
-    public class Tile
+    public class Tile : ISelectable
     {
         public int X { get; }
         public int Y { get; }
@@ -155,5 +156,26 @@ namespace Models.Map.Tiles
         {
             onTileDefinitionChanged += _callback;
         }
+        
+        #region ISelectable Implementation
+
+        public Sprite GetSelectionIcon()
+        {
+            return null;
+        }
+
+        public string GetSelectionName()
+        {
+            return TileDefinition.TileName;
+        }
+
+        public string GetSelectionDescription()
+        {
+            return $"Tile X: {X}\n" +
+                   $"Tile Y: {Y}\n" +
+                   $"Object: {(HasObject ? Object.ObjectName : "None")}";
+        }
+        
+        #endregion
     }
 }
