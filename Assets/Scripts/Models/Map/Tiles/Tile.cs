@@ -172,8 +172,7 @@ namespace Models.Map.Tiles
         public string GetSelectionDescription()
         {
             return $"Tile X: {X}\n" +
-                   $"Tile Y: {Y}\n" +
-                   $"Object: {(HasObject ? Object.ObjectName : "None")}";
+                   $"Tile Y: {Y}";
         }
         
         #endregion

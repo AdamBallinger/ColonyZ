@@ -31,7 +31,14 @@ namespace Controllers.UI
         /// <param name="_tile"></param>
         public void OnTileSelect(Tile _tile)
         {
-            Set(_tile);
+            if (_tile.HasObject)
+            {
+                Set(_tile.Object);
+            }
+            else
+            {
+                Set(_tile);
+            }
         }
         
         private void Set(ISelectable _selectable)
