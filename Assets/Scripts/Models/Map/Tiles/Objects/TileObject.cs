@@ -109,7 +109,8 @@ namespace Models.Map.Tiles.Objects
 
         public string GetSelectionDescription()
         {
-            return "This is an object. I don't have anything to put here yet :)";
+            return Tile.GetSelectionDescription() +
+                   "Durability: 0/0\n";
         }
         
         #endregion

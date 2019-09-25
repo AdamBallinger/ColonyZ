@@ -171,8 +171,7 @@ namespace Models.Map.Tiles
 
         public string GetSelectionDescription()
         {
-            return $"Tile X: {X}\n" +
-                   $"Tile Y: {Y}";
+            return $"Tile: ({X}, {Y})\n";
         }
         
         #endregion
