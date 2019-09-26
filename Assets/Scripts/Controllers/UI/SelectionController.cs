@@ -24,6 +24,8 @@ namespace Controllers.UI
         
         [SerializeField]
         private TMP_Text description;
+
+        private ISelectable currentSelection;
         
         /// <summary>
         /// Called when the mouse clicks on a tile.
@@ -47,6 +49,7 @@ namespace Controllers.UI
         
         private void Set(ISelectable _selectable)
         {
+            currentSelection = _selectable;
             icon.sprite = _selectable.GetSelectionIcon();
             title.text = _selectable.GetSelectionName();
             description.text = _selectable.GetSelectionDescription();
@@ -60,6 +63,11 @@ namespace Controllers.UI
             {
                 selectionContainer.SetActive(false);
                 IsVisible = false;
+            }
+            
+            if (IsVisible)
+            {
+                description.text = currentSelection.GetSelectionDescription();
             }
         }
     }
