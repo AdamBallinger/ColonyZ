@@ -10,14 +10,14 @@ namespace Models.Entities.Living
         
         public AIMotor Motor { get; }
         
-        protected float Health { get; set; }
+        protected int Health { get; set; }
 
         protected ActionManager actionManager;
 
         protected LivingEntity(Tile _tile) : base(_tile)
         {
             MovementSpeed = 1.0f;
-            Health = 100.0f;
+            Health = 100;
             actionManager = new ActionManager();
             Motor = new AIMotor(this);
             //CurrentTile.LivingEntities.Add(this);
