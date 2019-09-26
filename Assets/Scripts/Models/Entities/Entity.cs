@@ -1,10 +1,11 @@
 using Models.Map.Tiles;
 using Models.Sprites;
+using Models.UI;
 using UnityEngine;
 
 namespace Models.Entities
 {
-    public abstract class Entity
+    public abstract class Entity : ISelectable
     {
         /// <summary>
         /// Precise X coordinate of entity.
@@ -40,5 +41,20 @@ namespace Models.Entities
         }
 
         public abstract void Update();
+        
+        public Sprite GetSelectionIcon()
+        {
+            return null;
+        }
+
+        public string GetSelectionName()
+        {
+            return Name;
+        }
+
+        public virtual string GetSelectionDescription()
+        {
+            return CurrentTile.GetSelectionDescription();
+        }
     }
 }

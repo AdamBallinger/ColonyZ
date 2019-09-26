@@ -33,5 +33,11 @@ namespace Models.Entities.Living
         /// Event called when the ai motor fails to find a path to its provided target tile.
         /// </summary>
         public virtual void OnPathFailed() {}
+
+        public override string GetSelectionDescription()
+        {
+            return base.GetSelectionDescription() +
+                   $"Health: {Health}\n";
+        }
     }
 }

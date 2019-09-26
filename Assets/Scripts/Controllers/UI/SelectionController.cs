@@ -31,7 +31,11 @@ namespace Controllers.UI
         /// <param name="_tile"></param>
         public void OnTileSelect(Tile _tile)
         {
-            if (_tile.HasObject)
+            if (_tile.LivingEntities.Count > 0)
+            {
+                Set(_tile.LivingEntities[0]);
+            }
+            else if (_tile.HasObject)
             {
                 Set(_tile.Object);
             }
