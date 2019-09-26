@@ -36,7 +36,7 @@ namespace Models.Entities.Living
 
         public override string GetSelectionDescription()
         {
-            return base.GetSelectionDescription() +
+            return $"Position: ({X:F}, {Y:F})\n" +
                    $"Health: {Health}\n";
         }
     }
