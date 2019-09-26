@@ -41,11 +41,8 @@ namespace Models.Entities
         }
 
         public abstract void Update();
-        
-        public Sprite GetSelectionIcon()
-        {
-            return null;
-        }
+
+        public abstract Sprite GetSelectionIcon();
 
         public string GetSelectionName()
         {
@@ -54,7 +51,12 @@ namespace Models.Entities
 
         public virtual string GetSelectionDescription()
         {
-            return CurrentTile.GetSelectionDescription();
+            return $"Position: ({X:0.#}, {Y:0.#})\n";
+        }
+        
+        public Vector2 GetPosition()
+        {
+            return new Vector2(X, Y);
         }
     }
 }

@@ -15,6 +15,9 @@ namespace Controllers.UI
         
         [SerializeField]
         private GameObject selectionContainer;
+
+        [SerializeField]
+        private GameObject selectionObject;
         
         [SerializeField]
         private Image icon;
@@ -33,6 +36,12 @@ namespace Controllers.UI
         /// <param name="_tile"></param>
         public void OnTileSelect(Tile _tile)
         {
+            if (_tile == null)
+            {
+                HideSelectable();
+                return;
+            }
+            
             if (_tile.LivingEntities.Count > 0)
             {
                 Set(_tile.LivingEntities[0]);
@@ -55,20 +64,29 @@ namespace Controllers.UI
             description.text = _selectable.GetSelectionDescription();
             IsVisible = true;
             selectionContainer.SetActive(true);
+            selectionObject.SetActive(true);
+            selectionObject.transform.position = currentSelection.GetPosition();
         }
         
         private void Update()
         {
             if (IsVisible && Input.GetKeyDown(KeyCode.Escape))
             {
-                selectionContainer.SetActive(false);
-                IsVisible = false;
+                HideSelectable();
             }
             
             if (IsVisible)
             {
                 description.text = currentSelection.GetSelectionDescription();
+                selectionObject.transform.position = currentSelection.GetPosition();
             }
+        }
+        
+        private void HideSelectable()
+        {
+            IsVisible = false;
+            selectionContainer.SetActive(false);
+            selectionObject.SetActive(false);
         }
     }
 }

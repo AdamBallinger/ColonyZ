@@ -1,6 +1,7 @@
 using Models.AI;
 using Models.AI.Actions;
 using Models.Map.Tiles;
+using UnityEngine;
 
 namespace Models.Entities.Living
 {
@@ -34,9 +35,15 @@ namespace Models.Entities.Living
         /// </summary>
         public virtual void OnPathFailed() {}
 
+        public override Sprite GetSelectionIcon()
+        {
+            // TODO: Have a way to access the face sprite for the entity.
+            return null;
+        }
+
         public override string GetSelectionDescription()
         {
-            return $"Position: ({X:F}, {Y:F})\n" +
+            return base.GetSelectionDescription() +
                    $"Health: {Health}\n";
         }
     }

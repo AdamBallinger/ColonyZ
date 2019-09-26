@@ -113,6 +113,11 @@ namespace Models.Map.Tiles.Objects
                    "Durability: 0/0\n";
         }
         
+        public Vector2 GetPosition()
+        {
+            return Tile.Position;
+        }
+        
         #endregion
     }
 }

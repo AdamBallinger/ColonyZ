@@ -171,7 +171,12 @@ namespace Models.Map.Tiles
 
         public string GetSelectionDescription()
         {
-            return $"Tile: ({X}, {Y})\n";
+            return $"Position: ({X}, {Y})\n";
+        }
+        
+        public Vector2 GetPosition()
+        {
+            return Position;
         }
         
         #endregion

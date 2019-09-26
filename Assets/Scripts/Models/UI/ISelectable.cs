@@ -21,5 +21,11 @@ namespace Models.UI
         /// </summary>
         /// <returns></returns>
         string GetSelectionDescription();
+
+        /// <summary>
+        /// Returns the position of the selectable to display in the UI.
+        /// </summary>
+        /// <returns></returns>
+        Vector2 GetPosition();
     }
 }
