@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Controllers;
 using Models.Entities.Living;
 using Models.Jobs;
@@ -8,7 +7,6 @@ using Models.Map.Pathing;
 using Models.Map.Tiles.Objects;
 using Models.UI;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Models.Map.Tiles
 {
@@ -126,18 +124,6 @@ namespace Models.Map.Tiles
         public TileEnterability GetEnterability()
         {
             return HasObject ? Object.Enterability : TileEnterability.Immediate;
-        }
-        
-        /// <summary>
-        /// Returns a random neighbour tile for this tile.
-        /// </summary>
-        /// <param name="_includeDiagonals"></param>
-        /// <returns></returns>
-        public Tile GetRandomNeighbour(bool _includeDiagonals = false)
-        {
-            var neighbours = World.Instance.GetTileNeighbours(this, _includeDiagonals);
-            var rand = Random.Range(0, neighbours.Count());
-            return neighbours[rand];
         }
 
         /// <summary>
