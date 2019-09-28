@@ -1,9 +1,10 @@
 using Models.Sprites;
+using Models.UI;
 using UnityEngine;
 
 namespace Models.Map.Tiles.Objects
 {
-    public abstract class TileObject : ScriptableObject
+    public abstract class TileObject : ScriptableObject, ISelectable
     {
         /// <summary>
         /// The Tile this object originates from. If the object is a multi tile object, then this is the "base" tile
@@ -93,5 +94,30 @@ namespace Models.Map.Tiles.Objects
         {
             return SpriteCache.GetSprite(SpriteData.SpriteGroup, SpriteData.IconIndex);
         }
+
+        #region ISelectable Implementation
+        
+        public Sprite GetSelectionIcon()
+        {
+            return GetIcon();
+        }
+
+        public string GetSelectionName()
+        {
+            return objectName;
+        }
+
+        public string GetSelectionDescription()
+        {
+            return Tile.GetSelectionDescription() +
+                   "Durability: 0/0\n";
+        }
+        
+        public Vector2 GetPosition()
+        {
+            return Tile.Position;
+        }
+        
+        #endregion
     }
 }

@@ -16,6 +16,8 @@ namespace Controllers
     public class WorldController : MonoBehaviour
     {
         public static WorldController Instance { get; private set; }
+        
+        public List<Sprite> TileTypesSprites { get; private set; }
 
         [SerializeField]
         private int worldWidth = 100;
@@ -31,10 +33,10 @@ namespace Controllers
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
         private Dictionary<LivingEntity, GameObject> livingEntityObjects;
 
-        private MeshFilter meshFilter;
-
         [SerializeField]
         private Texture2D tileTypesTexture;
+
+        private MeshFilter meshFilter;
 
         private Transform _transform;
 
@@ -43,10 +45,29 @@ namespace Controllers
             Instance = this;
             Instance._transform = Instance.transform;
 
+            Instance.TileTypesSprites = new List<Sprite>();
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
 
+            SliceTileTypesTexture();
             NewWorld();
+        }
+        
+        /// <summary>
+        /// Cuts the tile types texture up into individual sprites.
+        /// </summary>
+        private void SliceTileTypesTexture()
+        {
+            TileTypesSprites.Clear();
+
+            for (var y = 0; y < tileTypesTexture.height / 32; y++)
+            {
+                for (var x = 0; x < tileTypesTexture.width / 32; x++)
+                {
+                    var sprite = Sprite.Create(tileTypesTexture, new Rect(x, y, 32, 32), new Vector2(x + 32, y + 32));
+                    TileTypesSprites.Add(sprite);
+                }
+            }
         }
 
         private void NewWorld()

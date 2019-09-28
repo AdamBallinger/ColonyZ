@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Controllers;
 using Models.Entities.Living;
 using Models.Jobs;
 using Models.Map.Pathing;
 using Models.Map.Tiles.Objects;
+using Models.UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Models.Map.Tiles
 {
-    public class Tile
+    public class Tile : ISelectable
     {
         public int X { get; }
         public int Y { get; }
@@ -155,5 +157,29 @@ namespace Models.Map.Tiles
         {
             onTileDefinitionChanged += _callback;
         }
+        
+        #region ISelectable Implementation
+
+        public Sprite GetSelectionIcon()
+        {
+            return WorldController.Instance.TileTypesSprites[TileDefinition.TextureIndex];
+        }
+
+        public string GetSelectionName()
+        {
+            return TileDefinition.TileName;
+        }
+
+        public string GetSelectionDescription()
+        {
+            return $"Position: ({X}, {Y})\n";
+        }
+        
+        public Vector2 GetPosition()
+        {
+            return Position;
+        }
+        
+        #endregion
     }
 }

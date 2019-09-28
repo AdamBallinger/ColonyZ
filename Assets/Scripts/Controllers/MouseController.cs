@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Controllers.UI;
 using EzPool;
 using Models.Map;
 using Models.Map.Pathing;
@@ -23,7 +24,8 @@ namespace Controllers
 
         public MouseMode Mode { get; set; } = MouseMode.Select;
 
-        public GameObject selectionObject;
+        [SerializeField]
+        private GameObject selectionObject;
 
         private SpriteRenderer selectionObjectRenderer;
 
@@ -32,6 +34,8 @@ namespace Controllers
         private bool IsMouseOverUI { get; set; }
 
         private EzPoolManager previewPool;
+
+        private SelectionController selectionController;
 
         private List<GameObject> previewObjects;
 
@@ -55,6 +59,7 @@ namespace Controllers
         private void Start()
         {
             previewPool = GetComponent<EzPoolManager>();
+            selectionController = FindObjectOfType<SelectionController>();
             previewObjects = new List<GameObject>();
             camera = Camera.main;
             selectionObjectRenderer = selectionObject.GetComponent<SpriteRenderer>();
@@ -213,6 +218,7 @@ namespace Controllers
         {
             if (Mode == MouseMode.Select)
             {
+                selectionController.OnTileSelect(World.Instance.GetTileAt(_dragData.StartX, _dragData.StartY));
                 return;
             }
 
