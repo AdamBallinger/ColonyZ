@@ -127,17 +127,6 @@ namespace Models.Map
         }
 
         /// <summary>
-        /// Returns a tile at the given world coordinates.
-        /// </summary>
-        /// <param name="_x"></param>
-        /// <param name="_y"></param>
-        /// <returns></returns>
-        public Tile GetTileAt(float _x, float _y)
-        {
-            return GetTileAt(Mathf.FloorToInt(_x), Mathf.FloorToInt(_y));
-        }
-
-        /// <summary>
         /// Returns a tile at the rounded world position.
         /// </summary>
         /// <param name="_pos"></param>
