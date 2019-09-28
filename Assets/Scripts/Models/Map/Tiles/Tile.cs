@@ -42,6 +42,16 @@ namespace Models.Map.Tiles
                     onTileDefinitionChanged?.Invoke(this);
             }
         }
+        
+        /// <summary>
+        /// Event called when the tile has changed (Object added or removed etc.).
+        /// </summary>
+        public event Action<Tile> onTileChanged;
+        
+        /// <summary>
+        /// Event called when the tile definition has changed.
+        /// </summary>
+        public event Action<Tile> onTileDefinitionChanged;
 
         /// <summary>
         /// Contains all neighbours for this tile. (N, NE, E, SE, S, SW, W, NW)
@@ -64,10 +74,6 @@ namespace Models.Map.Tiles
         public TileObject Object { get; private set; }
 
         private TileDefinition definition, oldDefinition;
-        
-        private Action<Tile> onTileChanged;
-        
-        private Action<Tile> onTileDefinitionChanged;
 
         /// <summary>
         /// Create a tile at the given x and y from a provided tile definition.
@@ -126,24 +132,6 @@ namespace Models.Map.Tiles
             return HasObject ? Object.Enterability : TileEnterability.Immediate;
         }
 
-        /// <summary>
-        /// Registers a callback function for when a tile is changed.
-        /// </summary>
-        /// <param name="_callback"></param>
-        public void RegisterTileChangedCallback(Action<Tile> _callback)
-        {
-            onTileChanged += _callback;
-        }
-
-        /// <summary>
-        /// Registers a callback function for when a tiles type is changed.
-        /// </summary>
-        /// <param name="_callback"></param>
-        public void RegisterTileTypeChangedCallback(Action<Tile> _callback)
-        {
-            onTileDefinitionChanged += _callback;
-        }
-        
         #region ISelectable Implementation
 
         public Sprite GetSelectionIcon()

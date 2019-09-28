@@ -73,7 +73,7 @@ namespace Controllers
         private void NewWorld()
         {
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
-            World.Instance.RegisterEntitySpawnCallback(OnEntitySpawn);
+            World.Instance.onEntitySpawn += OnEntitySpawn;
             
             TimeManager.Create(8, 0, 1);
             JobManager.Create();
@@ -226,7 +226,7 @@ namespace Controllers
         }
 
         /// <summary>
-        /// Callback for when a tile has been modified. E.g. a wall removed etc.
+        /// Event for when a tile has been modified. E.g. a wall removed etc.
         /// </summary>
         /// <param name="_tile"></param>
         public void OnTileChanged(Tile _tile)
@@ -246,7 +246,7 @@ namespace Controllers
         }
 
         /// <summary>
-        /// Callback for when the definition of a tile has been changed.
+        /// Event for when the definition of a tile has been changed.
         /// </summary>
         /// <param name="_tile"></param>
         public void OnTileDefinitionChanged(Tile _tile)
@@ -255,7 +255,7 @@ namespace Controllers
         }
 
         /// <summary>
-        /// Callback for when a new entity is spawned into the world.
+        /// Event for when a new entity is spawned into the world.
         /// </summary>
         /// <param name="_entity"></param>
         public void OnEntitySpawn(Entity _entity)

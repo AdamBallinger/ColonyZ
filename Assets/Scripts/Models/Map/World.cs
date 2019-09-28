@@ -28,7 +28,10 @@ namespace Models.Map
         
         public List<TileObject> Objects { get; private set; }
 
-        private Action<Entity> onEntitySpawnCallback;
+        /// <summary>
+        /// Event called when a new entity is created.
+        /// </summary>
+        public event Action<Entity> onEntitySpawn;
 
         private World() { }
 
@@ -37,10 +40,10 @@ namespace Models.Map
         /// </summary>
         /// <param name="_width"></param>
         /// <param name="_height"></param>
-        /// <param name="_tileTypeChangedCallback"></param>
-        /// <param name="_tileChangedCallback"></param>
-        public static void CreateWorld(int _width, int _height, Action<Tile> _tileTypeChangedCallback, 
-            Action<Tile> _tileChangedCallback)
+        /// <param name="_tileDefinitionChangeListener"></param>
+        /// <param name="_tileChangedListener"></param>
+        public static void CreateWorld(int _width, int _height, Action<Tile> _tileDefinitionChangeListener, 
+            Action<Tile> _tileChangedListener)
         {
             Instance = new World
             {
@@ -52,7 +55,7 @@ namespace Models.Map
             };
             
             TileManager.LoadDefinitions();
-            Instance.PopulateTileArray(_tileTypeChangedCallback, _tileChangedCallback);
+            Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
         }
 
         public void Update()
@@ -70,15 +73,15 @@ namespace Models.Map
             PathFinder.Instance?.ProcessNext();
         }
 
-        private void PopulateTileArray(Action<Tile> _tileTypeChangeCallback, Action<Tile> _tileChangeCallback)
+        private void PopulateTileArray(Action<Tile> _tileDefinitionChangeListener, Action<Tile> _tileChangedListener)
         {
             for (var x = 0; x < Width; x++)
             {
                 for (var y = 0; y < Height; y++)
                 {
                     var tile = new Tile(x, y, TileManager.GetTileDefinition("Grass"));
-                    tile.RegisterTileTypeChangedCallback(_tileTypeChangeCallback);
-                    tile.RegisterTileChangedCallback(_tileChangeCallback);
+                    tile.onTileDefinitionChanged += _tileDefinitionChangeListener;
+                    tile.onTileChanged += _tileChangedListener;
                     Tiles[x * Width + y] = tile;
                 }
             }
@@ -216,7 +219,7 @@ namespace Models.Map
             var entity = new HumanEntity(_tile);
             Characters.Add(entity);
 
-            onEntitySpawnCallback?.Invoke(entity);
+            onEntitySpawn?.Invoke(entity);
         }
 
         /// <summary>
@@ -255,16 +258,6 @@ namespace Models.Map
             return true;
 
         }
-
-        /// <summary>
-        /// Registers a callback function invoked when any kind of new entity is spawned into the world.
-        /// </summary>
-        /// <param name="_callback"></param>
-        public void RegisterEntitySpawnCallback(Action<Entity> _callback)
-        {
-            onEntitySpawnCallback += _callback;
-        }
-
 
         #region IEnumerable Implementation
 
