@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Controllers;
 using Models.Entities.Living;
 using Models.Jobs;
 using Models.Map.Pathing;
@@ -161,7 +162,7 @@ namespace Models.Map.Tiles
 
         public Sprite GetSelectionIcon()
         {
-            return null;
+            return WorldController.Instance.TileTypesSprites[TileDefinition.TextureIndex];
         }
 
         public string GetSelectionName()
