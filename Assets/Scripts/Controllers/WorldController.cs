@@ -25,6 +25,9 @@ namespace Controllers
         [SerializeField]
         private int worldHeight = 100;
 
+        [SerializeField, Range(1, 100)]
+        private int treeSpawnChance = 25;
+
         [SerializeField]
         private GameObject characterPrefab;
 
@@ -93,7 +96,8 @@ namespace Controllers
 
             foreach (var tile in World.Instance)
             {
-                if (Random.Range(0, 10) == 0)
+                if (Random.Range(0, treeSpawnChance) == 0 || tile.X == 0 || tile.X == worldWidth - 1 
+                    || tile.Y == 0 || tile.Y == worldHeight - 1)
                 {
                     tile.SetObject(TileObjectCache.GetObject("Tree"));
                 }
@@ -261,7 +265,12 @@ namespace Controllers
 
             var spriteRenderer = tileObjectRenderers[_tile];
             spriteRenderer.sprite = SpriteCache.GetSprite(_tile.Object);
-            spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
+            
+            if (_tile.HasObject)
+            {
+                spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
+            }
+            
             UpdateTileNeighbourSprites(_tile);
         }
 
