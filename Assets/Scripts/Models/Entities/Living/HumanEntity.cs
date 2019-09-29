@@ -51,6 +51,17 @@ namespace Models.Entities.Living
                 }
             }
             
+            // If a new closest tile is found for the job, switch to it.
+            var closeTile = JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
+            if (closeTile != null && closeTile != CurrentJob.WorkingTile)
+            {
+                if (PathFinder.TestPath(CurrentTile, closeTile))
+                {
+                    CurrentJob.WorkingTile = closeTile;
+                    Motor.SetTargetTile(closeTile);
+                }
+            }
+            
             CurrentJob?.Update();
         }
 
