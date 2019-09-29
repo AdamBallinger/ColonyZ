@@ -15,6 +15,7 @@ MonoBehaviour:
   objectSpriteData: {fileID: 11400000, guid: 73f54200bbe129d4a81129890d0df55a, type: 2}
   dynamicSprite: 0
   objectName: Tree
+  buildable: 0
   objectWidth: 1
   objectHeight: 1
   objectEnterability: 1

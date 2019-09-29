@@ -4685,11 +4685,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cee140ee272f24ba4a9e3dfdb4d706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 16
-  worldHeight: 16
+  worldWidth: 128
+  worldHeight: 128
+  treeSpawnChance: 25
   characterPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
-  tileSortingLayerName: Tiles
+  tileObjectsSortingName: Objects
   tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
   spriteLoader: {fileID: 1523355955}
   objectsLoader: {fileID: 1523355956}
@@ -5427,7 +5428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxZoom: 0.5
-  minZoom: 18
+  minZoom: 25
   zoomSpeed: 65
   cameraMoveSpeed: 2.5
   cameraPivot: {fileID: 740356067}
