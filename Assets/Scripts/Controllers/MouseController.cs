@@ -4,6 +4,7 @@ using EzPool;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 using Models.Sprites;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -152,8 +153,11 @@ namespace Controllers
                 {
                     for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                     {
-                        if(x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
-
+                        if (BuildModeController.Mode == BuildMode.Object)
+                        {
+                            if(x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
+                        }
+                        
                         var tile = World.Instance.GetTileAt(x, y);
 
                         if (tile == null) continue;
@@ -170,12 +174,25 @@ namespace Controllers
                             previewRenderer.color = !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, tile)
                                 ? new Color(1.0f, 0.3f, 0.3f, 0.4f) : new Color(0.3f, 1.0f, 0.3f, 0.4f);
                         }
-
-                        if (BuildModeController.Mode == BuildMode.Demolish)
+                        else if (BuildModeController.Mode == BuildMode.Demolish)
                         {
-                            if (tile.HasObject)
+                            // Only allow buildable objects to be demolished.
+                            if (tile.HasObject && tile.Object.Buildable)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 0);
+                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
+                            }
+                            else
+                            {
+                                previewRenderer.sprite = null;
+                            }
+                        }
+                        else if (BuildModeController.Mode == BuildMode.Harvest)
+                        {
+                            // TODO: Make a better method of marking something as harvest-able. Maybe an IHarvestable interface?
+                            if (tile.HasObject && tile.Object is NatureObject)
+                            {
+                                previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 2);
                                 previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
                             }
                             else
@@ -227,8 +244,12 @@ namespace Controllers
             {
                 for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                 {
-                    if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
-                    
+                    if (BuildModeController.Mode == BuildMode.Object)
+                    {
+                        // Only when building objects should the drag area only include the edge of the dragged area.
+                        if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
+                    }
+
                     var tile = World.Instance?.GetTileAt(x, y);
 
                     if (tile == null)
