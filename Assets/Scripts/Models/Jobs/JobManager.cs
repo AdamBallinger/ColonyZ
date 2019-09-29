@@ -117,7 +117,7 @@ namespace Models.Jobs
             for(var i = ActiveJobs.Count - 1; i >= 0; i--)
             {
                 var job = ActiveJobs[i];
-                if (job.Progress >= 1.0f)
+                if (job.Complete)
                 {
                     OnJobFinished(job);
                 }

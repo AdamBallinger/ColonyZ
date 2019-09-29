@@ -12,9 +12,19 @@ namespace Models.Jobs
         public string JobName { get; protected set; }
         
         /// <summary>
-        /// Current progress of the job. Value >= 1.0f is completed.
+        /// Current progress of the job.
         /// </summary>
-        public float Progress { get; protected set; }
+        protected float Progress { get; set; }
+        
+        /// <summary>
+        /// Time in seconds it takes to complete the job. Default: 1 second.
+        /// </summary>
+        public float WorkTime { get; protected set; }
+
+        /// <summary>
+        /// Checks if the job is completed.
+        /// </summary>
+        public bool Complete => Progress >= WorkTime;
 
         /// <summary>
         /// Reference to the entity assigned to complete this job.
@@ -35,11 +45,12 @@ namespace Models.Jobs
         {
             TargetTile = _targetTile;
             WorkingTile = _targetTile;
+            WorkTime = 1.0f;
         }
 
         public virtual void Update()
         {
-            if (Progress >= 1.0f) return;
+            if (Complete) return;
 
             if (AssignedEntity == null) return;
 

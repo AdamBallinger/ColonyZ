@@ -16,7 +16,7 @@ namespace Models.Entities.Living
         
         public bool SetJob(Job _job, bool _forceStop = false)
         {
-            if (!_forceStop && CurrentJob != null && CurrentJob.Progress < 1.0f) return false;
+            if (!_forceStop && CurrentJob != null && CurrentJob.Complete) return false;
 
             CurrentJob = _job;
             Motor.Stop();
