@@ -11,7 +11,8 @@ namespace Controllers
     public enum BuildMode
     {
         Object,
-        Demolish
+        Demolish,
+        Harvest
     }
 
     public class BuildModeController
@@ -41,6 +42,9 @@ namespace Controllers
                     break;
                 case BuildMode.Demolish:
                     HandleObjectDemolish(_tiles);
+                    break;
+                case BuildMode.Harvest:
+                    // TODO: Handle harvesting.
                     break;
             }
         }
@@ -88,6 +92,12 @@ namespace Controllers
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Demolish;
+        }
+        
+        public void SetHarvestMode()
+        {
+            MouseController.Instance.Mode = MouseMode.Build;
+            Mode = BuildMode.Harvest;
         }
     }
 }
