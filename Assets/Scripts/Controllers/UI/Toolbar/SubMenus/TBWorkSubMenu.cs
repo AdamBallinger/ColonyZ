@@ -6,7 +6,7 @@ namespace Controllers.UI.Toolbar.SubMenus
     {
         protected override void OnEnabled()
         {
-            AddItem("Destroy", SpriteCache.GetSprite("Overlay", 0), 
+            AddItem("Demolish", SpriteCache.GetSprite("Overlay", 0), 
                     () => MouseController.Instance.BuildModeController.SetDemolishMode());
             
             AddItem("Fell", SpriteCache.GetSprite("Overlay", 2),
