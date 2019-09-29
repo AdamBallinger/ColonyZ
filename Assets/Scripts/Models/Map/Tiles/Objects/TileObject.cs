@@ -68,13 +68,12 @@ namespace Models.Map.Tiles.Objects
         public virtual void Update() {}
 
         /// <summary>
-        /// Returns if this structure connects to a given structure.
+        /// Returns if this object connects to a given object. By default, no objects connect to each other.
         /// </summary>
         /// <param name="_other"></param>
         /// <returns></returns>
         public virtual bool ConnectsWith(TileObject _other)
         {
-            // TODO: Implement this in appropriate object classes so dynamic sprites work.
             return false;
         }
 
