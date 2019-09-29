@@ -69,7 +69,8 @@ namespace Controllers
         
         private void HandleObjectDemolish(IEnumerable<Tile> _tiles)
         {
-            var jobs = (from tile in _tiles where tile.HasObject select new DemolishJob(tile)).Cast<Job>().ToList();
+            var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Buildable 
+                        select new DemolishJob(tile)).Cast<Job>().ToList();
 
             JobManager.Instance.AddJobs(jobs);
         }
