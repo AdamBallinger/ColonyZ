@@ -76,7 +76,8 @@ namespace Controllers
         
         private void HandleHarvest(IEnumerable<Tile> _tiles)
         {
-            var jobs = (from tile in _tiles where tile.HasObject select new HarvestJob(tile)).Cast<Job>().ToList();
+            var jobs = (from tile in _tiles where tile.HasObject && tile.Object is NatureObject 
+                        select new HarvestJob(tile)).Cast<Job>().ToList();
             
             JobManager.Instance.AddJobs(jobs);
         }
