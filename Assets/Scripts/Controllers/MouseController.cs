@@ -261,7 +261,7 @@ namespace Controllers
                 }
             }
             
-            BuildModeController.Build(tiles.ToArray());
+            BuildModeController.Process(tiles.ToArray());
             
             // Diagonally build over the drag area.
             /*for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)

@@ -30,10 +30,10 @@ namespace Controllers
         }
 
         /// <summary>
-        /// Performs a build on a given tile.
+        /// Processes the given tiles based on the current mode.
         /// </summary>
         /// <param name="_tiles"></param>
-        public void Build(IEnumerable<Tile> _tiles)
+        public void Process(IEnumerable<Tile> _tiles)
         {
             switch (Mode)
             {
@@ -44,7 +44,7 @@ namespace Controllers
                     HandleObjectDemolish(_tiles);
                     break;
                 case BuildMode.Harvest:
-                    // TODO: Handle harvesting.
+                    HandleHarvest(_tiles);
                     break;
             }
         }
@@ -69,8 +69,15 @@ namespace Controllers
         
         private void HandleObjectDemolish(IEnumerable<Tile> _tiles)
         {
-            var jobs = (from tile in _tiles where tile.Object != null select new DemolishJob(tile)).Cast<Job>().ToList();
+            var jobs = (from tile in _tiles where tile.HasObject select new DemolishJob(tile)).Cast<Job>().ToList();
 
+            JobManager.Instance.AddJobs(jobs);
+        }
+        
+        private void HandleHarvest(IEnumerable<Tile> _tiles)
+        {
+            var jobs = (from tile in _tiles where tile.HasObject select new HarvestJob(tile)).Cast<Job>().ToList();
+            
             JobManager.Instance.AddJobs(jobs);
         }
 
