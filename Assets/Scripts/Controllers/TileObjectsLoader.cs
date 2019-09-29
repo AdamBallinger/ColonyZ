@@ -8,7 +8,7 @@ namespace Controllers
         [SerializeField]
         private TileObject[] tileObjects;
         
-        private void Start()
+        public void Load()
         {
             foreach (var to in tileObjects)
             {

@@ -8,7 +8,7 @@ namespace Controllers
         [SerializeField]
         private SpriteData[] spriteData;
         
-        private void Awake()
+        public void Load()
         {
             foreach(var data in spriteData)
             {

@@ -15,6 +15,7 @@ MonoBehaviour:
   objectSpriteData: {fileID: 11400000, guid: ecfda6801bf6a4f43a48ceed825cdb1f, type: 2}
   dynamicSprite: 1
   objectName: Wood Wall
+  buildable: 1
   objectWidth: 1
   objectHeight: 1
   objectEnterability: 1

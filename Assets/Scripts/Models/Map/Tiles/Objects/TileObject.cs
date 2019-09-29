@@ -26,6 +26,11 @@ namespace Models.Map.Tiles.Objects
         /// </summary>
         public string ObjectName => objectName;
 
+        /// <summary>
+        /// Determines if the object appears in the structure menu.
+        /// </summary>
+        public bool Buildable => buildable;
+
         public int Width => objectWidth;
         public int Height => objectHeight;
 
@@ -46,6 +51,9 @@ namespace Models.Map.Tiles.Objects
 
         [SerializeField]
         private string objectName;
+
+        [SerializeField]
+        private bool buildable = true;
 
         [SerializeField]
         private int objectWidth = 1;
@@ -77,6 +85,11 @@ namespace Models.Map.Tiles.Objects
         public virtual int GetSpriteIndex()
         {
             return 0;
+        }
+        
+        public virtual int GetSortingOrder()
+        {
+            return World.Instance.Height - Tile.Y;
         }
 
         /// <summary>

@@ -6,9 +6,11 @@ namespace Controllers.UI.Toolbar.SubMenus
     {        
         protected override void OnEnabled()
         {
-            foreach(var to in TileObjectCache.TileObjects)
+            foreach(var obj in TileObjectCache.TileObjects)
             {
-                AddItem(to.ObjectName, to.GetIcon(), () => MouseController.Instance.BuildModeController.SetBuildMode(to));
+                if (!obj.Buildable) continue;
+                
+                AddItem(obj.ObjectName, obj.GetIcon(), () => MouseController.Instance.BuildModeController.SetBuildMode(obj));
             }
         }
     }

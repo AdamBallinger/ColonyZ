@@ -29,5 +29,23 @@ namespace Models.Map.Tiles.Objects
             
             TileObjects.Add(_object);
         }
+        
+        /// <summary>
+        /// Returns a new instance for the tile object with provided name.
+        /// </summary>
+        /// <param name="_objectName"></param>
+        /// <returns></returns>
+        public static TileObject GetObject(string _objectName)
+        {
+            foreach(var obj in TileObjects)
+            {
+                if (obj.ObjectName.Equals(_objectName))
+                {
+                    return UnityEngine.Object.Instantiate(obj);
+                }
+            }
+
+            return null;
+        }
     }
 }

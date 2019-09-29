@@ -90,7 +90,9 @@ namespace Models.Map
             {
                 for(var y = 0; y < Height; y++)
                 {
-                    SetTileNeighbours(Tiles[x * Width + y]);
+                    var tile = Tiles[x * Width + y];
+                    tile.DirectNeighbours.AddRange(GetTileNeighbours(tile, false));
+                    tile.Neighbours.AddRange(GetTileNeighbours(tile));
                 }
             }
         }
@@ -195,12 +197,6 @@ namespace Models.Map
             neighbours.RemoveAll(tile => tile == null);
 
             return neighbours;
-        }
-
-        private void SetTileNeighbours(Tile _tile)
-        {
-            _tile.Neighbours.AddRange(GetTileNeighbours(_tile));
-            _tile.DirectNeighbours.AddRange(GetTileNeighbours(_tile, false));
         }
 
         public void SpawnCharacter(Tile _tile)

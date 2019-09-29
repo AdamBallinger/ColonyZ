@@ -5,6 +5,7 @@ using Models.Jobs;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 using Models.Sprites;
 using Models.TimeSystem;
 using UnityEngine;
@@ -28,13 +29,19 @@ namespace Controllers
         private GameObject characterPrefab;
 
         [SerializeField]
-        private string tileSortingLayerName = "Tiles";
+        private string tileObjectsSortingName = "Objects";
 
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
         private Dictionary<LivingEntity, GameObject> livingEntityObjects;
 
         [SerializeField]
         private Texture2D tileTypesTexture;
+
+        [SerializeField]
+        private SpriteLoader spriteLoader;
+
+        [SerializeField]
+        private TileObjectsLoader objectsLoader;
 
         private MeshFilter meshFilter;
 
@@ -48,6 +55,9 @@ namespace Controllers
             Instance.TileTypesSprites = new List<Sprite>();
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
+
+            spriteLoader.Load();
+            objectsLoader.Load();
 
             SliceTileTypesTexture();
             NewWorld();
@@ -81,6 +91,14 @@ namespace Controllers
             
             GenerateWorldMesh();
 
+            foreach (var tile in World.Instance)
+            {
+                if (Random.Range(0, 10) == 0)
+                {
+                    tile.SetObject(TileObjectCache.GetObject("Tree"));
+                }
+            }
+            
             World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
         }
 
@@ -220,7 +238,7 @@ namespace Controllers
             object_GO.transform.position = new Vector2(_tile.X, _tile.Y);
             object_GO.transform.SetParent(_transform);
             
-            object_SR.sortingLayerName = tileSortingLayerName;
+            object_SR.sortingLayerName = tileObjectsSortingName;
             
             tileObjectRenderers.Add(_tile, object_SR);
         }
@@ -241,7 +259,9 @@ namespace Controllers
                 CreateTileObject(_tile);
             }
 
-            tileObjectRenderers[_tile].sprite = SpriteCache.GetSprite(_tile.Object);
+            var spriteRenderer = tileObjectRenderers[_tile];
+            spriteRenderer.sprite = SpriteCache.GetSprite(_tile.Object);
+            spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
             UpdateTileNeighbourSprites(_tile);
         }
 

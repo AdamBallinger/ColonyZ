@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43da2fb6a88b4ff4eb5d67661fc47a24, type: 3}
-  m_Name: TileObject_Wall_Steel
+  m_Script: {fileID: 11500000, guid: ff0f572b1e5748c3bf5159158b55d4e6, type: 3}
+  m_Name: TileObject_Nature_Tree
   m_EditorClassIdentifier: 
-  objectSpriteData: {fileID: 11400000, guid: f282d678156fac24fa85e1a89f79b2c7, type: 2}
-  dynamicSprite: 1
-  objectName: Steel Wall
-  buildable: 1
+  objectSpriteData: {fileID: 11400000, guid: 73f54200bbe129d4a81129890d0df55a, type: 2}
+  dynamicSprite: 0
+  objectName: Tree
   objectWidth: 1
   objectHeight: 1
   objectEnterability: 1
