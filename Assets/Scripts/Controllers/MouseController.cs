@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Controllers.UI;
 using EzPool;
 using Models.Map;
@@ -239,7 +241,7 @@ namespace Controllers
                 return;
             }
 
-            var tiles = new List<Tile>();
+            var tiles = new Tile[_dragData.SizeX, _dragData.SizeY];
             for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
             {
                 for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
@@ -256,23 +258,31 @@ namespace Controllers
                     {
                         continue;
                     }
-                    
-                    tiles.Add(tile);
+
+                    tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
                 }
             }
-            
-            BuildModeController.Process(tiles.ToArray());
-            
-            // Diagonally build over the drag area.
-            /*for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)
+
+            if (BuildModeController.Mode == BuildMode.Object)
             {
-                var startCol = Math.Max(0, line - _dragData.SizeX);
-                var count = Math.Min(line, Math.Min((_dragData.SizeY - startCol), _dragData.SizeX));
-                for (var i = 0; i < count; i++)
+                BuildModeController.Process(tiles.Cast<Tile>());
+            }
+            else
+            {
+                var sorted = new List<Tile>();
+                // Diagonally build over the drag area.
+                for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)
                 {
-                    BuildModeController.Build(tiles[Math.Min(_dragData.SizeX, line) - i - 1, startCol + i]);
+                    var startCol = Math.Max(0, line - _dragData.SizeX);
+                    var count = Math.Min(line, Math.Min((_dragData.SizeY - startCol), _dragData.SizeX));
+                    for (var i = 0; i < count; i++)
+                    {
+                        sorted.Add(tiles[Math.Min(_dragData.SizeX, line) - i - 1, startCol + i]);
+                    }
                 }
-            }*/
+                
+                BuildModeController.Process(sorted);
+            }
 
             NodeGraph.Instance?.UpdateGraph(_dragData.StartX, _dragData.StartY, _dragData.EndX, _dragData.EndY);
         }
