@@ -6,7 +6,6 @@ using EzPool;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
-using Models.Map.Tiles.Objects;
 using Models.Sprites;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -189,10 +188,21 @@ namespace Controllers
                                 previewRenderer.sprite = null;
                             }
                         }
-                        else if (BuildModeController.Mode == BuildMode.Harvest)
+                        else if (BuildModeController.Mode == BuildMode.Mine)
                         {
-                            // TODO: Make a better method of marking something as harvest-able. Maybe an IHarvestable interface?
-                            if (tile.HasObject && tile.Object is NatureObject)
+                            if (tile.HasObject && tile.Object.Mineable)
+                            {
+                                previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 1);
+                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
+                            }
+                            else
+                            {
+                                previewRenderer.sprite = null;
+                            }
+                        }
+                        else if (BuildModeController.Mode == BuildMode.Fell)
+                        {
+                            if (tile.HasObject && tile.Object.Fellable)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 2);
                                 previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
@@ -202,6 +212,18 @@ namespace Controllers
                                 previewRenderer.sprite = null;
                             }
                         }
+                        /*else if (BuildModeController.Mode == BuildMode.Harvest)
+                        {
+                            if (tile.HasObject && tile.Object.Harvestable)
+                            {
+                                previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 2);
+                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
+                            }
+                            else
+                            {
+                                previewRenderer.sprite = null;
+                            }
+                        }*/
 
                         previewObjects.Add(previewObject);
                     }
@@ -270,11 +292,11 @@ namespace Controllers
             else
             {
                 var sorted = new List<Tile>();
-                // Diagonally build over the drag area.
+                // Diagonally process the drag area.
                 for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)
                 {
                     var startCol = Math.Max(0, line - _dragData.SizeX);
-                    var count = Math.Min(line, Math.Min((_dragData.SizeY - startCol), _dragData.SizeX));
+                    var count = Math.Min(line, Math.Min(_dragData.SizeY - startCol, _dragData.SizeX));
                     for (var i = 0; i < count; i++)
                     {
                         sorted.Add(tiles[Math.Min(_dragData.SizeX, line) - i - 1, startCol + i]);

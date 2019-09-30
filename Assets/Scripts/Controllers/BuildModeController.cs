@@ -40,10 +40,16 @@ namespace Controllers
             switch (Mode)
             {
                 case BuildMode.Object:
-                    HandleObjectBuild(_tiles);
+                    HandleBuild(_tiles);
                     break;
                 case BuildMode.Demolish:
-                    HandleObjectDemolish(_tiles);
+                    HandleDemolish(_tiles);
+                    break;
+                case BuildMode.Mine:
+                    HandleMine(_tiles);
+                    break;
+                case BuildMode.Fell:
+                    HandleFell(_tiles);
                     break;
                 case BuildMode.Harvest:
                     HandleHarvest(_tiles);
@@ -51,7 +57,7 @@ namespace Controllers
             }
         }
 
-        private void HandleObjectBuild(IEnumerable<Tile> _tiles)
+        private void HandleBuild(IEnumerable<Tile> _tiles)
         {
             var jobs = new List<Job>();
             
@@ -69,7 +75,7 @@ namespace Controllers
             JobManager.Instance.AddJobs(jobs);
         }
         
-        private void HandleObjectDemolish(IEnumerable<Tile> _tiles)
+        private void HandleDemolish(IEnumerable<Tile> _tiles)
         {
             var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Buildable 
                         select new DemolishJob(tile)).Cast<Job>().ToList();
