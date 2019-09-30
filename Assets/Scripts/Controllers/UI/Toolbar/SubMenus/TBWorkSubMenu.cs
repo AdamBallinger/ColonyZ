@@ -13,7 +13,7 @@ namespace Controllers.UI.Toolbar.SubMenus
                     () => MouseController.Instance.BuildModeController.SetMineMode());
             
             AddItem("Fell", SpriteCache.GetSprite("Overlay", 2),
-                    () => MouseController.Instance.BuildModeController.SetHarvestMode());
+                    () => MouseController.Instance.BuildModeController.SetFellMode());
         }
     }
 }
