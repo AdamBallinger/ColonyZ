@@ -16,6 +16,9 @@ MonoBehaviour:
   dynamicSprite: 0
   objectName: Tree
   buildable: 0
+  fellable: 1
+  mineable: 0
+  harvestable: 0
   objectWidth: 1
   objectHeight: 1
   objectEnterability: 1

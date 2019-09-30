@@ -31,6 +31,12 @@ namespace Models.Map.Tiles.Objects
         /// </summary>
         public bool Buildable => buildable;
 
+        public bool Fellable => fellable;
+
+        public bool Mineable => mineable;
+
+        public bool Harvestable => harvestable;
+
         public int Width => objectWidth;
         public int Height => objectHeight;
 
@@ -54,6 +60,15 @@ namespace Models.Map.Tiles.Objects
 
         [SerializeField]
         private bool buildable = true;
+
+        [SerializeField]
+        private bool fellable;
+
+        [SerializeField]
+        private bool mineable;
+
+        [SerializeField]
+        private bool harvestable;
 
         [SerializeField]
         private int objectWidth = 1;

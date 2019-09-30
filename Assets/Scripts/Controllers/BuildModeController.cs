@@ -12,6 +12,8 @@ namespace Controllers
     {
         Object,
         Demolish,
+        Fell,
+        Mine,
         Harvest
     }
 
@@ -75,9 +77,25 @@ namespace Controllers
             JobManager.Instance.AddJobs(jobs);
         }
         
+        private void HandleFell(IEnumerable<Tile> _tiles)
+        {
+            var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Fellable
+                        select new HarvestJob(tile)).Cast<Job>().ToList();
+            
+            JobManager.Instance.AddJobs(jobs);
+        }
+        
+        private void HandleMine(IEnumerable<Tile> _tiles)
+        {
+            var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Mineable
+                        select new HarvestJob(tile)).Cast<Job>().ToList();
+            
+            JobManager.Instance.AddJobs(jobs);
+        }
+        
         private void HandleHarvest(IEnumerable<Tile> _tiles)
         {
-            var jobs = (from tile in _tiles where tile.HasObject && tile.Object is NatureObject 
+            var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Harvestable
                         select new HarvestJob(tile)).Cast<Job>().ToList();
             
             JobManager.Instance.AddJobs(jobs);
@@ -101,6 +119,18 @@ namespace Controllers
         {
             MouseController.Instance.Mode = MouseMode.Build;
             Mode = BuildMode.Demolish;
+        }
+        
+        public void SetFellMode()
+        {
+            MouseController.Instance.Mode = MouseMode.Build;
+            Mode = BuildMode.Fell;
+        }
+        
+        public void SetMineMode()
+        {
+            MouseController.Instance.Mode = MouseMode.Build;
+            Mode = BuildMode.Mine;
         }
         
         public void SetHarvestMode()
