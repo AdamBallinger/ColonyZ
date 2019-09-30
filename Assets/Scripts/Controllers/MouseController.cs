@@ -15,7 +15,7 @@ namespace Controllers
     public enum MouseMode
     {
         Select,
-        Build
+        Job
     }
 
     public class MouseController : MonoBehaviour
@@ -138,7 +138,7 @@ namespace Controllers
                 }
             }
 
-            if (Mode == MouseMode.Build)
+            if (Mode == MouseMode.Job)
             {
                 // Calculate size of drag area. Add one as the world starts at 0, 0
                 selectionSize.x = _dragData.EndX - _dragData.StartX + 1.0f;

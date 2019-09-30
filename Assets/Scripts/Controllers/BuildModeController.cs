@@ -113,7 +113,7 @@ namespace Controllers
         /// <param name="_object"></param>
         public void SetBuildMode(TileObject _object)
         {
-            MouseController.Instance.Mode = MouseMode.Build;
+            MouseController.Instance.Mode = MouseMode.Job;
             Mode = BuildMode.Object;
             ObjectToBuild = _object;
         }
@@ -123,25 +123,25 @@ namespace Controllers
         /// </summary>
         public void SetDemolishMode()
         {
-            MouseController.Instance.Mode = MouseMode.Build;
+            MouseController.Instance.Mode = MouseMode.Job;
             Mode = BuildMode.Demolish;
         }
         
         public void SetFellMode()
         {
-            MouseController.Instance.Mode = MouseMode.Build;
+            MouseController.Instance.Mode = MouseMode.Job;
             Mode = BuildMode.Fell;
         }
         
         public void SetMineMode()
         {
-            MouseController.Instance.Mode = MouseMode.Build;
+            MouseController.Instance.Mode = MouseMode.Job;
             Mode = BuildMode.Mine;
         }
         
         public void SetHarvestMode()
         {
-            MouseController.Instance.Mode = MouseMode.Build;
+            MouseController.Instance.Mode = MouseMode.Job;
             Mode = BuildMode.Harvest;
         }
     }
