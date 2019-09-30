@@ -9,6 +9,9 @@ namespace Controllers.UI.Toolbar.SubMenus
             AddItem("Demolish", SpriteCache.GetSprite("Overlay", 0), 
                     () => MouseController.Instance.BuildModeController.SetDemolishMode());
             
+            AddItem("Mine", SpriteCache.GetSprite("Overlay", 1),
+                    () => MouseController.Instance.BuildModeController.SetMineMode());
+            
             AddItem("Fell", SpriteCache.GetSprite("Overlay", 2),
                     () => MouseController.Instance.BuildModeController.SetHarvestMode());
         }
