@@ -16,6 +16,9 @@ MonoBehaviour:
   dynamicSprite: 1
   objectName: Foundation
   buildable: 0
+  fellable: 0
+  mineable: 0
+  harvestable: 0
   objectWidth: 1
   objectHeight: 1
   objectEnterability: 0

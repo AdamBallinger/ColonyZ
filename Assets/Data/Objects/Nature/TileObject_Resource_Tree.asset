@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff0f572b1e5748c3bf5159158b55d4e6, type: 3}
-  m_Name: TileObject_Nature_Tree
+  m_Name: TileObject_Resource_Tree
   m_EditorClassIdentifier: 
   objectSpriteData: {fileID: 11400000, guid: 73f54200bbe129d4a81129890d0df55a, type: 2}
   dynamicSprite: 0
