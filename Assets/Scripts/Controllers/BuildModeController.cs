@@ -17,6 +17,9 @@ namespace Controllers
         Harvest
     }
 
+    /// <summary>
+    /// TODO: This class is become a shit show and should be re done at some point..
+    /// </summary>
     public class BuildModeController
     {
         public BuildMode Mode { get; private set; }
@@ -46,13 +49,9 @@ namespace Controllers
                     HandleDemolish(_tiles);
                     break;
                 case BuildMode.Mine:
-                    HandleMine(_tiles);
-                    break;
                 case BuildMode.Fell:
-                    HandleFell(_tiles);
-                    break;
                 case BuildMode.Harvest:
-                    HandleHarvest(_tiles);
+                    HandleGather(_tiles);
                     break;
             }
         }
@@ -77,34 +76,35 @@ namespace Controllers
         
         private void HandleDemolish(IEnumerable<Tile> _tiles)
         {
-            var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Buildable 
+            var jobs = (from tile in _tiles where tile.HasObject && ObjectCompatWithMode(tile.Object)
                         select new DemolishJob(tile)).Cast<Job>().ToList();
 
             JobManager.Instance.AddJobs(jobs);
         }
-        
-        private void HandleFell(IEnumerable<Tile> _tiles)
+
+        private void HandleGather(IEnumerable<Tile> _tiles)
         {
-            var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Fellable
-                        select new HarvestJob(tile)).Cast<Job>().ToList();
+            var jobs = (from tile in _tiles where tile.HasObject && ObjectCompatWithMode(tile.Object)
+                        select new HarvestJob(tile, Mode.ToString())).Cast<Job>().ToList();
             
             JobManager.Instance.AddJobs(jobs);
         }
         
-        private void HandleMine(IEnumerable<Tile> _tiles)
+        private bool ObjectCompatWithMode(TileObject _object)
         {
-            var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Mineable
-                        select new HarvestJob(tile)).Cast<Job>().ToList();
-            
-            JobManager.Instance.AddJobs(jobs);
-        }
-        
-        private void HandleHarvest(IEnumerable<Tile> _tiles)
-        {
-            var jobs = (from tile in _tiles where tile.HasObject && tile.Object.Harvestable
-                        select new HarvestJob(tile)).Cast<Job>().ToList();
-            
-            JobManager.Instance.AddJobs(jobs);
+            switch (Mode)
+            {
+                case BuildMode.Demolish:
+                    return _object.Buildable;
+                case BuildMode.Mine:
+                    return _object.Mineable;
+                case BuildMode.Fell:
+                    return _object.Fellable;
+                case BuildMode.Harvest:
+                    return _object.Harvestable;
+            }
+
+            return false;
         }
 
         /// <summary>

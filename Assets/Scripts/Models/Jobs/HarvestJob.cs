@@ -4,9 +4,14 @@ namespace Models.Jobs
 {
     public class HarvestJob : Job
     {
-        public HarvestJob(Tile _targetTile) : base(_targetTile)
+        /// <summary>
+        /// Create a new harvest job
+        /// </summary>
+        /// <param name="_targetTile"></param>
+        /// <param name="_harvestType">Type of harvest which names the job. E.g "Fell", "Mine"</param>
+        public HarvestJob(Tile _targetTile, string _harvestType) : base(_targetTile)
         {
-            JobName = "Harvest: " + _targetTile.Object.ObjectName;
+            JobName = $"{_harvestType}: {_targetTile.Object.ObjectName}";
         }
 
         public override void OnComplete()
