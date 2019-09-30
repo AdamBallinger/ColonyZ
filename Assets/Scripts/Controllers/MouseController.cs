@@ -181,7 +181,7 @@ namespace Controllers
                             if (tile.HasObject && tile.Object.Buildable)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 0);
-                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
+                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                             }
                             else
                             {
@@ -193,7 +193,7 @@ namespace Controllers
                             if (tile.HasObject && tile.Object.Mineable)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 1);
-                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
+                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                             }
                             else
                             {
@@ -205,7 +205,7 @@ namespace Controllers
                             if (tile.HasObject && tile.Object.Fellable)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 2);
-                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
+                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                             }
                             else
                             {
