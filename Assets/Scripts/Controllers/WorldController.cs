@@ -4,6 +4,7 @@ using Models.Entities.Living;
 using Models.Jobs;
 using Models.Map;
 using Models.Map.Pathing;
+using Models.Map.Rooms;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using Models.Sprites;
@@ -85,10 +86,12 @@ namespace Controllers
 
         private void NewWorld()
         {
+            RoomManager.Create();
+            TimeManager.Create(8, 0, 1);
+            
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;
             
-            TimeManager.Create(8, 0, 1);
             JobManager.Create();
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
             

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Map.Pathing;
+using Models.Map.Rooms;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
@@ -82,6 +83,7 @@ namespace Models.Map
                     var tile = new Tile(x, y, TileManager.GetTileDefinition("Grass"));
                     tile.onTileDefinitionChanged += _tileDefinitionChangeListener;
                     tile.onTileChanged += _tileChangedListener;
+                    RoomManager.Instance.OutsideRoom.AssignTile(tile);
                     Tiles[x * Width + y] = tile;
                 }
             }

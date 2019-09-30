@@ -4,6 +4,7 @@ using Controllers;
 using Models.Entities.Living;
 using Models.Jobs;
 using Models.Map.Pathing;
+using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
 using Models.UI;
 using UnityEngine;
@@ -26,6 +27,11 @@ namespace Models.Map.Tiles
         /// Reference to any job for this tile.
         /// </summary>
         public Job CurrentJob { get; set; }
+        
+        /// <summary>
+        /// Reference to the current room this tile is assigned too.
+        /// </summary>
+        public Room Room { get; set; }
 
         /// <summary>
         /// The definition of this tile.
