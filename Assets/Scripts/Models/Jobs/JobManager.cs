@@ -28,6 +28,11 @@ namespace Models.Jobs
         /// the jobs working tile is not reachable by any available entity.
         /// </summary>
         public List<Job> InvalidJobs { get; private set; }
+        
+        /// <summary>
+        /// A map for each job that keeps track of which entities can't reach it.
+        /// </summary>
+        private Dictionary<Job, List<HumanEntity>> jobNoAccessMap { get; set; }
 
         /// <summary>
         /// Event called when a new job is added to the job manager.
@@ -60,6 +65,7 @@ namespace Models.Jobs
             InactiveJobs = new List<Job>();
             ActiveJobs = new List<Job>();  
             InvalidJobs = new List<Job>();
+            jobNoAccessMap = new Dictionary<Job, List<HumanEntity>>();
         }
         
         /// <summary>
@@ -78,6 +84,7 @@ namespace Models.Jobs
         
         /// <summary>
         /// Checks if any job in the invalid jobs list is now completable.
+        /// TODO: Might be better to run this at a set interval rather than when jobs finish.
         /// </summary>
         private void EvaluateInvalidJobs()
         {
@@ -85,6 +92,7 @@ namespace Models.Jobs
             
             for (var i = InvalidJobs.Count - 1; i >= 0; i--)
             {
+                var isJobReachable = false;
                 var job = InvalidJobs[i];
 
                 foreach (var livingEntity in entities)
@@ -93,9 +101,20 @@ namespace Models.Jobs
 
                     if (CanEntityReachJob(humanEntity, job))
                     {
-                        RemoveInvalidJob(job);
-                        break;
+                        //RemoveInvalidJob(job);
+                        //break;
+                        isJobReachable = true;
+                        
+                        if (jobNoAccessMap[job].Contains(humanEntity))
+                        {
+                            jobNoAccessMap[job].Remove(humanEntity);
+                        }
                     }
+                }
+                
+                if (isJobReachable)
+                {
+                    RemoveInvalidJob(job);
                 }
             }
         }
@@ -119,6 +138,7 @@ namespace Models.Jobs
                 var job = ActiveJobs[i];
                 if (job.Complete)
                 {
+                    jobNoAccessMap.Remove(job);
                     OnJobFinished(job);
                 }
             }
@@ -134,20 +154,25 @@ namespace Models.Jobs
             for (var i = 0; i < entities.Count; i++)
             {
                 var entity = entities[i] as HumanEntity;
-                if (entity?.CurrentJob != null)
+                var job = InactiveJobs[0];
+                
+                if (entity?.CurrentJob != null || jobNoAccessMap[job].Contains(entity))
                 {
                     continue;
                 }
-
-                var job = InactiveJobs[0];
+                
                 var closestTile = GetClosestEnterableNeighbour(entity, job.TargetTile.DirectNeighbours);
                 
+                // TODO: This path test is too slow and needs a better solution.
                 if (closestTile != null && PathFinder.TestPath(entity?.CurrentTile, closestTile))
                 {
                     job.WorkingTile = closestTile;
                     AssignEntityJob(entity, job);
                     break;
                 }
+                
+                // Entity can't reach the job so add it to the jobs map.
+                jobNoAccessMap[job].Add(entity);
 
                 // If the last entity can't reach the job, then the job must be unreachable.
                 if (i == entities.Count - 1)
@@ -172,6 +197,8 @@ namespace Models.Jobs
 
             // TODO: Move to mouse controller to visualise duplication for demolish jobs etc.
             if (_job.TargetTile.CurrentJob != null) return false;
+            
+            jobNoAccessMap.Add(_job, new List<HumanEntity>());
 
             _job.TargetTile.CurrentJob = _job;
             InactiveJobs.Add(_job);
