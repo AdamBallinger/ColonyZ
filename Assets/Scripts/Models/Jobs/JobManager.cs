@@ -161,10 +161,10 @@ namespace Models.Jobs
                     continue;
                 }
                 
-                var closestTile = GetClosestEnterableNeighbour(entity, job.TargetTile.DirectNeighbours);
-                
                 // TODO: This path test is too slow and needs a better solution.
-                if (closestTile != null && PathFinder.TestPath(entity?.CurrentTile, closestTile))
+                var closestTile = GetClosestPathableNeighbour(entity, job.TargetTile.DirectNeighbours);
+                
+                if (closestTile != null)
                 {
                     job.WorkingTile = closestTile;
                     AssignEntityJob(entity, job);
@@ -280,6 +280,34 @@ namespace Models.Jobs
                 if (tile.CurrentJob != null) dist += 1000.0f;
 
                 if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closest = tile;
+                }
+            }
+
+            return closest;
+        }
+        
+        public Tile GetClosestPathableNeighbour(Entity _entity, IReadOnlyCollection<Tile> _tiles)
+        {
+            if (_entity == null || _tiles == null || _tiles.Count <= 0) return null;
+            
+            Tile closest = null;
+            var closestDist = float.MaxValue;
+
+            var entityTile = _entity.CurrentTile;
+                
+            foreach(var tile in _tiles)
+            {
+                if (tile.GetEnterability() != TileEnterability.Immediate) continue;
+                    
+                var dist = (entityTile.Position - tile.Position).sqrMagnitude;
+
+                // Make tiles that have a job assigned appear more expensive.
+                if (tile.CurrentJob != null) dist += 1000.0f;
+
+                if (dist < closestDist && PathFinder.TestPath(_entity.CurrentTile, tile))
                 {
                     closestDist = dist;
                     closest = tile;

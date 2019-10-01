@@ -38,9 +38,9 @@ namespace Models.Entities.Living
             // Try find a new working tile if the current tile is no longer enterable.
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
             {
-                var closestTile = JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
+                var closestTile = JobManager.Instance.GetClosestPathableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
                 
-                if (closestTile != null && PathFinder.TestPath(CurrentTile, closestTile))
+                if (closestTile != null)
                 {
                     CurrentJob.WorkingTile = closestTile;
                     Motor.SetTargetTile(CurrentJob.WorkingTile);
