@@ -37,6 +37,8 @@ namespace Models.Map.Tiles.Objects
 
         public bool Harvestable => harvestable;
 
+        public bool EnclosesRoom => enclosesRoom;
+
         public int Width => objectWidth;
         public int Height => objectHeight;
 
@@ -69,6 +71,9 @@ namespace Models.Map.Tiles.Objects
 
         [SerializeField]
         private bool harvestable;
+
+        [SerializeField]
+        private bool enclosesRoom;
 
         [SerializeField]
         private int objectWidth = 1;

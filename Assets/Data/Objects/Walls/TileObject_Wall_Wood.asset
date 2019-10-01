@@ -16,6 +16,10 @@ MonoBehaviour:
   dynamicSprite: 1
   objectName: Wood Wall
   buildable: 1
+  fellable: 0
+  mineable: 0
+  harvestable: 0
+  enclosesRoom: 1
   objectWidth: 1
   objectHeight: 1
   objectEnterability: 1
