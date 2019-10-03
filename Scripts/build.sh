@@ -1,16 +1,13 @@
 #! /bin/sh
 
-project="ColonyZ"
+executableName="ColonyZ-x64"
 
-echo "Attempting to build $project for Windows"
+echo "Attempting to build $executableName for Windows"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/unity.log \
   -projectPath $(pwd) \
-  -buildWindowsPlayer "$(pwd)/Build/windows/$project.exe" \
+  -buildWindows64Player "$(pwd)/Build/windows/$executableName.exe" \
   -quit
-
-echo 'Logs from build'
-cat $(pwd)/unity.log
