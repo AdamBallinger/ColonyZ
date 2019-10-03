@@ -26,7 +26,7 @@ namespace Controllers
         [SerializeField]
         private int worldHeight = 100;
 
-        [SerializeField, Range(1, 100)]
+        [SerializeField, Range(0, 100)]
         private int treeSpawnChance = 25;
 
         [SerializeField]
@@ -99,13 +99,13 @@ namespace Controllers
 
             foreach (var tile in World.Instance)
             {
-                if (Random.Range(0, treeSpawnChance) == 0 || tile.X == 0 || tile.X == worldWidth - 1 
+                if (Random.Range(1, 100) <= treeSpawnChance || tile.X == 0 || tile.X == worldWidth - 1 
                     || tile.Y == 0 || tile.Y == worldHeight - 1)
                 {
                     tile.SetObject(TileObjectCache.GetObject("Tree"));
                 }
             }
-            
+
             World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
         }
 
