@@ -116,6 +116,11 @@ namespace Models.Map.Tiles
             World.Instance.Objects.Add(_object);
             NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
             
+            if (_object.EnclosesRoom)
+            {
+                RoomManager.Instance.CheckForRoom(this);
+            }
+            
             onTileChanged?.Invoke(this);
         }
 
@@ -126,16 +131,78 @@ namespace Models.Map.Tiles
                 return;
             }
 
+            var shouldCheckForRoom = Object.EnclosesRoom;
+
             World.Instance.Objects.Remove(Object);
             Object = null;
             HasObject = false;
             NodeGraph.Instance.UpdateGraph(X, Y);
             onTileChanged?.Invoke(this);
+            
+            if (shouldCheckForRoom)
+            {
+                RoomManager.Instance.CheckForRoom(this);
+            }
         }
 
         public TileEnterability GetEnterability()
         {
             return HasObject ? Object.Enterability : TileEnterability.Immediate;
+        }
+        
+        /// <summary>
+        /// Returns if this tile is in direct LOS of the edge of the map.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsExposedToOutside()
+        {
+            if (HasObject && Object.EnclosesRoom) return false;
+            
+            return ExposedUp() || ExposedDown() || ExposedLeft() || ExposedRight();
+        }
+        
+        private bool ExposedUp()
+        {
+            var up = World.Instance.GetTileAt(X, Y + 1);
+
+            if (up == null) return true;
+
+            if (up.HasObject && up.Object.EnclosesRoom) return false;
+
+            return up.ExposedUp();
+        }
+        
+        private bool ExposedDown()
+        {
+            var down = World.Instance.GetTileAt(X, Y - 1);
+
+            if (down == null) return true;
+
+            if (down.HasObject && down.Object.EnclosesRoom) return false;
+
+            return down.ExposedDown();
+        }
+        
+        private bool ExposedLeft()
+        {
+            var left = World.Instance.GetTileAt(X - 1, Y);
+
+            if (left == null) return true;
+
+            if (left.HasObject && left.Object.EnclosesRoom) return false;
+
+            return left.ExposedLeft();
+        }
+        
+        private bool ExposedRight()
+        {
+            var right = World.Instance.GetTileAt(X + 1, Y);
+
+            if (right == null) return true;
+
+            if (right.HasObject && right.Object.EnclosesRoom) return false;
+
+            return right.ExposedRight();
         }
 
         #region ISelectable Implementation
@@ -152,7 +219,9 @@ namespace Models.Map.Tiles
 
         public string GetSelectionDescription()
         {
-            return $"Position: ({X}, {Y})\n";
+            return $"Position: ({X}, {Y})\n" +
+                   $"Room: {(Room != null ? Room.RoomID.ToString() : "None")}\n" +
+                   $"Exposed: {IsExposedToOutside()}\n";
         }
         
         public Vector2 GetPosition()
