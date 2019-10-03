@@ -14,16 +14,10 @@ namespace Models.Map.Rooms
         /// List of tiles that assigned to this room. This does not include the tiles that enclose the room.
         /// </summary>
         public List<Tile> Tiles { get; }
-        
-        /// <summary>
-        /// List of rooms that have a direct entrance to this room.
-        /// </summary>
-        public List<Room> ConnectedRooms { get; }
-        
+
         public Room()
         {
             Tiles = new List<Tile>();
-            ConnectedRooms = new List<Room>();
         }
         
         public void AssignTile(Tile _tile)
