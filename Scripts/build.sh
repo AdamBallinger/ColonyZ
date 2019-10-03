@@ -11,3 +11,6 @@ echo "Attempting to build $executableName for Windows"
   -projectPath $(pwd) \
   -buildWindows64Player "$(pwd)/Build/windows/$executableName.exe" \
   -quit
+  
+echo "Build log."
+cat $(pwd)/unity.log
