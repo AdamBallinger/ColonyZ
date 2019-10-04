@@ -158,6 +158,9 @@ namespace Controllers
                         {
                             if(x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
                         }
+
+                        // Don't allow modifying edge of map.
+                        if (x == 0 || x == World.Instance.Width - 1 || y == 0 || y == World.Instance.Height - 1) continue;
                         
                         var tile = World.Instance.GetTileAt(x, y);
 
@@ -273,6 +276,9 @@ namespace Controllers
                         // Only when building objects should the drag area only include the edge of the dragged area.
                         if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
                     }
+                    
+                    // Don't allow modifying the edge of map.
+                    if (x == 0 || x == World.Instance.Width - 1 || y == 0 || y == World.Instance.Height - 1) continue;
 
                     var tile = World.Instance?.GetTileAt(x, y);
 
@@ -302,6 +308,8 @@ namespace Controllers
                         sorted.Add(tiles[Math.Min(_dragData.SizeX, line) - i - 1, startCol + i]);
                     }
                 }
+
+                sorted.RemoveAll(t => t == null);
                 
                 BuildModeController.Process(sorted);
             }
