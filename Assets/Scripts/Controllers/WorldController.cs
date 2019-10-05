@@ -132,6 +132,11 @@ namespace Controllers
                     World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
                 }
             }
+            
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                TimeManager.Instance.Toggle();
+            }
         }
 
         /// <summary>
