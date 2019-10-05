@@ -186,9 +186,9 @@ namespace Models.Jobs
         {
             if (_entity == null || _job == null) return false;
 
-            var closestTile = GetClosestEnterableNeighbour(_entity, _job.TargetTile.DirectNeighbours);
+            var closestTile = GetClosestPathableNeighbour(_entity, _job.TargetTile.DirectNeighbours);
 
-            return closestTile != null && PathFinder.TestPath(_entity.CurrentTile, closestTile);
+            return closestTile != null;
         }
 
         private bool AddJob(Job _job)
@@ -231,6 +231,7 @@ namespace Models.Jobs
             ActiveJobs.Remove(_job);
             InvalidJobs.Add(_job);
             jobStateChangedEvent?.Invoke(_job);
+            EvaluateInvalidJobs();
         }
         
         /// <summary>
@@ -255,12 +256,6 @@ namespace Models.Jobs
             jobStateChangedEvent?.Invoke(_job);
         }
         
-        /// <summary>
-        /// Returns the closest enterable tile from the given tiles for the given entity.
-        /// </summary>
-        /// <param name="_entity"></param>
-        /// <param name="_tiles"></param>
-        /// <returns></returns>
         public Tile GetClosestEnterableNeighbour(Entity _entity, IReadOnlyCollection<Tile> _tiles)
         {
             if (_entity == null || _tiles == null || _tiles.Count <= 0) return null;
@@ -273,6 +268,10 @@ namespace Models.Jobs
             foreach(var tile in _tiles)
             {
                 if (tile.GetEnterability() != TileEnterability.Immediate) continue;
+                // TODO: This needs to be fixed as the entities current tile should never have a null room.
+                if (entityTile.Room == null) continue;
+                // Skip the tile if entities current room has no connection to the tiles room.
+                if (!entityTile.Room.HasConnection(tile.Room)) continue;
                     
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
 
@@ -288,7 +287,7 @@ namespace Models.Jobs
 
             return closest;
         }
-        
+
         public Tile GetClosestPathableNeighbour(Entity _entity, IReadOnlyCollection<Tile> _tiles)
         {
             if (_entity == null || _tiles == null || _tiles.Count <= 0) return null;
@@ -301,6 +300,8 @@ namespace Models.Jobs
             foreach(var tile in _tiles)
             {
                 if (tile.GetEnterability() != TileEnterability.Immediate) continue;
+                // Skip the tile if entities current room has no connection to the tiles room.
+                if (!entityTile.Room.HasConnection(tile.Room)) continue;
                     
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
 

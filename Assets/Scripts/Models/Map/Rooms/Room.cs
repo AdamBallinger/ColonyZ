@@ -63,5 +63,10 @@ namespace Models.Map.Rooms
             
             ConnectedRooms.Add(_room);
         }
+        
+        public bool HasConnection(Room _room)
+        {
+            return ConnectedRooms.Contains(_room);
+        }
     }
 }

@@ -22,6 +22,8 @@ namespace Models.Map.Rooms
             {
                 OutsideRoom
             };
+            
+            OutsideRoom.AddConnection(OutsideRoom);
         }
         
         public static void Create()
@@ -143,11 +145,13 @@ namespace Models.Map.Rooms
         {
             var doors = World.Instance.Objects.OfType<DoorObject>().ToList();
             
+            // Clear existing connections, then re-add self connections.
             foreach (var room in Rooms)
             {
                 room.ConnectedRooms.Clear();
+                room.AddConnection(room);
             }
-            
+
             foreach (var door in doors)
             {
                 var tile = door.Tile;
