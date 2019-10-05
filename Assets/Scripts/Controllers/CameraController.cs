@@ -71,17 +71,6 @@ namespace Controllers
             
             camera.orthographicSize -= camera.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * (zoomSpeed * Time.deltaTime);
             camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, maxZoom, minZoom);
-            
-            /*
-             * Experimental zoom for the pixel perfect camera.
-             * Bug: Pixel perfect doesn't play nice with zooming and panning the camera. Needs looking at again at some point.
-             */
-            /*var scale = cameraPivot.localScale;
-            scale -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime * cameraPivot.localScale;
-            scale.x = Mathf.Clamp(scale.x, maxZoom, minZoom);
-            scale.y = Mathf.Clamp(scale.y, maxZoom, minZoom);
-            scale.z = 1;
-            cameraPivot.localScale = scale;*/
         }
     }
 }
