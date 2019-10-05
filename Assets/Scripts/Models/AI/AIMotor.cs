@@ -54,6 +54,12 @@ namespace Models.AI
             {
                 return;
             }
+            
+            // If the entities current room has no connection to the targets room, then we already know there's no valid path.
+            if (!Entity.CurrentTile.Room.HasConnection(_tile.Room))
+            {
+                return;
+            }
 
             Working = true;
             TargetTile = _tile;
