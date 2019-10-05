@@ -116,7 +116,6 @@ namespace Controllers
         /// <param name="_dragData"></param>
         private void UpdateDragPreview(DragData _dragData)
         {
-            // TODO: Dragging probably needs to be rewritten as it causes massive frame drops with large drag areas.
             ClearPreviewObjects();
 
             // Hide selection graphic if mouse is off the map.
