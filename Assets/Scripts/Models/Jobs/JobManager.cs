@@ -158,7 +158,6 @@ namespace Models.Jobs
                     continue;
                 }
                 
-                // TODO: This path test is too slow and needs a better solution.
                 var closestTile = GetClosestPathableNeighbour(entity, job.TargetTile.DirectNeighbours);
                 
                 if (closestTile != null)
