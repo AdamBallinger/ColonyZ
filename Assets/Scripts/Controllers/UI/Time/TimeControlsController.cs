@@ -17,33 +17,35 @@ namespace Controllers.UI.Time
 
         [SerializeField]
         private Sprite[] playPauseSprites;
+
+        private TimeManager timeManager;
         
         private void Start()
         {
-            var tm = TimeManager.Instance;
-            playPauseImage.sprite = tm.TimeMode == TimeMode.x0 ? playPauseSprites[0] : playPauseSprites[1];
+            timeManager = TimeManager.Instance;
+            playPauseImage.sprite = timeManager.TimeMode == TimeMode.x0 ? playPauseSprites[0] : playPauseSprites[1];
+
+            timeManager.timeModeChangedEvent += OnTimeModeChanged;
         }
-        
+
         /// <summary>
         /// Event called when the increase time button is pressed.
         /// </summary>
         public void OnTimeIncrease()
         {
-            var tm = TimeManager.Instance;
-            
-            switch (tm.TimeMode)
+            switch (timeManager.TimeMode)
             {
                 case TimeMode.x0:
-                    tm.TimeMode = TimeMode.x1;
-                    decreaseButton.interactable = true;
+                    timeManager.TimeMode = TimeMode.x1;
                     break;
                 case TimeMode.x1:
-                    tm.TimeMode = TimeMode.x2;
-                    decreaseButton.interactable = true;
+                    timeManager.TimeMode = TimeMode.x2;
                     break;
                 case TimeMode.x2:
-                    tm.TimeMode = TimeMode.x4;
-                    increaseButton.interactable = false;
+                    timeManager.TimeMode = TimeMode.x4;
+                    break;
+                case TimeMode.x4:
+                    timeManager.TimeMode = TimeMode.x10;
                     break;
             }
         }
@@ -53,17 +55,16 @@ namespace Controllers.UI.Time
         /// </summary>
         public void OnTimeDecrease()
         {
-            var tm = TimeManager.Instance;
-            
-            switch (tm.TimeMode)
+            switch (timeManager.TimeMode)
             {
+                case TimeMode.x10:
+                    timeManager.TimeMode = TimeMode.x4;
+                    break;
                 case TimeMode.x4:
-                    tm.TimeMode = TimeMode.x2;
-                    increaseButton.interactable = true;
+                    timeManager.TimeMode = TimeMode.x2;
                     break;
                 case TimeMode.x2:
-                    tm.TimeMode = TimeMode.x1;
-                    decreaseButton.interactable = false;
+                    timeManager.TimeMode = TimeMode.x1;
                     break;
             }
         }
@@ -73,11 +74,14 @@ namespace Controllers.UI.Time
         /// </summary>
         public void OnPauseResume()
         {
-            var tm = TimeManager.Instance;
-            tm.TimeMode = tm.TimeMode == TimeMode.x0 ? TimeMode.x1 : TimeMode.x0;
-            increaseButton.interactable = tm.TimeMode != TimeMode.x0;
-            decreaseButton.interactable = tm.TimeMode != TimeMode.x0;
-            playPauseImage.sprite = tm.TimeMode == TimeMode.x0 ? playPauseSprites[0] : playPauseSprites[1];
+            timeManager.Toggle();
+        }
+        
+        private void OnTimeModeChanged(TimeMode _newMode)
+        {
+            increaseButton.interactable = _newMode != TimeMode.x10 || _newMode != TimeMode.x0;
+            decreaseButton.interactable = _newMode != TimeMode.x1 || _newMode != TimeMode.x0;
+            playPauseImage.sprite = _newMode == TimeMode.x0 ? playPauseSprites[0] : playPauseSprites[1];
         }
     }
 }
