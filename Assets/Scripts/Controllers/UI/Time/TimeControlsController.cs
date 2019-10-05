@@ -13,6 +13,9 @@ namespace Controllers.UI.Time
         private Button decreaseButton;
 
         [SerializeField]
+        private Button playPauseButton;
+
+        [SerializeField]
         private Image playPauseImage;
 
         [SerializeField]
@@ -26,12 +29,16 @@ namespace Controllers.UI.Time
             playPauseImage.sprite = timeManager.TimeMode == TimeMode.x0 ? playPauseSprites[0] : playPauseSprites[1];
 
             timeManager.timeModeChangedEvent += OnTimeModeChanged;
+            
+            increaseButton.onClick.AddListener(OnTimeIncrease);
+            decreaseButton.onClick.AddListener(OnTimeDecrease);
+            playPauseButton.onClick.AddListener(OnPlayResume);
         }
 
         /// <summary>
         /// Event called when the increase time button is pressed.
         /// </summary>
-        public void OnTimeIncrease()
+        private void OnTimeIncrease()
         {
             switch (timeManager.TimeMode)
             {
@@ -53,7 +60,7 @@ namespace Controllers.UI.Time
         /// <summary>
         /// Event called when the decrease time button is pressed.
         /// </summary>
-        public void OnTimeDecrease()
+        private void OnTimeDecrease()
         {
             switch (timeManager.TimeMode)
             {
@@ -70,9 +77,9 @@ namespace Controllers.UI.Time
         }
         
         /// <summary>
-        /// Event called when the pause/resume time button is pressed.
+        /// Event called when the play/pause time button is pressed.
         /// </summary>
-        public void OnPauseResume()
+        private void OnPlayResume()
         {
             timeManager.Toggle();
         }

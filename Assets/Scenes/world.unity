@@ -2550,18 +2550,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1222296492}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1749062330}
-        m_MethodName: OnTimeDecrease
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1222296492
@@ -2949,18 +2938,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1279805218}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1749062330}
-        m_MethodName: OnPauseResume
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1279805218
@@ -3375,18 +3353,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1365786269}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1749062330}
-        m_MethodName: OnTimeIncrease
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1365786269
@@ -4368,6 +4335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   increaseButton: {fileID: 1365786268}
   decreaseButton: {fileID: 1222296491}
+  playPauseButton: {fileID: 1279805217}
   playPauseImage: {fileID: 1279805218}
   playPauseSprites:
   - {fileID: 21300000, guid: e1751190e52210e40920f8ea717df4ec, type: 3}
