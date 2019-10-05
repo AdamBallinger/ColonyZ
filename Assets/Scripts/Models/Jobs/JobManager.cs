@@ -84,7 +84,6 @@ namespace Models.Jobs
         
         /// <summary>
         /// Checks if any job in the invalid jobs list is now completable.
-        /// TODO: Might be better to run this at a set interval rather than when jobs finish.
         /// </summary>
         private void EvaluateInvalidJobs()
         {
@@ -101,8 +100,6 @@ namespace Models.Jobs
 
                     if (CanEntityReachJob(humanEntity, job))
                     {
-                        //RemoveInvalidJob(job);
-                        //break;
                         isJobReachable = true;
                         
                         if (jobNoAccessMap[job].Contains(humanEntity))
