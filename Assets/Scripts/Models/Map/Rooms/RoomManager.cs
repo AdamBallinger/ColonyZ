@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 
 namespace Models.Map.Rooms
 {
@@ -74,6 +76,8 @@ namespace Models.Map.Rooms
                 // Once the rooms are removed, flood from the source tile to create the new room.
                 FloodFill(_tile, null);
             }
+            
+            GenerateRoomConnections();
         }
         
         /// <summary>
@@ -133,6 +137,64 @@ namespace Models.Map.Rooms
             }
             
             Rooms.Add(newRoom);
+        }
+        
+        private void GenerateRoomConnections()
+        {
+            var doors = World.Instance.Objects.OfType<DoorObject>().ToList();
+            
+            foreach (var room in Rooms)
+            {
+                room.ConnectedRooms.Clear();
+            }
+            
+            foreach (var door in doors)
+            {
+                var tile = door.Tile;
+                var n = World.Instance.GetTileAt(tile.X, tile.Y + 1);
+                var s = World.Instance.GetTileAt(tile.X, tile.Y - 1);
+                
+                // if the tiles to the north and south of the door have different room ids, then they are connected.
+                if (n != null && s != null && n.Room?.RoomID != s.Room?.RoomID)
+                {
+                    n.Room?.AddConnection(s.Room);
+                    s.Room?.AddConnection(n.Room);
+                    continue;
+                }
+
+                var e = World.Instance.GetTileAt(tile.X + 1, tile.Y);
+                var w = World.Instance.GetTileAt(tile.X - 1, tile.Y);
+                
+                if (e != null && w != null && e.Room?.RoomID != w.Room?.RoomID)
+                {
+                    e.Room?.AddConnection(w.Room);
+                    w.Room?.AddConnection(e.Room);
+                }
+            }
+            
+            foreach (var room in Rooms)
+            {
+                var checkedRooms = new List<Room>();
+                var rooms = LinkRoom(room, checkedRooms);
+                
+                foreach (var r in rooms)
+                {
+                    room.AddConnection(r);
+                }
+            }
+        }
+        
+        private List<Room> LinkRoom(Room _room, List<Room> _checkedRooms)
+        {
+            foreach (var room in _room.ConnectedRooms)
+            {
+                if (_checkedRooms.Contains(room)) continue;
+                
+                _checkedRooms.Add(room);
+                LinkRoom(room, _checkedRooms);
+            }
+
+            return _checkedRooms;
         }
     }
 }

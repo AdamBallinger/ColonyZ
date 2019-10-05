@@ -14,10 +14,13 @@ namespace Models.Map.Rooms
         /// List of tiles that assigned to this room. This does not include the tiles that enclose the room.
         /// </summary>
         public List<Tile> Tiles { get; }
+        
+        public List<Room> ConnectedRooms { get; }
 
         public Room()
         {
             Tiles = new List<Tile>();
+            ConnectedRooms = new List<Room>();
         }
         
         public void AssignTile(Tile _tile)
@@ -52,6 +55,13 @@ namespace Models.Map.Rooms
             {
                 RoomManager.Instance.OutsideRoom.AssignTile(Tiles[i]);
             }
+        }
+        
+        public void AddConnection(Room _room)
+        {
+            if (_room == null || ConnectedRooms.Contains(_room)) return;
+            
+            ConnectedRooms.Add(_room);
         }
     }
 }
