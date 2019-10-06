@@ -9,6 +9,12 @@ namespace Models.Map.Tiles.Objects
         {
             return _tile?.Object == null;
         }
+        
+        // Make foundations always appear below anything else.
+        public override int GetSortingOrder()
+        {
+            return -10;
+        }
 
         public override bool ConnectsWith(TileObject _other)
         {
