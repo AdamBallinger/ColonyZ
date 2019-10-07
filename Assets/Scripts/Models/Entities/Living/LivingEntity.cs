@@ -1,6 +1,7 @@
 using Models.AI;
 using Models.AI.Actions;
 using Models.Map.Tiles;
+using Models.Sprites;
 using UnityEngine;
 
 namespace Models.Entities.Living
@@ -10,6 +11,10 @@ namespace Models.Entities.Living
         public float MovementSpeed { get; set; }
         
         public AIMotor Motor { get; }
+        
+        public int HeadId { get; protected set; }
+        
+        public int BodyId { get; protected set; }
         
         protected int Health { get; set; }
 
@@ -21,7 +26,6 @@ namespace Models.Entities.Living
             Health = 100;
             actionManager = new ActionManager();
             Motor = new AIMotor(this);
-            //CurrentTile.LivingEntities.Add(this);
         }
 
         public override void Update()
@@ -37,8 +41,8 @@ namespace Models.Entities.Living
 
         public override Sprite GetSelectionIcon()
         {
-            // TODO: Have a way to access the face sprite for the entity.
-            return null;
+            // Each head has 4 sprites so multiply the head id by 4 to get the facing sprite for the entity head id.
+            return SpriteCache.GetSprite("Living_Heads", HeadId * 4);
         }
 
         public override string GetSelectionDescription()

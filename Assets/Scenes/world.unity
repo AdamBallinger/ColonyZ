@@ -2234,7 +2234,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1027192665
-  m_SortingLayer: 3
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c2fd2b1f61c4c69479baa06381e996f4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.2509804}
@@ -2831,7 +2831,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1027192665
-  m_SortingLayer: 3
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 81f4ba3dd69e2a242bebc9e3ea729310, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.7254902}
@@ -2871,7 +2871,7 @@ GameObject:
   - component: {fileID: 1279805218}
   - component: {fileID: 1279805217}
   m_Layer: 5
-  m_Name: Resume/Pause
+  m_Name: Play/Pause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4042,6 +4042,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dd0b244d09aa09648aff41e72399ab14, type: 2}
   - {fileID: 11400000, guid: f282d678156fac24fa85e1a89f79b2c7, type: 2}
   - {fileID: 11400000, guid: 73f54200bbe129d4a81129890d0df55a, type: 2}
+  - {fileID: 11400000, guid: be985ecf6cdee224badde935d471d424, type: 2}
+  - {fileID: 11400000, guid: 5fcd96af566056742aa9f4f909899b92, type: 2}
 --- !u!114 &1523355956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4622,7 +4624,7 @@ MonoBehaviour:
   treeSpawnChance: 3
   characterPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
-  tileObjectsSortingName: Objects
+  tileObjectsSortingName: Default
   tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
   spriteLoader: {fileID: 1523355955}
   objectsLoader: {fileID: 1523355956}
@@ -5225,7 +5227,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1027192665
-  m_SortingLayer: 3
+  m_SortingLayer: 1
   m_SortingOrder: 0
 --- !u!1 &1991545585
 GameObject:

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Controllers.Render;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Jobs;
@@ -297,14 +298,13 @@ namespace Controllers
         /// <param name="_entity"></param>
         public void OnEntitySpawn(Entity _entity)
         {
-            if (_entity is HumanEntity)
+            if (_entity is LivingEntity)
             {
                 var entity_GO = Instantiate(characterPrefab, _transform);
                 entity_GO.transform.position = new Vector2(_entity.X, _entity.Y);
+                entity_GO.GetComponent<LivingEntityRenderer>().SetEntity((LivingEntity) _entity);
 
-                // TODO: Set sprites for character GameObject.
-
-                livingEntityObjects.Add((HumanEntity) _entity, entity_GO);
+                livingEntityObjects.Add((LivingEntity)_entity, entity_GO);
             }
         }
     }

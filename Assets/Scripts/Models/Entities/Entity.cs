@@ -1,5 +1,5 @@
+using Models.Map;
 using Models.Map.Tiles;
-using Models.Sprites;
 using Models.UI;
 using UnityEngine;
 
@@ -29,15 +29,15 @@ namespace Models.Entities
 
         public Vector2 TileOffset { get; set; }
 
-        /// <summary>
-        /// Sprite data for this entity.
-        /// </summary>
-        public SpriteData SpriteData { get; set; }
-
         protected Entity(Tile _tile)
         {
             CurrentTile = _tile;
             TileOffset = Vector2.zero;
+        }
+        
+        public virtual int GetSortingOrder()
+        {
+            return World.Instance.Height - CurrentTile.Y;
         }
 
         public abstract void Update();

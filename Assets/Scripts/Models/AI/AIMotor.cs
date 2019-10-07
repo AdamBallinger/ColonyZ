@@ -13,12 +13,21 @@ namespace Models.AI
         /// </summary>
         public bool Working { get; private set; }
 
-        private LivingEntity Entity { get; }
+        /// <summary>
+        /// The directional index that the motor is currently moving in.
+        /// 0 - Moving Down / Not moving
+        /// 1 - Moving Right
+        /// 2 - Moving Left
+        /// 3 - Moving Up
+        /// </summary>
+        public int DirectionIndex { get; private set; } = 0;
 
         /// <summary>
         /// The tile the motor is moving the entity towards.
         /// </summary>
         public Tile TargetTile { get; private set; }
+        
+        private LivingEntity Entity { get; }
 
         /// <summary>
         /// The path the motor is currently navigating.
@@ -87,6 +96,20 @@ namespace Models.AI
                 return;
             }
 
+            var pathX = path.CurrentTile.X;
+            var pathY = path.CurrentTile.Y;
+            var entityX = Entity.CurrentTile.X;
+            var entityY = Entity.CurrentTile.Y;
+            
+            if (pathY < entityY) // Moving down
+            {
+                DirectionIndex = pathX == entityX ? 0 : pathX > entityX ? 1 : 2;
+            }
+            else if (pathY > entityY) // Moving up
+            {
+                DirectionIndex = pathX == entityX ? 3 : pathX > entityX ? 1 : 2;
+            }
+
             // The amount the entity will move this frame.
             var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * TimeManager.Instance.DeltaTime;
             var travelPercentageThisFrame = movementDelta / distance;
@@ -140,6 +163,7 @@ namespace Models.AI
             path = null;
             travelProgress = 0.0f;
             Entity.TileOffset = Vector2.zero;
+            DirectionIndex = 0;
         }
         
         private float GetDistance()
