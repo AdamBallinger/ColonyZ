@@ -29,15 +29,16 @@ namespace Controllers
 
         [SerializeField, Range(0, 100)]
         private int treeSpawnChance = 25;
+        
+        [SerializeField]
+        private GameObject livingEntityPrefab;
 
         [SerializeField]
-        private GameObject characterPrefab;
-
-        [SerializeField]
-        private string tileObjectsSortingName = "Objects";
+        private GameObject itemEntityPrefab;
 
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
         private Dictionary<LivingEntity, GameObject> livingEntityObjects;
+        private Dictionary<ItemEntity, GameObject> itemEntityObjects;
 
         [SerializeField]
         private Texture2D tileTypesTexture;
@@ -60,6 +61,7 @@ namespace Controllers
             Instance.TileTypesSprites = new List<Sprite>();
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
+            Instance.itemEntityObjects = new Dictionary<ItemEntity, GameObject>();
 
             spriteLoader.Load();
             objectsLoader.Load();
@@ -92,6 +94,7 @@ namespace Controllers
             
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;
+            World.Instance.onEntityRemoved += OnEntityRemoved;
             
             JobManager.Create();
             NodeGraph.Create(World.Instance.Width, World.Instance.Height);
@@ -250,9 +253,7 @@ namespace Controllers
             
             object_GO.transform.position = new Vector2(_tile.X, _tile.Y);
             object_GO.transform.SetParent(_transform);
-            
-            object_SR.sortingLayerName = tileObjectsSortingName;
-            
+
             tileObjectRenderers.Add(_tile, object_SR);
         }
 
@@ -298,13 +299,43 @@ namespace Controllers
         /// <param name="_entity"></param>
         public void OnEntitySpawn(Entity _entity)
         {
-            if (_entity is LivingEntity)
+            if (_entity is LivingEntity living)
             {
-                var entity_GO = Instantiate(characterPrefab, _transform);
-                entity_GO.transform.position = new Vector2(_entity.X, _entity.Y);
-                entity_GO.GetComponent<LivingEntityRenderer>().SetEntity((LivingEntity) _entity);
+                var entity_GO = Instantiate(livingEntityPrefab, _transform);
+                entity_GO.transform.position = new Vector2(living.X, living.Y);
+                entity_GO.GetComponent<LivingEntityRenderer>().SetEntity(living);
 
-                livingEntityObjects.Add((LivingEntity)_entity, entity_GO);
+                livingEntityObjects.Add(living, entity_GO);
+            }
+            else if (_entity is ItemEntity item)
+            {
+                var item_GO = Instantiate(itemEntityPrefab, _transform);
+                item_GO.transform.position = new Vector2(item.X, item.Y);
+                // TODO: Get item renderer and assign item to it.
+                
+                itemEntityObjects.Add(item, item_GO);
+            }
+        }
+        
+        /// <summary>
+        /// Event for when an entity gets removed from the world.
+        /// </summary>
+        /// <param name="_entity"></param>
+        public void OnEntityRemoved(Entity _entity)
+        {
+            if (_entity is LivingEntity living)
+            {
+                if (!livingEntityObjects.ContainsKey(living)) return;
+                
+                Destroy(livingEntityObjects[living]);
+                livingEntityObjects.Remove(living);
+            }
+            else if (_entity is ItemEntity item)
+            {
+                if (!itemEntityObjects.ContainsKey(item)) return;
+                
+                Destroy(itemEntityObjects[item]);
+                itemEntityObjects.Remove(item);
             }
         }
     }

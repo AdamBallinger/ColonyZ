@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Controllers;
+using Models.Entities;
 using Models.Entities.Living;
 using Models.Jobs;
 using Models.Map.Pathing;
@@ -78,6 +79,11 @@ namespace Models.Map.Tiles
         /// Installed tile object for this tile.
         /// </summary>
         public TileObject Object { get; private set; }
+        
+        /// <summary>
+        /// The current Item on this tile.
+        /// </summary>
+        public ItemEntity Item { get; private set; }
 
         private TileDefinition definition, oldDefinition;
 
@@ -143,6 +149,19 @@ namespace Models.Map.Tiles
             {
                 RoomManager.Instance.CheckForRoom(this);
             }
+        }
+        
+        public void SetItem(ItemEntity _entity)
+        {
+            // Tile already has an item on it.
+            if (Item != null) return;
+
+            Item = _entity;
+        }
+        
+        public void RemoveItem()
+        {
+            Item = null;
         }
 
         public TileEnterability GetEnterability()

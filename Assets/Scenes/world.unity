@@ -4621,10 +4621,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldWidth: 64
   worldHeight: 64
-  treeSpawnChance: 3
-  characterPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
+  treeSpawnChance: 4
+  livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
-  tileObjectsSortingName: Default
+  itemEntityPrefab: {fileID: 4256605384353934779, guid: cf0a6cd49092b8d4cbe1a2441751f071,
+    type: 3}
   tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
   spriteLoader: {fileID: 1523355955}
   objectsLoader: {fileID: 1523355956}

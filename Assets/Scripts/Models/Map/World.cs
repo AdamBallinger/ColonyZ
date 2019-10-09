@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Models.Entities;
 using Models.Entities.Living;
+using Models.Items;
 using Models.Map.Pathing;
 using Models.Map.Rooms;
 using Models.Map.Tiles;
@@ -27,12 +28,19 @@ namespace Models.Map
 
         public List<LivingEntity> Characters { get; private set; }
         
+        public List<ItemEntity> Items { get; private set; }
+        
         public List<TileObject> Objects { get; private set; }
 
         /// <summary>
         /// Event called when a new entity is created.
         /// </summary>
         public event Action<Entity> onEntitySpawn;
+
+        /// <summary>
+        /// Event called when an Entity is removed from the world.
+        /// </summary>
+        public event Action<Entity> onEntityRemoved;
 
         private World() { }
 
@@ -52,6 +60,7 @@ namespace Models.Map
                 Height = _height,
                 Tiles = new Tile[_width * _height],
                 Characters = new List<LivingEntity>(),
+                Items = new List<ItemEntity>(),
                 Objects = new List<TileObject>()
             };
             
@@ -201,12 +210,53 @@ namespace Models.Map
             return neighbours;
         }
 
+        /// <summary>
+        /// Spawns a new character entity in the world.
+        /// </summary>
+        /// <param name="_tile"></param>
         public void SpawnCharacter(Tile _tile)
         {
             var entity = new HumanEntity(_tile);
             Characters.Add(entity);
 
             onEntitySpawn?.Invoke(entity);
+        }
+        
+        /// <summary>
+        /// Removes a given character entity from the world if it exists.
+        /// </summary>
+        /// <param name="_entity"></param>
+        public void RemoveCharacter(LivingEntity _entity)
+        {
+            if (!Characters.Contains(_entity)) return;
+
+            Characters.Remove(_entity);
+            onEntityRemoved?.Invoke(_entity);
+        }
+        
+        /// <summary>
+        /// Spawns a new item entity into the world.
+        /// </summary>
+        /// <param name="_item"></param>
+        /// <param name="_quantity"></param>
+        /// <param name="_tile"></param>
+        public bool SpawnItem(Item _item, int _quantity, Tile _tile)
+        {
+            if (_tile.Item != null) return false;
+            
+            var itemEntity = new ItemEntity(_tile, new ItemStack(_item, _quantity));
+            
+            onEntitySpawn?.Invoke(itemEntity);
+
+            return true;
+        }
+        
+        public void RemoveItem(ItemEntity _entity)
+        {
+            if (!Items.Contains(_entity)) return;
+
+            Items.Remove(_entity);
+            onEntityRemoved?.Invoke(_entity);
         }
 
         /// <summary>
