@@ -19,7 +19,7 @@ namespace Models.Items
         /// <param name="_itemName"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Item CreateItem<T>(string _itemName) where T : Item
+        public static T CreateItem<T>(string _itemName) where T : Item
         {
             foreach (var item in items)
             {
