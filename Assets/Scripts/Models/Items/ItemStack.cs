@@ -29,7 +29,7 @@ namespace Models.Items
 
             Quantity -= _quantity;
             
-            return new ItemStack(ItemManager.CreateItem<Item>(Item.ItemName), _quantity);
+            return new ItemStack(ItemManager.CreateItem(Item.ItemName), _quantity);
         }
         
         /// <summary>

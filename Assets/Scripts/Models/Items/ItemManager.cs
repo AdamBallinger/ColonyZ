@@ -31,5 +31,16 @@ namespace Models.Items
 
             return null;
         }
+        
+        /// <summary>
+        /// Creates a new item instance of the given item name.
+        /// </summary>
+        /// <param name="_itemName"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static Item CreateItem(string _itemName)
+        {
+            return CreateItem<Item>(_itemName);
+        }
     }
 }
