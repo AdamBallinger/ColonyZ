@@ -115,7 +115,8 @@ namespace Controllers
                 }
             }
 
-            World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+            World.Instance.SpawnCharacter(World.Instance.GetRandomTile(worldWidth / 2 - 5, worldHeight / 2 - 5,
+                                                                       worldWidth / 2 + 5, worldHeight / 2 + 5));
         }
 
         private void Update()
