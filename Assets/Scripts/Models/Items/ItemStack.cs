@@ -37,7 +37,7 @@ namespace Models.Items
         /// <returns></returns>
         public void Merge(ItemStack _other)
         {
-            // Item stacks do not match, so just return the given stack.
+            // Item stacks do not match.
             if (!Item.ItemName.Equals(_other.Item.ItemName))
             {
                 return;
