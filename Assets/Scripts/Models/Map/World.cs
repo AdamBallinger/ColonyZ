@@ -245,6 +245,7 @@ namespace Models.Map
             if (_tile.Item != null) return false;
             
             var itemEntity = new ItemEntity(_tile, new ItemStack(_item, _quantity));
+            _tile.SetItem(itemEntity);
             
             onEntitySpawn?.Invoke(itemEntity);
 
@@ -255,6 +256,7 @@ namespace Models.Map
         {
             if (!Items.Contains(_entity)) return;
 
+            _entity.CurrentTile.RemoveItem();
             Items.Remove(_entity);
             onEntityRemoved?.Invoke(_entity);
         }
