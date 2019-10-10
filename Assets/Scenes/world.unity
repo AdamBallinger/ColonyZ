@@ -4002,6 +4002,7 @@ GameObject:
   - component: {fileID: 1523355954}
   - component: {fileID: 1523355955}
   - component: {fileID: 1523355956}
+  - component: {fileID: 1523355957}
   m_Layer: 0
   m_Name: Loaders
   m_TagString: Untagged
@@ -4062,6 +4063,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8b137ff655fdd664dba9981a9d73144a, type: 2}
   - {fileID: 11400000, guid: a63b92cceec1d774ead2263e123a483c, type: 2}
   - {fileID: 11400000, guid: 1d6a3513faa64bd49a26aa3ca2783ab5, type: 2}
+--- !u!114 &1523355957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523355953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6517a71f3394feca6323a25298589c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items:
+  - {fileID: 11400000, guid: ce3c8807adfaab3438ae35e2e0ebe3d4, type: 2}
 --- !u!1 &1563564460
 GameObject:
   m_ObjectHideFlags: 0
@@ -4629,6 +4644,7 @@ MonoBehaviour:
   tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
   spriteLoader: {fileID: 1523355955}
   objectsLoader: {fileID: 1523355956}
+  itemsLoader: {fileID: 1523355957}
 --- !u!23 &1920970006
 MeshRenderer:
   m_ObjectHideFlags: 0

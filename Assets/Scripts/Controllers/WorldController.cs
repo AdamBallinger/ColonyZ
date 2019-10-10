@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Controllers.Loaders;
 using Controllers.Render;
 using Models.Entities;
 using Models.Entities.Living;
@@ -49,6 +50,9 @@ namespace Controllers
         [SerializeField]
         private TileObjectsLoader objectsLoader;
 
+        [SerializeField]
+        private ItemLoader itemsLoader;
+
         private MeshFilter meshFilter;
 
         private Transform _transform;
@@ -65,6 +69,7 @@ namespace Controllers
 
             spriteLoader.Load();
             objectsLoader.Load();
+            itemsLoader.Load();
 
             SliceTileTypesTexture();
             NewWorld();
