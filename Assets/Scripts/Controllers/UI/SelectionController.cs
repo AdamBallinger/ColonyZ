@@ -42,7 +42,11 @@ namespace Controllers.UI
                 return;
             }
             
-            if (_tile.LivingEntities.Count > 0)
+            if (_tile.Item != null)
+            {
+                Set(_tile.Item);
+            }
+            else if (_tile.LivingEntities.Count > 0)
             {
                 Set(_tile.LivingEntities[0]);
             }

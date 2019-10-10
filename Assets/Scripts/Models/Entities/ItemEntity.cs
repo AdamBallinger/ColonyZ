@@ -1,12 +1,13 @@
 using Models.Items;
 using Models.Map.Tiles;
+using Models.Sprites;
 using UnityEngine;
 
 namespace Models.Entities
 {
     public class ItemEntity : Entity
     {
-        public ItemStack ItemStack { get; private set; }
+        public ItemStack ItemStack { get; }
         
         public ItemEntity(Tile _tile, ItemStack _itemStack) : base(_tile)
         {
@@ -29,7 +30,7 @@ namespace Models.Entities
 
         public override Sprite GetSelectionIcon()
         {
-            return null;
+            return SpriteCache.GetSprite(ItemStack.Item);
         }
 
         public override string GetSelectionDescription()
