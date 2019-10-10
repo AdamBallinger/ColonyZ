@@ -264,7 +264,6 @@ namespace Models.Jobs
             foreach(var tile in _tiles)
             {
                 if (tile.GetEnterability() != TileEnterability.Immediate) continue;
-                // TODO: This needs to be fixed as the entities current tile should never have a null room.
                 if (entityTile.Room == null) continue;
                 // Skip the tile if entities current room has no connection to the tiles room.
                 if (!entityTile.Room.HasConnection(tile.Room)) continue;
@@ -296,6 +295,7 @@ namespace Models.Jobs
             foreach(var tile in _tiles)
             {
                 if (tile.GetEnterability() != TileEnterability.Immediate) continue;
+                if (entityTile.Room == null) continue;
                 // Skip the tile if entities current room has no connection to the tiles room.
                 if (!entityTile.Room.HasConnection(tile.Room)) continue;
                     
