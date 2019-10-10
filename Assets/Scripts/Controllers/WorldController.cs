@@ -3,7 +3,6 @@ using Controllers.Loaders;
 using Controllers.Render;
 using Models.Entities;
 using Models.Entities.Living;
-using Models.Items;
 using Models.Jobs;
 using Models.Map;
 using Models.Map.Pathing;
@@ -118,8 +117,6 @@ namespace Controllers
 
             World.Instance.SpawnCharacter(World.Instance.GetRandomTile(worldWidth / 2 - 5, worldHeight / 2 - 5,
                                                                        worldWidth / 2 + 5, worldHeight / 2 + 5));
-
-            World.Instance.SpawnItem(ItemManager.CreateItem<ResourceItem>("Wood"), -100, World.Instance.GetTileAt(10, 10));
         }
 
         private void Update()
