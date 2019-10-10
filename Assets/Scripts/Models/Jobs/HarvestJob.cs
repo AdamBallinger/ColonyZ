@@ -1,3 +1,4 @@
+using Models.Map;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 
@@ -23,7 +24,7 @@ namespace Models.Jobs
             base.OnComplete();
             
             TargetTile.RemoveObject();
-            // TODO: Decide how to spawn harvest items..
+            World.Instance.SpawnItem(resourceObject.Item, resourceObject.Quantity, TargetTile);
         }
     }
 }

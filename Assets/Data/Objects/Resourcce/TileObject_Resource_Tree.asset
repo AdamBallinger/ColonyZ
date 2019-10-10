@@ -19,6 +19,9 @@ MonoBehaviour:
   fellable: 1
   mineable: 0
   harvestable: 0
+  enclosesRoom: 0
   objectWidth: 1
   objectHeight: 1
   objectEnterability: 1
+  item: {fileID: 11400000, guid: ce3c8807adfaab3438ae35e2e0ebe3d4, type: 2}
+  quanitity: 25
