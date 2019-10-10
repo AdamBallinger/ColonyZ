@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Sprite_Data_Item_Resource
   m_EditorClassIdentifier: 
   spriteGroupName: Item_Resource
-  sprites: []
+  sprites:
+  - {fileID: -6302176436445171612, guid: c761f0befff74234b8d2b7234a2acd35, type: 3}
   uiIconIndex: 0

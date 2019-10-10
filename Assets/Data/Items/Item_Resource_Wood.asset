@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036b5fd6b058417a880fa445459e0859, type: 3}
   m_Name: Item_Resource_Wood
   m_EditorClassIdentifier: 
-  itemSpriteData: {fileID: 0}
+  itemSpriteData: {fileID: 11400000, guid: c4402c530296e7d4298ca16fa4c68315, type: 2}
+  itemSpriteIndex: 0
   itemName: Wood
+  maxDurability: 100
+  expires: 0
+  requiresCoolStorage: 0
