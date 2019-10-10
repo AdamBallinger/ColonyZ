@@ -1,7 +1,7 @@
 ﻿using Models.Map.Tiles.Objects;
 using UnityEngine;
 
-namespace Controllers
+namespace Controllers.Loaders
 {
     public class TileObjectsLoader : MonoBehaviour
     {

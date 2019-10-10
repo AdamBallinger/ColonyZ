@@ -1,7 +1,7 @@
 ﻿using Models.Sprites;
 using UnityEngine;
 
-namespace Controllers
+namespace Controllers.Loaders
 {
     public class SpriteLoader : MonoBehaviour
     {
