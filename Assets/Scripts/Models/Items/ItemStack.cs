@@ -1,3 +1,5 @@
+using System;
+
 namespace Models.Items
 {
     public class ItemStack
@@ -9,7 +11,7 @@ namespace Models.Items
         public ItemStack(Item _item, int _quantity)
         {
             Item = _item;
-            Quantity = _quantity;
+            Quantity = Math.Min(_quantity, Item.MaxStackSize);
         }
         
         /// <summary>
