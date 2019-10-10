@@ -79,6 +79,11 @@ namespace Models.Map
             {
                 Objects[i].Update();
             }
+            
+            for (var i = Items.Count - 1; i >= 0; i--)
+            {
+                Items[i].Update();
+            }
 
             PathFinder.Instance?.ProcessNext();
         }
@@ -246,6 +251,7 @@ namespace Models.Map
             
             var itemEntity = new ItemEntity(_tile, new ItemStack(_item, _quantity));
             _tile.SetItem(itemEntity);
+            Items.Add(itemEntity);
             
             onEntitySpawn?.Invoke(itemEntity);
 
