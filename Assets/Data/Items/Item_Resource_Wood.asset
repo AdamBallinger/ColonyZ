@@ -15,6 +15,7 @@ MonoBehaviour:
   itemSpriteData: {fileID: 11400000, guid: c4402c530296e7d4298ca16fa4c68315, type: 2}
   itemSpriteIndex: 0
   itemName: Wood
+  maxStackSize: 250
   maxDurability: 100
   expires: 0
   requiresCoolStorage: 0

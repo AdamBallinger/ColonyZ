@@ -11,6 +11,8 @@ namespace Models.Items
 
         public string ItemName => itemName;
 
+        public int MaxStackSize => maxStackSize;
+
         public int MaxDurability => maxDurability;
         
         public int Durability { get; protected set; }
@@ -25,6 +27,9 @@ namespace Models.Items
         
         [SerializeField]
         private string itemName;
+
+        [SerializeField]
+        private int maxStackSize;
 
         [SerializeField]
         private int maxDurability;
