@@ -1,4 +1,5 @@
 using Models.Items;
+using Models.Map;
 using Models.Map.Tiles;
 using Models.Sprites;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace Models.Entities
         {
             if (ItemStack.Quantity <= 0)
             {
-                // Delete the item entity from the world.
+                World.Instance.RemoveItem(this);
             }
         }
 
