@@ -6,17 +6,17 @@ namespace Models.Entities
 {
     public class ItemEntity : Entity
     {
-        private ItemStack itemStack;
+        public ItemStack ItemStack { get; private set; }
         
         public ItemEntity(Tile _tile, ItemStack _itemStack) : base(_tile)
         {
-            itemStack = _itemStack;
-            Name = itemStack.Item.ItemName;
+            ItemStack = _itemStack;
+            Name = ItemStack.Item.ItemName;
         }
 
         public override void Update()
         {
-            if (itemStack.Quantity <= 0)
+            if (ItemStack.Quantity <= 0)
             {
                 // Delete the item entity from the world.
             }
@@ -35,7 +35,7 @@ namespace Models.Entities
         public override string GetSelectionDescription()
         {
             return base.GetSelectionDescription() +
-                   $"Quantity: {itemStack.Quantity}\n";
+                   $"Quantity: {ItemStack.Quantity}\n";
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Models.Items;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
 
@@ -23,10 +24,7 @@ namespace Models.Sprites
 
         public static Sprite GetSprite(TileObject _object)
         {
-            if(_object == null)
-            {
-                return null;
-            }
+            if (_object == null) return null;
 
             if(spriteCache.ContainsKey(_object.SpriteData.SpriteGroup))
             {
@@ -40,6 +38,20 @@ namespace Models.Sprites
                 var index = !_object.DynamicSprite ? _object.GetSpriteIndex() : 
                     SpriteBitMask.GetObjectWorldIndex(_object.Tile);
                 return spriteCache[spriteData.SpriteGroup][index];
+            }
+
+            return null;
+        }
+        
+        public static Sprite GetSprite(Item _item)
+        {
+            if (_item == null) return null;
+            
+            if (spriteCache.ContainsKey(_item.ItemSpriteData.SpriteGroup))
+            {
+                var spriteData = _item.ItemSpriteData;
+
+                return spriteCache[spriteData.SpriteGroup][_item.SpriteIndex];
             }
 
             return null;

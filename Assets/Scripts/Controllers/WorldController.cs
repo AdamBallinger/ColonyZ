@@ -311,7 +311,7 @@ namespace Controllers
             {
                 var item_GO = Instantiate(itemEntityPrefab, _transform);
                 item_GO.transform.position = new Vector2(item.X, item.Y);
-                // TODO: Get item renderer and assign item to it.
+                item_GO.GetComponent<SpriteRenderer>().sprite = SpriteCache.GetSprite(item.ItemStack.Item);
                 
                 itemEntityObjects.Add(item, item_GO);
             }

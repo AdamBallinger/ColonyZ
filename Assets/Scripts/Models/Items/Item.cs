@@ -7,6 +7,8 @@ namespace Models.Items
     {
         public SpriteData ItemSpriteData => itemSpriteData;
 
+        public int SpriteIndex => itemSpriteIndex;
+
         public string ItemName => itemName;
 
         public int MaxDurability => maxDurability;
@@ -17,6 +19,9 @@ namespace Models.Items
 
         [SerializeField]
         private SpriteData itemSpriteData;
+
+        [SerializeField]
+        private int itemSpriteIndex;
         
         [SerializeField]
         private string itemName;
