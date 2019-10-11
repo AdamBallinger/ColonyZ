@@ -1,4 +1,3 @@
-using Models.Map;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 
@@ -24,7 +23,7 @@ namespace Models.Jobs
             base.OnComplete();
             
             TargetTile.RemoveObject();
-            World.Instance.SpawnItem(resourceObject.Item, resourceObject.Quantity, TargetTile);
+            //World.Instance.SpawnItem(resourceObject.Item, resourceObject.Quantity, TargetTile);
         }
     }
 }
