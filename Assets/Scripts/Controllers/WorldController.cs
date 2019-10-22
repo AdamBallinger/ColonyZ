@@ -18,8 +18,6 @@ namespace Controllers
     [RequireComponent(typeof(WorldRenderer))]
     public class WorldController : MonoBehaviour
     {
-        public static WorldController Instance { get; private set; }
-
         [SerializeField]
         private int worldWidth = 100;
         [SerializeField]
@@ -50,12 +48,11 @@ namespace Controllers
 
         private void Awake()
         {
-            Instance = this;
-            Instance._transform = Instance.transform;
+            _transform = transform;
             
-            Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
-            Instance.livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
-            Instance.itemEntityObjects = new Dictionary<ItemEntity, GameObject>();
+            tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
+            livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
+            itemEntityObjects = new Dictionary<ItemEntity, GameObject>();
 
             spriteLoader.Load();
             objectsLoader.Load();

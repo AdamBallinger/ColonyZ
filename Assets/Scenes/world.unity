@@ -4625,7 +4625,6 @@ MonoBehaviour:
     type: 3}
   itemEntityPrefab: {fileID: 4256605384353934779, guid: cf0a6cd49092b8d4cbe1a2441751f071,
     type: 3}
-  tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
 --- !u!114 &1920970006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4638,6 +4637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbb744aebf340c0b61c13d264e51773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileTypesTexture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
 --- !u!33 &1920970007
 MeshFilter:
   m_ObjectHideFlags: 0
