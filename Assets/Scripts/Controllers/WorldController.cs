@@ -12,11 +12,10 @@ using Models.Map.Tiles.Objects;
 using Models.Sprites;
 using Models.TimeSystem;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace Controllers
 {
-    [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+    [RequireComponent(typeof(WorldRenderer))]
     public class WorldController : MonoBehaviour
     {
         public static WorldController Instance { get; private set; }
@@ -46,9 +45,8 @@ namespace Controllers
         [SerializeField]
         private Texture2D tileTypesTexture;
 
-        private MeshFilter meshFilter;
-        private MeshRenderer meshRenderer;
-        
+        private WorldRenderer worldRenderer;
+
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
         private Dictionary<LivingEntity, GameObject> livingEntityObjects;
         private Dictionary<ItemEntity, GameObject> itemEntityObjects;
@@ -68,6 +66,8 @@ namespace Controllers
             spriteLoader.Load();
             objectsLoader.Load();
             itemsLoader.Load();
+
+            Instance.worldRenderer = GetComponent<WorldRenderer>();
 
             SliceTileTypesTexture();
             NewWorld();
@@ -100,9 +100,9 @@ namespace Controllers
             World.Instance.onEntityRemoved += OnEntityRemoved;
             
             JobManager.Create();
-            NodeGraph.Create(World.Instance.Width, World.Instance.Height);
+            NodeGraph.Create(worldWidth, worldHeight);
             
-            GenerateWorldMesh();
+            worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
 
             foreach (var tile in World.Instance)
             {
@@ -145,82 +145,6 @@ namespace Controllers
             {
                 TimeManager.Instance.Toggle();
             }
-        }
-
-        /// <summary>
-        /// Generates the mesh for the world.
-        /// </summary>
-        private void GenerateWorldMesh()
-        {
-            if (meshFilter == null)
-            {
-                meshFilter = GetComponent<MeshFilter>();
-                meshRenderer = GetComponent<MeshRenderer>();
-            }
-            else
-            {
-                // if mesh filter isn't null, then the mesh must be already generated, so abort.
-                return;
-            }
-
-            var mesh = new Mesh
-            {
-                name = "World Mesh",
-                indexFormat = IndexFormat.UInt16
-            };
-
-            var verts = new Vector3[4];
-            verts[0] = new Vector3(-0.5f, -0.5f);
-            verts[1] = new Vector3(-0.5f, worldHeight - 0.5f);
-            verts[2] = new Vector3(worldWidth - 0.5f, worldHeight - 0.5f);
-            verts[3] = new Vector3(worldWidth - 0.5f, -0.5f);
-
-            var tris = new int[6];
-            tris[0] = 0;
-            tris[1] = 1;
-            tris[2] = 3;
-            tris[3] = 1;
-            tris[4] = 2;
-            tris[5] = 3;
-            
-            var uv = new Vector2[4];
-            uv[0] = new Vector2(0, 0);
-            uv[1] = new Vector2(0, 1);
-            uv[2] = new Vector2(1, 1);
-            uv[3] = new Vector2(1, 0);
-
-            mesh.vertices = verts;
-            mesh.triangles = tris;
-            mesh.uv = uv;
-            
-            meshFilter.mesh = mesh;
-            meshRenderer.material.mainTexture = GenerateMapTexture();
-            meshRenderer.material.SetInt("_WorldWidth", worldWidth);
-            meshRenderer.material.SetInt("_WorldHeight", worldHeight);
-        }
-        
-        private Texture2D GenerateMapTexture()
-        {
-            var texture = new Texture2D(worldWidth, worldHeight, TextureFormat.ARGB32, false)
-            {
-                filterMode = FilterMode.Point
-            };
-            
-            var colors = new Color[texture.width * texture.height];
-            for (var x = 0; x < worldWidth; x++)
-            {
-                for (var y = 0; y < worldHeight; y++)
-                {
-                    var index = x * worldWidth + y;
-                    var tileIndex = World.Instance.GetTileAt(x, y).TileDefinition.TextureIndex;
-                    colors[index] = new Color(tileIndex, tileIndex, tileIndex);
-                }
-            }
-            
-            texture.SetPixels(colors);
-            texture.Apply();
-
-            return texture;
         }
 
         /// <summary>
@@ -286,7 +210,7 @@ namespace Controllers
         /// <param name="_tile"></param>
         public void OnTileDefinitionChanged(Tile _tile)
         {
-            meshRenderer.material.mainTexture = GenerateMapTexture();
+            worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
         }
 
         /// <summary>
