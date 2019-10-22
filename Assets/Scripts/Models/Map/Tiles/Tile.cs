@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Controllers;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Jobs;
 using Models.Map.Pathing;
 using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
+using Models.Sprites;
 using Models.UI;
 using UnityEngine;
 
@@ -228,7 +228,7 @@ namespace Models.Map.Tiles
 
         public Sprite GetSelectionIcon()
         {
-            return WorldController.Instance.TileTypesSprites[TileDefinition.TextureIndex];
+            return SpriteCache.GetSprite("Tiles", TileDefinition.TextureIndex);
         }
 
         public string GetSelectionName()

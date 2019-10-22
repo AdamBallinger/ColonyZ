@@ -19,8 +19,6 @@ namespace Controllers
     public class WorldController : MonoBehaviour
     {
         public static WorldController Instance { get; private set; }
-        
-        public List<Sprite> TileTypesSprites { get; private set; }
 
         [SerializeField]
         private int worldWidth = 100;
@@ -42,9 +40,6 @@ namespace Controllers
         [SerializeField]
         private GameObject itemEntityPrefab;
 
-        [SerializeField]
-        private Texture2D tileTypesTexture;
-
         private WorldRenderer worldRenderer;
 
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
@@ -57,8 +52,7 @@ namespace Controllers
         {
             Instance = this;
             Instance._transform = Instance.transform;
-
-            Instance.TileTypesSprites = new List<Sprite>();
+            
             Instance.tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             Instance.livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
             Instance.itemEntityObjects = new Dictionary<ItemEntity, GameObject>();
@@ -67,27 +61,9 @@ namespace Controllers
             objectsLoader.Load();
             itemsLoader.Load();
 
-            Instance.worldRenderer = GetComponent<WorldRenderer>();
+            worldRenderer = GetComponent<WorldRenderer>();
 
-            SliceTileTypesTexture();
             NewWorld();
-        }
-
-        /// <summary>
-        /// Cuts the tile types texture up into individual sprites.
-        /// </summary>
-        private void SliceTileTypesTexture()
-        {
-            TileTypesSprites.Clear();
-
-            for (var y = 0; y < tileTypesTexture.height / 32; y++)
-            {
-                for (var x = 0; x < tileTypesTexture.width / 32; x++)
-                {
-                    var sprite = Sprite.Create(tileTypesTexture, new Rect(x, y, 32, 32), new Vector2(x + 32, y + 32));
-                    TileTypesSprites.Add(sprite);
-                }
-            }
         }
 
         private void NewWorld()

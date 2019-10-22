@@ -1,4 +1,5 @@
 using Models.Map;
+using Models.Sprites;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -7,8 +8,16 @@ namespace Controllers.Render
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class WorldRenderer : MonoBehaviour
     {
+        [SerializeField]
+        private Texture2D tileTypesTexture;
+        
         private MeshRenderer meshRenderer;
         private MeshFilter meshFilter;
+        
+        private void Start()
+        {
+            SliceTileTypesTexture();
+        }
 
         /// <summary>
         /// Generates the mesh for the world.
@@ -81,5 +90,19 @@ namespace Controllers.Render
             return texture;
         }
         
+        /// <summary>
+        /// Cuts the tile types texture up into individual sprites.
+        /// </summary>
+        private void SliceTileTypesTexture()
+        {
+            for (var y = 0; y < tileTypesTexture.height / 32; y++)
+            {
+                for (var x = 0; x < tileTypesTexture.width / 32; x++)
+                {
+                    var sprite = Sprite.Create(tileTypesTexture, new Rect(x, y, 32, 32), new Vector2(x + 32, y + 32));
+                    SpriteCache.AddSprite("Tiles", sprite);
+                }
+            }
+        }
     }
 }
