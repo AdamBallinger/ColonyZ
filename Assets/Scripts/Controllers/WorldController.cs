@@ -32,28 +32,26 @@ namespace Controllers
         private int treeSpawnChance = 25;
         
         [SerializeField]
+        private SpriteLoader spriteLoader;
+        [SerializeField]
+        private TileObjectsLoader objectsLoader;
+        [SerializeField]
+        private ItemLoader itemsLoader;
+        
+        [SerializeField]
         private GameObject livingEntityPrefab;
-
         [SerializeField]
         private GameObject itemEntityPrefab;
-
-        private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
-        private Dictionary<LivingEntity, GameObject> livingEntityObjects;
-        private Dictionary<ItemEntity, GameObject> itemEntityObjects;
 
         [SerializeField]
         private Texture2D tileTypesTexture;
 
-        [SerializeField]
-        private SpriteLoader spriteLoader;
-
-        [SerializeField]
-        private TileObjectsLoader objectsLoader;
-
-        [SerializeField]
-        private ItemLoader itemsLoader;
-
         private MeshFilter meshFilter;
+        private MeshRenderer meshRenderer;
+        
+        private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
+        private Dictionary<LivingEntity, GameObject> livingEntityObjects;
+        private Dictionary<ItemEntity, GameObject> itemEntityObjects;
 
         private Transform _transform;
 
@@ -74,7 +72,7 @@ namespace Controllers
             SliceTileTypesTexture();
             NewWorld();
         }
-        
+
         /// <summary>
         /// Cuts the tile types texture up into individual sprites.
         /// </summary>
@@ -142,7 +140,7 @@ namespace Controllers
                     World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
                 }
             }
-            
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 TimeManager.Instance.Toggle();
@@ -150,13 +148,14 @@ namespace Controllers
         }
 
         /// <summary>
-        /// Generates the full tilemap mesh for the world
+        /// Generates the mesh for the world.
         /// </summary>
         private void GenerateWorldMesh()
         {
             if (meshFilter == null)
             {
                 meshFilter = GetComponent<MeshFilter>();
+                meshRenderer = GetComponent<MeshRenderer>();
             }
             else
             {
@@ -167,70 +166,61 @@ namespace Controllers
             var mesh = new Mesh
             {
                 name = "World Mesh",
-                indexFormat = IndexFormat.UInt32
+                indexFormat = IndexFormat.UInt16
+            };
+
+            var verts = new Vector3[4];
+            verts[0] = new Vector3(-0.5f, -0.5f);
+            verts[1] = new Vector3(-0.5f, worldHeight - 0.5f);
+            verts[2] = new Vector3(worldWidth - 0.5f, worldHeight - 0.5f);
+            verts[3] = new Vector3(worldWidth - 0.5f, -0.5f);
+
+            var tris = new int[6];
+            tris[0] = 0;
+            tris[1] = 1;
+            tris[2] = 3;
+            tris[3] = 1;
+            tris[4] = 2;
+            tris[5] = 3;
+            
+            var uv = new Vector2[4];
+            uv[0] = new Vector2(0, 0);
+            uv[1] = new Vector2(0, 1);
+            uv[2] = new Vector2(1, 1);
+            uv[3] = new Vector2(1, 0);
+
+            mesh.vertices = verts;
+            mesh.triangles = tris;
+            mesh.uv = uv;
+            
+            meshFilter.mesh = mesh;
+            meshRenderer.material.mainTexture = GenerateMapTexture();
+            meshRenderer.material.SetInt("_WorldWidth", worldWidth);
+            meshRenderer.material.SetInt("_WorldHeight", worldHeight);
+        }
+        
+        private Texture2D GenerateMapTexture()
+        {
+            var texture = new Texture2D(worldWidth, worldHeight, TextureFormat.ARGB32, false)
+            {
+                filterMode = FilterMode.Point
             };
             
-            var combiner = new CombineInstance[World.Instance.Size];
-
+            var colors = new Color[texture.width * texture.height];
             for (var x = 0; x < worldWidth; x++)
             {
                 for (var y = 0; y < worldHeight; y++)
                 {
-                    var tile = World.Instance.GetTileAt(x, y);
-
-                    var tileMesh = new Mesh();
-                    
-                    var tileVerts = new Vector3[4];
-                    tileVerts[0] = new Vector2(x - 0.5f, y - 0.5f);
-                    tileVerts[1] = new Vector2(x - 0.5f, y + 0.5f);
-                    tileVerts[2] = new Vector2(x + 0.5f, y + 0.5f);
-                    tileVerts[3] = new Vector2(x + 0.5f, y - 0.5f);
-                    
-                    var tileUV = new Vector2[4];
-
-                    // Calculate the number of tiles along the X and Y of the texture
-                    var textureTileWidth = tileTypesTexture.width / 32;
-                    var textureTileHeight = tileTypesTexture.height / 32;
-
-                    var uSize = 1.0f / textureTileWidth; 
-                    var vSize = 1.0f / textureTileHeight;
-
-                    // Get the index of the tile in the texture
-                    var tileIndex = tile.TileDefinition.TextureIndex;
-
-                    // Calculate tile X and Y inside the texture
-                    var tileX = tileIndex % textureTileWidth;
-                    var tileY = (tileIndex - tileX) / textureTileWidth;
-
-                    // Generate UV for the bottom left vertex of the tile
-                    var u = uSize * tileX;
-                    // invert the v as it starts at lower left rather than top left. Minus 1 so v points to bottom vertex
-                    var v = vSize * (textureTileHeight - tileY - 1);
-                    
-                    // Set the UV for the tile quad
-                    tileUV[0] = new Vector2(u, v);
-                    tileUV[1] = new Vector2(u, v + vSize);
-                    tileUV[2] = new Vector2(u + uSize, v + vSize);
-                    tileUV[3] = new Vector2(u + uSize, v);
-
-                    var tileTris = new int[6];
-                    tileTris[0] = 0;
-                    tileTris[1] = 1;
-                    tileTris[2] = 3;
-                    tileTris[3] = 1;
-                    tileTris[4] = 2;
-                    tileTris[5] = 3;
-
-                    tileMesh.vertices = tileVerts;
-                    tileMesh.triangles = tileTris;
-                    tileMesh.uv = tileUV;
-
-                    combiner[x * worldWidth + y].mesh = tileMesh;
+                    var index = x * worldWidth + y;
+                    var tileIndex = World.Instance.GetTileAt(x, y).TileDefinition.TextureIndex;
+                    colors[index] = new Color(tileIndex, tileIndex, tileIndex);
                 }
             }
+            
+            texture.SetPixels(colors);
+            texture.Apply();
 
-            mesh.CombineMeshes(combiner, true, false);
-            meshFilter.mesh = mesh;
+            return texture;
         }
 
         /// <summary>
@@ -241,7 +231,7 @@ namespace Controllers
         {
             foreach (var tile in _tile.Neighbours)
             {
-                if (tile?.Object != null)
+                if (tile.HasObject)
                 {
                     tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
                 }
@@ -296,7 +286,7 @@ namespace Controllers
         /// <param name="_tile"></param>
         public void OnTileDefinitionChanged(Tile _tile)
         {
-            // TODO: Update world mesh
+            meshRenderer.material.mainTexture = GenerateMapTexture();
         }
 
         /// <summary>

@@ -1,8 +1,11 @@
-﻿Shader "Unlit/WorldMesh"
+﻿Shader "ColonyZ/WorldMesh"
 {
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "white" {}
+		[HideInInspector] _MainTex ("Texture", 2D) = "white" {}
+		[NoScaleOffset] _TilesTex ("Tile Textures", 2D) = "white" {}
+		[HideInInspector] _WorldWidth ("World Width", Int) = 0
+		[HideInInspector] _WorldHeight ("World Height", Int) = 0
 	}
 	SubShader
 	{
@@ -14,8 +17,6 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			// make fog work
-			#pragma multi_compile_fog
 			
 			#include "UnityCG.cginc"
 
@@ -28,28 +29,44 @@
 			struct v2f
 			{
 				float2 uv : TEXCOORD0;
-				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
 			};
 
 			sampler2D _MainTex;
-			float4 _MainTex_ST;
+			sampler2D _TilesTex;
+			
+			float4 _TilesTex_TexelSize;
+			
+			int _WorldWidth;
+			int _WorldHeight;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				UNITY_TRANSFER_FOG(o,o.vertex);
+				o.uv = v.uv;
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				// sample the texture
-				fixed4 col = tex2D(_MainTex, i.uv);
-				// apply fog
-				UNITY_APPLY_FOG(i.fogCoord, col);
+		        int numTiles = 2; // TODO: Auto detect this with _TilesTex_TexelSize.
+
+			    fixed4 sample = tex2D(_MainTex, i.uv);
+			    uint index = sample.r;		    
+			    
+			    // uv positions for tile tex.
+			    uint xPos = index % numTiles;
+			    uint yPos = 0;
+			    
+			    float2 uv = float2(xPos, yPos) / numTiles;
+			    
+			    float xOff = frac(i.uv.x * _WorldWidth) / numTiles;
+			    float yOff = frac(i.uv.y * _WorldHeight) / 1;    
+			    
+			    uv += float2(xOff, yOff);   
+			    
+				fixed4 col = tex2D(_TilesTex, uv);
 				return col;
 			}
 			ENDCG
