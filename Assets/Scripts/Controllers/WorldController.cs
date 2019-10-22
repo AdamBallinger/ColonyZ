@@ -79,7 +79,7 @@ namespace Controllers
 
             foreach (var tile in World.Instance)
             {
-                if (Random.Range(1, 100) <= treeSpawnChance || tile.X == 0 || tile.X == worldWidth - 1 
+                if (Random.Range(0, 100) <= treeSpawnChance || tile.X == 0 || tile.X == worldWidth - 1 
                     || tile.Y == 0 || tile.Y == worldHeight - 1)
                 {
                     tile.SetObject(TileObjectCache.GetObject("Tree"));
