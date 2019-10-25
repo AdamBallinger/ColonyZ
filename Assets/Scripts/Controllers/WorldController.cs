@@ -76,7 +76,7 @@ namespace Controllers
             NodeGraph.Create(worldWidth, worldHeight);
             
             worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
-
+            
             foreach (var tile in World.Instance)
             {
                 if (Random.Range(0, 100) <= treeSpawnChance || tile.X == 0 || tile.X == worldWidth - 1 
@@ -85,9 +85,6 @@ namespace Controllers
                     tile.SetObject(TileObjectCache.GetObject("Tree"));
                 }
             }
-
-            World.Instance.SpawnCharacter(World.Instance.GetRandomTile(worldWidth / 2 - 5, worldHeight / 2 - 5,
-                                                                       worldWidth / 2 + 5, worldHeight / 2 + 5));
         }
 
         private void Update()
