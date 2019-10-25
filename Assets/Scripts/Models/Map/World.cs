@@ -67,7 +67,7 @@ namespace Models.Map
             TileManager.LoadDefinitions();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
 
-            Instance.SpawnCharacter(Instance.GetRandomTile(_width / 2 - 5, _height / 2 - 5, _width / 2 + 5, _height / 2 + 5));
+            Instance.SpawnCharacter(Instance.GetRandomTileAround(_width / 2, _height / 2, 5));
         }
 
         public void Update()
@@ -164,6 +164,18 @@ namespace Models.Map
         {
             return GetTileAt(UnityEngine.Random.Range(0, Width), UnityEngine.Random.Range(0, Height));
         }
+        
+        /// <summary>
+        /// Return a random tile within the given radius around the given position.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <param name="_radius"></param>
+        /// <returns></returns>
+        public Tile GetRandomTileAround(int _x, int _y, int _radius)
+        {
+            return GetRandomTile(_x - _radius, _y - _radius, _x + _radius, _y + _radius);
+        }
 
         /// <summary>
         /// Returns a random world tile with a specified range. The range will be automatically clamped to
@@ -174,7 +186,7 @@ namespace Models.Map
         /// <param name="_xRangeMax"></param>
         /// <param name="_yRangeMax"></param>
         /// <returns></returns>
-        public Tile GetRandomTile(int _xRangeMin, int _yRangeMin, int _xRangeMax, int _yRangeMax)
+        private Tile GetRandomTile(int _xRangeMin, int _yRangeMin, int _xRangeMax, int _yRangeMax)
         {
             _xRangeMin = Mathf.Clamp(_xRangeMin, 0, Width);
             _xRangeMax = Mathf.Clamp(_xRangeMax, 0, Width);
@@ -303,7 +315,6 @@ namespace Models.Map
             }
 
             return true;
-
         }
 
         #region IEnumerable Implementation
