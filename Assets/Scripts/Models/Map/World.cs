@@ -66,8 +66,6 @@ namespace Models.Map
             
             TileManager.LoadDefinitions();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
-
-            Instance.SpawnCharacter(Instance.GetRandomTileAround(_width / 2, _height / 2, 5));
         }
 
         public void Update()

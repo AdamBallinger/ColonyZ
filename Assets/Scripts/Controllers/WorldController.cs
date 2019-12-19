@@ -72,6 +72,8 @@ namespace Controllers
             World.Instance.onEntitySpawn += OnEntitySpawn;
             World.Instance.onEntityRemoved += OnEntityRemoved;
             
+            World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2, worldHeight / 2, 5));
+
             JobManager.Create();
             NodeGraph.Create(worldWidth, worldHeight);
             
