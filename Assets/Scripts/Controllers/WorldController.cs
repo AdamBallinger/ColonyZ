@@ -60,13 +60,15 @@ namespace Controllers
 
             worldRenderer = GetComponent<WorldRenderer>();
 
-            NewWorld();
+            SetupWorld();
         }
 
-        private void NewWorld()
+        private void SetupWorld()
         {
             RoomManager.Create();
             TimeManager.Create(6, 30, 1);
+            JobManager.Create();
+            NodeGraph.Create(worldWidth, worldHeight);
 
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;
@@ -74,9 +76,6 @@ namespace Controllers
             
             World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2, worldHeight / 2, 5));
 
-            JobManager.Create();
-            NodeGraph.Create(worldWidth, worldHeight);
-            
             worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
             
             foreach (var tile in World.Instance)
