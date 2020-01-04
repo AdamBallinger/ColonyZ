@@ -66,8 +66,8 @@ namespace Controllers
         private void NewWorld()
         {
             RoomManager.Create();
-            TimeManager.Create(8, 0, 1);
-            
+            TimeManager.Create(6, 30, 1);
+
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;
             World.Instance.onEntityRemoved += OnEntityRemoved;
