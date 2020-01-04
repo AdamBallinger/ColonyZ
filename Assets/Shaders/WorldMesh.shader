@@ -53,7 +53,7 @@
 		        int numTiles = 2; // TODO: Auto detect this with _TilesTex_TexelSize.
 
 			    fixed4 sample = tex2D(_MainTex, i.uv);
-			    uint index = sample.r;		    
+			    uint index = sample.r;
 			    
 			    // uv positions for tile tex.
 			    uint xPos = index % numTiles;
@@ -62,7 +62,7 @@
 			    float2 uv = float2(xPos, yPos) / numTiles;
 			    
 			    float xOff = frac(i.uv.x * _WorldWidth) / numTiles;
-			    float yOff = frac(i.uv.y * _WorldHeight) / 1;    
+			    float yOff = frac(i.uv.y * _WorldHeight);    
 			    
 			    uv += float2(xOff, yOff);   
 			    
