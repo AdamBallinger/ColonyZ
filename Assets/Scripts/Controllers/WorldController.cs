@@ -93,7 +93,7 @@ namespace Controllers
             TimeManager.Instance.Update();
             JobManager.Instance.Update();
             World.Instance.Update();
-            
+
             foreach (var pair in livingEntityObjects)
             {
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);

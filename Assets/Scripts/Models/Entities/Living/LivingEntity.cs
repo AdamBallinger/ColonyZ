@@ -1,5 +1,4 @@
 using Models.AI;
-using Models.AI.Actions;
 using Models.Map.Tiles;
 using Models.Sprites;
 using UnityEngine;
@@ -18,19 +17,15 @@ namespace Models.Entities.Living
         
         protected int Health { get; set; }
 
-        protected ActionManager actionManager;
-
         protected LivingEntity(Tile _tile) : base(_tile)
         {
             MovementSpeed = 1.0f;
             Health = 100;
-            actionManager = new ActionManager();
             Motor = new AIMotor(this);
         }
 
         public override void Update()
         {
-            actionManager.Update();
             Motor.Update();
         }
 
