@@ -1,4 +1,4 @@
-using Models.Jobs;
+using Models.AI.Jobs;
 using TMPro;
 using UnityEngine;
 

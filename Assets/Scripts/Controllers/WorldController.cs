@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Controllers.Loaders;
 using Controllers.Render;
+using Models.AI.Jobs;
 using Models.Entities;
 using Models.Entities.Living;
-using Models.Jobs;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Rooms;

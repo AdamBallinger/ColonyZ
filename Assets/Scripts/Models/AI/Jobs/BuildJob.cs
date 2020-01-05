@@ -1,7 +1,7 @@
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 
-namespace Models.Jobs
+namespace Models.AI.Jobs
 {
     public class BuildJob : Job
     {

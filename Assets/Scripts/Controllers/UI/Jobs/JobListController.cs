@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Models.Jobs;
+using Models.AI.Jobs;
 using UnityEngine;
 
 namespace Controllers.UI.Jobs

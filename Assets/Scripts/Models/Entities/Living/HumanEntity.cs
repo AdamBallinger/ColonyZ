@@ -1,4 +1,4 @@
-﻿using Models.Jobs;
+﻿using Models.AI.Jobs;
 using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;

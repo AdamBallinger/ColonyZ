@@ -2,7 +2,7 @@ using Models.Entities.Living;
 using Models.Map.Tiles;
 using Models.TimeSystem;
 
-namespace Models.Jobs
+namespace Models.AI.Jobs
 {
     public abstract class Job
     {

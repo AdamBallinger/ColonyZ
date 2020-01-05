@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Models.Jobs;
+using Models.AI.Jobs;
 using Models.Map;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;

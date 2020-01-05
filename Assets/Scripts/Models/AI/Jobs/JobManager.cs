@@ -6,7 +6,7 @@ using Models.Map;
 using Models.Map.Pathing;
 using Models.Map.Tiles;
 
-namespace Models.Jobs
+namespace Models.AI.Jobs
 {
     public class JobManager
     {

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Models.AI.Jobs;
 using Models.Entities;
 using Models.Entities.Living;
-using Models.Jobs;
 using Models.Map.Pathing;
 using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
