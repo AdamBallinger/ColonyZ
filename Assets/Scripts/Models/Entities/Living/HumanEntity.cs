@@ -31,8 +31,7 @@ namespace Models.Entities.Living
             {
                 Motor.SetTargetTile(World.Instance.GetRandomTile());
             }
-
-            // TODO: Should maybe use action system for handling jobs?
+            
             if (CurrentJob == null) return;
 
             // Try find a new working tile if the current tile is no longer enterable.
