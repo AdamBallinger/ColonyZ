@@ -258,7 +258,7 @@ namespace Models.Map.Tiles
 
         public ItemStack GetItem()
         {
-            return Item.ItemStack;
+            return Item?.ItemStack;
         }
     }
 }
