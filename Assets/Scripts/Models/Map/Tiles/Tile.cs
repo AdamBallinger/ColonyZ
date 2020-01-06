@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Models.AI.Jobs;
 using Models.Entities;
 using Models.Entities.Living;
+using Models.Inventory;
+using Models.Items;
 using Models.Map.Pathing;
 using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
@@ -12,7 +14,7 @@ using UnityEngine;
 
 namespace Models.Map.Tiles
 {
-    public class Tile : ISelectable
+    public class Tile : ISelectable, IInventory
     {
         public int X { get; }
         public int Y { get; }
@@ -169,6 +171,8 @@ namespace Models.Map.Tiles
             return HasObject ? Object.Enterability : TileEnterability.Immediate;
         }
         
+        #region Tile Exposure
+        
         /// <summary>
         /// Returns if this tile is in direct LOS of the edge of the map.
         /// </summary>
@@ -223,6 +227,8 @@ namespace Models.Map.Tiles
 
             return right.ExposedRight();
         }
+        
+        #endregion
 
         #region ISelectable Implementation
 
@@ -249,5 +255,10 @@ namespace Models.Map.Tiles
         }
         
         #endregion
+
+        public ItemStack GetItem()
+        {
+            return Item.ItemStack;
+        }
     }
 }
