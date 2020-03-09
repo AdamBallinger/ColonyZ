@@ -15,7 +15,7 @@ namespace Controllers
     public enum MouseMode
     {
         Select,
-        Job
+        Process
     }
 
     public class MouseController : MonoBehaviour
@@ -137,7 +137,7 @@ namespace Controllers
                 }
             }
 
-            if (Mode == MouseMode.Job)
+            if (Mode == MouseMode.Process)
             {
                 // Calculate size of drag area. Add one as the world starts at 0, 0
                 selectionSize.x = _dragData.EndX - _dragData.StartX + 1.0f;
@@ -290,9 +290,9 @@ namespace Controllers
                 }
             }
 
-            if (BuildModeController.Mode == BuildMode.Object)
+            if (BuildModeController.Mode == BuildMode.Object || BuildModeController.Mode == BuildMode.Area)
             {
-                BuildModeController.Process(tiles.Cast<Tile>());
+                BuildModeController.Process(tiles.Cast<Tile>(), _dragData.StartX, _dragData.StartY, _dragData.SizeX, _dragData.SizeY);
             }
             else
             {

@@ -5,6 +5,7 @@ using Models.Entities;
 using Models.Entities.Living;
 using Models.Inventory;
 using Models.Items;
+using Models.Map.Areas;
 using Models.Map.Pathing;
 using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
@@ -35,6 +36,11 @@ namespace Models.Map.Tiles
         /// Reference to the current room this tile is assigned too.
         /// </summary>
         public Room Room { get; set; }
+        
+        /// <summary>
+        /// Reference to the current area this tile is assigned too.
+        /// </summary>
+        public Area Area { get; set; }
 
         /// <summary>
         /// The definition of this tile.
@@ -246,6 +252,7 @@ namespace Models.Map.Tiles
         {
             return $"Position: ({X}, {Y})\n" +
                    $"Room: {(Room != null ? Room.RoomID.ToString() : "None")}\n" +
+                   $"Area: {(Area != null ? Area.AreaName : "None")}" +
                    $"Exposed: {IsExposedToOutside()}\n";
         }
         

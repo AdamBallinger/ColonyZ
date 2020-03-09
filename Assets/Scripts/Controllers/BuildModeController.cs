@@ -2,6 +2,7 @@
 using System.Linq;
 using Models.AI.Jobs;
 using Models.Map;
+using Models.Map.Areas;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Controllers
 {
     public enum BuildMode
     {
+        Area,
         Object,
         Demolish,
         Fell,
@@ -27,7 +29,9 @@ namespace Controllers
         /// <summary>
         /// Reference to the object that will be built on a tile when in Object build mode.
         /// </summary>
-        public TileObject ObjectToBuild { get; set; }
+        public TileObject ObjectToBuild { get; private set; }
+
+        private Area areaToBuild;
 
         public BuildModeController()
         {
@@ -38,10 +42,23 @@ namespace Controllers
         /// Processes the given tiles based on the current mode.
         /// </summary>
         /// <param name="_tiles"></param>
-        public void Process(IEnumerable<Tile> _tiles)
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <param name="_width"></param>
+        /// <param name="_height"></param>
+        public void Process(IEnumerable<Tile> _tiles, int _x = 0, int _y = 0, int _width = 0, int _height = 0)
         {
             switch (Mode)
             {
+                case BuildMode.Area:
+                    areaToBuild = new StockpileArea(_x, _y, _width, _height);
+                    
+                    if (areaToBuild.IsValidSize())
+                    {
+                        HandleBuildArea(_tiles);
+                    }
+                    
+                    break;
                 case BuildMode.Object:
                     HandleBuild(_tiles);
                     break;
@@ -56,6 +73,24 @@ namespace Controllers
             }
         }
 
+        private void HandleBuildArea(IEnumerable<Tile> _tiles)
+        {
+            var enumerable = _tiles as Tile[] ?? _tiles.ToArray();
+            
+            foreach (var tile in enumerable)
+            {
+                if (tile.Area != null)
+                {
+                    return;
+                }
+            }
+
+            foreach (var tile in enumerable)
+            {
+                tile.Area = areaToBuild;
+            }
+        }
+        
         private void HandleBuild(IEnumerable<Tile> _tiles)
         {
             var jobs = new List<Job>();
@@ -107,13 +142,19 @@ namespace Controllers
             return false;
         }
 
+        public void SetAreaMode(AreaType _type)
+        {
+            MouseController.Instance.Mode = MouseMode.Process;
+            Mode = BuildMode.Area;
+        }
+        
         /// <summary>
         /// Sets the controller to build the provided tile object.
         /// </summary>
         /// <param name="_object"></param>
         public void SetBuildMode(TileObject _object)
         {
-            MouseController.Instance.Mode = MouseMode.Job;
+            MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Object;
             ObjectToBuild = _object;
         }
@@ -123,25 +164,25 @@ namespace Controllers
         /// </summary>
         public void SetDemolishMode()
         {
-            MouseController.Instance.Mode = MouseMode.Job;
+            MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Demolish;
         }
         
         public void SetFellMode()
         {
-            MouseController.Instance.Mode = MouseMode.Job;
+            MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Fell;
         }
         
         public void SetMineMode()
         {
-            MouseController.Instance.Mode = MouseMode.Job;
+            MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Mine;
         }
         
         public void SetHarvestMode()
         {
-            MouseController.Instance.Mode = MouseMode.Job;
+            MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Harvest;
         }
     }
