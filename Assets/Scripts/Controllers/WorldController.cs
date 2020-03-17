@@ -18,25 +18,17 @@ namespace Controllers
     [RequireComponent(typeof(WorldRenderer))]
     public class WorldController : MonoBehaviour
     {
-        [SerializeField]
-        private int worldWidth = 100;
-        [SerializeField]
-        private int worldHeight = 100;
+        [SerializeField] private int worldWidth = 100;
+        [SerializeField] private int worldHeight = 100;
 
-        [SerializeField, Range(0, 100)]
-        private int treeSpawnChance = 25;
-        
-        [SerializeField]
-        private SpriteLoader spriteLoader;
-        [SerializeField]
-        private TileObjectsLoader objectsLoader;
-        [SerializeField]
-        private ItemLoader itemsLoader;
-        
-        [SerializeField]
-        private GameObject livingEntityPrefab;
-        [SerializeField]
-        private GameObject itemEntityPrefab;
+        [SerializeField, Range(0, 100)] private int treeSpawnChance = 25;
+
+        [SerializeField] private SpriteLoader spriteLoader;
+        [SerializeField] private TileObjectsLoader objectsLoader;
+        [SerializeField] private ItemLoader itemsLoader;
+
+        [SerializeField] private GameObject livingEntityPrefab;
+        [SerializeField] private GameObject itemEntityPrefab;
 
         private WorldRenderer worldRenderer;
 
@@ -49,7 +41,7 @@ namespace Controllers
         private void Awake()
         {
             _transform = transform;
-            
+
             tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
             itemEntityObjects = new Dictionary<ItemEntity, GameObject>();
@@ -73,14 +65,14 @@ namespace Controllers
             World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;
             World.Instance.onEntityRemoved += OnEntityRemoved;
-            
+
             World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2, worldHeight / 2, 5));
 
             worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
-            
+
             foreach (var tile in World.Instance)
             {
-                if (Random.Range(0, 100) <= treeSpawnChance || tile.X == 0 || tile.X == worldWidth - 1 
+                if (Random.Range(1, 100) <= treeSpawnChance || tile.X == 0 || tile.X == worldWidth - 1
                     || tile.Y == 0 || tile.Y == worldHeight - 1)
                 {
                     tile.SetObject(TileObjectCache.GetObject("Tree"));
@@ -132,7 +124,7 @@ namespace Controllers
                 }
             }
         }
-        
+
         /// <summary>
         /// Creates the game object for a tile object, and adds it the renderer map.
         /// </summary>
@@ -141,7 +133,7 @@ namespace Controllers
         {
             var object_GO = new GameObject("Tile Object");
             var object_SR = object_GO.AddComponent<SpriteRenderer>();
-            
+
             object_GO.transform.position = new Vector2(_tile.X, _tile.Y);
             object_GO.transform.SetParent(_transform);
 
@@ -158,20 +150,20 @@ namespace Controllers
             {
                 return;
             }
-            
-            if(!tileObjectRenderers.ContainsKey(_tile))
+
+            if (!tileObjectRenderers.ContainsKey(_tile))
             {
                 CreateTileObject(_tile);
             }
 
             var spriteRenderer = tileObjectRenderers[_tile];
             spriteRenderer.sprite = SpriteCache.GetSprite(_tile.Object);
-            
+
             if (_tile.HasObject)
             {
                 spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
             }
-            
+
             UpdateTileNeighbourSprites(_tile);
         }
 
@@ -203,11 +195,11 @@ namespace Controllers
                 var item_GO = Instantiate(itemEntityPrefab, _transform);
                 item_GO.transform.position = new Vector2(item.X, item.Y);
                 item_GO.GetComponent<SpriteRenderer>().sprite = SpriteCache.GetSprite(item.ItemStack.Item);
-                
+
                 itemEntityObjects.Add(item, item_GO);
             }
         }
-        
+
         /// <summary>
         /// Event for when an entity gets removed from the world.
         /// </summary>
@@ -217,14 +209,14 @@ namespace Controllers
             if (_entity is LivingEntity living)
             {
                 if (!livingEntityObjects.ContainsKey(living)) return;
-                
+
                 Destroy(livingEntityObjects[living]);
                 livingEntityObjects.Remove(living);
             }
             else if (_entity is ItemEntity item)
             {
                 if (!itemEntityObjects.ContainsKey(item)) return;
-                
+
                 Destroy(itemEntityObjects[item]);
                 itemEntityObjects.Remove(item);
             }

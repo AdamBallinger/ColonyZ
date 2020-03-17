@@ -4847,7 +4847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldWidth: 64
   worldHeight: 64
-  treeSpawnChance: 4
+  treeSpawnChance: 1
   spriteLoader: {fileID: 1523355955}
   objectsLoader: {fileID: 1523355956}
   itemsLoader: {fileID: 1523355957}
@@ -5782,7 +5782,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1153445049}
   m_HandleRect: {fileID: 1153445048}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
