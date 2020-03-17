@@ -21,22 +21,22 @@ namespace Models.Map.Tiles
         public int Y { get; }
 
         public Vector2 Position => new Vector2(X, Y);
-        
+
         /// <summary>
         /// List of living entities currently occupying this tile.
         /// </summary>
         public List<LivingEntity> LivingEntities { get; private set; }
-        
+
         /// <summary>
         /// Reference to any job for this tile.
         /// </summary>
         public Job CurrentJob { get; set; }
-        
+
         /// <summary>
         /// Reference to the current room this tile is assigned too.
         /// </summary>
         public Room Room { get; set; }
-        
+
         /// <summary>
         /// Reference to the current area this tile is assigned too.
         /// </summary>
@@ -57,12 +57,12 @@ namespace Models.Map.Tiles
                     onTileDefinitionChanged?.Invoke(this);
             }
         }
-        
+
         /// <summary>
         /// Event called when the tile has changed (Object added or removed etc.).
         /// </summary>
         public event Action<Tile> onTileChanged;
-        
+
         /// <summary>
         /// Event called when the tile definition has changed.
         /// </summary>
@@ -72,7 +72,7 @@ namespace Models.Map.Tiles
         /// Contains all neighbours for this tile. (N, NE, E, SE, S, SW, W, NW)
         /// </summary>
         public List<Tile> Neighbours { get; }
-        
+
         /// <summary>
         /// Contains all directly connected neighbours for this tile. (N, E, S, W)
         /// </summary>
@@ -87,7 +87,7 @@ namespace Models.Map.Tiles
         /// Installed tile object for this tile.
         /// </summary>
         public TileObject Object { get; private set; }
-        
+
         /// <summary>
         /// The current Item on this tile.
         /// </summary>
@@ -129,12 +129,12 @@ namespace Models.Map.Tiles
             HasObject = true;
             World.Instance.Objects.Add(_object);
             NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
-            
+
             if (_object.EnclosesRoom)
             {
                 RoomManager.Instance.CheckForRoom(this);
             }
-            
+
             onTileChanged?.Invoke(this);
         }
 
@@ -152,13 +152,13 @@ namespace Models.Map.Tiles
             HasObject = false;
             NodeGraph.Instance.UpdateGraph(X, Y);
             onTileChanged?.Invoke(this);
-            
+
             if (shouldCheckForRoom)
             {
                 RoomManager.Instance.CheckForRoom(this);
             }
         }
-        
+
         public void SetItem(ItemEntity _entity)
         {
             // Tile already has an item on it.
@@ -166,7 +166,7 @@ namespace Models.Map.Tiles
 
             Item = _entity;
         }
-        
+
         public void RemoveItem()
         {
             Item = null;
@@ -176,9 +176,9 @@ namespace Models.Map.Tiles
         {
             return HasObject ? Object.Enterability : TileEnterability.Immediate;
         }
-        
+
         #region Tile Exposure
-        
+
         /// <summary>
         /// Returns if this tile is in direct LOS of the edge of the map.
         /// </summary>
@@ -186,10 +186,10 @@ namespace Models.Map.Tiles
         public bool IsExposedToOutside()
         {
             if (HasObject && Object.EnclosesRoom) return false;
-            
+
             return ExposedUp() || ExposedDown() || ExposedLeft() || ExposedRight();
         }
-        
+
         private bool ExposedUp()
         {
             var up = World.Instance.GetTileAt(X, Y + 1);
@@ -200,7 +200,7 @@ namespace Models.Map.Tiles
 
             return up.ExposedUp();
         }
-        
+
         private bool ExposedDown()
         {
             var down = World.Instance.GetTileAt(X, Y - 1);
@@ -211,7 +211,7 @@ namespace Models.Map.Tiles
 
             return down.ExposedDown();
         }
-        
+
         private bool ExposedLeft()
         {
             var left = World.Instance.GetTileAt(X - 1, Y);
@@ -222,7 +222,7 @@ namespace Models.Map.Tiles
 
             return left.ExposedLeft();
         }
-        
+
         private bool ExposedRight()
         {
             var right = World.Instance.GetTileAt(X + 1, Y);
@@ -233,7 +233,7 @@ namespace Models.Map.Tiles
 
             return right.ExposedRight();
         }
-        
+
         #endregion
 
         #region ISelectable Implementation
@@ -253,14 +253,14 @@ namespace Models.Map.Tiles
             return $"Position: ({X}, {Y})\n" +
                    $"Room: {(Room != null ? Room.RoomID.ToString() : "None")}\n" +
                    $"Area: {(Area != null ? Area.AreaName : "None")}" +
-                   $"Exposed: {IsExposedToOutside()}\n";
+                   $"\nExposed: {IsExposedToOutside()}\n";
         }
-        
+
         public Vector2 GetPosition()
         {
             return Position;
         }
-        
+
         #endregion
 
         public ItemStack GetItemStack()
