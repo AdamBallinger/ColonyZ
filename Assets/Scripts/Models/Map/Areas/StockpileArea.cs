@@ -7,7 +7,7 @@ namespace Models.Map.Areas
     public class StockpileArea : Area
     {
         private Tile[] tiles;
-        
+
         public StockpileArea(int _x, int _y, int _width, int _height) : base(_x, _y, _width, _height)
         {
             AreaName = "Stockpile"; // TODO: Have an ID system for stockpiles and append to name.
@@ -15,25 +15,26 @@ namespace Models.Map.Areas
             MinimumSize = new Vector2(2, 2);
             tiles = new Tile[_width * _height];
         }
-        
+
         /// <summary>
-        /// Returns whether the stockpile has a given item (and optional quantity) in its inventory.
+        /// Returns the tile containing the given item and quantity inside the stockpile.
         /// </summary>
         /// <param name="_item"></param>
         /// <param name="_quantity"></param>
         /// <returns></returns>
-        public bool HasItem(Item _item, int _quantity = 1)
+        public Tile GetTileWithItem(Item _item, int _quantity)
         {
+            // TODO: Prioritize tiles with lowest stack quantity first. Maybe use priority list with dictionary?
             foreach (var tile in tiles)
             {
-                if (tile.GetItemStack() != null && tile.GetItemStack().Item.ItemName.Equals(_item.ItemName) && 
+                if (tile.GetItemStack() != null && tile.GetItemStack().Item.ItemName.Equals(_item.ItemName) &&
                     tile.GetItemStack().Quantity >= _quantity)
                 {
-                    return true;
+                    return tile;
                 }
             }
 
-            return false;
+            return null;
         }
     }
 }
