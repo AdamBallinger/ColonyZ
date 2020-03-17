@@ -42,7 +42,7 @@ namespace Controllers.UI
                 return;
             }
             
-            if (_tile.GetItem() != null)
+            if (_tile.GetItemStack() != null)
             {
                 Set(_tile.Item);
             }

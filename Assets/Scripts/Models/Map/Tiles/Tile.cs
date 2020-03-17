@@ -263,7 +263,7 @@ namespace Models.Map.Tiles
         
         #endregion
 
-        public ItemStack GetItem()
+        public ItemStack GetItemStack()
         {
             return Item?.ItemStack;
         }

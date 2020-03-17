@@ -26,8 +26,8 @@ namespace Models.Map.Areas
         {
             foreach (var tile in tiles)
             {
-                if (tile.GetItem() != null && tile.GetItem().Item.ItemName.Equals(_item.ItemName) && 
-                    tile.GetItem().Quantity >= _quantity)
+                if (tile.GetItemStack() != null && tile.GetItemStack().Item.ItemName.Equals(_item.ItemName) && 
+                    tile.GetItemStack().Quantity >= _quantity)
                 {
                     return true;
                 }

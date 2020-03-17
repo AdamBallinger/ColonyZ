@@ -4,6 +4,6 @@ namespace Models.Inventory
 {
     public interface IInventory
     {
-        ItemStack GetItem();
+        ItemStack GetItemStack();
     }
 }
