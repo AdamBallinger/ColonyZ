@@ -8,12 +8,11 @@ namespace Models.Entities.Living
     public class HumanEntity : LivingEntity
     {
         public Job CurrentJob { get; private set; }
-        
+
         public HumanEntity(Tile _tile) : base(_tile)
         {
-            
         }
-        
+
         public bool SetJob(Job _job, bool _forceStop = false)
         {
             if (!_forceStop && CurrentJob != null && CurrentJob.Complete) return false;
@@ -26,19 +25,27 @@ namespace Models.Entities.Living
         public override void Update()
         {
             base.Update();
-            
+
             if (!Motor.Working && CurrentJob == null)
             {
                 Motor.SetTargetTile(World.Instance.GetRandomTile());
             }
-            
+
             if (CurrentJob == null) return;
 
-            // Try find a new working tile if the current tile is no longer enterable.
+            // Check if the working tile for the job became unreachable due to another job being completed.
+            if (!CurrentJob.WorkingTile.Room.HasConnection(CurrentTile.Room))
+            {
+                JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
+                return;
+            }
+
+            // Try find a new working tile if the current tile is no longer enter-able.
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
             {
-                var closestTile = JobManager.Instance.GetClosestPathableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
-                
+                var closestTile =
+                    JobManager.Instance.GetClosestPathableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
+
                 if (closestTile != null)
                 {
                     CurrentJob.WorkingTile = closestTile;
@@ -47,11 +54,13 @@ namespace Models.Entities.Living
                 else
                 {
                     JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
+                    return;
                 }
             }
-            
+
             // If a new closest tile is found for the job, switch to it.
-            var closeTile = JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
+            var closeTile =
+                JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
             if (closeTile != null && closeTile != CurrentJob.WorkingTile)
             {
                 if (PathFinder.TestPath(CurrentTile, closeTile))
@@ -60,7 +69,7 @@ namespace Models.Entities.Living
                     Motor.SetTargetTile(closeTile);
                 }
             }
-            
+
             CurrentJob?.Update();
         }
 
