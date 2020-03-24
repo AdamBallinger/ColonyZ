@@ -78,7 +78,7 @@ namespace Controllers
 
             foreach (var tile in enumerable)
             {
-                if (AreaToBuild.CanPlace(tile))
+                if (!AreaToBuild.CanPlace(tile))
                 {
                     return;
                 }
