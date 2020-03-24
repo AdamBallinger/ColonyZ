@@ -50,6 +50,8 @@ namespace Controllers
         /// </summary>
         private Vector2 currentMousePosition;
 
+        private Color defaultCursorColor;
+
         private new Camera camera;
 
         private void Awake()
@@ -64,6 +66,7 @@ namespace Controllers
             previewObjects = new List<GameObject>();
             camera = Camera.main;
             selectionObjectRenderer = selectionObject.GetComponent<SpriteRenderer>();
+            defaultCursorColor = selectionObjectRenderer.color;
 
             BuildModeController = new BuildModeController();
         }
@@ -147,6 +150,7 @@ namespace Controllers
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
                 selectionObject.SetActive(Mode == MouseMode.Select);
+                selectionObjectRenderer.color = defaultCursorColor;
 
                 var areaValid = true;
 
