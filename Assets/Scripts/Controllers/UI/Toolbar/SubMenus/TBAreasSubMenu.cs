@@ -6,7 +6,8 @@ namespace Controllers.UI.Toolbar.SubMenus
     {
         protected override void OnEnabled()
         {
-            AddItem("Stockpile", null, () => MouseController.Instance.BuildModeController.SetAreaMode(AreaType.Stockpile));
+            AddItem("Stockpile", null,
+                () => MouseController.Instance.BuildModeController.SetAreaMode(new StockpileArea()));
         }
     }
 }

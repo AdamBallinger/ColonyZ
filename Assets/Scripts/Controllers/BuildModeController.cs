@@ -31,7 +31,7 @@ namespace Controllers
         /// </summary>
         public TileObject ObjectToBuild { get; private set; }
 
-        private Area areaToBuild;
+        public Area AreaToBuild { get; private set; }
 
         public BuildModeController()
         {
@@ -51,13 +51,13 @@ namespace Controllers
             switch (Mode)
             {
                 case BuildMode.Area:
-                    areaToBuild = new StockpileArea(_x, _y, _width, _height);
-                    
-                    if (areaToBuild.IsValidSize())
+                    //AreaToBuild = new StockpileArea();
+
+                    if (AreaToBuild.IsValidSize())
                     {
                         HandleBuildArea(_tiles);
                     }
-                    
+
                     break;
                 case BuildMode.Object:
                     HandleBuild(_tiles);
@@ -75,26 +75,30 @@ namespace Controllers
 
         private void HandleBuildArea(IEnumerable<Tile> _tiles)
         {
-            var enumerable = _tiles as Tile[] ?? _tiles.ToArray();
-            
+            var enumerable = _tiles.ToArray();
+
+            // TODO: Validate area size here from list.
+
             foreach (var tile in enumerable)
             {
-                if (tile.Area != null)
+                if (AreaToBuild.CanPlace(tile))
                 {
                     return;
                 }
             }
 
+            // TODO: Set size and origin for area here. Is origin needed?
+
             foreach (var tile in enumerable)
             {
-                tile.Area = areaToBuild;
+                tile.Area = AreaToBuild;
             }
         }
-        
+
         private void HandleBuild(IEnumerable<Tile> _tiles)
         {
             var jobs = new List<Job>();
-            
+
             foreach (var tile in _tiles)
             {
                 if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile))
@@ -105,26 +109,28 @@ namespace Controllers
                     jobs.Add(new BuildJob(tile, obj));
                 }
             }
-            
+
             JobManager.Instance.AddJobs(jobs);
         }
-        
+
         private void HandleDemolish(IEnumerable<Tile> _tiles)
         {
-            var jobs = (from tile in _tiles where tile.HasObject && ObjectCompatWithMode(tile.Object)
-                        select new DemolishJob(tile)).Cast<Job>().ToList();
+            var jobs = (from tile in _tiles
+                where tile.HasObject && ObjectCompatWithMode(tile.Object)
+                select new DemolishJob(tile)).Cast<Job>().ToList();
 
             JobManager.Instance.AddJobs(jobs);
         }
 
         private void HandleGather(IEnumerable<Tile> _tiles)
         {
-            var jobs = (from tile in _tiles where tile.HasObject && ObjectCompatWithMode(tile.Object)
-                        select new HarvestJob(tile, Mode.ToString())).Cast<Job>().ToList();
-            
+            var jobs = (from tile in _tiles
+                where tile.HasObject && ObjectCompatWithMode(tile.Object)
+                select new HarvestJob(tile, Mode.ToString())).Cast<Job>().ToList();
+
             JobManager.Instance.AddJobs(jobs);
         }
-        
+
         private bool ObjectCompatWithMode(TileObject _object)
         {
             switch (Mode)
@@ -142,12 +148,13 @@ namespace Controllers
             return false;
         }
 
-        public void SetAreaMode(AreaType _type)
+        public void SetAreaMode(Area _areaToBuild)
         {
             MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Area;
+            AreaToBuild = _areaToBuild;
         }
-        
+
         /// <summary>
         /// Sets the controller to build the provided tile object.
         /// </summary>
@@ -167,19 +174,19 @@ namespace Controllers
             MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Demolish;
         }
-        
+
         public void SetFellMode()
         {
             MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Fell;
         }
-        
+
         public void SetMineMode()
         {
             MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Mine;
         }
-        
+
         public void SetHarvestMode()
         {
             MouseController.Instance.Mode = MouseMode.Process;

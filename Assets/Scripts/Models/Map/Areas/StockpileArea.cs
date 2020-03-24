@@ -8,11 +8,19 @@ namespace Models.Map.Areas
     {
         private Tile[] tiles;
 
-        public StockpileArea(int _x, int _y, int _width, int _height) : base(_x, _y, _width, _height)
+        public StockpileArea() : base()
         {
-            AreaName = "Stockpile"; // TODO: Have an ID system for stockpiles and append to name.
+            AreaName = "Stockpile"; // TODO: Have an ID system for stockpiles and append to name? Is this needed?
             RequiresRoom = false;
+            CanContainObjects = false;
             MinimumSize = new Vector2(2, 2);
+            //tiles = new Tile[_width * _height];
+        }
+
+        public override void SetSize(int _width, int _height)
+        {
+            base.SetSize(_width, _height);
+            // TODO: This should either only be allowed once, or redone in the future to allow merging.
             tiles = new Tile[_width * _height];
         }
 

@@ -26,8 +26,7 @@ namespace Controllers
 
         public MouseMode Mode { get; set; } = MouseMode.Select;
 
-        [SerializeField]
-        private GameObject selectionObject;
+        [SerializeField] private GameObject selectionObject;
 
         private SpriteRenderer selectionObjectRenderer;
 
@@ -149,18 +148,22 @@ namespace Controllers
 
                 selectionObject.SetActive(Mode == MouseMode.Select);
 
+                var areaValid = true;
+
                 for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
                 {
                     for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                     {
                         if (BuildModeController.Mode == BuildMode.Object)
                         {
-                            if(x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
+                            if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX &&
+                                y != _dragData.EndY) continue;
                         }
 
                         // Don't allow modifying edge of map.
-                        if (x == 0 || x == World.Instance.Width - 1 || y == 0 || y == World.Instance.Height - 1) continue;
-                        
+                        if (x == 0 || x == World.Instance.Width - 1 || y == 0 || y == World.Instance.Height - 1)
+                            continue;
+
                         var tile = World.Instance.GetTileAt(x, y);
 
                         if (tile == null) continue;
@@ -174,8 +177,10 @@ namespace Controllers
                             previewRenderer.sprite = BuildModeController.ObjectToBuild.GetIcon();
 
                             // Tint the preview color based on if the structure position is valid.
-                            previewRenderer.color = !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, tile)
-                                ? new Color(1.0f, 0.3f, 0.3f, 0.4f) : new Color(0.3f, 1.0f, 0.3f, 0.4f);
+                            previewRenderer.color =
+                                !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, tile)
+                                    ? new Color(1.0f, 0.3f, 0.3f, 0.4f)
+                                    : new Color(0.3f, 1.0f, 0.3f, 0.4f);
                         }
                         else if (BuildModeController.Mode == BuildMode.Demolish)
                         {
@@ -188,6 +193,21 @@ namespace Controllers
                             else
                             {
                                 previewRenderer.sprite = null;
+                            }
+                        }
+                        else if (BuildModeController.Mode == BuildMode.Area)
+                        {
+                            selectionObject.SetActive(true);
+
+                            if (!BuildModeController.AreaToBuild.CanPlace(tile))
+                            {
+                                selectionObjectRenderer.color = new Color(1.0f, 0.3f, 0.3f, 0.4f);
+                                areaValid = false;
+                            }
+                            else
+                            {
+                                if (!areaValid) break;
+                                selectionObjectRenderer.color = new Color(0.3f, 1.0f, 0.3f, 0.4f);
                             }
                         }
                         else if (BuildModeController.Mode == BuildMode.Mine)
@@ -250,9 +270,9 @@ namespace Controllers
         {
             var dragData = new DragData();
             dragData.Build(Mathf.FloorToInt(dragStartPosition.x + 0.5f),
-                            Mathf.FloorToInt(currentMousePosition.x + 0.5f),
-                            Mathf.FloorToInt(dragStartPosition.y + 0.5f),
-                            Mathf.FloorToInt(currentMousePosition.y + 0.5f));
+                Mathf.FloorToInt(currentMousePosition.x + 0.5f),
+                Mathf.FloorToInt(dragStartPosition.y + 0.5f),
+                Mathf.FloorToInt(currentMousePosition.y + 0.5f));
 
             return dragData;
         }
@@ -273,9 +293,10 @@ namespace Controllers
                     if (BuildModeController.Mode == BuildMode.Object)
                     {
                         // Only when building objects should the drag area only include the edge of the dragged area.
-                        if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX && y != _dragData.EndY) continue;
+                        if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX &&
+                            y != _dragData.EndY) continue;
                     }
-                    
+
                     // Don't allow modifying the edge of map.
                     if (x == 0 || x == World.Instance.Width - 1 || y == 0 || y == World.Instance.Height - 1) continue;
 
@@ -292,7 +313,8 @@ namespace Controllers
 
             if (BuildModeController.Mode == BuildMode.Object || BuildModeController.Mode == BuildMode.Area)
             {
-                BuildModeController.Process(tiles.Cast<Tile>(), _dragData.StartX, _dragData.StartY, _dragData.SizeX, _dragData.SizeY);
+                BuildModeController.Process(tiles.Cast<Tile>(), _dragData.StartX, _dragData.StartY, _dragData.SizeX,
+                    _dragData.SizeY);
             }
             else
             {
@@ -309,7 +331,7 @@ namespace Controllers
                 }
 
                 sorted.RemoveAll(t => t == null);
-                
+
                 BuildModeController.Process(sorted);
             }
 
