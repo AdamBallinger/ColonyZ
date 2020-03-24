@@ -38,11 +38,6 @@ namespace Models.Map.Areas
             Size = new Vector2(_width, _height);
         }
 
-        public virtual bool IsValidSize()
-        {
-            return Size.x >= MinimumSize.x && Size.y >= MinimumSize.y;
-        }
-
         public virtual bool CanPlace(Tile _tile)
         {
             if (_tile.Area != null) return false;

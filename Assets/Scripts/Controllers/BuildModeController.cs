@@ -51,11 +51,10 @@ namespace Controllers
             switch (Mode)
             {
                 case BuildMode.Area:
-                    //AreaToBuild = new StockpileArea();
 
-                    if (AreaToBuild.IsValidSize())
+                    if (AreaToBuild.MinimumSize.x <= _width && AreaToBuild.MinimumSize.y <= _height)
                     {
-                        HandleBuildArea(_tiles);
+                        HandleBuildArea(_tiles, _x, _y, _width, _height);
                     }
 
                     break;
@@ -73,11 +72,9 @@ namespace Controllers
             }
         }
 
-        private void HandleBuildArea(IEnumerable<Tile> _tiles)
+        private void HandleBuildArea(IEnumerable<Tile> _tiles, int _x, int _y, int _width, int _height)
         {
             var enumerable = _tiles.ToArray();
-
-            // TODO: Validate area size here from list.
 
             foreach (var tile in enumerable)
             {
@@ -87,7 +84,8 @@ namespace Controllers
                 }
             }
 
-            // TODO: Set size and origin for area here. Is origin needed?
+            AreaToBuild.SetOrigin(_x, _y); // TODO: Is this even needed?
+            AreaToBuild.SetSize(_width, _height);
 
             foreach (var tile in enumerable)
             {
