@@ -5,6 +5,7 @@ using Models.AI.Jobs;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Map;
+using Models.Map.Areas;
 using Models.Map.Pathing;
 using Models.Map.Rooms;
 using Models.Map.Tiles;
@@ -58,6 +59,7 @@ namespace Controllers
         private void SetupWorld()
         {
             RoomManager.Create();
+            AreaManager.Create();
             TimeManager.Create(6, 30, 1);
             JobManager.Create();
             NodeGraph.Create(worldWidth, worldHeight);

@@ -8,7 +8,7 @@ namespace Models.Map.Areas
     {
         private Tile[] tiles;
 
-        public StockpileArea() : base()
+        public StockpileArea()
         {
             AreaName = "Stockpile"; // TODO: Have an ID system for stockpiles and append to name? Is this needed?
             RequiresRoom = false;

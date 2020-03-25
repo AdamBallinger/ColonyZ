@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Models.AI.Jobs;
 using Models.Map;
 using Models.Map.Areas;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Controllers
 {
@@ -84,13 +85,17 @@ namespace Controllers
                 }
             }
 
-            AreaToBuild.SetOrigin(_x, _y); // TODO: Is this even needed?
+            AreaToBuild.SetOrigin(_x, _y);
             AreaToBuild.SetSize(_width, _height);
+
+            AreaManager.Instance.AddArea(AreaToBuild);
 
             foreach (var tile in enumerable)
             {
                 tile.Area = AreaToBuild;
             }
+
+            AreaToBuild = (Area) Activator.CreateInstance(AreaToBuild.GetType());
         }
 
         private void HandleBuild(IEnumerable<Tile> _tiles)
