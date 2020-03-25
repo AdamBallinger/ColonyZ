@@ -132,6 +132,7 @@ namespace Controllers
             if (Mode == MouseMode.Select)
             {
                 draggableCursor.SetActive(isDragging);
+                draggableCursorRenderer.color = defaultCursorColor;
 
                 if (isDragging)
                 {
@@ -153,7 +154,6 @@ namespace Controllers
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
                 draggableCursor.SetActive(Mode == MouseMode.Select);
-                draggableCursorRenderer.color = defaultCursorColor;
 
                 var areaValid = true;
 
