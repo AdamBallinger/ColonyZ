@@ -34,7 +34,9 @@ namespace Models.Entities.Living
             if (CurrentJob == null) return;
 
             // Check if the working tile for the job became unreachable due to another job being completed.
-            if (!CurrentJob.WorkingTile.Room.HasConnection(CurrentTile.Room))
+            // A working tile would have a null room if the tile has an object built on it.
+            if (CurrentJob.WorkingTile.Room == null
+                || !CurrentJob.WorkingTile.Room.HasConnection(CurrentTile.Room))
             {
                 JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
                 return;
