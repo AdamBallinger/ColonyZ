@@ -177,7 +177,9 @@ namespace Controllers
 
                         var previewObject = previewPool.GetAvailable();
                         previewObject.transform.position = new Vector2(x, y);
+                        // TODO: Should probably pool the SpriteRenderer as well as the GameObject?
                         var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
+                        previewRenderer.sprite = null;
 
                         if (BuildModeController.Mode == BuildMode.Object)
                         {
