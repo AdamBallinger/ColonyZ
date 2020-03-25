@@ -8,7 +8,7 @@ namespace Models.Map.Areas
     {
         public static AreaManager Instance { get; private set; }
 
-        public List<Area> areas = new List<Area>();
+        private readonly List<Area> areas = new List<Area>();
 
         public event Action<Area> onAreaCreatedEvent;
         public event Action<Area> onAreaDeletedEvent;
@@ -33,7 +33,6 @@ namespace Models.Map.Areas
         {
             if (!areas.Contains(_area))
             {
-                Debug.Log("Creating a new area.");
                 areas.Add(_area);
                 onAreaCreatedEvent?.Invoke(_area);
             }
