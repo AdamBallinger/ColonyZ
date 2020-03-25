@@ -2418,7 +2418,7 @@ GameObject:
   - component: {fileID: 1110402561}
   - component: {fileID: 1110402562}
   m_Layer: 0
-  m_Name: Selection Cursor
+  m_Name: Draggable Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5637,7 +5637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86952f593ac14994bb6a77bdac865c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionObject: {fileID: 1110402560}
+  draggableCursor: {fileID: 1110402560}
 --- !u!114 &1999893019
 MonoBehaviour:
   m_ObjectHideFlags: 0

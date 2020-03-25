@@ -26,9 +26,9 @@ namespace Controllers
 
         public MouseMode Mode { get; set; } = MouseMode.Select;
 
-        [SerializeField] private GameObject selectionObject;
+        [SerializeField] private GameObject draggableCursor;
 
-        private SpriteRenderer selectionObjectRenderer;
+        private SpriteRenderer draggableCursorRenderer;
 
         private bool isDragging;
 
@@ -50,6 +50,9 @@ namespace Controllers
         /// </summary>
         private Vector2 currentMousePosition;
 
+        /// <summary>
+        /// Default color of the draggable cursor object.
+        /// </summary>
         private Color defaultCursorColor;
 
         private new Camera camera;
@@ -65,8 +68,8 @@ namespace Controllers
             selectionController = FindObjectOfType<SelectionController>();
             previewObjects = new List<GameObject>();
             camera = Camera.main;
-            selectionObjectRenderer = selectionObject.GetComponent<SpriteRenderer>();
-            defaultCursorColor = selectionObjectRenderer.color;
+            draggableCursorRenderer = draggableCursor.GetComponent<SpriteRenderer>();
+            defaultCursorColor = draggableCursorRenderer.color;
 
             BuildModeController = new BuildModeController();
         }
@@ -121,14 +124,14 @@ namespace Controllers
             ClearPreviewObjects();
 
             // Hide selection graphic if mouse is off the map.
-            selectionObject.SetActive(GetTileUnderMouse() != null);
+            draggableCursor.SetActive(GetTileUnderMouse() != null);
 
             var selectionSize = Vector2.zero;
             var selectionPosition = Vector2.zero;
 
             if (Mode == MouseMode.Select)
             {
-                selectionObject.SetActive(isDragging);
+                draggableCursor.SetActive(isDragging);
 
                 if (isDragging)
                 {
@@ -149,8 +152,8 @@ namespace Controllers
                 // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
-                selectionObject.SetActive(Mode == MouseMode.Select);
-                selectionObjectRenderer.color = defaultCursorColor;
+                draggableCursor.SetActive(Mode == MouseMode.Select);
+                draggableCursorRenderer.color = defaultCursorColor;
 
                 var areaValid = true;
 
@@ -201,19 +204,19 @@ namespace Controllers
                         }
                         else if (BuildModeController.Mode == BuildMode.Area)
                         {
-                            selectionObject.SetActive(true);
+                            draggableCursor.SetActive(true);
                             var area = BuildModeController.AreaToBuild;
 
                             if (!area.CanPlace(tile) || _dragData.SizeX < area.MinimumSize.x ||
                                 _dragData.SizeY < area.MinimumSize.y)
                             {
-                                selectionObjectRenderer.color = new Color(1.0f, 0.3f, 0.3f, 0.4f);
+                                draggableCursorRenderer.color = new Color(1.0f, 0.3f, 0.3f, 0.4f);
                                 areaValid = false;
                             }
                             else
                             {
                                 if (!areaValid) break;
-                                selectionObjectRenderer.color = new Color(0.3f, 1.0f, 0.3f, 0.4f);
+                                draggableCursorRenderer.color = new Color(0.3f, 1.0f, 0.3f, 0.4f);
                             }
                         }
                         else if (BuildModeController.Mode == BuildMode.Mine)
@@ -258,8 +261,8 @@ namespace Controllers
                 }
             }
 
-            selectionObject.transform.position = selectionPosition;
-            selectionObjectRenderer.size = selectionSize;
+            draggableCursor.transform.position = selectionPosition;
+            draggableCursorRenderer.size = selectionSize;
         }
 
         private void ClearPreviewObjects()
