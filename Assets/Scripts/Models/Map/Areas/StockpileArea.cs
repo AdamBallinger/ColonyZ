@@ -10,7 +10,7 @@ namespace Models.Map.Areas
 
         public StockpileArea()
         {
-            AreaName = "Stockpile"; // TODO: Have an ID system for stockpiles and append to name? Is this needed?
+            AreaName = "Stockpile";
             RequiresRoom = false;
             CanContainObjects = false;
             MinimumSize = new Vector2(3, 2);
