@@ -202,8 +202,10 @@ namespace Controllers
                         else if (BuildModeController.Mode == BuildMode.Area)
                         {
                             selectionObject.SetActive(true);
+                            var area = BuildModeController.AreaToBuild;
 
-                            if (!BuildModeController.AreaToBuild.CanPlace(tile))
+                            if (!area.CanPlace(tile) || _dragData.SizeX < area.MinimumSize.x ||
+                                _dragData.SizeY < area.MinimumSize.y)
                             {
                                 selectionObjectRenderer.color = new Color(1.0f, 0.3f, 0.3f, 0.4f);
                                 areaValid = false;
