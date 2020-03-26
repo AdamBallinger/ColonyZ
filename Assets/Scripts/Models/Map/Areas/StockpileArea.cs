@@ -19,7 +19,6 @@ namespace Models.Map.Areas
         public override void SetSize(int _width, int _height)
         {
             base.SetSize(_width, _height);
-            // TODO: This should either only be allowed once, or redone in the future to allow merging.
             tiles = new Tile[_width * _height];
         }
 
