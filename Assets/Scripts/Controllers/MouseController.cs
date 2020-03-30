@@ -92,7 +92,7 @@ namespace Controllers
 
             if (Input.GetMouseButtonDown(0))
             {
-                mouseClickEvent?.Invoke(World.Instance.GetTileAt(currentMousePosition), IsMouseOverUI);
+                mouseClickEvent?.Invoke(GetTileUnderMouse(), IsMouseOverUI);
             }
 
             if (!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
