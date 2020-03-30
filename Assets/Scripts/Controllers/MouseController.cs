@@ -26,6 +26,11 @@ namespace Controllers
 
         public MouseMode Mode { get; set; } = MouseMode.Select;
 
+        /// <summary>
+        /// Event fired when the mouse is clicked. Passes tile clicked on and if the cursor was over UI.
+        /// </summary>
+        public event Action<Tile, bool> mouseClickEvent;
+
         [SerializeField] private GameObject draggableCursor;
 
         private SpriteRenderer draggableCursorRenderer;
@@ -84,6 +89,11 @@ namespace Controllers
             IsMouseOverUI = EventSystem.current.IsPointerOverGameObject();
 
             currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                mouseClickEvent?.Invoke(World.Instance.GetTileAt(currentMousePosition), IsMouseOverUI);
+            }
 
             if (!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
             {
