@@ -4,13 +4,13 @@ namespace Models.Items
 {
     public static class ItemManager
     {
-        private static List<Item> items = new List<Item>();
-        
+        public static List<Item> Items { get; } = new List<Item>();
+
         public static void RegisterItem(Item _item)
         {
-            if (items.Contains(_item)) return;
-            
-            items.Add(_item);
+            if (Items.Contains(_item)) return;
+
+            Items.Add(_item);
         }
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Models.Items
         /// <returns></returns>
         public static T CreateItem<T>(string _itemName) where T : Item
         {
-            foreach (var item in items)
+            foreach (var item in Items)
             {
                 if (item.ItemName.Equals(_itemName))
                 {
@@ -31,7 +31,7 @@ namespace Models.Items
 
             return null;
         }
-        
+
         /// <summary>
         /// Creates a new item instance of the given item name.
         /// </summary>
