@@ -6,6 +6,8 @@ namespace Controllers.Dev
     {
         public static DevToolManager Instance { get; private set; }
 
+        [SerializeField] private GameObject pathCountRoot;
+
         private TileNodesTool tileNodesTool;
         private ItemsDevTool itemDevTool;
 
@@ -30,6 +32,11 @@ namespace Controllers.Dev
         public void ToggleItemTool()
         {
             itemDevTool.Toggle();
+        }
+
+        public void TogglePathCount()
+        {
+            pathCountRoot.SetActive(!pathCountRoot.activeSelf);
         }
     }
 }
