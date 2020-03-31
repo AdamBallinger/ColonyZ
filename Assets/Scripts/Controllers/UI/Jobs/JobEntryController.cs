@@ -6,13 +6,24 @@ namespace Controllers.UI.Jobs
 {
     public class JobEntryController : MonoBehaviour
     {
-        [SerializeField]
-        private TMP_Text jobNameText;
-        
+        [SerializeField] private TMP_Text jobNameText;
+
+        private Job job;
+
         public void Set(Job _job)
         {
-            jobNameText.color = JobManager.Instance.InvalidJobs.Contains(_job) ? Color.red : Color.white;
+            job = _job;
+            JobManager.Instance.jobStateChangedEvent += StateChanged;
             jobNameText.text = _job.JobName;
+        }
+
+        private void StateChanged(Job _job)
+        {
+            if (_job == job)
+            {
+                jobNameText.color = job.State == JobState.Active ? Color.green :
+                    job.State == JobState.Error ? Color.red : Color.gray;
+            }
         }
     }
 }

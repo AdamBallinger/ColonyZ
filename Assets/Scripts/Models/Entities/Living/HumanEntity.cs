@@ -1,6 +1,5 @@
 ﻿using Models.AI.Jobs;
 using Models.Map;
-using Models.Map.Pathing;
 using Models.Map.Tiles;
 
 namespace Models.Entities.Living
@@ -46,7 +45,7 @@ namespace Models.Entities.Living
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
             {
                 var closestTile =
-                    JobManager.Instance.GetClosestPathableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
+                    JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
 
                 if (closestTile != null)
                 {
@@ -65,11 +64,12 @@ namespace Models.Entities.Living
                 JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
             if (closeTile != null && closeTile != CurrentJob.WorkingTile)
             {
-                if (PathFinder.TestPath(CurrentTile, closeTile))
-                {
-                    CurrentJob.WorkingTile = closeTile;
-                    Motor.SetTargetTile(closeTile);
-                }
+                // TODO: Is a path test needed now that rooms can be used to check if a tile is reachable?
+                //if (PathFinder.TestPath(CurrentTile, closeTile))
+                //{
+                CurrentJob.WorkingTile = closeTile;
+                Motor.SetTargetTile(closeTile);
+                //}
             }
 
             CurrentJob?.Update();

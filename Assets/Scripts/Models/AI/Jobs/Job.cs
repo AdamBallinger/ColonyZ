@@ -10,12 +10,17 @@ namespace Models.AI.Jobs
         /// Name of the job that is displayed on the UI.
         /// </summary>
         public string JobName { get; protected set; }
-        
+
+        /// <summary>
+        /// Current state of the job.
+        /// </summary>
+        public JobState State { get; set; } = JobState.Idle;
+
         /// <summary>
         /// Current progress of the job.
         /// </summary>
         protected float Progress { get; set; }
-        
+
         /// <summary>
         /// Time in seconds it takes to complete the job. Default: 1 second.
         /// </summary>
@@ -30,12 +35,12 @@ namespace Models.AI.Jobs
         /// Reference to the entity assigned to complete this job.
         /// </summary>
         public HumanEntity AssignedEntity { get; set; }
-        
+
         /// <summary>
         /// The tile the job is modifying.
         /// </summary>
         public Tile TargetTile { get; }
-        
+
         /// <summary>
         /// The tile the entity will complete the job on. Defaults to the target tile.
         /// </summary>
@@ -59,7 +64,7 @@ namespace Models.AI.Jobs
                 Progress += TimeManager.Instance.DeltaTime;
             }
         }
-        
+
         public virtual void OnComplete()
         {
             AssignedEntity.SetJob(null, true);
