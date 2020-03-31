@@ -218,6 +218,7 @@ namespace Models.AI.Jobs
         /// <param name="_job"></param>
         public void NotifyActiveJobInvalid(Job _job)
         {
+            jobNoAccessMap[_job].Add(_job.AssignedEntity);
             _job.AssignedEntity.SetJob(null, true);
 
             _job.State = JobState.Error;
