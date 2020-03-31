@@ -24,9 +24,7 @@ namespace Controllers
 
         [SerializeField, Range(0, 100)] private int treeSpawnChance = 25;
 
-        [SerializeField] private SpriteLoader spriteLoader;
-        [SerializeField] private TileObjectsLoader objectsLoader;
-        [SerializeField] private ItemLoader itemsLoader;
+        [SerializeField] private DataLoader dataLoader;
 
         [SerializeField] private GameObject livingEntityPrefab;
         [SerializeField] private GameObject itemEntityPrefab;
@@ -47,9 +45,7 @@ namespace Controllers
             livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
             itemEntityObjects = new Dictionary<ItemEntity, GameObject>();
 
-            spriteLoader.Load();
-            objectsLoader.Load();
-            itemsLoader.Load();
+            dataLoader.Load();
 
             worldRenderer = GetComponent<WorldRenderer>();
 
