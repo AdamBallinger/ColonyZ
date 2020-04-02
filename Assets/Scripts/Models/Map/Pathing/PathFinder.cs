@@ -111,7 +111,7 @@ namespace Models.Map.Pathing
                     }
 
                     var movementCostToNeighbour =
-                        gCosts[currentNode.ID] + Heuristic(currentNode, node) + node.MovementCost;
+                        gCosts[currentNode.ID] + Heuristic(_request.Start, node) + node.MovementCost;
 
                     if (movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
                     {
