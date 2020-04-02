@@ -4,8 +4,7 @@ using Models.Map.Tiles;
 namespace Models.Map.Pathing
 {
     public class PathRequest
-	{
-
+    {
         /// <summary>
         /// The starting Node for the path request.
         /// </summary>
@@ -19,7 +18,7 @@ namespace Models.Map.Pathing
         /// <summary>
         /// Callback function invoked when the path has been computed.
         /// </summary>
-	    public Action<Path> onPathCompleteCallback;
+        public Action<Path> onPathCompleteCallback;
 
         /// <summary>
         /// Create a new path request that will generate a path from start to end and pass it back to the given callback function when
@@ -34,7 +33,7 @@ namespace Models.Map.Pathing
             End = NodeGraph.Instance?.GetNodeAt(_end.X, _end.Y);
 
             // If the start or end node is not a pathable node, then just ignore this request and return an empty callback.
-            if (!End.Pathable)
+            if (End == null || !End.Pathable)
             {
                 _onCompleteCallback?.Invoke(new Path(null, false, -1.0f));
                 return;
@@ -42,5 +41,5 @@ namespace Models.Map.Pathing
 
             onPathCompleteCallback += _onCompleteCallback;
         }
-	}
+    }
 }
