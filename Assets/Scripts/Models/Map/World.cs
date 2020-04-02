@@ -189,17 +189,15 @@ namespace Models.Map
             {
                 return _room.Tiles[UnityEngine.Random.Range(0, _room.Tiles.Count)];
             }
-            else
+
+            var tiles = new List<Tile>();
+
+            foreach (var room in _room.ConnectedRooms)
             {
-                var tiles = new List<Tile>();
-
-                foreach (var room in _room.ConnectedRooms)
-                {
-                    tiles.AddRange(room.Tiles);
-                }
-
-                return tiles[UnityEngine.Random.Range(0, tiles.Count)];
+                tiles.AddRange(room.Tiles);
             }
+
+            return tiles[UnityEngine.Random.Range(0, tiles.Count)];
         }
 
         /// <summary>
