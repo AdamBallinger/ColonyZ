@@ -1,4 +1,5 @@
-﻿using Models.Map.Pathing;
+﻿using Models.Map;
+using Models.Map.Pathing;
 using TMPro;
 using UnityEngine;
 
@@ -10,7 +11,8 @@ namespace Controllers.Dev
 
         private void Update()
         {
-            text.text = $"Queued Paths: {PathFinder.Instance.TaskCount.ToString()}";
+            text.text = $"Queued Paths: {PathFinder.Instance.TaskCount.ToString()}\n" +
+                        $"Characters: {World.Instance.Characters.Count}";
         }
     }
 }
