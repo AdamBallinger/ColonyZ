@@ -27,7 +27,7 @@ namespace Models.Entities.Living
 
             if (!Motor.Working && CurrentJob == null)
             {
-                Motor.SetTargetTile(World.Instance.GetRandomTile());
+                Motor.SetTargetTile(World.Instance.GetRandomTileAround(CurrentTile, 16));
             }
 
             if (CurrentJob == null) return;
