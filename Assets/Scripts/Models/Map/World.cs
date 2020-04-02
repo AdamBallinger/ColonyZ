@@ -177,6 +177,11 @@ namespace Models.Map
             return GetRandomTile(_x - _radius, _y - _radius, _x + _radius, _y + _radius);
         }
 
+        public Tile GetRandomTileAround(Tile _tile, int _radius)
+        {
+            return GetRandomTileAround(_tile.X, _tile.Y, _radius);
+        }
+
         /// <summary>
         /// Returns a random tile from a given room, and optionally its connected rooms.
         /// </summary>
