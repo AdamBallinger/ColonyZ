@@ -13,13 +13,15 @@ namespace Models.Map.Pathing
         public static PathFinder Instance { get; private set; }
 
         public int TaskCount => taskList.Count;
-        
+
         private const float STRAIGHT_MOVEMENT_COST = 10.0f;
         private const float DIAGONAL_MOVEMENT_COST = 14.0f;
 
         private List<Task<PathResult>> taskList;
 
-        private PathFinder() { }
+        private PathFinder()
+        {
+        }
 
         /// <summary>
         /// Creates a new Instance of the PathFinder class.
@@ -58,7 +60,7 @@ namespace Models.Map.Pathing
         public async void ProcessNext()
         {
             if (taskList.Count == 0) return;
-            
+
             var task = await Task.WhenAny(taskList.ToArray());
             taskList.Remove(task);
             var result = task.Result;
@@ -96,26 +98,28 @@ namespace Models.Map.Pathing
                 if (currentNode == _request.End)
                 {
                     sw.Stop();
-                    result = new PathResult(_request, new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds));
+                    result = new PathResult(_request,
+                        new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds));
                     return Task.FromResult(result);
                 }
 
-                foreach(var node in currentNode.Neighbours)
+                foreach (var node in currentNode.Neighbours)
                 {
-                    if(!node.Pathable || nodeClosedSet.Contains(node))
+                    if (!node.Pathable || nodeClosedSet.Contains(node))
                     {
                         continue;
                     }
 
-                    var movementCostToNeighbour = gCosts[currentNode.ID] + Heuristic(currentNode, node) + node.MovementCost;
+                    var movementCostToNeighbour =
+                        gCosts[currentNode.ID] + Heuristic(currentNode, node) + node.MovementCost;
 
-                    if(movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
+                    if (movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
                     {
                         gCosts[node.ID] = movementCostToNeighbour;
                         hCosts[node.ID] = Heuristic(node, _request.End);
                         parents[node.ID] = currentNode;
 
-                        if(!nodeOpenSet.Contains(node))
+                        if (!nodeOpenSet.Contains(node))
                         {
                             nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
                         }
@@ -130,71 +134,6 @@ namespace Models.Map.Pathing
             // If every node was evaluated and the end node wasn't found, then invoke the callback with an invalid empty path.
             result = new PathResult(_request, new Path(null, false, 0.0f));
             return Task.FromResult(result);
-        }
-        
-        /// <summary>
-        /// Returns if a valid path can be made from a starting tile to an end tile.
-        /// Should not be called frequently as this is not done asynchronously.
-        /// </summary>
-        /// <param name="_start"></param>
-        /// <param name="_end"></param>
-        /// <returns></returns>
-        public static bool TestPath(Tile _start, Tile _end)
-        {
-            var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
-            var nodeClosedSet = new HashSet<Node>();
-
-            var gCosts = new float[World.Instance.Size];
-            var hCosts = new float[World.Instance.Size];
-
-            var parents = new Node[World.Instance.Size];
-
-            var startNode = NodeGraph.Instance.GetNodeAt(_start.Position);
-            var endNode = NodeGraph.Instance.GetNodeAt(_end.Position);
-
-            hCosts[startNode.ID] = Instance.Heuristic(startNode, endNode);
-
-            nodeOpenSet.Enqueue(startNode, hCosts[endNode.ID] + gCosts[startNode.ID]);
-
-            while (nodeOpenSet.Count != 0)
-            {
-                var currentNode = nodeOpenSet.Dequeue();
-
-                nodeClosedSet.Add(currentNode);
-
-                if (currentNode == endNode)
-                {
-                    return true;
-                }
-
-                foreach(var node in currentNode.Neighbours)
-                {
-                    if(!node.Pathable || nodeClosedSet.Contains(node))
-                    {
-                        continue;
-                    }
-
-                    var movementCostToNeighbour = gCosts[currentNode.ID] + Instance.Heuristic(currentNode, node) + node.MovementCost;
-
-                    if(movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
-                    {
-                        gCosts[node.ID] = movementCostToNeighbour;
-                        hCosts[node.ID] = Instance.Heuristic(node, endNode);
-                        parents[node.ID] = currentNode;
-
-                        if(!nodeOpenSet.Contains(node))
-                        {
-                            nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
-                        }
-                        else
-                        {
-                            nodeOpenSet.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
-                        }
-                    }
-                }
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -237,18 +176,18 @@ namespace Models.Map.Pathing
 
             return DIAGONAL_MOVEMENT_COST * dx + STRAIGHT_MOVEMENT_COST * (dy - dx);
         }
-        
+
         private struct PathResult
         {
             private PathRequest request;
             private Path path;
-            
+
             public PathResult(PathRequest _request, Path _path)
             {
                 request = _request;
                 path = _path;
             }
-            
+
             public void InvokeCallback()
             {
                 request?.onPathCompleteCallback?.Invoke(path);
