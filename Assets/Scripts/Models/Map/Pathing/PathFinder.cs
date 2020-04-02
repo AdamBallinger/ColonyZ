@@ -161,7 +161,7 @@ namespace Models.Map.Pathing
         }
 
         /// <summary>
-        /// Calculates the Diagonal Distance Heuristic cost for a node.
+        /// Calculates nodes H cost using Manhattan distance.
         /// </summary>
         /// <param name="_node"></param>
         /// <param name="_end"></param>
@@ -171,10 +171,7 @@ namespace Models.Map.Pathing
             var dx = Mathf.Abs(_node.X - _end.X);
             var dy = Mathf.Abs(_node.Y - _end.Y);
 
-            if (dx > dy)
-                return DIAGONAL_MOVEMENT_COST * dy + STRAIGHT_MOVEMENT_COST * (dx - dy);
-
-            return DIAGONAL_MOVEMENT_COST * dx + STRAIGHT_MOVEMENT_COST * (dy - dx);
+            return dx + dy;
         }
 
         private struct PathResult
