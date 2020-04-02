@@ -27,9 +27,9 @@ namespace Models.Map
         private Tile[] Tiles { get; set; }
 
         public List<LivingEntity> Characters { get; private set; }
-        
+
         public List<ItemEntity> Items { get; private set; }
-        
+
         public List<TileObject> Objects { get; private set; }
 
         /// <summary>
@@ -42,7 +42,9 @@ namespace Models.Map
         /// </summary>
         public event Action<Entity> onEntityRemoved;
 
-        private World() { }
+        private World()
+        {
+        }
 
         /// <summary>
         /// Creates a new instance of World.Instance
@@ -51,7 +53,7 @@ namespace Models.Map
         /// <param name="_height"></param>
         /// <param name="_tileDefinitionChangeListener"></param>
         /// <param name="_tileChangedListener"></param>
-        public static void CreateWorld(int _width, int _height, Action<Tile> _tileDefinitionChangeListener, 
+        public static void CreateWorld(int _width, int _height, Action<Tile> _tileDefinitionChangeListener,
             Action<Tile> _tileChangedListener)
         {
             Instance = new World
@@ -63,7 +65,7 @@ namespace Models.Map
                 Items = new List<ItemEntity>(),
                 Objects = new List<TileObject>()
             };
-            
+
             TileManager.LoadDefinitions();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
         }
@@ -74,12 +76,12 @@ namespace Models.Map
             {
                 character.Update();
             }
-            
-            for(var i = Objects.Count - 1; i >= 0; i--)
+
+            for (var i = Objects.Count - 1; i >= 0; i--)
             {
                 Objects[i].Update();
             }
-            
+
             for (var i = Items.Count - 1; i >= 0; i--)
             {
                 Items[i].Update();
@@ -102,9 +104,9 @@ namespace Models.Map
                 }
             }
 
-            for(var x = 0; x < Width; x++)
+            for (var x = 0; x < Width; x++)
             {
-                for(var y = 0; y < Height; y++)
+                for (var y = 0; y < Height; y++)
                 {
                     var tile = Tiles[x * Width + y];
                     tile.DirectNeighbours.AddRange(GetTileNeighbours(tile, false));
@@ -162,7 +164,7 @@ namespace Models.Map
         {
             return GetTileAt(UnityEngine.Random.Range(0, Width), UnityEngine.Random.Range(0, Height));
         }
-        
+
         /// <summary>
         /// Return a random tile within the given radius around the given position.
         /// </summary>
@@ -173,6 +175,31 @@ namespace Models.Map
         public Tile GetRandomTileAround(int _x, int _y, int _radius)
         {
             return GetRandomTile(_x - _radius, _y - _radius, _x + _radius, _y + _radius);
+        }
+
+        /// <summary>
+        /// Returns a random tile from a given room, and optionally its connected rooms.
+        /// </summary>
+        /// <param name="_room"></param>
+        /// <param name="_includeConnectedRooms"></param>
+        /// <returns></returns>
+        public Tile GetRandomTileFromRoom(Room _room, bool _includeConnectedRooms = false)
+        {
+            if (!_includeConnectedRooms)
+            {
+                return _room.Tiles[UnityEngine.Random.Range(0, _room.Tiles.Count)];
+            }
+            else
+            {
+                var tiles = new List<Tile>();
+
+                foreach (var room in _room.ConnectedRooms)
+                {
+                    tiles.AddRange(room.Tiles);
+                }
+
+                return tiles[UnityEngine.Random.Range(0, tiles.Count)];
+            }
         }
 
         /// <summary>
@@ -191,7 +218,8 @@ namespace Models.Map
             _yRangeMin = Mathf.Clamp(_yRangeMin, 0, Height);
             _yRangeMax = Mathf.Clamp(_yRangeMax, 0, Height);
 
-            return GetTileAt(UnityEngine.Random.Range(_xRangeMin, _xRangeMax), UnityEngine.Random.Range(_yRangeMin, _yRangeMax));
+            return GetTileAt(UnityEngine.Random.Range(_xRangeMin, _xRangeMax),
+                UnityEngine.Random.Range(_yRangeMin, _yRangeMax));
         }
 
         /// <summary>
@@ -200,7 +228,7 @@ namespace Models.Map
         /// <param name="_tile"></param>
         /// <param name="_includeDiagonal"></param>
         /// <returns></returns>
-        public List<Tile> GetTileNeighbours(Tile _tile, bool _includeDiagonal = true)
+        private IEnumerable<Tile> GetTileNeighbours(Tile _tile, bool _includeDiagonal = true)
         {
             var neighbours = new List<Tile>
             {
@@ -208,7 +236,6 @@ namespace Models.Map
                 GetTileAt(_tile.X - 1, _tile.Y),
                 GetTileAt(_tile.X + 1, _tile.Y),
                 GetTileAt(_tile.X, _tile.Y - 1),
-                
             };
 
             if (_includeDiagonal)
@@ -219,7 +246,7 @@ namespace Models.Map
                     GetTileAt(_tile.X + 1, _tile.Y + 1),
                     GetTileAt(_tile.X - 1, _tile.Y - 1),
                     GetTileAt(_tile.X + 1, _tile.Y - 1)
-                }); 
+                });
             }
 
             neighbours.RemoveAll(tile => tile == null);
@@ -238,7 +265,7 @@ namespace Models.Map
 
             onEntitySpawn?.Invoke(entity);
         }
-        
+
         /// <summary>
         /// Removes a given character entity from the world if it exists.
         /// </summary>
@@ -250,7 +277,7 @@ namespace Models.Map
             Characters.Remove(_entity);
             onEntityRemoved?.Invoke(_entity);
         }
-        
+
         /// <summary>
         /// Spawns a new item entity into the world.
         /// </summary>
@@ -260,16 +287,16 @@ namespace Models.Map
         public bool SpawnItem(Item _item, int _quantity, Tile _tile)
         {
             if (_tile.Item != null) return false;
-            
+
             var itemEntity = new ItemEntity(_tile, new ItemStack(_item, _quantity));
             _tile.SetItem(itemEntity);
             Items.Add(itemEntity);
-            
+
             onEntitySpawn?.Invoke(itemEntity);
 
             return true;
         }
-        
+
         public void RemoveItem(ItemEntity _entity)
         {
             if (!Items.Contains(_entity)) return;
@@ -291,12 +318,12 @@ namespace Models.Map
             {
                 return false;
             }
-            
+
             if (_object.Width <= 1 && _object.Height <= 1)
             {
                 return _object.CanPlace(_tile);
             }
-            
+
             for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             {
                 for (var yOffset = 0; yOffset < _object.Height; yOffset++)
@@ -319,7 +346,7 @@ namespace Models.Map
 
         public IEnumerator<Tile> GetEnumerator()
         {
-            return ((IEnumerable<Tile>)Tiles).GetEnumerator();
+            return ((IEnumerable<Tile>) Tiles).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
