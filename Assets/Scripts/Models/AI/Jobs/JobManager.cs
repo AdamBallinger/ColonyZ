@@ -5,6 +5,7 @@ using Models.Entities;
 using Models.Entities.Living;
 using Models.Map;
 using Models.Map.Tiles;
+using Models.TimeSystem;
 
 namespace Models.AI.Jobs
 {
@@ -36,6 +37,16 @@ namespace Models.AI.Jobs
         /// Event called when a job has been completed.
         /// </summary>
         public event Action<Job> jobCompletedEvent;
+
+        /// <summary>
+        /// Time in ms between each automatic evaluation of errored jobs.
+        /// </summary>
+        private const float ERROR_JOB_CHECK_INTERVAL = 2000.0f;
+
+        /// <summary>
+        /// Current timer for auto checking errored jobs.
+        /// </summary>
+        private float jobErrorTimer;
 
         private JobManager()
         {
@@ -101,7 +112,7 @@ namespace Models.AI.Jobs
 
                 if (isJobReachable)
                 {
-                    job.State = JobState.Idle;
+                    SetJobState(job, JobState.Idle);
                 }
             }
         }
@@ -113,16 +124,23 @@ namespace Models.AI.Jobs
             {
                 _job.AssignedEntity = _entity;
                 _entity.Motor.SetTargetTile(_job.WorkingTile);
-                _job.State = JobState.Active;
-                jobStateChangedEvent?.Invoke(_job);
+                SetJobState(_job, JobState.Active);
             }
         }
 
         public void Update()
         {
+            jobErrorTimer += TimeManager.Instance.UnscaledDeltaTime;
+
             if (Jobs.Count == 0)
             {
                 return;
+            }
+
+            if (jobErrorTimer >= ERROR_JOB_CHECK_INTERVAL)
+            {
+                jobErrorTimer = 0.0f;
+                EvaluateInvalidJobs();
             }
 
             for (var i = Jobs.Count - 1; i >= 0; i--)
@@ -143,7 +161,7 @@ namespace Models.AI.Jobs
                 var entity = entities[i] as HumanEntity;
 
                 // Only use entities that are available.
-                if (entity == null || entity.CurrentJob != null) continue;
+                if (entity?.CurrentJob != null) continue;
 
                 var job = Jobs.FirstOrDefault(j => j.State == JobState.Idle);
 
@@ -169,9 +187,15 @@ namespace Models.AI.Jobs
                 // If the last entity can't reach the job, then the job must be unreachable.
                 if (i == entities.Count - 1)
                 {
-                    job.State = JobState.Error;
+                    SetJobState(job, JobState.Error);
                 }
             }
+        }
+
+        private void SetJobState(Job _job, JobState _state)
+        {
+            _job.State = _state;
+            jobStateChangedEvent?.Invoke(_job);
         }
 
         private bool CanEntityReachJob(Entity _entity, Job _job)
@@ -183,12 +207,12 @@ namespace Models.AI.Jobs
             return closestTile != null;
         }
 
-        private bool AddJob(Job _job)
+        private void AddJob(Job _job)
         {
-            if (_job == null) return false;
+            if (_job == null) return;
 
             // TODO: Move to mouse controller to visualise duplication for demolish jobs etc.
-            if (_job.TargetTile.CurrentJob != null) return false;
+            if (_job.TargetTile.CurrentJob != null) return;
 
             jobNoAccessMap.Add(_job, new List<HumanEntity>());
 
@@ -197,19 +221,14 @@ namespace Models.AI.Jobs
             _job.State = JobState.Idle;
             jobCreatedEvent?.Invoke(_job);
             jobStateChangedEvent?.Invoke(_job);
-
-            return true;
         }
 
         public void AddJobs(IEnumerable<Job> _jobs)
         {
-            var forceEvaluationOfInvalid = false;
             foreach (var job in _jobs)
             {
-                if (AddJob(job) && job is DemolishJob) forceEvaluationOfInvalid = true;
+                AddJob(job);
             }
-
-            if (forceEvaluationOfInvalid) EvaluateInvalidJobs();
         }
 
         /// <summary>
@@ -221,9 +240,7 @@ namespace Models.AI.Jobs
             jobNoAccessMap[_job].Add(_job.AssignedEntity);
             _job.AssignedEntity.SetJob(null, true);
 
-            _job.State = JobState.Error;
-            jobStateChangedEvent?.Invoke(_job);
-            EvaluateInvalidJobs();
+            SetJobState(_job, JobState.Error);
         }
 
         public Tile GetClosestEnterableNeighbour(Entity _entity, IReadOnlyCollection<Tile> _tiles)
