@@ -39,9 +39,9 @@ namespace Models.AI.Jobs
         public event Action<Job> jobCompletedEvent;
 
         /// <summary>
-        /// Time in ms between each automatic evaluation of errored jobs.
+        /// Time in seconds between each automatic evaluation of errored jobs.
         /// </summary>
-        private const float ERROR_JOB_CHECK_INTERVAL = 2000.0f;
+        private const float ERROR_JOB_CHECK_INTERVAL = 2.0f;
 
         /// <summary>
         /// Current timer for auto checking errored jobs.
@@ -77,8 +77,6 @@ namespace Models.AI.Jobs
             _completedJob.TargetTile.CurrentJob = null;
             _completedJob.OnComplete();
             jobCompletedEvent?.Invoke(_completedJob);
-
-            EvaluateInvalidJobs();
         }
 
         /// <summary>
