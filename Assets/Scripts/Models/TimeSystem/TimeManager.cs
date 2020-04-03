@@ -6,7 +6,7 @@ namespace Models.TimeSystem
     public class TimeManager
     {
         public static TimeManager Instance { get; private set; }
-        
+
         /// <summary>
         /// Controls the time scale mode.
         /// </summary>
@@ -28,12 +28,17 @@ namespace Models.TimeSystem
         /// <summary>
         /// Returns the delta time based on the current time mode.
         /// </summary>
-        public float DeltaTime => Time.deltaTime * (int)TimeMode;
-        
+        public float DeltaTime => Time.deltaTime * (int) TimeMode;
+
+        /// <summary>
+        /// Returns normal delta time regardless of the current time mode.
+        /// </summary>
+        public float UnscaledDeltaTime => Time.deltaTime;
+
         public int Hour { get; private set; }
-        
+
         public int Minute { get; private set; }
-        
+
         public int Day { get; private set; }
 
         /// <summary>
@@ -68,8 +73,10 @@ namespace Models.TimeSystem
 
         private TimeMode toggleTimeMode;
 
-        private TimeManager() {}
-        
+        private TimeManager()
+        {
+        }
+
         /// <summary>
         /// Create the TimeManager at the given time (24h).
         /// </summary>
@@ -86,7 +93,7 @@ namespace Models.TimeSystem
                 };
             }
         }
-        
+
         /// <summary>
         /// Toggles the TimeMode between 0 and the previously set time mode.
         /// </summary>
@@ -102,17 +109,17 @@ namespace Models.TimeSystem
                 TimeMode = toggleTimeMode;
             }
         }
-        
+
         public void Update()
         {
-            millis += (int)(millisPerSecond * DeltaTime);
-            
+            millis += (int) (millisPerSecond * DeltaTime);
+
             // Check if a minute has passed.
             if (millis >= millisPerMinute)
             {
                 Minute += 1 * (millis / millisPerMinute);
                 millis -= millisPerMinute * (millis / millisPerMinute);
-                
+
                 // Check if an hour has passed.
                 if (Minute >= 60)
                 {
@@ -127,7 +134,7 @@ namespace Models.TimeSystem
                         newDayEvent?.Invoke(Day);
                     }
                 }
-                
+
                 timeChangedEvent?.Invoke(Hour, Minute);
             }
         }
