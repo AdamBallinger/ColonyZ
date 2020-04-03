@@ -14,6 +14,17 @@ namespace Models.AI.Jobs
         public static JobManager Instance { get; private set; }
 
         /// <summary>
+        /// Total number of current jobs.
+        /// </summary>
+        public int JobCount => Jobs.Count;
+
+        public int ActiveCount => Jobs.Count(j => j.State == JobState.Active);
+
+        public int IdleCount => Jobs.Count(j => j.State == JobState.Idle);
+
+        public int ErrorCount => Jobs.Count(j => j.State == JobState.Error);
+
+        /// <summary>
         /// List of all created jobs.
         /// </summary>
         private List<Job> Jobs { get; set; }

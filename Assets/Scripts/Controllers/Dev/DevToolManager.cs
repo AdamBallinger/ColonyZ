@@ -7,6 +7,7 @@ namespace Controllers.Dev
         public static DevToolManager Instance { get; private set; }
 
         [SerializeField] private GameObject pathCountRoot;
+        [SerializeField] private GameObject jobsInfoRoot;
 
         private TileNodesTool tileNodesTool;
         private ItemsDevTool itemDevTool;
@@ -37,6 +38,11 @@ namespace Controllers.Dev
         public void TogglePathCount()
         {
             pathCountRoot.SetActive(!pathCountRoot.activeSelf);
+        }
+
+        public void ToggleJobsInfo()
+        {
+            jobsInfoRoot.SetActive(!jobsInfoRoot.activeSelf);
         }
     }
 }
