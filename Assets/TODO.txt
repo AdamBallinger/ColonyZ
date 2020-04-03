@@ -1,9 +1,11 @@
-﻿RoomManager.cs:
-- Fix a case where sometimes a room that is clearly enclosed is still considered as room 0. This issue is 
-also breaking the job system as a character outside the room is being assigned it thinking they have access 
-to it.
+﻿RoomManager.cs: Fucking pain in the ass
+- Fix flooding so that it allows a room to to be enclosed by trees, but prevent the flood fill from flooding 
+every single tile in the world when a single tile is built for some reason. I dont even know why tbh.
 - Add an indoors flag to rooms that have a "roof". A room can have a roof if it is smaller than a specific width
 and height, as well as not having any objects such as trees inside of them?
+- Trees enclosing rooms wont be easy since the flood fill uses Tile::IsExposedToOutside to determine if the
+tile is in a room or not. Having trees flagged as encloses room means the entire map gets flooded every time
+a tile is placed that encloses a room...
 
 Pathing:
 - Look into splitting the node graph into chunks to try speed up the pathfinder on large maps?
