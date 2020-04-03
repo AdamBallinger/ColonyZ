@@ -48,6 +48,14 @@ namespace Models.Map.Rooms
 
         public void CheckForRoom(Tile _tile)
         {
+            // Don't try flood from world edge tile.
+            if (_tile.X == 0 || _tile.X == World.Instance.Width - 1 ||
+                _tile.Y == 0 || _tile.Y == World.Instance.Height - 1)
+                return;
+
+            // Don't flood from tiles that enclose areas, but are not buildable, such as trees.
+            if (_tile.HasObject && _tile.Object.EnclosesRoom && !_tile.Object.Buildable) return;
+
             var oldRoom = _tile.Room;
 
             // An enclosing object was built on this tile.
