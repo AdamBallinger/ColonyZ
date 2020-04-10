@@ -5,6 +5,7 @@ using Models.Entities;
 using Models.Entities.Living;
 using Models.Items;
 using Models.Map.Pathing;
+using Models.Map.Regions;
 using Models.Map.Rooms;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
@@ -68,6 +69,7 @@ namespace Models.Map
 
             TileManager.LoadDefinitions();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
+            RegionManager.Create();
         }
 
         public void Update()

@@ -7,6 +7,7 @@ using Models.Inventory;
 using Models.Items;
 using Models.Map.Areas;
 using Models.Map.Pathing;
+using Models.Map.Regions;
 using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
 using Models.Sprites;
@@ -27,19 +28,10 @@ namespace Models.Map.Tiles
         /// </summary>
         public List<LivingEntity> LivingEntities { get; private set; }
 
-        /// <summary>
-        /// Reference to any job for this tile.
-        /// </summary>
         public Job CurrentJob { get; set; }
 
-        /// <summary>
-        /// Reference to the current room this tile is assigned too.
-        /// </summary>
         public Room Room { get; set; }
-
-        /// <summary>
-        /// Reference to the current area this tile is assigned too.
-        /// </summary>
+        public Region Region { get; set; }
         public Area Area { get; set; }
 
         /// <summary>
@@ -78,19 +70,12 @@ namespace Models.Map.Tiles
         /// </summary>
         public List<Tile> DirectNeighbours { get; }
 
-        /// <summary>
-        /// Determines if the tile has an object installed on it.
-        /// </summary>
         public bool HasObject { get; private set; }
 
-        /// <summary>
-        /// Installed tile object for this tile.
-        /// </summary>
+        public bool IsMapEdge => X == 0 || X == World.Instance.Width - 1 || Y == 0 || Y == World.Instance.Height - 1;
+
         public TileObject Object { get; private set; }
 
-        /// <summary>
-        /// The current Item on this tile.
-        /// </summary>
         public ItemEntity Item { get; private set; }
 
         private TileDefinition definition, oldDefinition;
@@ -183,18 +168,18 @@ namespace Models.Map.Tiles
         /// Returns if this tile is in direct LOS of the edge of the map.
         /// </summary>
         /// <returns></returns>
-        public bool IsExposedToOutside()
+        public bool ExposedToMapEdge()
         {
             if (HasObject && Object.EnclosesRoom) return false;
 
-            return ExposedUp() || ExposedDown() || ExposedLeft() || ExposedRight();
+            return IsMapEdge || ExposedUp() || ExposedDown() || ExposedLeft() || ExposedRight();
         }
 
         private bool ExposedUp()
         {
             var up = World.Instance.GetTileAt(X, Y + 1);
 
-            if (up == null) return true;
+            if (up == null || up.IsMapEdge) return true;
 
             if (up.HasObject && up.Object.EnclosesRoom) return false;
 
@@ -205,7 +190,7 @@ namespace Models.Map.Tiles
         {
             var down = World.Instance.GetTileAt(X, Y - 1);
 
-            if (down == null) return true;
+            if (down == null || down.IsMapEdge) return true;
 
             if (down.HasObject && down.Object.EnclosesRoom) return false;
 
@@ -216,7 +201,7 @@ namespace Models.Map.Tiles
         {
             var left = World.Instance.GetTileAt(X - 1, Y);
 
-            if (left == null) return true;
+            if (left == null || left.IsMapEdge) return true;
 
             if (left.HasObject && left.Object.EnclosesRoom) return false;
 
@@ -227,7 +212,7 @@ namespace Models.Map.Tiles
         {
             var right = World.Instance.GetTileAt(X + 1, Y);
 
-            if (right == null) return true;
+            if (right == null || right.IsMapEdge) return true;
 
             if (right.HasObject && right.Object.EnclosesRoom) return false;
 
@@ -252,8 +237,8 @@ namespace Models.Map.Tiles
         {
             return $"Position: ({X}, {Y})\n" +
                    $"Room: {(Room != null ? Room.RoomID.ToString() : "None")}\n" +
-                   $"Area: {(Area != null ? Area.AreaName : "None")}" +
-                   $"\nExposed: {IsExposedToOutside()}\n";
+                   $"Area: {(Area != null ? Area.AreaName : "None")}\n" +
+                   $"Exposed: {ExposedToMapEdge()}\n";
         }
 
         public Vector2 GetPosition()
@@ -266,6 +251,11 @@ namespace Models.Map.Tiles
         public ItemStack GetItemStack()
         {
             return Item?.ItemStack;
+        }
+
+        public override String ToString()
+        {
+            return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectName : "None")}";
         }
     }
 }

@@ -24,6 +24,8 @@ namespace Controllers
 
         [SerializeField, Range(0, 100)] private int treeSpawnChance = 25;
 
+        [SerializeField, Range(0, 10)] private int initialCharacterCount = 1;
+
         [SerializeField] private DataLoader dataLoader;
 
         [SerializeField] private GameObject livingEntityPrefab;
@@ -64,16 +66,20 @@ namespace Controllers
             World.Instance.onEntitySpawn += OnEntitySpawn;
             World.Instance.onEntityRemoved += OnEntityRemoved;
 
-            World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2, worldHeight / 2, 5));
+            for (var i = 0; i < initialCharacterCount; i++)
+            {
+                World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2,
+                    worldHeight / 2, 5));
+            }
 
             worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
 
             foreach (var tile in World.Instance)
             {
-                if (Random.Range(1, 100) <= treeSpawnChance || tile.X == 0 || tile.X == worldWidth - 1
-                    || tile.Y == 0 || tile.Y == worldHeight - 1)
+                if (Random.Range(1, 100) <= treeSpawnChance || tile.IsMapEdge)
                 {
                     tile.SetObject(TileObjectCache.GetObject("Tree"));
+                    RoomManager.Instance.OutsideRoom.UnassignTile(tile);
                 }
             }
         }
