@@ -27,6 +27,8 @@ namespace Controllers
     {
         public BuildMode Mode { get; private set; }
 
+        public bool GodMode = true;
+
         /// <summary>
         /// Reference to the object that will be built on a tile when in Object build mode.
         /// </summary>
@@ -106,10 +108,17 @@ namespace Controllers
             {
                 if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile))
                 {
-                    var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
                     var obj = Object.Instantiate(ObjectToBuild);
-                    tile.SetObject(foundation);
-                    jobs.Add(new BuildJob(tile, obj));
+                    if (GodMode)
+                    {
+                        tile.SetObject(obj);
+                    }
+                    else
+                    {
+                        var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
+                        tile.SetObject(foundation);
+                        jobs.Add(new BuildJob(tile, obj));
+                    }
                 }
             }
 
