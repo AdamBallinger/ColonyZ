@@ -127,6 +127,16 @@ namespace Controllers
 
         private void HandleDemolish(IEnumerable<Tile> _tiles)
         {
+            if (GodMode)
+            {
+                foreach (var tile in _tiles)
+                {
+                    tile.RemoveObject();
+                }
+
+                return;
+            }
+
             var jobs = (from tile in _tiles
                 where tile.HasObject && ObjectCompatWithMode(tile.Object)
                 select new DemolishJob(tile)).Cast<Job>().ToList();
