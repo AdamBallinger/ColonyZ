@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Items;
@@ -194,7 +195,7 @@ namespace Models.Map
         {
             if (!_includeConnectedRooms)
             {
-                return _room.Tiles[UnityEngine.Random.Range(0, _room.Tiles.Count)];
+                return _room.Tiles.ToList()[UnityEngine.Random.Range(0, _room.Tiles.Count)];
             }
 
             var tiles = new List<Tile>();
