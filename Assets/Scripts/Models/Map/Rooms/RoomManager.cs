@@ -49,9 +49,7 @@ namespace Models.Map.Rooms
         public void CheckForRoom(Tile _tile)
         {
             // Don't try flood from world edge tile.
-            if (_tile.X == 0 || _tile.X == World.Instance.Width - 1 ||
-                _tile.Y == 0 || _tile.Y == World.Instance.Height - 1)
-                return;
+            if (_tile.IsMapEdge) return;
 
             // Don't flood from tiles that enclose areas, but are not buildable, such as trees.
             if (_tile.HasObject && _tile.Object.EnclosesRoom && !_tile.Object.Buildable) return;
@@ -78,7 +76,7 @@ namespace Models.Map.Rooms
                 // Getting here means the tile previously had an enclosing object (Wall, door etc.) on it
                 // So go through each of the neighbour tiles and remove their rooms, as it means we could potentially be merging
                 // up to 4 rooms together.
-                foreach (var tile in _tile.Neighbours)
+                foreach (var tile in _tile.DirectNeighbours)
                 {
                     RemoveRoom(tile.Room);
                 }
@@ -129,7 +127,7 @@ namespace Models.Map.Rooms
                         // Enclosing objects don't get assigned to rooms.
                         if (neighbour.HasObject && neighbour.Object.EnclosesRoom) continue;
 
-                        if (neighbour.IsExposedToOutside())
+                        if (neighbour.ExposedToMapBottom())
                         {
                             // Room isn't valid as it is not enclosed.
                             connectedToOutside = true;

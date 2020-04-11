@@ -157,33 +157,26 @@ namespace Models.Map.Tiles
             Item = null;
         }
 
+        public ItemStack GetItemStack()
+        {
+            return Item?.ItemStack;
+        }
+
         public TileEnterability GetEnterability()
         {
             return HasObject ? Object.Enterability : TileEnterability.Immediate;
         }
 
-        #region Tile Exposure
-
         /// <summary>
-        /// Returns if this tile is in direct LOS of the edge of the map.
+        /// Returns if this tile is in direct LOS of the bottom of the map.
         /// </summary>
         /// <returns></returns>
-        public bool ExposedToMapEdge()
+        public bool ExposedToMapBottom()
         {
+            if (IsMapEdge) return true;
             if (HasObject && Object.EnclosesRoom) return false;
 
-            return IsMapEdge || ExposedUp() || ExposedDown() || ExposedLeft() || ExposedRight();
-        }
-
-        private bool ExposedUp()
-        {
-            var up = World.Instance.GetTileAt(X, Y + 1);
-
-            if (up == null || up.IsMapEdge) return true;
-
-            if (up.HasObject && up.Object.EnclosesRoom) return false;
-
-            return up.ExposedUp();
+            return ExposedDown();
         }
 
         private bool ExposedDown()
@@ -196,30 +189,6 @@ namespace Models.Map.Tiles
 
             return down.ExposedDown();
         }
-
-        private bool ExposedLeft()
-        {
-            var left = World.Instance.GetTileAt(X - 1, Y);
-
-            if (left == null || left.IsMapEdge) return true;
-
-            if (left.HasObject && left.Object.EnclosesRoom) return false;
-
-            return left.ExposedLeft();
-        }
-
-        private bool ExposedRight()
-        {
-            var right = World.Instance.GetTileAt(X + 1, Y);
-
-            if (right == null || right.IsMapEdge) return true;
-
-            if (right.HasObject && right.Object.EnclosesRoom) return false;
-
-            return right.ExposedRight();
-        }
-
-        #endregion
 
         #region ISelectable Implementation
 
@@ -237,8 +206,7 @@ namespace Models.Map.Tiles
         {
             return $"Position: ({X}, {Y})\n" +
                    $"Room: {(Room != null ? Room.RoomID.ToString() : "None")}\n" +
-                   $"Area: {(Area != null ? Area.AreaName : "None")}\n" +
-                   $"Exposed: {ExposedToMapEdge()}\n";
+                   $"Area: {(Area != null ? Area.AreaName : "None")}\n";
         }
 
         public Vector2 GetPosition()
@@ -247,11 +215,6 @@ namespace Models.Map.Tiles
         }
 
         #endregion
-
-        public ItemStack GetItemStack()
-        {
-            return Item?.ItemStack;
-        }
 
         public override String ToString()
         {
