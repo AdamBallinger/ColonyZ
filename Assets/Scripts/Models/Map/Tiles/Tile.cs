@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Models.Map.Tiles
 {
-    public class Tile : ISelectable, IInventory
+    public class Tile : ISelectable, IInventory, IEquatable<Tile>
     {
         public int X { get; }
         public int Y { get; }
@@ -175,6 +175,7 @@ namespace Models.Map.Tiles
         {
             if (IsMapEdge) return true;
             if (HasObject && Object.EnclosesRoom) return false;
+            if (Room != RoomManager.Instance.OutsideRoom) return false;
 
             return ExposedDown();
         }
@@ -186,6 +187,8 @@ namespace Models.Map.Tiles
             if (down == null || down.IsMapEdge) return true;
 
             if (down.HasObject && down.Object.EnclosesRoom) return false;
+
+            if (down.Room != RoomManager.Instance.OutsideRoom) return false;
 
             return down.ExposedDown();
         }
@@ -219,6 +222,39 @@ namespace Models.Map.Tiles
         public override String ToString()
         {
             return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectName : "None")}";
+        }
+
+        public bool Equals(Tile other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return X == other.X && Y == other.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Tile) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (X * 397) ^ Y;
+            }
+        }
+
+        public static bool operator ==(Tile left, Tile right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Tile left, Tile right)
+        {
+            return !Equals(left, right);
         }
     }
 }
