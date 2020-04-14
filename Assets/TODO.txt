@@ -1,13 +1,9 @@
-﻿RoomManager.cs: Fucking pain in the ass
-- Fix flooding so that it allows a room to to be enclosed by trees, but prevent the flood fill from flooding 
-every single tile in the world when a single tile is built for some reason. I dont even know why tbh.
-- Add an indoors flag to rooms that have a "roof". A room can have a roof if it is smaller than a specific width
-and height, as well as not having any objects such as trees inside of them?
-- Trees enclosing rooms wont be easy since the flood fill uses Tile::IsExposedToOutside to determine if the
-tile is in a room or not. Having trees flagged as encloses room means the entire map gets flooded every time
-a tile is placed that encloses a room...
-- Maybe need to re think how to check if a room is enclosed, rather than recursively checking if a tile is
-in line of sight of the edge of the map. This is going to be slow on large maps.
+﻿Room and Areas:
+- Refactor Areas to zones, and Rooms to Areas to improve clarity on what these systems actually are.
+
+Regions:
+- Split world into chunks, and flood each chunk to get the individual regions. Work out how to calculate
+adjacent regions and store them.
 
 Pathing:
 - Look into splitting the node graph into chunks to try speed up the pathfinder on large maps?
