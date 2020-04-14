@@ -13,8 +13,12 @@ namespace Models.Map.Rooms
 
         public List<Room> Rooms { get; }
 
-        public event Action roomCreatedEvent;
-        public event Action roomDeletedEvent;
+        /// <summary>
+        /// Event called after new rooms have been created, or old rooms deleted.
+        /// </summary>
+        public event Action roomsUpdatedEvent;
+
+        private bool shouldTriggerUpdate = false;
 
         private RoomManager()
         {
@@ -39,7 +43,7 @@ namespace Models.Map.Rooms
 
             _room.ReleaseTiles();
             Rooms.Remove(_room);
-            roomDeletedEvent?.Invoke();
+            shouldTriggerUpdate = true;
         }
 
         public void CheckForRoom(Tile _tile)
@@ -57,6 +61,9 @@ namespace Models.Map.Rooms
             // An enclosing object was built on this tile.
             if (oldRoom != null)
             {
+                // TODO: Try optimise this so it doesnt release all tiles in the room it was placed.
+                // Causes massive slow downs on large maps. This is a downside to not having an
+                // outside room system.. but its going to make stuff so much easier if this works..
                 // Flood each neighbour to see if any are now enclosed.
                 foreach (var tile in _tile.DirectNeighbours)
                 {
@@ -89,6 +96,12 @@ namespace Models.Map.Rooms
                     set => CreateRoom(set.ToList()));
             }
 
+            if (shouldTriggerUpdate)
+            {
+                roomsUpdatedEvent?.Invoke();
+                shouldTriggerUpdate = false;
+            }
+
             GenerateRoomConnections();
         }
 
@@ -99,7 +112,7 @@ namespace Models.Map.Rooms
                 var room = new Room();
                 _tiles.ForEach(t => room.AssignTile(t));
                 Rooms.Add(room);
-                roomCreatedEvent?.Invoke();
+                shouldTriggerUpdate = true;
             }
         }
 

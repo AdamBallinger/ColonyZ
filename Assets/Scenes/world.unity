@@ -5652,7 +5652,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660482574}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 450b194d5ad74098a99ac861f0de4cce, type: 3}
   m_Name: 
@@ -6108,9 +6108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cee140ee272f24ba4a9e3dfdb4d706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 32
-  worldHeight: 32
-  treeSpawnChance: 21
+  worldWidth: 200
+  worldHeight: 200
+  treeSpawnChance: 3
   initialCharacterCount: 0
   dataLoader: {fileID: 1523355955}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,

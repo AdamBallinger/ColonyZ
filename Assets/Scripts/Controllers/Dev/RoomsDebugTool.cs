@@ -20,7 +20,7 @@ namespace Controllers.Dev
 
         private void Start()
         {
-            RoomManager.Instance.roomCreatedEvent += UpdateOverlay;
+            RoomManager.Instance.roomsUpdatedEvent += UpdateOverlay;
 
             UpdateOverlay();
         }
@@ -30,7 +30,7 @@ namespace Controllers.Dev
             if (!enabled)
             {
                 roomsText.text = string.Empty;
-                meshFilter.mesh = null;
+                //meshFilter.mesh = null;
                 return;
             }
 
