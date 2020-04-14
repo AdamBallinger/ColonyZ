@@ -76,10 +76,15 @@ namespace Controllers
 
             foreach (var tile in World.Instance)
             {
-                if (Random.Range(1, 100) <= treeSpawnChance || tile.IsMapEdge)
+                if (tile.IsMapEdge)
                 {
                     tile.SetObject(TileObjectCache.GetObject("Tree"));
-                    RoomManager.Instance.OutsideRoom.UnassignTile(tile);
+                    continue;
+                }
+
+                if (Random.Range(1, 100) <= treeSpawnChance)
+                {
+                    tile.SetObject(TileObjectCache.GetObject("Tree"));
                 }
             }
         }
