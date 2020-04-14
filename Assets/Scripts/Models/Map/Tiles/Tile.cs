@@ -96,7 +96,7 @@ namespace Models.Map.Tiles
             DirectNeighbours = new List<Tile>();
         }
 
-        public void SetObject(TileObject _object)
+        public void SetObject(TileObject _object, bool _checkForRoom = true)
         {
             for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             {
@@ -115,7 +115,7 @@ namespace Models.Map.Tiles
             World.Instance.Objects.Add(_object);
             NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
 
-            if (_object.EnclosesRoom)
+            if (_checkForRoom && _object.EnclosesRoom)
             {
                 RoomManager.Instance.CheckForRoom(this);
             }
@@ -123,14 +123,14 @@ namespace Models.Map.Tiles
             onTileChanged?.Invoke(this);
         }
 
-        public void RemoveObject()
+        public void RemoveObject(bool _checkForRooms = true)
         {
             if (!HasObject)
             {
                 return;
             }
 
-            var shouldCheckForRoom = Object.EnclosesRoom;
+            var shouldCheckForRoom = _checkForRooms && Object.EnclosesRoom;
 
             World.Instance.Objects.Remove(Object);
             Object = null;
@@ -165,32 +165,6 @@ namespace Models.Map.Tiles
         public TileEnterability GetEnterability()
         {
             return HasObject ? Object.Enterability : TileEnterability.Immediate;
-        }
-
-        /// <summary>
-        /// Returns if this tile is in direct LOS of the bottom of the map.
-        /// </summary>
-        /// <returns></returns>
-        public bool ExposedToMapBottom()
-        {
-            if (IsMapEdge) return true;
-            if (HasObject && Object.EnclosesRoom) return false;
-            if (Room != RoomManager.Instance.OutsideRoom) return false;
-
-            return ExposedDown();
-        }
-
-        private bool ExposedDown()
-        {
-            var down = World.Instance.GetTileAt(X, Y - 1);
-
-            if (down == null || down.IsMapEdge) return true;
-
-            if (down.HasObject && down.Object.EnclosesRoom) return false;
-
-            if (down.Room != RoomManager.Instance.OutsideRoom) return false;
-
-            return down.ExposedDown();
         }
 
         #region ISelectable Implementation

@@ -11,21 +11,11 @@ namespace Models.Map.Rooms
     {
         public static RoomManager Instance { get; private set; }
 
-        public static int OUTSIDE_ROOM_ID => 0;
-
-        public Room OutsideRoom { get; }
-
         private List<Room> Rooms { get; }
 
         private RoomManager()
         {
-            OutsideRoom = new Room();
-            Rooms = new List<Room>
-            {
-                OutsideRoom
-            };
-
-            OutsideRoom.AddConnection(OutsideRoom);
+            Rooms = new List<Room>();
         }
 
         public static void Create()
@@ -42,19 +32,15 @@ namespace Models.Map.Rooms
 
         private void RemoveRoom(Room _room)
         {
-            if (_room == null || _room.RoomID == OUTSIDE_ROOM_ID) return;
+            if (_room == null) return;
 
-            _room.ReleaseTilesToOutside();
+            _room.ReleaseTiles();
             Rooms.Remove(_room);
         }
 
         public void CheckForRoom(Tile _tile)
         {
-            // Don't try flood from world edge tile.
             if (_tile.IsMapEdge) return;
-
-            // Don't flood from tiles that enclose areas, but are not buildable, such as trees.
-            if (_tile.HasObject && _tile.Object.EnclosesRoom && !_tile.Object.Buildable) return;
 
             var oldRoom = _tile.Room;
 
@@ -62,9 +48,7 @@ namespace Models.Map.Rooms
                                                             && t.Room == oldRoom
                                                             && !(t.HasObject && t.Object.EnclosesRoom);
 
-            Predicate<Tile> floodfill_PassCheck = t => t != null
-                                                       && t.Room == oldRoom
-                                                       && !t.ExposedToMapBottom();
+            Predicate<Tile> floodfill_PassCheck = t => t.Room == oldRoom;
 
             // An enclosing object was built on this tile.
             if (oldRoom != null)
@@ -81,26 +65,20 @@ namespace Models.Map.Rooms
                 // Remove the source tile from its current room, as enclosing tiles do not belong to any rooms.
                 oldRoom.UnassignTile(_tile);
 
-                // Delete the old source tile room as it is no longer needed (Unless it was the outside room).
+                // Delete the old source tile room as it is no longer needed.
                 RemoveRoom(oldRoom);
             }
             else
             {
                 // Getting here means the tile previously had an enclosing object (Wall, door etc.) on it
-                // So go through each of the neighbour tiles and remove their rooms, as it means we could potentially be merging
-                // up to 4 rooms together.
+                // So go through each of the neighbour tiles and remove their rooms, as it means we could
+                // potentially be merging up to 4 rooms together.
                 foreach (var tile in _tile.DirectNeighbours)
                 {
                     RemoveRoom(tile.Room);
                 }
 
-                // Place the tile that currently has no room assigned back to the outside for now.
-                OutsideRoom.AssignTile(_tile);
-
-                // Set the target room for the flood fill to find tiles that are marked as outside.
-                oldRoom = OutsideRoom;
-
-                // Old rooms removed, and source tile released to outside, flood from it.
+                // Old rooms removed, flood from source to find new rooms.
                 FloodFiller.Flood(_tile,
                     floodfill_ConditionCheck,
                     floodfill_PassCheck,

@@ -78,13 +78,21 @@ namespace Controllers
             {
                 if (tile.IsMapEdge)
                 {
-                    tile.SetObject(TileObjectCache.GetObject("Tree"));
+                    tile.SetObject(TileObjectCache.GetObject("Tree"), false);
                     continue;
                 }
 
                 if (Random.Range(1, 100) <= treeSpawnChance)
                 {
-                    tile.SetObject(TileObjectCache.GetObject("Tree"));
+                    tile.SetObject(TileObjectCache.GetObject("Tree"), false);
+                }
+            }
+
+            foreach (var tile in World.Instance)
+            {
+                if (tile != null && tile.Room == null && !(tile.HasObject && tile.Object.EnclosesRoom))
+                {
+                    RoomManager.Instance.CheckForRoom(tile);
                 }
             }
         }

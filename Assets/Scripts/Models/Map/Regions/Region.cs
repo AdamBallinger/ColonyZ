@@ -11,11 +11,11 @@ namespace Models.Map.Regions
     /// </summary>
     public class Region
     {
-        public List<Tile> Tiles { get; private set; }
+        public HashSet<Tile> Tiles { get; }
 
         public Region()
         {
-            Tiles = new List<Tile>();
+            Tiles = new HashSet<Tile>();
         }
     }
 }

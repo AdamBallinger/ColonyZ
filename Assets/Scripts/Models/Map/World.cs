@@ -102,7 +102,6 @@ namespace Models.Map
                     var tile = new Tile(x, y, TileManager.GetTileDefinition("Grass"));
                     tile.onTileDefinitionChanged += _tileDefinitionChangeListener;
                     tile.onTileChanged += _tileChangedListener;
-                    RoomManager.Instance.OutsideRoom.AssignTile(tile);
                     Tiles[x * Width + y] = tile;
                 }
             }

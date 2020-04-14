@@ -10,7 +10,7 @@ namespace Models.Map.Regions
         /// <summary>
         /// Maximum size in both width and height a region can be.
         /// </summary>
-        private const int REGION_MAX_SIZE = 16;
+        public static readonly int REGION_MAX_SIZE = 16;
 
         public List<Region> Regions { get; private set; }
 

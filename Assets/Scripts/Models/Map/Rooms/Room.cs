@@ -44,14 +44,14 @@ namespace Models.Map.Rooms
         }
 
         /// <summary>
-        /// Place all tiles in this room back into the outside room.
+        /// Unassign all tiles in the room.
         /// </summary>
-        public void ReleaseTilesToOutside()
+        public void ReleaseTiles()
         {
             var tiles = Tiles.ToList();
             for (var i = Tiles.Count - 1; i >= 0; i--)
             {
-                RoomManager.Instance.OutsideRoom.AssignTile(tiles[i]);
+                tiles[i].Room?.UnassignTile(tiles[i]);
             }
         }
 
