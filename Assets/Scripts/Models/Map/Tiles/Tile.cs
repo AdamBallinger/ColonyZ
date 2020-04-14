@@ -7,6 +7,7 @@ using Models.Inventory;
 using Models.Items;
 using Models.Map.Areas;
 using Models.Map.Pathing;
+using Models.Map.Regions;
 using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
 using Models.Sprites;
@@ -15,7 +16,7 @@ using UnityEngine;
 
 namespace Models.Map.Tiles
 {
-    public class Tile : ISelectable, IInventory
+    public class Tile : ISelectable, IInventory, IEquatable<Tile>
     {
         public int X { get; }
         public int Y { get; }
@@ -27,19 +28,10 @@ namespace Models.Map.Tiles
         /// </summary>
         public List<LivingEntity> LivingEntities { get; private set; }
 
-        /// <summary>
-        /// Reference to any job for this tile.
-        /// </summary>
         public Job CurrentJob { get; set; }
 
-        /// <summary>
-        /// Reference to the current room this tile is assigned too.
-        /// </summary>
         public Room Room { get; set; }
-
-        /// <summary>
-        /// Reference to the current area this tile is assigned too.
-        /// </summary>
+        public Region Region { get; set; }
         public Area Area { get; set; }
 
         /// <summary>
@@ -78,19 +70,12 @@ namespace Models.Map.Tiles
         /// </summary>
         public List<Tile> DirectNeighbours { get; }
 
-        /// <summary>
-        /// Determines if the tile has an object installed on it.
-        /// </summary>
         public bool HasObject { get; private set; }
 
-        /// <summary>
-        /// Installed tile object for this tile.
-        /// </summary>
+        public bool IsMapEdge => X == 0 || X == World.Instance.Width - 1 || Y == 0 || Y == World.Instance.Height - 1;
+
         public TileObject Object { get; private set; }
 
-        /// <summary>
-        /// The current Item on this tile.
-        /// </summary>
         public ItemEntity Item { get; private set; }
 
         private TileDefinition definition, oldDefinition;
@@ -111,7 +96,7 @@ namespace Models.Map.Tiles
             DirectNeighbours = new List<Tile>();
         }
 
-        public void SetObject(TileObject _object)
+        public void SetObject(TileObject _object, bool _checkForRoom = true)
         {
             for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             {
@@ -130,7 +115,7 @@ namespace Models.Map.Tiles
             World.Instance.Objects.Add(_object);
             NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
 
-            if (_object.EnclosesRoom)
+            if (_checkForRoom && _object.EnclosesRoom)
             {
                 RoomManager.Instance.CheckForRoom(this);
             }
@@ -138,14 +123,14 @@ namespace Models.Map.Tiles
             onTileChanged?.Invoke(this);
         }
 
-        public void RemoveObject()
+        public void RemoveObject(bool _checkForRooms = true)
         {
             if (!HasObject)
             {
                 return;
             }
 
-            var shouldCheckForRoom = Object.EnclosesRoom;
+            var shouldCheckForRoom = _checkForRooms && Object.EnclosesRoom;
 
             World.Instance.Objects.Remove(Object);
             Object = null;
@@ -172,69 +157,15 @@ namespace Models.Map.Tiles
             Item = null;
         }
 
+        public ItemStack GetItemStack()
+        {
+            return Item?.ItemStack;
+        }
+
         public TileEnterability GetEnterability()
         {
             return HasObject ? Object.Enterability : TileEnterability.Immediate;
         }
-
-        #region Tile Exposure
-
-        /// <summary>
-        /// Returns if this tile is in direct LOS of the edge of the map.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsExposedToOutside()
-        {
-            if (HasObject && Object.EnclosesRoom) return false;
-
-            return ExposedUp() || ExposedDown() || ExposedLeft() || ExposedRight();
-        }
-
-        private bool ExposedUp()
-        {
-            var up = World.Instance.GetTileAt(X, Y + 1);
-
-            if (up == null) return true;
-
-            if (up.HasObject && up.Object.EnclosesRoom) return false;
-
-            return up.ExposedUp();
-        }
-
-        private bool ExposedDown()
-        {
-            var down = World.Instance.GetTileAt(X, Y - 1);
-
-            if (down == null) return true;
-
-            if (down.HasObject && down.Object.EnclosesRoom) return false;
-
-            return down.ExposedDown();
-        }
-
-        private bool ExposedLeft()
-        {
-            var left = World.Instance.GetTileAt(X - 1, Y);
-
-            if (left == null) return true;
-
-            if (left.HasObject && left.Object.EnclosesRoom) return false;
-
-            return left.ExposedLeft();
-        }
-
-        private bool ExposedRight()
-        {
-            var right = World.Instance.GetTileAt(X + 1, Y);
-
-            if (right == null) return true;
-
-            if (right.HasObject && right.Object.EnclosesRoom) return false;
-
-            return right.ExposedRight();
-        }
-
-        #endregion
 
         #region ISelectable Implementation
 
@@ -252,8 +183,7 @@ namespace Models.Map.Tiles
         {
             return $"Position: ({X}, {Y})\n" +
                    $"Room: {(Room != null ? Room.RoomID.ToString() : "None")}\n" +
-                   $"Area: {(Area != null ? Area.AreaName : "None")}" +
-                   $"\nExposed: {IsExposedToOutside()}\n";
+                   $"Area: {(Area != null ? Area.AreaName : "None")}\n";
         }
 
         public Vector2 GetPosition()
@@ -263,9 +193,42 @@ namespace Models.Map.Tiles
 
         #endregion
 
-        public ItemStack GetItemStack()
+        public override String ToString()
         {
-            return Item?.ItemStack;
+            return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectName : "None")}";
+        }
+
+        public bool Equals(Tile other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return X == other.X && Y == other.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Tile) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (X * 397) ^ Y;
+            }
+        }
+
+        public static bool operator ==(Tile left, Tile right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Tile left, Tile right)
+        {
+            return !Equals(left, right);
         }
     }
 }

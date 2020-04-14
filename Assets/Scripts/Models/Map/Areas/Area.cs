@@ -1,4 +1,3 @@
-using Models.Map.Rooms;
 using Models.Map.Tiles;
 using UnityEngine;
 
@@ -7,8 +6,6 @@ namespace Models.Map.Areas
     public abstract class Area
     {
         public string AreaName { get; protected set; }
-
-        public bool RequiresRoom { get; protected set; }
 
         // TODO: Maybe change this so that the tile with an object just isn't a part of the area?
         /// <summary>
@@ -41,7 +38,6 @@ namespace Models.Map.Areas
         public virtual bool CanPlace(Tile _tile)
         {
             if (_tile.Area != null) return false;
-            if (RequiresRoom && _tile.Room.RoomID == RoomManager.OUTSIDE_ROOM_ID) return false;
             if (_tile.HasObject && !CanContainObjects) return false;
 
             return true;

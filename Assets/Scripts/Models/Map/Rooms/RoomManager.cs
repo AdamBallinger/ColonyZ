@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
+using Utils;
 
 namespace Models.Map.Rooms
 {
@@ -9,21 +11,18 @@ namespace Models.Map.Rooms
     {
         public static RoomManager Instance { get; private set; }
 
-        public static int OUTSIDE_ROOM_ID => 0;
+        public List<Room> Rooms { get; }
 
-        public Room OutsideRoom { get; }
+        /// <summary>
+        /// Event called after new rooms have been created, or old rooms deleted.
+        /// </summary>
+        public event Action roomsUpdatedEvent;
 
-        private List<Room> Rooms { get; }
+        private bool shouldTriggerUpdate = false;
 
         private RoomManager()
         {
-            OutsideRoom = new Room();
-            Rooms = new List<Room>
-            {
-                OutsideRoom
-            };
-
-            OutsideRoom.AddConnection(OutsideRoom);
+            Rooms = new List<Room>();
         }
 
         public static void Create()
@@ -35,118 +34,86 @@ namespace Models.Map.Rooms
 
         public int GetRoomID(Room _room)
         {
-            return Rooms.IndexOf(_room);
+            return Rooms.IndexOf(_room) + 1;
         }
 
         private void RemoveRoom(Room _room)
         {
-            if (_room == null || _room.RoomID == OUTSIDE_ROOM_ID) return;
+            if (_room == null) return;
 
-            _room.ReleaseTilesToOutside();
+            _room.ReleaseTiles();
             Rooms.Remove(_room);
+            shouldTriggerUpdate = true;
         }
 
         public void CheckForRoom(Tile _tile)
         {
-            // Don't try flood from world edge tile.
-            if (_tile.X == 0 || _tile.X == World.Instance.Width - 1 ||
-                _tile.Y == 0 || _tile.Y == World.Instance.Height - 1)
-                return;
-
-            // Don't flood from tiles that enclose areas, but are not buildable, such as trees.
-            if (_tile.HasObject && _tile.Object.EnclosesRoom && !_tile.Object.Buildable) return;
+            if (_tile.IsMapEdge) return;
 
             var oldRoom = _tile.Room;
+
+            Predicate<Tile> floodfill_ConditionCheck = t => t != null
+                                                            && t.Room == oldRoom
+                                                            && !(t.HasObject && t.Object.EnclosesRoom);
+
+            Predicate<Tile> floodfill_PassCheck = t => t.Room == oldRoom;
 
             // An enclosing object was built on this tile.
             if (oldRoom != null)
             {
+                // TODO: Try optimise this so it doesnt release all tiles in the room it was placed.
+                // Causes massive slow downs on large maps. This is a downside to not having an
+                // outside room system.. but its going to make stuff so much easier if this works..
                 // Flood each neighbour to see if any are now enclosed.
                 foreach (var tile in _tile.DirectNeighbours)
                 {
-                    FloodFill(tile, oldRoom);
+                    FloodFiller.Flood(tile,
+                        floodfill_ConditionCheck,
+                        floodfill_PassCheck,
+                        set => CreateRoom(set.ToList()));
                 }
 
                 // Remove the source tile from its current room, as enclosing tiles do not belong to any rooms.
                 oldRoom.UnassignTile(_tile);
 
-                // Delete the old source tile room as it is no longer needed (Unless it was the outside room).
+                // Delete the old source tile room as it is no longer needed.
                 RemoveRoom(oldRoom);
             }
             else
             {
                 // Getting here means the tile previously had an enclosing object (Wall, door etc.) on it
-                // So go through each of the neighbour tiles and remove their rooms, as it means we could potentially be merging
-                // up to 4 rooms together.
-                foreach (var tile in _tile.Neighbours)
+                // So go through each of the neighbour tiles and remove their rooms, as it means we could
+                // potentially be merging up to 4 rooms together.
+                foreach (var tile in _tile.DirectNeighbours)
                 {
                     RemoveRoom(tile.Room);
                 }
 
-                // Once the rooms are removed, flood from the source tile to create the new room.
-                FloodFill(_tile, null);
+                // Old rooms removed, flood from source to find new rooms.
+                FloodFiller.Flood(_tile,
+                    floodfill_ConditionCheck,
+                    floodfill_PassCheck,
+                    set => CreateRoom(set.ToList()));
+            }
+
+            if (shouldTriggerUpdate)
+            {
+                roomsUpdatedEvent?.Invoke();
+                shouldTriggerUpdate = false;
             }
 
             GenerateRoomConnections();
         }
 
-        /// <summary>
-        /// Perform a flood fill on a given tile to check if a new room needs to be created.
-        /// </summary>
-        /// <param name="_startTile"></param>
-        /// <param name="_oldRoom"></param>
-        private void FloodFill(Tile _startTile, Room _oldRoom)
+        private void CreateRoom(List<Tile> _tiles)
         {
-            // Can't create a room outside of the map..
-            if (_startTile == null) return;
-
-            // Tile has an enclosing object so a room can't be made here.
-            if (_startTile.HasObject && _startTile.Object.EnclosesRoom) return;
-
-            // The tile must have already been assigned a new room so skip this tile.
-            if (_startTile.Room != _oldRoom) return;
-
-            var newRoom = new Room();
-
-            var tilesToCheck = new Queue<Tile>();
-            tilesToCheck.Enqueue(_startTile);
-
-            var connectedToOutside = false;
-
-            while (tilesToCheck.Count > 0)
+            if (_tiles != null && _tiles.Count > 0)
             {
-                var currentTile = tilesToCheck.Dequeue();
-
-                if (currentTile.Room != newRoom)
-                {
-                    newRoom.AssignTile(currentTile);
-
-                    foreach (var neighbour in currentTile.DirectNeighbours)
-                    {
-                        // This neighbour has already been added to the new room.
-                        if (neighbour.Room == newRoom) continue;
-
-                        // Enclosing objects don't get assigned to rooms.
-                        if (neighbour.HasObject && neighbour.Object.EnclosesRoom) continue;
-
-                        if (neighbour.IsExposedToOutside())
-                        {
-                            // Room isn't valid as it is not enclosed.
-                            connectedToOutside = true;
-                        }
-
-                        tilesToCheck.Enqueue(neighbour);
-                    }
-
-                    if (connectedToOutside)
-                    {
-                        newRoom.ReleaseTilesToOutside();
-                        return;
-                    }
-                }
+                var room = new Room();
+                _tiles.ForEach(t => room.AssignTile(t));
+                Rooms.Add(room);
+                shouldTriggerUpdate = true;
             }
-
-            Rooms.Add(newRoom);
         }
 
         private void GenerateRoomConnections()

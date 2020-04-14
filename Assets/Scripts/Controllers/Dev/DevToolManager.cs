@@ -11,12 +11,14 @@ namespace Controllers.Dev
 
         private TileNodesTool tileNodesTool;
         private ItemsDevTool itemDevTool;
+        private RoomsDebugTool roomsDebugTool;
 
         private void Awake()
         {
             Instance = this;
 
             tileNodesTool = GetComponent<TileNodesTool>();
+            roomsDebugTool = FindObjectOfType<RoomsDebugTool>();
             itemDevTool = FindObjectOfType<ItemsDevTool>();
         }
 
@@ -28,6 +30,11 @@ namespace Controllers.Dev
         public void DisableTileNodes()
         {
             tileNodesTool.enabled = false;
+        }
+
+        public void ToggleRoomsDebug()
+        {
+            roomsDebugTool.Toggle();
         }
 
         public void ToggleItemTool()

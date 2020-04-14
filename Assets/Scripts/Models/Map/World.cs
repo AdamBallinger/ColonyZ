@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Items;
 using Models.Map.Pathing;
+using Models.Map.Regions;
 using Models.Map.Rooms;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
@@ -68,6 +70,7 @@ namespace Models.Map
 
             TileManager.LoadDefinitions();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
+            RegionManager.Create();
         }
 
         public void Update()
@@ -99,7 +102,6 @@ namespace Models.Map
                     var tile = new Tile(x, y, TileManager.GetTileDefinition("Grass"));
                     tile.onTileDefinitionChanged += _tileDefinitionChangeListener;
                     tile.onTileChanged += _tileChangedListener;
-                    RoomManager.Instance.OutsideRoom.AssignTile(tile);
                     Tiles[x * Width + y] = tile;
                 }
             }
@@ -192,7 +194,7 @@ namespace Models.Map
         {
             if (!_includeConnectedRooms)
             {
-                return _room.Tiles[UnityEngine.Random.Range(0, _room.Tiles.Count)];
+                return _room.Tiles.ToList()[UnityEngine.Random.Range(0, _room.Tiles.Count)];
             }
 
             var tiles = new List<Tile>();

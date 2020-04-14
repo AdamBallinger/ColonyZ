@@ -11,7 +11,6 @@ namespace Models.Map.Areas
         public StockpileArea()
         {
             AreaName = "Stockpile";
-            RequiresRoom = false;
             CanContainObjects = false;
             MinimumSize = new Vector2(3, 2);
         }
