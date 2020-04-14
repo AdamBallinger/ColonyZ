@@ -131,7 +131,10 @@ namespace Controllers
             {
                 foreach (var tile in _tiles)
                 {
-                    tile.RemoveObject();
+                    if (tile.HasObject && ObjectCompatWithMode(tile.Object))
+                    {
+                        tile.RemoveObject();
+                    }
                 }
 
                 return;
@@ -139,16 +142,29 @@ namespace Controllers
 
             var jobs = (from tile in _tiles
                 where tile.HasObject && ObjectCompatWithMode(tile.Object)
-                select new DemolishJob(tile)).Cast<Job>().ToList();
+                select new DemolishJob(tile)).Cast<Job>();
 
             JobManager.Instance.AddJobs(jobs);
         }
 
         private void HandleGather(IEnumerable<Tile> _tiles)
         {
+            if (GodMode)
+            {
+                foreach (var tile in _tiles)
+                {
+                    if (tile.HasObject && ObjectCompatWithMode(tile.Object))
+                    {
+                        tile.RemoveObject();
+                    }
+                }
+
+                return;
+            }
+
             var jobs = (from tile in _tiles
                 where tile.HasObject && ObjectCompatWithMode(tile.Object)
-                select new HarvestJob(tile, Mode.ToString())).Cast<Job>().ToList();
+                select new HarvestJob(tile, Mode.ToString())).Cast<Job>();
 
             JobManager.Instance.AddJobs(jobs);
         }

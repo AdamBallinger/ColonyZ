@@ -11,7 +11,10 @@ namespace Models.Map.Rooms
     {
         public static RoomManager Instance { get; private set; }
 
-        private List<Room> Rooms { get; }
+        public List<Room> Rooms { get; }
+
+        public event Action roomCreatedEvent;
+        public event Action roomDeletedEvent;
 
         private RoomManager()
         {
@@ -27,7 +30,7 @@ namespace Models.Map.Rooms
 
         public int GetRoomID(Room _room)
         {
-            return Rooms.IndexOf(_room);
+            return Rooms.IndexOf(_room) + 1;
         }
 
         private void RemoveRoom(Room _room)
@@ -36,6 +39,7 @@ namespace Models.Map.Rooms
 
             _room.ReleaseTiles();
             Rooms.Remove(_room);
+            roomDeletedEvent?.Invoke();
         }
 
         public void CheckForRoom(Tile _tile)
@@ -95,6 +99,7 @@ namespace Models.Map.Rooms
                 var room = new Room();
                 _tiles.ForEach(t => room.AssignTile(t));
                 Rooms.Add(room);
+                roomCreatedEvent?.Invoke();
             }
         }
 
