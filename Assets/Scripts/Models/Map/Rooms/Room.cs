@@ -16,18 +16,16 @@ namespace Models.Map.Rooms
         /// </summary>
         public HashSet<Tile> Tiles { get; }
 
-        public List<Room> ConnectedRooms { get; }
+        public HashSet<Room> ConnectedRooms { get; }
 
         public Room()
         {
             Tiles = new HashSet<Tile>();
-            ConnectedRooms = new List<Room>();
+            ConnectedRooms = new HashSet<Room>();
         }
 
         public void AssignTile(Tile _tile)
         {
-            if (Tiles.Contains(_tile)) return;
-
             // Remove tile from its previous room.
             _tile.Room?.UnassignTile(_tile);
 
@@ -41,8 +39,6 @@ namespace Models.Map.Rooms
         /// <param name="_tile"></param>
         public void UnassignTile(Tile _tile)
         {
-            if (!Tiles.Contains(_tile)) return;
-
             Tiles.Remove(_tile);
             _tile.Room = null;
         }
