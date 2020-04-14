@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Models.Map;
-using Models.Map.Pathing;
 using Models.Map.Rooms;
 using TMPro;
 using UnityEngine;
@@ -18,10 +17,13 @@ namespace Controllers.Dev
 
         private readonly Dictionary<int, Color> roomColorMap = new Dictionary<int, Color>();
 
+        private Mesh tileMesh;
+
         private void Start()
         {
             RoomManager.Instance.roomsUpdatedEvent += UpdateOverlay;
 
+            GenerateTileMesh();
             UpdateOverlay();
         }
 
@@ -30,9 +32,11 @@ namespace Controllers.Dev
             if (!enabled)
             {
                 roomsText.text = string.Empty;
-                //meshFilter.mesh = null;
+                meshFilter.mesh = null;
                 return;
             }
+
+            meshFilter.mesh = tileMesh;
 
             foreach (var room in RoomManager.Instance.Rooms)
             {
@@ -48,12 +52,28 @@ namespace Controllers.Dev
 
             roomsText.text = "Rooms: " + RoomManager.Instance.Rooms.Count;
 
-            GenerateTileMesh();
+            var colors = meshFilter.mesh.colors;
+            var vertIndex = 0;
+
+            foreach (var tile in World.Instance)
+            {
+                var col = tile.Room != null ? roomColorMap[tile.Room.RoomID] : new Color(0, 0, 0, 0);
+                colors[vertIndex] = col;
+                colors[vertIndex + 1] = col;
+                colors[vertIndex + 2] = col;
+                colors[vertIndex + 3] = col;
+                vertIndex += 4;
+            }
+
+            meshFilter.mesh.colors = colors;
         }
 
         public void Toggle()
         {
             enabled = !enabled;
+
+            if (tileMesh == null) return;
+
             UpdateOverlay();
         }
 
@@ -69,7 +89,7 @@ namespace Controllers.Dev
 
             meshFilter.mesh = null;
 
-            var mesh = new Mesh
+            tileMesh = new Mesh
             {
                 name = "[Rooms Debug Tool] Rooms Debug Mesh",
                 indexFormat = IndexFormat.UInt32
@@ -77,13 +97,11 @@ namespace Controllers.Dev
 
             var combiner = new CombineInstance[World.Instance.Size];
 
-            for (var x = 0; x < NodeGraph.Instance.Width; x++)
+            for (var x = 0; x < World.Instance.Width; x++)
             {
-                for (var y = 0; y < NodeGraph.Instance.Height; y++)
+                for (var y = 0; y < World.Instance.Height; y++)
                 {
-                    var tile = World.Instance.GetTileAt(x, y);
-
-                    var nodesMesh = new Mesh();
+                    var tileQuad = new Mesh();
 
                     var quadVerts = new Vector3[4];
                     quadVerts[0] = new Vector2(x - 0.5f, y - 0.5f);
@@ -102,20 +120,19 @@ namespace Controllers.Dev
                     var quadColors = new Color[quadVerts.Length];
                     for (var i = 0; i < quadColors.Length; i++)
                     {
-                        var col = tile.Room != null ? roomColorMap[tile.Room.RoomID] : new Color(0, 0, 0, 0);
-                        quadColors[i] = col;
+                        quadColors[i] = new Color(0, 0, 0, 0);
                     }
 
-                    nodesMesh.vertices = quadVerts;
-                    nodesMesh.triangles = quadTris;
-                    nodesMesh.colors = quadColors;
+                    tileQuad.vertices = quadVerts;
+                    tileQuad.triangles = quadTris;
+                    tileQuad.colors = quadColors;
 
-                    combiner[x * World.Instance.Width + y].mesh = nodesMesh;
+                    combiner[x * World.Instance.Width + y].mesh = tileQuad;
                 }
             }
 
-            mesh.CombineMeshes(combiner, true, false);
-            meshFilter.mesh = mesh;
+            tileMesh.CombineMeshes(combiner, true, false);
+            meshFilter.mesh = tileMesh;
         }
     }
 }
