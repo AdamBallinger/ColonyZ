@@ -27,7 +27,22 @@ namespace Controllers
     {
         public BuildMode Mode { get; private set; }
 
-        public bool GodMode = true;
+        private bool _godMode;
+
+        public bool GodMode
+        {
+            get => _godMode;
+            set
+            {
+                if (value != _godMode)
+                {
+                    _godMode = value;
+                    godModeChangeEvent?.Invoke(_godMode);
+                }
+            }
+        }
+
+        public event Action<bool> godModeChangeEvent;
 
         /// <summary>
         /// Reference to the object that will be built on a tile when in Object build mode.
@@ -39,6 +54,7 @@ namespace Controllers
         public BuildModeController()
         {
             Mode = BuildMode.Object;
+            GodMode = true;
         }
 
         /// <summary>

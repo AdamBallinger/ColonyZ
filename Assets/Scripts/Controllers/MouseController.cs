@@ -65,6 +65,7 @@ namespace Controllers
         private void Awake()
         {
             Instance = this;
+            BuildModeController = new BuildModeController();
         }
 
         private void Start()
@@ -75,8 +76,6 @@ namespace Controllers
             camera = Camera.main;
             draggableCursorRenderer = draggableCursor.GetComponent<SpriteRenderer>();
             defaultCursorColor = draggableCursorRenderer.color;
-
-            BuildModeController = new BuildModeController();
         }
 
         private void Update()

@@ -14,14 +14,23 @@ namespace Controllers.UI.Time
 
         [SerializeField] private TMP_Text temperatureText;
 
+        [SerializeField] private TMP_Text godModeText;
+
         private void Start()
         {
             TimeManager.Instance.timeModeChangedEvent += OnTimeModeChanged;
             TimeManager.Instance.timeChangedEvent += OnTimeChanged;
             TimeManager.Instance.newDayEvent += day => dayText.text = "Day: " + day;
+            MouseController.Instance.BuildModeController.godModeChangeEvent += OnGodModeChange;
 
             modeText.text = $"{(int) TimeManager.Instance.TimeMode}x";
             dayText.text = "Day: " + TimeManager.Instance.Day;
+            OnGodModeChange(MouseController.Instance.BuildModeController.GodMode);
+        }
+
+        private void OnGodModeChange(bool _state)
+        {
+            godModeText.text = _state ? "GOD MODE" : string.Empty;
         }
 
         private void OnTimeModeChanged(TimeMode _newMode)
