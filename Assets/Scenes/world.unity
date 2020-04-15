@@ -514,7 +514,7 @@ GameObject:
   - component: {fileID: 146144097}
   - component: {fileID: 146144096}
   m_Layer: 0
-  m_Name: Area Manager
+  m_Name: Zone Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2294,7 +2294,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1029201877543582, guid: 79ca2d5c507e2884197d3a58d2d09997, type: 3}
       propertyPath: m_Name
-      value: Areas Button
+      value: Zone Button
       objectReference: {fileID: 0}
     - target: {fileID: 114038449034679424, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
@@ -2424,7 +2424,7 @@ PrefabInstance:
     - target: {fileID: 850755427329075317, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}
       propertyPath: m_text
-      value: Areas
+      value: Zones
       objectReference: {fileID: 0}
     - target: {fileID: 3991612440397122401, guid: 79ca2d5c507e2884197d3a58d2d09997,
         type: 3}

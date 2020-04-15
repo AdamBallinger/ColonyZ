@@ -1,16 +1,16 @@
 using Models.Map.Tiles;
 using UnityEngine;
 
-namespace Models.Map.Areas
+namespace Models.Map.Zones
 {
-    public abstract class Area
+    public abstract class Zone
     {
-        public string AreaName { get; protected set; }
+        public string ZoneName { get; protected set; }
 
-        // TODO: Maybe change this so that the tile with an object just isn't a part of the area?
+        // TODO: Maybe change this so that the tile with an object just isn't a part of the zone?
         /// <summary>
-        /// Determines if the area can contain objects when being placed in the word.
-        /// This does not affect the area when an object is being built after the area is placed.
+        /// Determines if the zone can contain objects when being placed in the word.
+        /// This does not affect the zone when an object is being built after the zone is placed.
         /// </summary>
         public bool CanContainObjects { get; protected set; }
 
@@ -20,7 +20,7 @@ namespace Models.Map.Areas
 
         public Vector2 Size { get; protected set; }
 
-        protected Area()
+        protected Zone()
         {
             MinimumSize = Vector2.one;
         }
@@ -37,7 +37,7 @@ namespace Models.Map.Areas
 
         public virtual bool CanPlace(Tile _tile)
         {
-            if (_tile.Area != null) return false;
+            if (_tile.Zone != null) return false;
             if (_tile.HasObject && !CanContainObjects) return false;
 
             return true;

@@ -5,11 +5,11 @@ using Models.Entities;
 using Models.Entities.Living;
 using Models.Inventory;
 using Models.Items;
-using Models.Map.Areas;
 using Models.Map.Pathing;
 using Models.Map.Regions;
 using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
+using Models.Map.Zones;
 using Models.Sprites;
 using Models.UI;
 using UnityEngine;
@@ -32,7 +32,7 @@ namespace Models.Map.Tiles
 
         public Room Room { get; set; }
         public Region Region { get; set; }
-        public Area Area { get; set; }
+        public Zone Zone { get; set; }
 
         /// <summary>
         /// The definition of this tile.
@@ -183,7 +183,7 @@ namespace Models.Map.Tiles
         {
             return $"Position: ({X}, {Y})\n" +
                    $"Room: {(Room != null ? Room.RoomID.ToString() : "None")}\n" +
-                   $"Area: {(Area != null ? Area.AreaName : "None")}\n";
+                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n";
         }
 
         public Vector2 GetPosition()

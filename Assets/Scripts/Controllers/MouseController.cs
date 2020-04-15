@@ -217,7 +217,7 @@ namespace Controllers
                         else if (BuildModeController.Mode == BuildMode.Area)
                         {
                             draggableCursor.SetActive(true);
-                            var area = BuildModeController.AreaToBuild;
+                            var area = BuildModeController.ZoneToBuild;
 
                             if (!area.CanPlace(tile) || _dragData.SizeX < area.MinimumSize.x ||
                                 _dragData.SizeY < area.MinimumSize.y)

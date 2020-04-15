@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 984015116896134390}
   - component: {fileID: 984015116896134389}
   m_Layer: 5
-  m_Name: Area Name
+  m_Name: Zone Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 984015116981611201}
   - component: {fileID: 2503986977447596745}
   m_Layer: 5
-  m_Name: Area_Overlay
+  m_Name: Zone_Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

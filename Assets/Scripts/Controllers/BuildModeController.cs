@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Models.AI.Jobs;
 using Models.Map;
-using Models.Map.Areas;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
+using Models.Map.Zones;
 using Object = UnityEngine.Object;
 
 namespace Controllers
@@ -34,7 +34,7 @@ namespace Controllers
         /// </summary>
         public TileObject ObjectToBuild { get; private set; }
 
-        public Area AreaToBuild { get; private set; }
+        public Zone ZoneToBuild { get; private set; }
 
         public BuildModeController()
         {
@@ -55,7 +55,7 @@ namespace Controllers
             {
                 case BuildMode.Area:
 
-                    if (AreaToBuild.MinimumSize.x <= _width && AreaToBuild.MinimumSize.y <= _height)
+                    if (ZoneToBuild.MinimumSize.x <= _width && ZoneToBuild.MinimumSize.y <= _height)
                     {
                         HandleBuildArea(_tiles, _x, _y, _width, _height);
                     }
@@ -81,23 +81,23 @@ namespace Controllers
 
             foreach (var tile in enumerable)
             {
-                if (!AreaToBuild.CanPlace(tile))
+                if (!ZoneToBuild.CanPlace(tile))
                 {
                     return;
                 }
             }
 
-            AreaToBuild.SetOrigin(_x, _y);
-            AreaToBuild.SetSize(_width, _height);
+            ZoneToBuild.SetOrigin(_x, _y);
+            ZoneToBuild.SetSize(_width, _height);
 
-            AreaManager.Instance.AddArea(AreaToBuild);
+            ZoneManager.Instance.AddZone(ZoneToBuild);
 
             foreach (var tile in enumerable)
             {
-                tile.Area = AreaToBuild;
+                tile.Zone = ZoneToBuild;
             }
 
-            AreaToBuild = (Area) Activator.CreateInstance(AreaToBuild.GetType());
+            ZoneToBuild = (Zone) Activator.CreateInstance(ZoneToBuild.GetType());
         }
 
         private void HandleBuild(IEnumerable<Tile> _tiles)
@@ -186,11 +186,11 @@ namespace Controllers
             return false;
         }
 
-        public void SetAreaMode(Area _areaToBuild)
+        public void SetZone(Zone _zoneToBuild)
         {
             MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Area;
-            AreaToBuild = _areaToBuild;
+            ZoneToBuild = _zoneToBuild;
         }
 
         /// <summary>

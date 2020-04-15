@@ -2,15 +2,15 @@ using Models.Items;
 using Models.Map.Tiles;
 using UnityEngine;
 
-namespace Models.Map.Areas
+namespace Models.Map.Zones
 {
-    public class StockpileArea : Area
+    public class StorageZone : Zone
     {
         private Tile[] tiles;
 
-        public StockpileArea()
+        public StorageZone()
         {
-            AreaName = "Stockpile";
+            ZoneName = "Storage";
             CanContainObjects = false;
             MinimumSize = new Vector2(3, 2);
         }
@@ -22,7 +22,7 @@ namespace Models.Map.Areas
         }
 
         /// <summary>
-        /// Returns the tile containing the given item and quantity inside the stockpile.
+        /// Returns the tile containing the given item and quantity inside the zone.
         /// </summary>
         /// <param name="_item"></param>
         /// <param name="_quantity"></param>
