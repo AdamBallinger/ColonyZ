@@ -5659,7 +5659,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 1660482577}
   overlayAlpha: 0.35
-  areasText: {fileID: 0}
+  areasText: {fileID: 1183010034}
 --- !u!1 &1694020874
 GameObject:
   m_ObjectHideFlags: 0
