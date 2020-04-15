@@ -21,3 +21,6 @@ shader, or should it be a new buildable object, separate to the TileObject syste
 
 World Shader:
 - Blending tiles so transitions between tile types isn't solid and ugly. Same for paths / flooring maybe?
+
+Toolbar:
+- This is a mess again and could do with being reworked properly so its not a spaghetti mess..
