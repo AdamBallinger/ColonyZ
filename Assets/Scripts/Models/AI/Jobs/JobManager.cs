@@ -264,9 +264,9 @@ namespace Models.AI.Jobs
             foreach (var tile in _tiles)
             {
                 if (tile.GetEnterability() != TileEnterability.Immediate) continue;
-                if (entityTile.Room == null) continue;
+                if (entityTile.Area == null) continue;
                 // Skip the tile if entities current room has no connection to the tiles room.
-                if (!entityTile.Room.HasConnection(tile.Room)) continue;
+                if (!entityTile.Area.HasConnection(tile.Area)) continue;
 
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
 

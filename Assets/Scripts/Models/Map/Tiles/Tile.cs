@@ -5,9 +5,9 @@ using Models.Entities;
 using Models.Entities.Living;
 using Models.Inventory;
 using Models.Items;
+using Models.Map.Areas;
 using Models.Map.Pathing;
 using Models.Map.Regions;
-using Models.Map.Rooms;
 using Models.Map.Tiles.Objects;
 using Models.Map.Zones;
 using Models.Sprites;
@@ -30,7 +30,7 @@ namespace Models.Map.Tiles
 
         public Job CurrentJob { get; set; }
 
-        public Room Room { get; set; }
+        public Area Area { get; set; }
         public Region Region { get; set; }
         public Zone Zone { get; set; }
 
@@ -96,7 +96,7 @@ namespace Models.Map.Tiles
             DirectNeighbours = new List<Tile>();
         }
 
-        public void SetObject(TileObject _object, bool _checkForRoom = true)
+        public void SetObject(TileObject _object, bool _checkForAreas = true)
         {
             for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             {
@@ -115,22 +115,22 @@ namespace Models.Map.Tiles
             World.Instance.Objects.Add(_object);
             NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
 
-            if (_checkForRoom && _object.EnclosesRoom)
+            if (_checkForAreas && _object.EnclosesRoom)
             {
-                RoomManager.Instance.CheckForRoom(this);
+                AreaManager.Instance.CheckForArea(this);
             }
 
             onTileChanged?.Invoke(this);
         }
 
-        public void RemoveObject(bool _checkForRooms = true)
+        public void RemoveObject(bool _checkForAreas = true)
         {
             if (!HasObject)
             {
                 return;
             }
 
-            var shouldCheckForRoom = _checkForRooms && Object.EnclosesRoom;
+            var shouldCheckForArea = _checkForAreas && Object.EnclosesRoom;
 
             World.Instance.Objects.Remove(Object);
             Object = null;
@@ -138,9 +138,9 @@ namespace Models.Map.Tiles
             NodeGraph.Instance.UpdateGraph(X, Y);
             onTileChanged?.Invoke(this);
 
-            if (shouldCheckForRoom)
+            if (shouldCheckForArea)
             {
-                RoomManager.Instance.CheckForRoom(this);
+                AreaManager.Instance.CheckForArea(this);
             }
         }
 
@@ -181,8 +181,9 @@ namespace Models.Map.Tiles
 
         public string GetSelectionDescription()
         {
+            // TODO: Only include area id in selection details doe development build / debug mode?
             return $"Position: ({X}, {Y})\n" +
-                   $"Room: {(Room != null ? Room.RoomID.ToString() : "None")}\n" +
+                   $"AreaID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
                    $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n";
         }
 

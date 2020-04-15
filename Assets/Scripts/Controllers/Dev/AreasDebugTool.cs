@@ -1,27 +1,27 @@
 ﻿using System.Collections.Generic;
 using Models.Map;
-using Models.Map.Rooms;
+using Models.Map.Areas;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Controllers.Dev
 {
-    public class RoomsDebugTool : MonoBehaviour
+    public class AreasDebugTool : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
 
         [SerializeField, Range(0.0f, 1.0f)] private float overlayAlpha = 0.25f;
 
-        [SerializeField] private TMP_Text roomsText;
+        [SerializeField] private TMP_Text areasText;
 
-        private readonly Dictionary<int, Color> roomColorMap = new Dictionary<int, Color>();
+        private readonly Dictionary<int, Color> areaColorMap = new Dictionary<int, Color>();
 
         private Mesh tileMesh;
 
         private void Start()
         {
-            RoomManager.Instance.roomsUpdatedEvent += UpdateOverlay;
+            AreaManager.Instance.areasUpdatedEvent += UpdateOverlay;
 
             GenerateTileMesh();
             UpdateOverlay();
@@ -31,33 +31,33 @@ namespace Controllers.Dev
         {
             if (!enabled)
             {
-                roomsText.text = string.Empty;
+                areasText.text = string.Empty;
                 meshFilter.mesh = null;
                 return;
             }
 
             meshFilter.mesh = tileMesh;
 
-            foreach (var room in RoomManager.Instance.Rooms)
+            foreach (var area in AreaManager.Instance.Areas)
             {
-                if (roomColorMap.ContainsKey(room.RoomID)) continue;
+                if (areaColorMap.ContainsKey(area.AreaID)) continue;
 
                 var randColor = new Color(
                     Random.Range(0.0f, 1.0f),
                     Random.Range(0.0f, 1.0f),
                     Random.Range(0.0f, 1.0f),
                     overlayAlpha);
-                roomColorMap.Add(room.RoomID, randColor);
+                areaColorMap.Add(area.AreaID, randColor);
             }
 
-            roomsText.text = "Rooms: " + RoomManager.Instance.Rooms.Count;
+            areasText.text = "Areas: " + AreaManager.Instance.Areas.Count;
 
             var colors = meshFilter.mesh.colors;
             var vertIndex = 0;
 
             foreach (var tile in World.Instance)
             {
-                var col = tile.Room != null ? roomColorMap[tile.Room.RoomID] : new Color(0, 0, 0, 0);
+                var col = tile.Area != null ? areaColorMap[tile.Area.AreaID] : new Color(0, 0, 0, 0);
                 colors[vertIndex] = col;
                 colors[vertIndex + 1] = col;
                 colors[vertIndex + 2] = col;
@@ -91,7 +91,7 @@ namespace Controllers.Dev
 
             tileMesh = new Mesh
             {
-                name = "[Rooms Debug Tool] Rooms Debug Mesh",
+                name = "[Areas Debug Tool] Areas Debug Mesh",
                 indexFormat = IndexFormat.UInt32
             };
 

@@ -13,7 +13,7 @@ namespace Controllers.UI.Toolbar.SubMenus
             AddItem("God Mode", null, () =>
                 MouseController.Instance.BuildModeController.GodMode =
                     !MouseController.Instance.BuildModeController.GodMode);
-            AddItem("Rooms Debug", null, () => DevToolManager.Instance.ToggleRoomsDebug());
+            AddItem("Areas Debug", null, () => DevToolManager.Instance.ToggleAreasDebug());
         }
 
         protected override void OnDisabled()

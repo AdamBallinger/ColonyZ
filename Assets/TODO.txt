@@ -1,7 +1,4 @@
-﻿Room and Areas:
-- Refactor Areas to zones, and Rooms to Areas to improve clarity on what these systems actually are.
-
-Regions:
+﻿Regions:
 - Split world into chunks, and flood each chunk to get the individual regions. Work out how to calculate
 adjacent regions and store them.
 

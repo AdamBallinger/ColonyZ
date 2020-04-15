@@ -5,9 +5,9 @@ using System.Linq;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Items;
+using Models.Map.Areas;
 using Models.Map.Pathing;
 using Models.Map.Regions;
-using Models.Map.Rooms;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using UnityEngine;
@@ -187,19 +187,19 @@ namespace Models.Map
         /// <summary>
         /// Returns a random tile from a given room, and optionally its connected rooms.
         /// </summary>
-        /// <param name="_room"></param>
+        /// <param name="_area"></param>
         /// <param name="_includeConnectedRooms"></param>
         /// <returns></returns>
-        public Tile GetRandomTileFromRoom(Room _room, bool _includeConnectedRooms = false)
+        public Tile GetRandomTileFromRoom(Area _area, bool _includeConnectedRooms = false)
         {
             if (!_includeConnectedRooms)
             {
-                return _room.Tiles.ToList()[UnityEngine.Random.Range(0, _room.Tiles.Count)];
+                return _area.Tiles.ToList()[UnityEngine.Random.Range(0, _area.Tiles.Count)];
             }
 
             var tiles = new List<Tile>();
 
-            foreach (var room in _room.ConnectedRooms)
+            foreach (var room in _area.LinkedAreas)
             {
                 tiles.AddRange(room.Tiles);
             }

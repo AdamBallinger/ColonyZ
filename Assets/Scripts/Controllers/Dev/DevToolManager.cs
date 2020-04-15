@@ -11,14 +11,14 @@ namespace Controllers.Dev
 
         private TileNodesTool tileNodesTool;
         private ItemsDevTool itemDevTool;
-        private RoomsDebugTool roomsDebugTool;
+        private AreasDebugTool areasDebugTool;
 
         private void Awake()
         {
             Instance = this;
 
             tileNodesTool = GetComponent<TileNodesTool>();
-            roomsDebugTool = FindObjectOfType<RoomsDebugTool>();
+            areasDebugTool = FindObjectOfType<AreasDebugTool>();
             itemDevTool = FindObjectOfType<ItemsDevTool>();
         }
 
@@ -32,9 +32,9 @@ namespace Controllers.Dev
             tileNodesTool.enabled = false;
         }
 
-        public void ToggleRoomsDebug()
+        public void ToggleAreasDebug()
         {
-            roomsDebugTool.Toggle();
+            areasDebugTool.Toggle();
         }
 
         public void ToggleItemTool()

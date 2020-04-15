@@ -26,7 +26,7 @@ namespace Models.AI
         /// The tile the motor is moving the entity towards.
         /// </summary>
         public Tile TargetTile { get; private set; }
-        
+
         private LivingEntity Entity { get; }
 
         /// <summary>
@@ -43,13 +43,13 @@ namespace Models.AI
         /// Ranging from 0 to 1, the percentage progress of the movement from the current tile to the next tile in the path.
         /// </summary>
         private float travelProgress;
-        
+
         public AIMotor(LivingEntity _entity)
         {
             Working = false;
             Entity = _entity;
         }
-        
+
         /// <summary>
         /// Update the tile the motor moves the entity towards.
         /// </summary>
@@ -57,15 +57,16 @@ namespace Models.AI
         public void SetTargetTile(Tile _tile)
         {
             Stop();
-            
+
             // Don't try move to the same tile the entity is currently on.
             if (Entity.CurrentTile.Position == _tile.Position)
             {
                 return;
             }
-            
-            // If the entities current room has no connection to the targets room, then we already know there's no valid path.
-            if (Entity.CurrentTile.Room != null && !Entity.CurrentTile.Room.HasConnection(_tile.Room))
+
+            // If the entities current area has no connection to the targets room,
+            // then we already know there's no valid path.
+            if (Entity.CurrentTile.Area != null && !Entity.CurrentTile.Area.HasConnection(_tile.Area))
             {
                 return;
             }
@@ -74,13 +75,13 @@ namespace Models.AI
             TargetTile = _tile;
             PathFinder.NewRequest(Entity.CurrentTile, TargetTile, OnPathReceived);
         }
-        
+
         public void Stop()
         {
             // TODO: Find a way to end a path without breaking the motor or causing the entity to teleport because of the tile offset.
             FinishPath();
         }
-        
+
         public void Update()
         {
             if (path == null)
@@ -100,7 +101,7 @@ namespace Models.AI
             var pathY = path.CurrentTile.Y;
             var entityX = Entity.CurrentTile.X;
             var entityY = Entity.CurrentTile.Y;
-            
+
             if (pathY < entityY) // Moving down
             {
                 DirectionIndex = pathX == entityX ? 0 : pathX > entityX ? 1 : 2;
@@ -111,10 +112,11 @@ namespace Models.AI
             }
 
             // The amount the entity will move this frame.
-            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * TimeManager.Instance.DeltaTime;
+            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier *
+                                TimeManager.Instance.DeltaTime;
             var travelPercentageThisFrame = movementDelta / distance;
             travelProgress += travelPercentageThisFrame;
-            
+
             if (travelProgress >= 1.0f)
             {
                 Entity.CurrentTile.LivingEntities.Remove(Entity);
@@ -139,7 +141,7 @@ namespace Models.AI
 
             Entity.TileOffset = (path.CurrentTile.Position - Entity.CurrentTile.Position) * travelProgress;
         }
-        
+
         private void OnPathReceived(Path _path)
         {
             if (_path.IsValid && _path.Size > 0)
@@ -156,7 +158,7 @@ namespace Models.AI
                 Entity.OnPathFailed();
             }
         }
-        
+
         private void FinishPath()
         {
             Working = false;
@@ -165,7 +167,7 @@ namespace Models.AI
             Entity.TileOffset = Vector2.zero;
             DirectionIndex = 0;
         }
-        
+
         private float GetDistance()
         {
             return Mathf.Sqrt(Mathf.Pow(Entity.CurrentTile.X - path.CurrentTile.X, 2) +

@@ -5,8 +5,8 @@ using Models.AI.Jobs;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Map;
+using Models.Map.Areas;
 using Models.Map.Pathing;
-using Models.Map.Rooms;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using Models.Map.Zones;
@@ -56,7 +56,7 @@ namespace Controllers
 
         private void SetupWorld()
         {
-            RoomManager.Create();
+            AreaManager.Create();
             ZoneManager.Create();
             TimeManager.Create(6, 30, 1);
             JobManager.Create();
@@ -90,9 +90,9 @@ namespace Controllers
 
             foreach (var tile in World.Instance)
             {
-                if (tile != null && tile.Room == null && !(tile.HasObject && tile.Object.EnclosesRoom))
+                if (tile != null && tile.Area == null && !(tile.HasObject && tile.Object.EnclosesRoom))
                 {
-                    RoomManager.Instance.CheckForRoom(tile);
+                    AreaManager.Instance.CheckForArea(tile);
                 }
             }
         }

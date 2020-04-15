@@ -5578,7 +5578,7 @@ GameObject:
   - component: {fileID: 1660482577}
   - component: {fileID: 1660482576}
   m_Layer: 0
-  m_Name: Room Debug Tool
+  m_Name: Area Debug Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5659,7 +5659,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 1660482577}
   overlayAlpha: 0.35
-  roomsText: {fileID: 1183010034}
+  areasText: {fileID: 0}
 --- !u!1 &1694020874
 GameObject:
   m_ObjectHideFlags: 0
