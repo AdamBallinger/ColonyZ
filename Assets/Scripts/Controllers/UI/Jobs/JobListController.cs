@@ -73,7 +73,7 @@ namespace Controllers.UI.Jobs
             buttonText.text = "Close";
             buttonText.color = closeTextColor;
             entryRoot.SetActive(true);
-            rTransform.sizeDelta = new Vector2(254, 407);
+            rTransform.sizeDelta = new Vector2(311, 490);
         }
 
         private void Close()
@@ -82,7 +82,7 @@ namespace Controllers.UI.Jobs
             buttonText.text = "Open";
             buttonText.color = openTextColor;
             entryRoot.SetActive(false);
-            rTransform.sizeDelta = new Vector2(172, 27);
+            rTransform.sizeDelta = new Vector2(240, 21);
         }
     }
 }
