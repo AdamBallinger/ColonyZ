@@ -1422,8 +1422,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -226.6, y: 0}
-  m_SizeDelta: {x: 238.94, y: 47.14}
+  m_AnchoredPosition: {x: -374, y: -12}
+  m_SizeDelta: {x: 240, y: 47}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &562226202
 MonoBehaviour:
@@ -1471,13 +1471,13 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 0
-  m_fontStyle: 33
+  m_fontStyle: 17
   m_textAlignment: 514
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -3598,7 +3598,7 @@ GameObject:
   - component: {fileID: 1183010035}
   - component: {fileID: 1183010034}
   m_Layer: 5
-  m_Name: Rooms Info
+  m_Name: Areas Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3618,11 +3618,11 @@ RectTransform:
   m_Father: {fileID: 1106070750}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 107}
-  m_SizeDelta: {x: 145.8, y: 50}
-  m_Pivot: {x: 1, y: 0.5}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -367, y: -85}
+  m_SizeDelta: {x: 254, y: 35}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &1183010034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3644,8 +3644,7 @@ MonoBehaviour:
   m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5b143fc62cd7ccb40a6c9977088bb083, type: 2}
-  m_sharedMaterial: {fileID: 7790979341800254915, guid: 5b143fc62cd7ccb40a6c9977088bb083,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 11e0183ab8efa2046bc397c67a952d35, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3670,13 +3669,13 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_textAlignment: 257
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -3684,7 +3683,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_firstOverflowCharacterIndex: -1
@@ -5582,6 +5581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 1555484631}
   regionOverlayColor: {r: 0, g: 1, b: 0.12042332, a: 0.1764706}
+  regionNeighbourColor: {r: 1, g: 1, b: 1, a: 0.1764706}
 --- !u!1 &1563564460
 GameObject:
   m_ObjectHideFlags: 0
@@ -6437,9 +6437,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cee140ee272f24ba4a9e3dfdb4d706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 32
-  worldHeight: 32
-  treeSpawnChance: 41
+  worldWidth: 64
+  worldHeight: 64
+  treeSpawnChance: 20
   initialCharacterCount: 0
   dataLoader: {fileID: 1523355955}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,

@@ -11,6 +11,7 @@ namespace Controllers.Dev
         [SerializeField] private MeshFilter meshFilter;
 
         [SerializeField] private Color regionOverlayColor;
+        [SerializeField] private Color regionNeighbourColor;
 
         private Tile selectedTile;
 
@@ -50,6 +51,18 @@ namespace Controllers.Dev
                 colors[vertIndex + 1] = regionOverlayColor;
                 colors[vertIndex + 2] = regionOverlayColor;
                 colors[vertIndex + 3] = regionOverlayColor;
+            }
+
+            foreach (var region in RegionLinks.GetRegionNeighbours(_region))
+            {
+                foreach (var tile in region.Tiles)
+                {
+                    var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
+                    colors[vertIndex] = regionNeighbourColor;
+                    colors[vertIndex + 1] = regionNeighbourColor;
+                    colors[vertIndex + 2] = regionNeighbourColor;
+                    colors[vertIndex + 3] = regionNeighbourColor;
+                }
             }
 
             meshFilter.mesh.colors = colors;

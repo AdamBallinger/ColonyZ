@@ -51,6 +51,7 @@ namespace Models.Map.Regions
             }
 
             FloodChunk(chunk);
+
             regionsUpdateEvent?.Invoke();
         }
 
@@ -72,7 +73,15 @@ namespace Models.Map.Regions
         {
             foreach (var tile in _chunk.Tiles)
             {
-                if (tile.GetEnterability() != TileEnterability.Immediate) continue;
+                if (tile.GetEnterability() == TileEnterability.None) continue;
+
+                // Doors are their own region.
+                if (tile.GetEnterability() == TileEnterability.Delayed)
+                {
+                    CreateRegion(new List<Tile> {tile});
+                    continue;
+                }
+
                 if (tile.Region != null) continue;
 
                 FloodFiller.Flood(tile,
@@ -96,6 +105,7 @@ namespace Models.Map.Regions
             _tiles.ForEach(t => region.Add(t));
 
             Regions.Add(region);
+            RegionLinks.Add(region);
         }
 
         private void DeleteRegion(Region _region)
@@ -106,6 +116,7 @@ namespace Models.Map.Regions
             }
 
             Regions.Remove(_region);
+            RegionLinks.Remove(_region);
         }
     }
 }
