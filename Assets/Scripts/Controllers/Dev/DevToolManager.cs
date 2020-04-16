@@ -12,6 +12,7 @@ namespace Controllers.Dev
         private TileNodesTool tileNodesTool;
         private ItemsDevTool itemDevTool;
         private AreasDebugTool areasDebugTool;
+        private RegionsDebugTool regionsDebugTool;
 
         private void Awake()
         {
@@ -20,6 +21,7 @@ namespace Controllers.Dev
             tileNodesTool = GetComponent<TileNodesTool>();
             areasDebugTool = FindObjectOfType<AreasDebugTool>();
             itemDevTool = FindObjectOfType<ItemsDevTool>();
+            regionsDebugTool = FindObjectOfType<RegionsDebugTool>();
         }
 
         public void ToggleTileNodes()
@@ -35,6 +37,11 @@ namespace Controllers.Dev
         public void ToggleAreasDebug()
         {
             areasDebugTool.Toggle();
+        }
+
+        public void ToggleRegionsDebug()
+        {
+            regionsDebugTool.Toggle();
         }
 
         public void ToggleItemTool()

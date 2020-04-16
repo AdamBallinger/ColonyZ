@@ -14,6 +14,7 @@ namespace Controllers.UI.Toolbar.SubMenus
                 MouseController.Instance.BuildModeController.GodMode =
                     !MouseController.Instance.BuildModeController.GodMode);
             AddItem("Areas Debug", null, () => DevToolManager.Instance.ToggleAreasDebug());
+            AddItem("Regions Debug", null, () => DevToolManager.Instance.ToggleRegionsDebug());
         }
 
         protected override void OnDisabled()

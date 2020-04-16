@@ -17,6 +17,13 @@ namespace Models.Map
             BuildWorldGrid();
         }
 
+        public WorldChunk GetChunkAt(int _x, int _y)
+        {
+            var cX = _x / GRID_SIZE;
+            var cY = _y / GRID_SIZE;
+            return Chunks.Find(c => c.X == cX && c.Y == cY);
+        }
+
         private void BuildWorldGrid()
         {
             for (var cx = 0; cx < world.Width / GRID_SIZE; cx++)
