@@ -6437,9 +6437,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cee140ee272f24ba4a9e3dfdb4d706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 64
-  worldHeight: 64
-  treeSpawnChance: 31
+  worldWidth: 32
+  worldHeight: 32
+  treeSpawnChance: 41
   initialCharacterCount: 0
   dataLoader: {fileID: 1523355955}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,

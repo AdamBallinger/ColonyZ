@@ -23,10 +23,10 @@ namespace Controllers.Dev
             MouseController.Instance.mouseClickEvent += (t, ui) =>
             {
                 selectedTile = ui || MouseController.Instance.Mode == MouseMode.Process ? selectedTile : t;
-                UpdateOverlay(selectedTile.Region, ui);
+                UpdateOverlay(selectedTile?.Region, ui);
             };
 
-            RegionManager.Instance.regionsUpdateEvent += () => UpdateOverlay(selectedTile.Region, false);
+            RegionManager.Instance.regionsUpdateEvent += () => UpdateOverlay(selectedTile?.Region, false);
         }
 
         private void UpdateOverlay(Region _region, bool _ui)
