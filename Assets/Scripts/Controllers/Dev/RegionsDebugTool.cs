@@ -22,9 +22,7 @@ namespace Controllers.Dev
 
             MouseController.Instance.mouseClickEvent += (t, ui) =>
             {
-                selectedTile = ui || MouseController.Instance.Mode == MouseMode.Process
-                    ? selectedTile
-                    : t;
+                selectedTile = ui || MouseController.Instance.Mode == MouseMode.Process ? selectedTile : t;
                 UpdateOverlay(selectedTile.Region, ui);
             };
 
