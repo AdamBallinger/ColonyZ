@@ -183,8 +183,9 @@ namespace Models.Map.Tiles
         {
             // TODO: Only include area id in selection details doe development build / debug mode?
             return $"Position: ({X}, {Y})\n" +
-                   $"AreaID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
-                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n";
+                   $"Area ID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
+                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n" +
+                   $"Region ID: {RegionManager.Instance.GetID(Region)}\n";
         }
 
         public Vector2 GetPosition()

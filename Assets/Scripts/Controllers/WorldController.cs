@@ -7,6 +7,7 @@ using Models.Entities.Living;
 using Models.Map;
 using Models.Map.Areas;
 using Models.Map.Pathing;
+using Models.Map.Regions;
 using Models.Map.Tiles;
 using Models.Map.Tiles.Objects;
 using Models.Map.Zones;
@@ -95,6 +96,8 @@ namespace Controllers
                     AreaManager.Instance.CheckForArea(tile);
                 }
             }
+
+            RegionManager.Instance.BuildRegions();
         }
 
         private void Update()
