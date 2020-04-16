@@ -12,38 +12,46 @@ namespace Controllers.Dev
 
         [SerializeField] private Color regionOverlayColor;
 
+        private Tile selectedTile;
+
         private Mesh tileMesh;
 
         private void Start()
         {
             GenerateTileMesh();
 
-            MouseController.Instance.mouseClickEvent += UpdateOverlay;
+            MouseController.Instance.mouseClickEvent += (t, ui) =>
+            {
+                selectedTile = ui || MouseController.Instance.Mode == MouseMode.Process
+                    ? selectedTile
+                    : t;
+                UpdateOverlay(selectedTile.Region, ui);
+            };
+
+            RegionManager.Instance.regionsUpdateEvent += () => UpdateOverlay(selectedTile.Region, false);
         }
 
-        private void UpdateOverlay(Tile _tile, bool _ui)
+        private void UpdateOverlay(Region _region, bool _ui)
         {
-            if (!enabled || _tile == null)
+            if (!enabled || _region == null)
             {
                 meshFilter.mesh = null;
                 return;
             }
 
+            if (_ui) return;
+
             meshFilter.mesh = tileMesh;
 
-            var tileRegion = RegionManager.Instance.GetID(_tile.Region);
             var colors = new Color[meshFilter.mesh.vertexCount];
 
-            if (tileRegion != -1)
+            foreach (var tile in _region.Tiles)
             {
-                foreach (var tile in _tile.Region.Tiles)
-                {
-                    var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                    colors[vertIndex] = regionOverlayColor;
-                    colors[vertIndex + 1] = regionOverlayColor;
-                    colors[vertIndex + 2] = regionOverlayColor;
-                    colors[vertIndex + 3] = regionOverlayColor;
-                }
+                var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
+                colors[vertIndex] = regionOverlayColor;
+                colors[vertIndex + 1] = regionOverlayColor;
+                colors[vertIndex + 2] = regionOverlayColor;
+                colors[vertIndex + 3] = regionOverlayColor;
             }
 
             meshFilter.mesh.colors = colors;

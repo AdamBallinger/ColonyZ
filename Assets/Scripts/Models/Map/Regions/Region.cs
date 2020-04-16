@@ -10,7 +10,7 @@ namespace Models.Map.Regions
     /// Regions are defined a max size in RegionManager.cs and will always be built to follow a grid like
     /// layout.
     /// </summary>
-    public struct Region
+    public class Region
     {
         public HashSet<Tile> Tiles { get; private set; }
 

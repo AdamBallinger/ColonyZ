@@ -118,6 +118,7 @@ namespace Models.Map.Tiles
             if (_checkForAreas && _object.EnclosesRoom)
             {
                 AreaManager.Instance.CheckForArea(this);
+                RegionManager.Instance.Update(this);
             }
 
             onTileChanged?.Invoke(this);
@@ -141,6 +142,7 @@ namespace Models.Map.Tiles
             if (shouldCheckForArea)
             {
                 AreaManager.Instance.CheckForArea(this);
+                RegionManager.Instance.Update(this);
             }
         }
 
@@ -181,11 +183,10 @@ namespace Models.Map.Tiles
 
         public string GetSelectionDescription()
         {
-            // TODO: Only include area id in selection details doe development build / debug mode?
+            // TODO: Only include area id in selection details for development build / debug mode?
             return $"Position: ({X}, {Y})\n" +
                    $"Area ID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
-                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n" +
-                   $"Region ID: {RegionManager.Instance.GetID(Region)}\n";
+                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n";
         }
 
         public Vector2 GetPosition()
