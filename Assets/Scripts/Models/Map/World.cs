@@ -26,7 +26,7 @@ namespace Models.Map
         /// </summary>
         public int Size => Width * Height;
 
-        private Tile[] Tiles { get; set; }
+        public WorldGridLayout WorldGrid { get; private set; }
 
         public List<LivingEntity> Characters { get; private set; }
 
@@ -43,6 +43,8 @@ namespace Models.Map
         /// Event called when an Entity is removed from the world.
         /// </summary>
         public event Action<Entity> onEntityRemoved;
+
+        private Tile[] Tiles { get; set; }
 
         private World()
         {
@@ -70,6 +72,7 @@ namespace Models.Map
 
             TileManager.LoadDefinitions();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
+            Instance.WorldGrid = new WorldGridLayout(Instance);
             RegionManager.Create();
         }
 
