@@ -32,14 +32,14 @@ namespace Models.Map
             var chunksHeight = world.Height / CHUNK_SIZE;
             chunksHeight += world.Height / chunksHeight;
 
-            for (var cx = 0; cx < chunksWidth; cx++)
+            for (var cy = 0; cy < chunksHeight; cy++)
             {
-                for (var cy = 0; cy < chunksHeight; cy++)
+                for (var cx = 0; cx < chunksWidth; cx++)
                 {
                     var chunk = new WorldChunk(cx, cy);
-                    for (var x = 0; x < CHUNK_SIZE; x++)
+                    for (var y = 0; y < CHUNK_SIZE; y++)
                     {
-                        for (var y = 0; y < CHUNK_SIZE; y++)
+                        for (var x = 0; x < CHUNK_SIZE; x++)
                         {
                             var xOffset = cx * CHUNK_SIZE;
                             var yOffset = cy * CHUNK_SIZE;
