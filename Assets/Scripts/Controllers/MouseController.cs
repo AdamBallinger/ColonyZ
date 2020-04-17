@@ -31,6 +31,11 @@ namespace Controllers
         /// </summary>
         public event Action<Tile, bool> mouseClickEvent;
 
+        /// <summary>
+        /// Event called when the mouse moves over a new tile. Passes new tile and if mouse is over UI.
+        /// </summary>
+        public event Action<Tile, bool> mouseTileChangeEvent;
+
         [SerializeField] private GameObject draggableCursor;
 
         private SpriteRenderer draggableCursorRenderer;
@@ -60,6 +65,8 @@ namespace Controllers
         /// </summary>
         private Color defaultCursorColor;
 
+        private Tile lastFrameTile;
+
         private new Camera camera;
 
         private void Awake()
@@ -81,6 +88,8 @@ namespace Controllers
         private void Update()
         {
             HandleDragging();
+
+            lastFrameTile = GetTileUnderMouse();
         }
 
         private void HandleDragging()
@@ -88,10 +97,16 @@ namespace Controllers
             IsMouseOverUI = EventSystem.current.IsPointerOverGameObject();
 
             currentMousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+            var currentMouseTile = GetTileUnderMouse();
+
+            if (currentMouseTile != lastFrameTile)
+            {
+                mouseTileChangeEvent?.Invoke(currentMouseTile, IsMouseOverUI);
+            }
 
             if (Input.GetMouseButtonDown(0))
             {
-                mouseClickEvent?.Invoke(GetTileUnderMouse(), IsMouseOverUI);
+                mouseClickEvent?.Invoke(currentMouseTile, IsMouseOverUI);
             }
 
             if (!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
