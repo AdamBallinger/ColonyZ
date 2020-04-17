@@ -50,6 +50,15 @@ namespace Models.Map.Tiles
             }
         }
 
+        #region Neighbour Accessbility Utility
+
+        public Tile Left => World.Instance.GetTileAt(X - 1, Y);
+        public Tile Right => World.Instance.GetTileAt(X + 1, Y);
+        public Tile Up => World.Instance.GetTileAt(X, Y + 1);
+        public Tile Down => World.Instance.GetTileAt(X, Y - 1);
+
+        #endregion
+
         /// <summary>
         /// Event called when the tile has changed (Object added or removed etc.).
         /// </summary>
