@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Models.Map.Tiles;
-using UnityEngine;
 
 namespace Models.Map.Regions
 {
@@ -14,18 +14,135 @@ namespace Models.Map.Regions
     {
         public HashSet<Tile> Tiles { get; private set; }
 
+        public List<RegionLink> Links { get; } = new List<RegionLink>();
+
+        /// <summary>
+        /// Map of tiles that are providing access to another region.
+        /// 0 - Tiles granting access from the right.
+        /// 1 - Tiles granting access upwards.
+        /// </summary>
+        public Dictionary<int, List<Tile>> BoundaryTiles { get; private set; }
+
         public void Add(Tile _tile)
         {
             if (Tiles == null) Tiles = new HashSet<Tile>();
 
             if (Tiles.Contains(_tile))
             {
-                Debug.LogWarning("Trying to add a tile to region that already contains tile.");
                 return;
             }
 
             Tiles.Add(_tile);
             _tile.Region = this;
+        }
+
+        public void CalculateBoundaryTiles()
+        {
+            BoundaryTiles = new Dictionary<int, List<Tile>>();
+            BoundaryTiles.Add(0, new List<Tile>()); // Left
+            BoundaryTiles.Add(1, new List<Tile>()); // Right
+            BoundaryTiles.Add(2, new List<Tile>()); // Up
+            BoundaryTiles.Add(3, new List<Tile>()); // Down
+
+            foreach (var tile in Tiles)
+            {
+                if (tile.Left?.Region == tile.Region
+                    && tile.Right?.Region == tile.Region
+                    && tile.Up?.Region == tile.Region
+                    && tile.Down?.Region == tile.Region) continue;
+
+                if (tile.Left?.GetEnterability() != TileEnterability.None
+                    && tile.Left?.Region != tile.Region)
+                    BoundaryTiles[0].Add(tile);
+
+                if (tile.Right?.GetEnterability() != TileEnterability.None
+                    && tile.Right?.Region != tile.Region)
+                    BoundaryTiles[1].Add(tile.Right);
+
+                if (tile.Up?.GetEnterability() != TileEnterability.None
+                    && tile.Up?.Region != tile.Region)
+                    BoundaryTiles[2].Add(tile.Up);
+
+                if (tile.Down?.GetEnterability() != TileEnterability.None
+                    && tile.Down?.Region != tile.Region)
+                    BoundaryTiles[3].Add(tile);
+            }
+
+            // Sort because the regions are created from a floodfill which means the bridges wont
+            // correctly organised when detecting edge spans.
+            BoundaryTiles[0].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
+            BoundaryTiles[1].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
+            BoundaryTiles[2].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+            BoundaryTiles[3].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+
+            GenerateEdgeSpans();
+        }
+
+        private void GenerateEdgeSpans()
+        {
+            foreach (var link in Links)
+            {
+                link.Unassign(this);
+            }
+
+            var spans = new List<EdgeSpan>();
+
+            foreach (var pair in BoundaryTiles)
+            {
+                var edgeSpan = new List<Tile>();
+                var newSpan = true;
+                var spanDir = pair.Key == 0 || pair.Key == 1 ? EdgeSpanDirection.Right : EdgeSpanDirection.Up;
+
+                foreach (var tile in pair.Value)
+                {
+                    // A new span started so auto add this tile to the span list.
+                    if (newSpan)
+                    {
+                        edgeSpan.Add(tile);
+                        newSpan = false;
+                        continue;
+                    }
+
+                    var lastSpanTile = edgeSpan[edgeSpan.Count - 1];
+
+                    // Right links.
+                    if (spanDir == EdgeSpanDirection.Right)
+                    {
+                        if (Math.Abs(tile.Y - lastSpanTile.Y) > 1)
+                        {
+                            spans.Add(new EdgeSpan(edgeSpan[0], EdgeSpanDirection.Right, edgeSpan.Count));
+                            edgeSpan = new List<Tile>();
+                            edgeSpan.Add(tile);
+                            continue;
+                        }
+                    }
+                    // Up links.
+                    else
+                    {
+                        if (Math.Abs(tile.X - lastSpanTile.X) > 1)
+                        {
+                            spans.Add(new EdgeSpan(edgeSpan[0], EdgeSpanDirection.Up, edgeSpan.Count));
+                            edgeSpan = new List<Tile>();
+                            edgeSpan.Add(tile);
+                            continue;
+                        }
+                    }
+
+                    edgeSpan.Add(tile);
+                }
+
+                if (edgeSpan.Count > 0)
+                {
+                    spans.Add(new EdgeSpan(edgeSpan[0], spanDir, edgeSpan.Count));
+                }
+            }
+
+            foreach (var span in spans)
+            {
+                var link = RegionLinksDatabase.LinkFromSpan(span);
+                link.Assign(this);
+                Links.Add(link);
+            }
         }
     }
 }

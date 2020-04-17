@@ -5580,8 +5580,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 1555484631}
-  regionOverlayColor: {r: 0, g: 1, b: 0.12042332, a: 0.1764706}
-  regionNeighbourColor: {r: 1, g: 1, b: 1, a: 0.1764706}
+  regionOverlayColor: {r: 0, g: 1, b: 0.12042332, a: 0.09803922}
+  regionNeighbourColor: {r: 1, g: 1, b: 1, a: 0.09803922}
+  regionBridgeColor: {r: 0.03756237, g: 0, b: 1, a: 0.3529412}
+  drawNeighbours: 1
+  drawBridges: 1
 --- !u!1 &1563564460
 GameObject:
   m_ObjectHideFlags: 0
@@ -6437,9 +6440,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cee140ee272f24ba4a9e3dfdb4d706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 64
-  worldHeight: 64
-  treeSpawnChance: 20
+  worldWidth: 32
+  worldHeight: 32
+  treeSpawnChance: 6
   initialCharacterCount: 0
   dataLoader: {fileID: 1523355955}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
@@ -7384,7 +7387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxZoom: 0.5
-  minZoom: 25
+  minZoom: 45
   zoomSpeed: 65
   cameraMoveSpeed: 2.5
   cameraPivot: {fileID: 740356067}

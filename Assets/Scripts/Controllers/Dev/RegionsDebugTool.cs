@@ -12,6 +12,10 @@ namespace Controllers.Dev
 
         [SerializeField] private Color regionOverlayColor;
         [SerializeField] private Color regionNeighbourColor;
+        [SerializeField] private Color regionBridgeColor;
+
+        [SerializeField] private bool drawNeighbours;
+        [SerializeField] private bool drawBridges;
 
         private Tile selectedTile;
 
@@ -23,6 +27,14 @@ namespace Controllers.Dev
 
             MouseController.Instance.mouseClickEvent += (t, ui) =>
             {
+                selectedTile = ui || MouseController.Instance.Mode == MouseMode.Process ? selectedTile : t;
+                UpdateOverlay(selectedTile?.Region, ui);
+            };
+
+            MouseController.Instance.mouseTileChangeEvent += (t, ui) =>
+            {
+                if (t?.Region == null) return;
+                if (t.Region == selectedTile?.Region) return;
                 selectedTile = ui || MouseController.Instance.Mode == MouseMode.Process ? selectedTile : t;
                 UpdateOverlay(selectedTile?.Region, ui);
             };
@@ -53,15 +65,36 @@ namespace Controllers.Dev
                 colors[vertIndex + 3] = regionOverlayColor;
             }
 
-            foreach (var region in RegionLinks.GetRegionNeighbours(_region))
+            if (drawNeighbours)
             {
-                foreach (var tile in region.Tiles)
+                foreach (var link in _region.Links)
                 {
-                    var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                    colors[vertIndex] = regionNeighbourColor;
-                    colors[vertIndex + 1] = regionNeighbourColor;
-                    colors[vertIndex + 2] = regionNeighbourColor;
-                    colors[vertIndex + 3] = regionNeighbourColor;
+                    var neighbour = link.GetOther(_region);
+                    if (neighbour == null) break;
+
+                    foreach (var tile in neighbour.Tiles)
+                    {
+                        var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
+                        colors[vertIndex] = regionNeighbourColor;
+                        colors[vertIndex + 1] = regionNeighbourColor;
+                        colors[vertIndex + 2] = regionNeighbourColor;
+                        colors[vertIndex + 3] = regionNeighbourColor;
+                    }
+                }
+            }
+
+            if (drawBridges)
+            {
+                foreach (var pair in _region.BoundaryTiles)
+                {
+                    foreach (var tile in pair.Value)
+                    {
+                        var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
+                        colors[vertIndex] = regionBridgeColor;
+                        colors[vertIndex + 1] = regionBridgeColor;
+                        colors[vertIndex + 2] = regionBridgeColor;
+                        colors[vertIndex + 3] = regionBridgeColor;
+                    }
                 }
             }
 

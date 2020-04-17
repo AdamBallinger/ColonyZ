@@ -105,7 +105,7 @@ namespace Models.Map.Regions
             _tiles.ForEach(t => region.Add(t));
 
             Regions.Add(region);
-            RegionLinks.Add(region);
+            region.CalculateBoundaryTiles();
         }
 
         private void DeleteRegion(Region _region)
@@ -115,8 +115,12 @@ namespace Models.Map.Regions
                 tile.Region = null;
             }
 
+            foreach (var link in _region.Links)
+            {
+                link.Unassign(_region);
+            }
+
             Regions.Remove(_region);
-            RegionLinks.Remove(_region);
         }
     }
 }
