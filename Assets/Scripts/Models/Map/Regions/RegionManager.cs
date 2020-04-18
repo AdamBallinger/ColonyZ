@@ -28,11 +28,6 @@ namespace Models.Map.Regions
             Instance = new RegionManager();
         }
 
-        public int GetID(Region _region)
-        {
-            return Regions.Contains(_region) ? Regions.IndexOf(_region) + 1 : -1;
-        }
-
         /// <summary>
         /// Update regions when a tile has an object placed / removed.
         /// </summary>
