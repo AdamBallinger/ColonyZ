@@ -9,7 +9,7 @@ namespace Models.Map
 
         private World world;
 
-        private const int CHUNK_SIZE = 16;
+        private const int CHUNK_SIZE = 12;
 
         public WorldGridLayout(World _world)
         {
