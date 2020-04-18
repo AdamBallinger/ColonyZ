@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Items;
-using Models.Map.Areas;
 using Models.Map.Pathing;
 using Models.Map.Regions;
 using Models.Map.Tiles;
@@ -185,29 +183,6 @@ namespace Models.Map
         public Tile GetRandomTileAround(Tile _tile, int _radius)
         {
             return GetRandomTileAround(_tile.X, _tile.Y, _radius);
-        }
-
-        /// <summary>
-        /// Returns a random tile from a given room, and optionally its connected rooms.
-        /// </summary>
-        /// <param name="_area"></param>
-        /// <param name="_includeConnectedRooms"></param>
-        /// <returns></returns>
-        public Tile GetRandomTileFromRoom(Area _area, bool _includeConnectedRooms = false)
-        {
-            if (!_includeConnectedRooms)
-            {
-                return _area.Tiles.ToList()[UnityEngine.Random.Range(0, _area.Tiles.Count)];
-            }
-
-            var tiles = new List<Tile>();
-
-            foreach (var room in _area.LinkedAreas)
-            {
-                tiles.AddRange(room.Tiles);
-            }
-
-            return tiles[UnityEngine.Random.Range(0, tiles.Count)];
         }
 
         /// <summary>
