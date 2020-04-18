@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Models.Map
 {
@@ -22,6 +23,23 @@ namespace Models.Map
             var cX = _x / CHUNK_SIZE;
             var cY = _y / CHUNK_SIZE;
             return Chunks.Find(c => c.X == cX && c.Y == cY);
+        }
+
+        public List<WorldChunk> GetChunkNeighbours(WorldChunk _chunk)
+        {
+            var chunks = new List<WorldChunk>();
+
+            foreach (var chunk in Chunks)
+            {
+                var cdx = Math.Abs(_chunk.X - chunk.X);
+                var cdy = Math.Abs(_chunk.Y - chunk.Y);
+                if (cdx == 1 && cdy == 0 || cdx == 0 && cdy == 1)
+                {
+                    chunks.Add(chunk);
+                }
+            }
+
+            return chunks;
         }
 
         private void BuildWorldGrid()

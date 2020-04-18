@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace Models.Map.Regions
 {
     public static class RegionLinksDatabase
     {
-        private static Dictionary<ulong, RegionLink> Links { get; } = new Dictionary<ulong, RegionLink>();
+        public static Dictionary<ulong, RegionLink> Links { get; } = new Dictionary<ulong, RegionLink>();
 
         public static RegionLink LinkFromSpan(EdgeSpan _span)
         {
@@ -23,7 +22,6 @@ namespace Models.Map.Regions
 
         public static void NotifyEmptyLink(RegionLink _link)
         {
-            Debug.Log("Removing empty link.");
             Links.Remove(_link.Span.UniqueHashCode());
         }
     }

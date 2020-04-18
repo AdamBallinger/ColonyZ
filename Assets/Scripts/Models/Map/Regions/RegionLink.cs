@@ -44,7 +44,11 @@ namespace Models.Map.Regions
 
         public void Unassign(Region _region)
         {
-            if (regions[0] != _region || regions[1] != _region) return;
+            if (regions[0] != _region && regions[1] != _region)
+            {
+                Debug.LogError("Trying to unassign region from a link it was never assigned to.");
+                return;
+            }
 
             if (regions[0] == _region)
             {

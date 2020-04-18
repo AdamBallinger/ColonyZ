@@ -13,9 +13,11 @@ namespace Controllers.Dev
         [SerializeField] private Color regionOverlayColor;
         [SerializeField] private Color regionNeighbourColor;
         [SerializeField] private Color regionBridgeColor;
+        [SerializeField] private Color regionEdgeColor;
 
         [SerializeField] private bool drawNeighbours;
         [SerializeField] private bool drawBridges;
+        [SerializeField] private bool drawEdges;
 
         private Tile selectedTile;
 
@@ -85,7 +87,7 @@ namespace Controllers.Dev
 
             if (drawBridges)
             {
-                foreach (var pair in _region.BoundaryTiles)
+                foreach (var pair in _region.BoundaryMap)
                 {
                     foreach (var tile in pair.Value)
                     {
@@ -95,6 +97,18 @@ namespace Controllers.Dev
                         colors[vertIndex + 2] = regionBridgeColor;
                         colors[vertIndex + 3] = regionBridgeColor;
                     }
+                }
+            }
+
+            if (drawEdges)
+            {
+                foreach (var tile in _region.EdgeTiles)
+                {
+                    var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
+                    colors[vertIndex] = regionEdgeColor;
+                    colors[vertIndex + 1] = regionEdgeColor;
+                    colors[vertIndex + 2] = regionEdgeColor;
+                    colors[vertIndex + 3] = regionEdgeColor;
                 }
             }
 

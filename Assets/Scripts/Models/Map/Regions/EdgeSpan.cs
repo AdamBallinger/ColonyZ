@@ -26,7 +26,10 @@ namespace Models.Map.Regions
         public ulong UniqueHashCode()
         {
             var code = (ulong) Root.GetHashCode();
-            code += Direction == EdgeSpanDirection.Right ? 72324523523UL : 249249877687462UL;
+            code += Direction == EdgeSpanDirection.Right
+                ? 72324523523UL
+                : 249249877687462UL
+                  * (ulong) Size;
             return code;
         }
     }

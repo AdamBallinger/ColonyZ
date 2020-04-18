@@ -126,7 +126,7 @@ namespace Models.Map.Tiles
 
             if (_checkForAreas && _object.EnclosesRoom)
             {
-                AreaManager.Instance.CheckForArea(this);
+                //AreaManager.Instance.CheckForArea(this);
                 RegionManager.Instance.Update(this);
             }
 
@@ -150,7 +150,7 @@ namespace Models.Map.Tiles
 
             if (shouldCheckForArea)
             {
-                AreaManager.Instance.CheckForArea(this);
+                //AreaManager.Instance.CheckForArea(this);
                 RegionManager.Instance.Update(this);
             }
         }

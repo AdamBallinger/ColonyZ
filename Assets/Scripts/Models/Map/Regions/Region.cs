@@ -21,7 +21,12 @@ namespace Models.Map.Regions
         /// 0 - Tiles granting access from the right.
         /// 1 - Tiles granting access upwards.
         /// </summary>
-        public Dictionary<int, List<Tile>> BoundaryTiles { get; private set; }
+        public Dictionary<int, List<Tile>> BoundaryMap { get; private set; }
+
+        /// <summary>
+        /// Tiles along the edge of the region.
+        /// </summary>
+        public HashSet<Tile> EdgeTiles { get; set; }
 
         public void Add(Tile _tile)
         {
@@ -38,11 +43,13 @@ namespace Models.Map.Regions
 
         public void CalculateBoundaryTiles()
         {
-            BoundaryTiles = new Dictionary<int, List<Tile>>();
-            BoundaryTiles.Add(0, new List<Tile>()); // Left
-            BoundaryTiles.Add(1, new List<Tile>()); // Right
-            BoundaryTiles.Add(2, new List<Tile>()); // Up
-            BoundaryTiles.Add(3, new List<Tile>()); // Down
+            BoundaryMap = new Dictionary<int, List<Tile>>();
+            BoundaryMap.Add(0, new List<Tile>()); // Left
+            BoundaryMap.Add(1, new List<Tile>()); // Right
+            BoundaryMap.Add(2, new List<Tile>()); // Up
+            BoundaryMap.Add(3, new List<Tile>()); // Down
+
+            EdgeTiles = new HashSet<Tile>();
 
             foreach (var tile in Tiles)
             {
@@ -53,41 +60,55 @@ namespace Models.Map.Regions
 
                 if (tile.Left?.GetEnterability() != TileEnterability.None
                     && tile.Left?.Region != tile.Region)
-                    BoundaryTiles[0].Add(tile);
+                {
+                    BoundaryMap[0].Add(tile);
+                    EdgeTiles.Add(tile);
+                }
 
                 if (tile.Right?.GetEnterability() != TileEnterability.None
                     && tile.Right?.Region != tile.Region)
-                    BoundaryTiles[1].Add(tile.Right);
+                {
+                    BoundaryMap[1].Add(tile.Right);
+                    EdgeTiles.Add(tile);
+                }
 
                 if (tile.Up?.GetEnterability() != TileEnterability.None
                     && tile.Up?.Region != tile.Region)
-                    BoundaryTiles[2].Add(tile.Up);
+                {
+                    BoundaryMap[2].Add(tile.Up);
+                    EdgeTiles.Add(tile);
+                }
 
                 if (tile.Down?.GetEnterability() != TileEnterability.None
                     && tile.Down?.Region != tile.Region)
-                    BoundaryTiles[3].Add(tile);
+                {
+                    BoundaryMap[3].Add(tile);
+                    EdgeTiles.Add(tile);
+                }
             }
 
             // Sort because the regions are created from a floodfill which means the bridges wont
             // correctly organised when detecting edge spans.
-            BoundaryTiles[0].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
-            BoundaryTiles[1].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
-            BoundaryTiles[2].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
-            BoundaryTiles[3].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+            BoundaryMap[0].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
+            BoundaryMap[1].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
+            BoundaryMap[2].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+            BoundaryMap[3].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
 
             GenerateEdgeSpans();
         }
 
         private void GenerateEdgeSpans()
         {
+            var spans = new List<EdgeSpan>();
+
             foreach (var link in Links)
             {
                 link.Unassign(this);
             }
 
-            var spans = new List<EdgeSpan>();
+            Links.Clear();
 
-            foreach (var pair in BoundaryTiles)
+            foreach (var pair in BoundaryMap)
             {
                 var edgeSpan = new List<Tile>();
                 var newSpan = true;

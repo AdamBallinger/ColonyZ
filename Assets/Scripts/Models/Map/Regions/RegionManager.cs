@@ -39,18 +39,28 @@ namespace Models.Map.Regions
         /// <param name="_tile"></param>
         public void Update(Tile _tile)
         {
-            var chunk = World.Instance.WorldGrid.GetChunkAt(_tile.X, _tile.Y);
+            var rootChunk = World.Instance.WorldGrid.GetChunkAt(_tile.X, _tile.Y);
 
-            // TODO: This could probably be optimised later if needed..
-            foreach (var tile in chunk.Tiles)
+            var chunksToUpdate = new List<WorldChunk>();
+            chunksToUpdate.Add(rootChunk);
+
+            if (_tile.Region != null && _tile.Region.EdgeTiles.Contains(_tile))
             {
-                if (tile.Region != null)
-                {
-                    DeleteRegion(tile.Region);
-                }
+                chunksToUpdate.AddRange(World.Instance.WorldGrid.GetChunkNeighbours(rootChunk));
             }
 
-            FloodChunk(chunk);
+            foreach (var chunk in chunksToUpdate)
+            {
+                foreach (var tile in chunk.Tiles)
+                {
+                    if (tile.Region != null)
+                    {
+                        DeleteRegion(tile.Region);
+                    }
+                }
+
+                FloodChunk(chunk);
+            }
 
             regionsUpdateEvent?.Invoke();
         }
@@ -73,6 +83,7 @@ namespace Models.Map.Regions
         {
             foreach (var tile in _chunk.Tiles)
             {
+                if (tile.Region != null) continue;
                 if (tile.GetEnterability() == TileEnterability.None) continue;
 
                 // Doors are their own region.
@@ -81,8 +92,6 @@ namespace Models.Map.Regions
                     CreateRegion(new List<Tile> {tile});
                     continue;
                 }
-
-                if (tile.Region != null) continue;
 
                 FloodFiller.Flood(tile,
                     t => t != null
@@ -110,14 +119,14 @@ namespace Models.Map.Regions
 
         private void DeleteRegion(Region _region)
         {
-            foreach (var tile in _region.Tiles)
-            {
-                tile.Region = null;
-            }
-
             foreach (var link in _region.Links)
             {
                 link.Unassign(_region);
+            }
+
+            foreach (var tile in _region.Tiles)
+            {
+                tile.Region = null;
             }
 
             Regions.Remove(_region);
