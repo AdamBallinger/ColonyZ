@@ -39,6 +39,12 @@ namespace Models.Map.Regions
             var chunksToUpdate = new List<WorldChunk>();
             chunksToUpdate.Add(rootChunk);
 
+            // TODO: Improve how regions are updated.
+            // This is too slow. Need to be able to detect which neighbour chunk is affected by the
+            // updated tile instead of just updating all neighbour chunks which is too slow.
+            // Also doesn't update edge spans for neighbour regions when a object is removed
+            // from the edge of the region.
+
             if (_tile.Region != null && _tile.Region.EdgeTiles.Contains(_tile))
             {
                 chunksToUpdate.AddRange(World.Instance.WorldGrid.GetChunkNeighbours(rootChunk));
