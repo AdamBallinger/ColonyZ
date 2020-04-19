@@ -4,6 +4,7 @@ using System.Linq;
 using Models.Entities;
 using Models.Entities.Living;
 using Models.Map;
+using Models.Map.Regions;
 using Models.Map.Tiles;
 using Models.TimeSystem;
 
@@ -210,6 +211,8 @@ namespace Models.AI.Jobs
         private bool CanEntityReachJob(Entity _entity, Job _job)
         {
             if (_entity == null || _job == null) return false;
+            if (!RegionReachabilityChecker.CanReachRegion(_entity.CurrentTile.Region, _job.WorkingTile.Region))
+                return false;
 
             var closestTile = GetClosestEnterableNeighbour(_entity, _job.TargetTile.DirectNeighbours);
 
@@ -264,9 +267,10 @@ namespace Models.AI.Jobs
             foreach (var tile in _tiles)
             {
                 if (tile.GetEnterability() != TileEnterability.Immediate) continue;
-                if (entityTile.Area == null) continue;
+                //if (entityTile.Area == null) continue;
                 // Skip the tile if entities current room has no connection to the tiles room.
-                if (!entityTile.Area.HasConnection(tile.Area)) continue;
+                //if (!entityTile.Area.HasConnection(tile.Area)) continue;
+                //if (!RegionReachabilityChecker.CanReachRegion(entityTile.Region, tile.Region)) continue;
 
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
 
