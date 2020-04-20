@@ -112,7 +112,7 @@ namespace Controllers.Dev
                 }
             }
 
-            meshFilter.mesh.colors = colors;
+            meshFilter.mesh.SetColors(colors);
         }
 
         public void Toggle()
