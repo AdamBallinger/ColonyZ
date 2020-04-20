@@ -34,12 +34,12 @@ namespace Models.Entities.Living
 
             // Check if the working tile for the job became unreachable due to another job being completed.
             // A working tile would have a null area if the tile has an object built on it.
-            if (CurrentJob.WorkingTile.Area == null
-                || !CurrentJob.WorkingTile.Area.HasConnection(CurrentTile.Area))
-            {
-                JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
-                return;
-            }
+            // if (CurrentJob.WorkingTile.Area == null
+            //     || !CurrentJob.WorkingTile.Area.HasConnection(CurrentTile.Area))
+            // {
+            //     JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
+            //     return;
+            // }
 
             // Try find a new working tile if the current tile is no longer enter-able.
             if (CurrentJob.WorkingTile.GetEnterability() != TileEnterability.Immediate)
@@ -64,12 +64,8 @@ namespace Models.Entities.Living
                 JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
             if (closeTile != null && closeTile != CurrentJob.WorkingTile)
             {
-                // TODO: Is a path test needed now that areas can be used to check if a tile is reachable?
-                //if (PathFinder.TestPath(CurrentTile, closeTile))
-                //{
                 CurrentJob.WorkingTile = closeTile;
                 Motor.SetTargetTile(closeTile);
-                //}
             }
 
             CurrentJob?.Update();
