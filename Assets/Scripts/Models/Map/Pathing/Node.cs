@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Priority_Queue;
 
 namespace Models.Map.Pathing
 {
-    public class Node : FastPriorityQueueNode
+    public class Node : FastPriorityQueueNode, IEquatable<Node>
     {
         /// <summary>
         /// ID of the node in the node graph. Used for fetching node costs during search.
@@ -24,13 +25,14 @@ namespace Models.Map.Pathing
         /// The cost of moving into this node.
         /// </summary>
         public float MovementCost { get; }
-        
+
         /// <summary>
         /// List of paths that contain this node.
         /// </summary>
         public List<Path> Paths { get; }
 
         private bool _pathable = true;
+
         /// <summary>
         /// Is this node a pathable node?
         /// </summary>
@@ -39,7 +41,7 @@ namespace Models.Map.Pathing
             get => _pathable;
             set
             {
-                if(value != _pathable)
+                if (value != _pathable)
                 {
                     _pathable = value;
                     OnModify();
@@ -85,17 +87,17 @@ namespace Models.Map.Pathing
             var node_SW = NodeGraph.Instance?.GetNodeAt(X - 1, Y - 1);
             var node_NW = NodeGraph.Instance?.GetNodeAt(X - 1, Y + 1);
 
-            if(node_N != null && node_N.Pathable && node_E != null && node_E.Pathable)
+            if (node_N != null && node_N.Pathable && node_E != null && node_E.Pathable)
             {
                 Neighbours.Add(node_NE);
             }
 
-            if(node_N != null && node_N.Pathable && node_W != null && node_W.Pathable)
+            if (node_N != null && node_N.Pathable && node_W != null && node_W.Pathable)
             {
                 Neighbours.Add(node_NW);
             }
 
-            if(node_S != null && node_S.Pathable && node_E != null && node_E.Pathable)
+            if (node_S != null && node_S.Pathable && node_E != null && node_E.Pathable)
             {
                 Neighbours.Add(node_SE);
             }
@@ -121,7 +123,7 @@ namespace Models.Map.Pathing
                 {
                     path?.Invalidate();
                 }
-            
+
                 Paths.Clear();
             }
 
@@ -131,10 +133,47 @@ namespace Models.Map.Pathing
 
         private void NotifyNeighboursToUpdate()
         {
-            foreach(var node in Neighbours)
+            foreach (var node in Neighbours)
             {
                 node?.ComputeNeighbours();
             }
+        }
+
+        public bool Equals(Node other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return _pathable == other._pathable && ID == other.ID && X == other.X && Y == other.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Node) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = _pathable.GetHashCode();
+                hashCode = (hashCode * 397) ^ ID;
+                hashCode = (hashCode * 397) ^ X;
+                hashCode = (hashCode * 397) ^ Y;
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(Node left, Node right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Node left, Node right)
+        {
+            return !Equals(left, right);
         }
     }
 }
