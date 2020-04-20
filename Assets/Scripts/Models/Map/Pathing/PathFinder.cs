@@ -14,9 +14,6 @@ namespace Models.Map.Pathing
 
         public int TaskCount => taskList.Count;
 
-        private const float STRAIGHT_MOVEMENT_COST = 10.0f;
-        private const float DIAGONAL_MOVEMENT_COST = 14.0f;
-
         private List<Task<PathResult>> taskList;
 
         private PathFinder()
