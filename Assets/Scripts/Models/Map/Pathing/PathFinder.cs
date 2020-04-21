@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Models.Map.Regions;
 using Models.Map.Tiles;
 using Priority_Queue;
 using UnityEngine;
@@ -73,64 +74,127 @@ namespace Models.Map.Pathing
             sw.Start();
 
             PathResult result;
-
-            var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
-            var nodeClosedSet = new HashSet<Node>();
-
-            var gCosts = new float[World.Instance.Size];
-            var hCosts = new float[World.Instance.Size];
-
-            var parents = new Node[World.Instance.Size];
-
-            hCosts[_request.Start.ID] = Heuristic(_request.Start, _request.End);
-
-            nodeOpenSet.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
-
-            while (nodeOpenSet.Count != 0)
+            var regionPath = GetRegionPath(_request);
+            if (regionPath != null)
             {
-                var currentNode = nodeOpenSet.Dequeue();
+                var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
+                var nodeClosedSet = new HashSet<Node>();
 
-                nodeClosedSet.Add(currentNode);
+                var gCosts = new float[World.Instance.Size];
+                var hCosts = new float[World.Instance.Size];
 
-                if (currentNode == _request.End)
+                var parents = new Node[World.Instance.Size];
+
+                hCosts[_request.Start.ID] = Heuristic(_request.Start, _request.End);
+
+                nodeOpenSet.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
+
+                while (nodeOpenSet.Count != 0)
                 {
-                    sw.Stop();
-                    result = new PathResult(_request,
-                        new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds));
-                    return Task.FromResult(result);
-                }
+                    var currentNode = nodeOpenSet.Dequeue();
 
-                foreach (var node in currentNode.Neighbours)
-                {
-                    if (!node.Pathable || nodeClosedSet.Contains(node))
+                    nodeClosedSet.Add(currentNode);
+
+                    if (currentNode == _request.End)
                     {
-                        continue;
+                        sw.Stop();
+                        result = new PathResult(_request,
+                            new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds));
+                        return Task.FromResult(result);
                     }
 
-                    var movementCostToNeighbour =
-                        gCosts[currentNode.ID] + Heuristic(_request.Start, node) + node.MovementCost;
-
-                    if (movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
+                    foreach (var node in currentNode.Neighbours)
                     {
-                        gCosts[node.ID] = movementCostToNeighbour;
-                        hCosts[node.ID] = Heuristic(node, _request.End);
-                        parents[node.ID] = currentNode;
-
-                        if (!nodeOpenSet.Contains(node))
+                        if (!node.Pathable || nodeClosedSet.Contains(node))
                         {
-                            nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
+                            continue;
                         }
-                        else
+
+                        var tile = World.Instance.GetTileAt(node.X, node.Y);
+
+                        if (!regionPath.Contains(tile.Region)) continue;
+
+                        var movementCostToNeighbour =
+                            gCosts[currentNode.ID] + Heuristic(_request.Start, node) + node.MovementCost;
+
+                        if (movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
                         {
-                            nodeOpenSet.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
+                            gCosts[node.ID] = movementCostToNeighbour;
+                            hCosts[node.ID] = Heuristic(node, _request.End);
+                            parents[node.ID] = currentNode;
+
+                            if (!nodeOpenSet.Contains(node))
+                            {
+                                nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
+                            }
+                            else
+                            {
+                                nodeOpenSet.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
+                            }
                         }
                     }
                 }
             }
 
+
+            sw.Stop();
             // If every node was evaluated and the end node wasn't found, then invoke the callback with an invalid empty path.
-            result = new PathResult(_request, new Path(null, false, 0.0f));
+            result = new PathResult(_request, new Path(null, false, sw.ElapsedMilliseconds));
             return Task.FromResult(result);
+        }
+
+        private HashSet<Region> GetRegionPath(PathRequest _request)
+        {
+            var path = new HashSet<Region>();
+
+            var origin = World.Instance.GetTileAt(_request.Start.X, _request.Start.Y).Region;
+            var target = World.Instance.GetTileAt(_request.End.X, _request.End.Y).Region;
+
+            if (origin == null || target == null) return null;
+
+            if (origin == target)
+            {
+                path.Add(origin);
+                return path;
+            }
+
+            var queue = new Queue<Region>();
+            var visited = new HashSet<Region>();
+            var parents = new Dictionary<Region, Region>();
+            queue.Enqueue(origin);
+            visited.Add(origin);
+            parents.Add(origin, null);
+
+            while (queue.Count > 0)
+            {
+                var region = queue.Dequeue();
+
+                if (region == target)
+                {
+                    path.Add(region);
+                    // retrace regions from region using the parent map.
+                    while (region != null)
+                    {
+                        path.Add(parents[region]);
+                        region = parents[region];
+                    }
+
+                    return path;
+                }
+
+                foreach (var link in region.Links)
+                {
+                    var other = link.GetOther(region);
+                    if (other == null) continue;
+                    if (visited.Contains(other)) continue;
+
+                    queue.Enqueue(other);
+                    visited.Add(other);
+                    parents.Add(other, region);
+                }
+            }
+
+            return path;
         }
 
         /// <summary>
