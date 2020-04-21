@@ -11,7 +11,14 @@ namespace Controllers.Dev
     {
         [SerializeField] private TMP_Text text;
 
-        private void Update()
+        private void Start()
+        {
+            JobManager.Instance.jobCreatedEvent += j => UpdateInfo();
+            JobManager.Instance.jobStateChangedEvent += j => UpdateInfo();
+            JobManager.Instance.jobCompletedEvent += j => UpdateInfo();
+        }
+
+        private void UpdateInfo()
         {
             var availabelCharacters = World.Instance.Characters.Cast<HumanEntity>()
                 .Count(h => h.CurrentJob == null);
