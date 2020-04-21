@@ -232,7 +232,6 @@ namespace Models.AI.Jobs
             _job.TargetTile.CurrentJob = _job;
             _job.State = JobState.Idle;
             jobCreatedEvent?.Invoke(_job);
-            jobStateChangedEvent?.Invoke(_job);
         }
 
         public void AddJobs(IEnumerable<Job> _jobs)
