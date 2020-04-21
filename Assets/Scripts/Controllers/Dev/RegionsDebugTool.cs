@@ -22,6 +22,9 @@ namespace Controllers.Dev
         private Tile selectedTile;
 
         private Mesh tileMesh;
+        private Color[] meshColors;
+
+        private Color clearColor = Color.clear;
 
         private void Start()
         {
@@ -53,15 +56,18 @@ namespace Controllers.Dev
 
             if (_ui) return;
 
-            var colors = new Color[tileMesh.vertexCount];
+            for (var i = 0; i < meshColors.Length; i++)
+            {
+                meshColors[i] = clearColor;
+            }
 
             foreach (var tile in _region.Tiles)
             {
                 var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                colors[vertIndex] = regionOverlayColor;
-                colors[vertIndex + 1] = regionOverlayColor;
-                colors[vertIndex + 2] = regionOverlayColor;
-                colors[vertIndex + 3] = regionOverlayColor;
+                meshColors[vertIndex] = regionOverlayColor;
+                meshColors[vertIndex + 1] = regionOverlayColor;
+                meshColors[vertIndex + 2] = regionOverlayColor;
+                meshColors[vertIndex + 3] = regionOverlayColor;
             }
 
             if (drawNeighbours)
@@ -74,10 +80,10 @@ namespace Controllers.Dev
                     foreach (var tile in neighbour.Tiles)
                     {
                         var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                        colors[vertIndex] = regionNeighbourColor;
-                        colors[vertIndex + 1] = regionNeighbourColor;
-                        colors[vertIndex + 2] = regionNeighbourColor;
-                        colors[vertIndex + 3] = regionNeighbourColor;
+                        meshColors[vertIndex] = regionNeighbourColor;
+                        meshColors[vertIndex + 1] = regionNeighbourColor;
+                        meshColors[vertIndex + 2] = regionNeighbourColor;
+                        meshColors[vertIndex + 3] = regionNeighbourColor;
                     }
                 }
             }
@@ -89,10 +95,10 @@ namespace Controllers.Dev
                     foreach (var tile in pair.Value)
                     {
                         var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                        colors[vertIndex] = regionBridgeColor;
-                        colors[vertIndex + 1] = regionBridgeColor;
-                        colors[vertIndex + 2] = regionBridgeColor;
-                        colors[vertIndex + 3] = regionBridgeColor;
+                        meshColors[vertIndex] = regionBridgeColor;
+                        meshColors[vertIndex + 1] = regionBridgeColor;
+                        meshColors[vertIndex + 2] = regionBridgeColor;
+                        meshColors[vertIndex + 3] = regionBridgeColor;
                     }
                 }
             }
@@ -102,14 +108,14 @@ namespace Controllers.Dev
                 foreach (var tile in _region.EdgeTiles)
                 {
                     var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                    colors[vertIndex] = regionEdgeColor;
-                    colors[vertIndex + 1] = regionEdgeColor;
-                    colors[vertIndex + 2] = regionEdgeColor;
-                    colors[vertIndex + 3] = regionEdgeColor;
+                    meshColors[vertIndex] = regionEdgeColor;
+                    meshColors[vertIndex + 1] = regionEdgeColor;
+                    meshColors[vertIndex + 2] = regionEdgeColor;
+                    meshColors[vertIndex + 3] = regionEdgeColor;
                 }
             }
 
-            tileMesh.SetColors(colors);
+            tileMesh.SetColors(meshColors);
         }
 
         public void Toggle()
@@ -174,6 +180,7 @@ namespace Controllers.Dev
 
             tileMesh.CombineMeshes(combiner, true, false);
             meshFilter.mesh = tileMesh;
+            meshColors = new Color[tileMesh.vertexCount];
         }
     }
 }
