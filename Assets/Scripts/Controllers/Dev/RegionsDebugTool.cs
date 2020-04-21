@@ -48,15 +48,12 @@ namespace Controllers.Dev
         {
             if (!enabled || _region == null)
             {
-                meshFilter.mesh = null;
                 return;
             }
 
             if (_ui) return;
 
-            meshFilter.mesh = tileMesh;
-
-            var colors = new Color[meshFilter.mesh.vertexCount];
+            var colors = new Color[tileMesh.vertexCount];
 
             foreach (var tile in _region.Tiles)
             {
@@ -112,12 +109,13 @@ namespace Controllers.Dev
                 }
             }
 
-            meshFilter.mesh.SetColors(colors);
+            tileMesh.SetColors(colors);
         }
 
         public void Toggle()
         {
             enabled = !enabled;
+            meshFilter.mesh = enabled ? tileMesh : null;
         }
 
         /// <summary>
