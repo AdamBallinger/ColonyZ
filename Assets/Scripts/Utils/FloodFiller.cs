@@ -29,6 +29,7 @@ namespace Utils
             Profiler.BeginSample("Flood fill sample");
             if (!_checkCondition(_root))
             {
+                Profiler.EndSample();
                 return;
             }
 
@@ -59,6 +60,7 @@ namespace Utils
                         }
                         else
                         {
+                            Profiler.EndSample();
                             return;
                         }
                     }
