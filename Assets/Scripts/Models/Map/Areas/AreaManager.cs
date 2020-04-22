@@ -70,7 +70,7 @@ namespace Models.Map.Areas
                     FloodFiller.Flood(tile,
                         floodfill_ConditionCheck,
                         floodfill_PassCheck,
-                        set => CreateArea(set.ToList()));
+                        CreateArea);
                 }
 
                 // Remove the source tile from its current area, as enclosing tiles do not belong
@@ -94,7 +94,7 @@ namespace Models.Map.Areas
                 FloodFiller.Flood(_tile,
                     floodfill_ConditionCheck,
                     floodfill_PassCheck,
-                    set => CreateArea(set.ToList()));
+                    CreateArea);
             }
 
             if (shouldTriggerUpdate)

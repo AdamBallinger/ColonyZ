@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Models.Map.Tiles;
 using Utils;
 
@@ -99,7 +98,7 @@ namespace Models.Map.Regions
                          && _chunk.Contains(t)
                          && t.GetEnterability() == TileEnterability.Immediate,
                     t => t != null,
-                    set => CreateRegion(set.ToList()));
+                    CreateRegion);
             }
         }
 

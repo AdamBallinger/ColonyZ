@@ -26,7 +26,9 @@ namespace Models.Map.Regions
         /// <summary>
         /// Tiles along the edge of the region.
         /// </summary>
-        public HashSet<Tile> EdgeTiles { get; set; }
+        public HashSet<Tile> EdgeTiles { get; } = new HashSet<Tile>();
+
+        private List<EdgeSpan> spans = new List<EdgeSpan>();
 
         public void Add(Tile _tile)
         {
@@ -43,13 +45,20 @@ namespace Models.Map.Regions
 
         public void CalculateBoundaryTiles()
         {
-            BoundaryMap = new Dictionary<int, List<Tile>>();
-            BoundaryMap.Add(0, new List<Tile>()); // Left
-            BoundaryMap.Add(1, new List<Tile>()); // Right
-            BoundaryMap.Add(2, new List<Tile>()); // Up
-            BoundaryMap.Add(3, new List<Tile>()); // Down
+            if (BoundaryMap == null)
+            {
+                BoundaryMap = new Dictionary<int, List<Tile>>();
+                BoundaryMap.Add(0, new List<Tile>()); // Left
+                BoundaryMap.Add(1, new List<Tile>()); // Right
+                BoundaryMap.Add(2, new List<Tile>()); // Up
+                BoundaryMap.Add(3, new List<Tile>()); // Down
+            }
 
-            EdgeTiles = new HashSet<Tile>();
+            BoundaryMap[0].Clear();
+            BoundaryMap[1].Clear();
+            BoundaryMap[2].Clear();
+            BoundaryMap[3].Clear();
+            EdgeTiles.Clear();
 
             foreach (var tile in Tiles)
             {
@@ -99,7 +108,7 @@ namespace Models.Map.Regions
 
         private void GenerateEdgeSpans()
         {
-            var spans = new List<EdgeSpan>();
+            spans.Clear();
 
             foreach (var link in Links)
             {
