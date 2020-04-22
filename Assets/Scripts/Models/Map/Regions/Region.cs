@@ -12,7 +12,7 @@ namespace Models.Map.Regions
     /// </summary>
     public class Region
     {
-        public HashSet<Tile> Tiles { get; private set; }
+        public HashSet<Tile> Tiles { get; } = new HashSet<Tile>();
 
         public List<RegionLink> Links { get; } = new List<RegionLink>();
 
@@ -29,11 +29,10 @@ namespace Models.Map.Regions
         public HashSet<Tile> EdgeTiles { get; } = new HashSet<Tile>();
 
         private List<EdgeSpan> spans = new List<EdgeSpan>();
+        private List<Tile> edgeSpan = new List<Tile>(12);
 
         public void Add(Tile _tile)
         {
-            if (Tiles == null) Tiles = new HashSet<Tile>();
-
             if (Tiles.Contains(_tile))
             {
                 return;
@@ -119,7 +118,7 @@ namespace Models.Map.Regions
 
             foreach (var pair in BoundaryMap)
             {
-                var edgeSpan = new List<Tile>();
+                edgeSpan.Clear();
                 var newSpan = true;
                 var spanDir = pair.Key == 0 || pair.Key == 1 ? EdgeSpanDirection.Right : EdgeSpanDirection.Up;
 

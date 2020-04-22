@@ -111,7 +111,10 @@ namespace Models.Map.Regions
 
             var region = new Region();
 
-            _tiles.ForEach(t => region.Add(t));
+            foreach (var tile in _tiles)
+            {
+                region.Add(tile);
+            }
 
             Regions.Add(region);
             region.CalculateBoundaryTiles();
