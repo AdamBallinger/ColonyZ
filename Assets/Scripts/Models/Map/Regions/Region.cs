@@ -121,18 +121,23 @@ namespace Models.Map.Regions
                 }
             }
 
-            // Sort because the regions are created from a floodfill which means the bridges wont
+            // Sort because the regions are created from a floodfill which means the bridges wont be
             // correctly organised when detecting edge spans.
-            BoundaryMap[0].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
-            BoundaryMap[1].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
-            BoundaryMap[2].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
-            BoundaryMap[3].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+            if (!IsDoor)
+            {
+                BoundaryMap[0].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
+                BoundaryMap[1].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
+                BoundaryMap[2].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+                BoundaryMap[3].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+            }
 
             GenerateEdgeSpans();
         }
 
         private void GenerateEdgeSpans()
         {
+            // TODO: This function need to be re written to properly detect edge spans that are not directly on the
+            // boundary of a region.. Hard af to explain.. Its down to the sorting of the boundary map tiles..
             spans.Clear();
 
             foreach (var link in Links)
@@ -163,9 +168,17 @@ namespace Models.Map.Regions
                     // Right links.
                     if (spanDir == EdgeSpanDirection.Right)
                     {
+                        if (Math.Abs(tile.X - lastSpanTile.X) > 0)
+                        {
+                            // If this is true, then this boundary tile is connecting to a door region.
+                            // Door regions can only be 1 tile. This is probably a bit hacky but it works.
+                            spans.Add(new EdgeSpan(tile, spanDir, 1));
+                            continue;
+                        }
+
                         if (Math.Abs(tile.Y - lastSpanTile.Y) > 1)
                         {
-                            spans.Add(new EdgeSpan(edgeSpan[0], EdgeSpanDirection.Right, edgeSpan.Count));
+                            spans.Add(new EdgeSpan(edgeSpan[0], spanDir, edgeSpan.Count));
                             edgeSpan.Clear();
                             edgeSpan.Add(tile);
                             continue;
@@ -174,9 +187,16 @@ namespace Models.Map.Regions
                     // Up links.
                     else
                     {
+                        if (Math.Abs(tile.Y - lastSpanTile.Y) > 0)
+                        {
+                            // Refer to above.
+                            spans.Add(new EdgeSpan(tile, spanDir, 1));
+                            continue;
+                        }
+
                         if (Math.Abs(tile.X - lastSpanTile.X) > 1)
                         {
-                            spans.Add(new EdgeSpan(edgeSpan[0], EdgeSpanDirection.Up, edgeSpan.Count));
+                            spans.Add(new EdgeSpan(edgeSpan[0], spanDir, edgeSpan.Count));
                             edgeSpan.Clear();
                             edgeSpan.Add(tile);
                             continue;
