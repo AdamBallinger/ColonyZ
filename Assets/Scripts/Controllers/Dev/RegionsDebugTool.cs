@@ -69,7 +69,8 @@ namespace Controllers.Dev
 
             foreach (var link in _region.Links)
             {
-                infoText.text += $"Hash: {link.Span.UniqueHashCode()}  Size: {link.Span.Size}\n";
+                infoText.text += $"Hash: [{link.Span.UniqueHashCode()}]  Size: [{link.Span.Size}]" +
+                                 $"    Dir: [{link.Span.Direction.ToString()}]\n";
             }
 
             foreach (var tile in _region.Tiles)

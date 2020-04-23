@@ -12,7 +12,7 @@ namespace Models.Map.Regions
     {
         private Tile Root { get; }
 
-        private EdgeSpanDirection Direction { get; }
+        public EdgeSpanDirection Direction { get; }
 
         public int Size { get; }
 
