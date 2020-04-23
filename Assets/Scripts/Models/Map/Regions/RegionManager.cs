@@ -11,6 +11,8 @@ namespace Models.Map.Regions
 
         private List<Region> Regions { get; set; }
 
+        private List<Region> newRegions = new List<Region>();
+
         /// <summary>
         /// Event called when regions get updated.
         /// </summary>
@@ -38,12 +40,7 @@ namespace Models.Map.Regions
             var chunksToUpdate = new List<WorldChunk>();
             chunksToUpdate.Add(rootChunk);
 
-            // TODO: Improve how regions are updated.
-            // This is too slow. Need to be able to detect which neighbour chunk is affected by the
-            // updated tile instead of just updating all neighbour chunks which is too slow.
-            // Also doesn't update edge spans for neighbour regions when a object is removed
-            // from the edge of the region.
-
+            // TODO: Fix removing objects not telling linked regions to update their edge spans.
             if (_tile.Region != null && _tile.Region.EdgeTiles.Contains(_tile))
             {
                 chunksToUpdate.AddRange(World.Instance.WorldGrid.GetChunkNeighbours(rootChunk));
@@ -58,10 +55,19 @@ namespace Models.Map.Regions
                         DeleteRegion(tile.Region);
                     }
                 }
+            }
 
+            foreach (var chunk in chunksToUpdate)
+            {
                 FloodChunk(chunk);
             }
 
+            foreach (var region in newRegions)
+            {
+                region.CalculateBoundaryTiles();
+            }
+
+            newRegions.Clear();
             regionsUpdateEvent?.Invoke();
         }
 
@@ -77,6 +83,13 @@ namespace Models.Map.Regions
             {
                 FloodChunk(chunk);
             }
+
+            foreach (var region in newRegions)
+            {
+                region.CalculateBoundaryTiles();
+            }
+
+            newRegions.Clear();
         }
 
         private void FloodChunk(WorldChunk _chunk)
@@ -117,7 +130,7 @@ namespace Models.Map.Regions
             }
 
             Regions.Add(region);
-            region.CalculateBoundaryTiles();
+            newRegions.Add(region);
         }
 
         private void DeleteRegion(Region _region)
