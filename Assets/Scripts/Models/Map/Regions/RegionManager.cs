@@ -41,10 +41,12 @@ namespace Models.Map.Regions
             chunksToUpdate.Add(rootChunk);
 
             // TODO: Fix removing objects not telling linked regions to update their edge spans.
-            if (_tile.Region != null && _tile.Region.EdgeTiles.Contains(_tile))
-            {
-                chunksToUpdate.AddRange(World.Instance.WorldGrid.GetChunkNeighbours(rootChunk));
-            }
+            // TODO: Door regions are still broken... I don't know why.
+            //if (_tile.Region != null && _tile.Region.EdgeTiles.Contains(_tile))
+            //{
+            // TODO: This is a hacky work around for now.
+            chunksToUpdate.AddRange(World.Instance.WorldGrid.GetChunkNeighbours(rootChunk));
+            //}
 
             foreach (var chunk in chunksToUpdate)
             {
@@ -72,11 +74,15 @@ namespace Models.Map.Regions
         }
 
         /// <summary>
-        /// Run first time build of regions. This should only be called once when the world is first
-        /// instantiated.
+        /// Run first time build of regions.
         /// </summary>
         public void BuildRegions()
         {
+            if (Regions != null)
+            {
+                return;
+            }
+
             Regions = new List<Region>();
 
             foreach (var chunk in World.Instance.WorldGrid.Chunks)
