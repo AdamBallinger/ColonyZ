@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Map.Tiles;
+using Models.Map.Tiles.Objects;
 
 namespace Models.Map.Regions
 {
@@ -28,6 +29,8 @@ namespace Models.Map.Regions
         /// </summary>
         public HashSet<Tile> EdgeTiles { get; } = new HashSet<Tile>();
 
+        public bool IsDoor { get; private set; }
+
         private List<EdgeSpan> spans = new List<EdgeSpan>();
         private List<Tile> edgeSpan = new List<Tile>(12);
 
@@ -36,6 +39,11 @@ namespace Models.Map.Regions
             if (Tiles.Contains(_tile))
             {
                 return;
+            }
+
+            if (_tile.HasObject && _tile.Object is DoorObject)
+            {
+                IsDoor = true;
             }
 
             Tiles.Add(_tile);
@@ -61,6 +69,24 @@ namespace Models.Map.Regions
 
             foreach (var tile in Tiles)
             {
+                if (IsDoor)
+                {
+                    // Door is a up/down access.
+                    if (tile.Left != null && tile.Left.HasObject)
+                    {
+                        BoundaryMap[2].Add(tile.Up);
+                        BoundaryMap[3].Add(tile);
+                    }
+                    // Door is left/right access.
+                    else
+                    {
+                        BoundaryMap[0].Add(tile);
+                        BoundaryMap[1].Add(tile.Right);
+                    }
+
+                    break;
+                }
+
                 if (tile.Left?.Region == tile.Region
                     && tile.Right?.Region == tile.Region
                     && tile.Up?.Region == tile.Region
