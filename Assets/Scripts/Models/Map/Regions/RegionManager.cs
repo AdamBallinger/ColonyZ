@@ -40,8 +40,6 @@ namespace Models.Map.Regions
             var chunksToUpdate = new List<WorldChunk>();
             chunksToUpdate.Add(rootChunk);
 
-            // TODO: Fix removing objects not telling linked regions to update their edge spans.
-            // TODO: Door regions are still broken... I don't know why.
             //if (_tile.Region != null && _tile.Region.EdgeTiles.Contains(_tile))
             //{
             // TODO: This is a hacky work around for now.
