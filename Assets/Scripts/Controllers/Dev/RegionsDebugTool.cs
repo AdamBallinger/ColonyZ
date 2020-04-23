@@ -23,6 +23,8 @@ namespace Controllers.Dev
         [SerializeField] private bool drawBridges;
         [SerializeField] private bool drawEdges;
 
+        private bool displayLinkData;
+
         private Tile selectedTile;
 
         private Mesh tileMesh;
@@ -67,10 +69,13 @@ namespace Controllers.Dev
 
             infoText.text = string.Empty;
 
-            foreach (var link in _region.Links)
+            if (displayLinkData)
             {
-                infoText.text += $"Hash: [{link.Span.UniqueHashCode()}]  Size: [{link.Span.Size}]" +
-                                 $"    Dir: [{link.Span.Direction.ToString()}]\n";
+                foreach (var link in _region.Links)
+                {
+                    infoText.text += $"Hash: [{link.Span.UniqueHashCode()}]  Size: [{link.Span.Size}]" +
+                                     $"    Dir: [{link.Span.Direction.ToString()}]\n";
+                }
             }
 
             foreach (var tile in _region.Tiles)
@@ -194,6 +199,26 @@ namespace Controllers.Dev
             tileMesh.CombineMeshes(combiner, true, false);
             meshFilter.mesh = tileMesh;
             meshColors = new Color[tileMesh.vertexCount];
+        }
+
+        public void ToggleNeighbours()
+        {
+            drawNeighbours = !drawNeighbours;
+        }
+
+        public void ToggleBridges()
+        {
+            drawBridges = !drawBridges;
+        }
+
+        public void ToggleEdges()
+        {
+            drawEdges = !drawEdges;
+        }
+
+        public void ToggleLinks()
+        {
+            displayLinkData = !displayLinkData;
         }
     }
 }
