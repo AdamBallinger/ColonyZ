@@ -4,7 +4,7 @@ namespace Models.Map.Regions
 {
     public static class RegionLinksDatabase
     {
-        public static Dictionary<ulong, RegionLink> Links { get; } = new Dictionary<ulong, RegionLink>();
+        private static Dictionary<ulong, RegionLink> Links { get; } = new Dictionary<ulong, RegionLink>();
 
         public static RegionLink LinkFromSpan(EdgeSpan _span)
         {
