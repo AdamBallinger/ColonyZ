@@ -14,7 +14,7 @@ namespace Models.Map.Regions
 
         private EdgeSpanDirection Direction { get; }
 
-        private int Size { get; }
+        public int Size { get; }
 
         public EdgeSpan(Tile _root, EdgeSpanDirection _direction, int _size)
         {

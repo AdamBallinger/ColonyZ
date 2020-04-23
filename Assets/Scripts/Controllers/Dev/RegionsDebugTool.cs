@@ -1,6 +1,7 @@
 ﻿using Models.Map;
 using Models.Map.Regions;
 using Models.Map.Tiles;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -9,6 +10,9 @@ namespace Controllers.Dev
     public class RegionsDebugTool : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
+
+        [SerializeField] private GameObject infoRoot;
+        [SerializeField] private TMP_Text infoText;
 
         [SerializeField] private Color regionOverlayColor;
         [SerializeField] private Color regionNeighbourColor;
@@ -59,6 +63,13 @@ namespace Controllers.Dev
             for (var i = 0; i < meshColors.Length; i++)
             {
                 meshColors[i] = clearColor;
+            }
+
+            infoText.text = string.Empty;
+
+            foreach (var link in _region.Links)
+            {
+                infoText.text += $"Hash: {link.Span.UniqueHashCode()}  Size: {link.Span.Size}\n";
             }
 
             foreach (var tile in _region.Tiles)
@@ -122,6 +133,7 @@ namespace Controllers.Dev
         {
             enabled = !enabled;
             meshFilter.mesh = enabled ? tileMesh : null;
+            infoRoot.SetActive(enabled);
         }
 
         /// <summary>
