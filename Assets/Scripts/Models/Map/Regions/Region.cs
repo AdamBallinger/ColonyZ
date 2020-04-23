@@ -8,8 +8,7 @@ namespace Models.Map.Regions
     /// <summary>
     /// Regions are spacial aware areas of the map. They are used for checking reachability, and finding
     /// nearest objects / items / entities etc.
-    /// Regions are defined a max size in RegionManager.cs and will always be built to follow a grid like
-    /// layout.
+    /// Regions are limited to the size of a WorldChunk.
     /// </summary>
     public class Region
     {
