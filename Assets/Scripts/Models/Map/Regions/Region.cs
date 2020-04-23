@@ -166,7 +166,7 @@ namespace Models.Map.Regions
                         if (Math.Abs(tile.Y - lastSpanTile.Y) > 1)
                         {
                             spans.Add(new EdgeSpan(edgeSpan[0], EdgeSpanDirection.Right, edgeSpan.Count));
-                            edgeSpan = new List<Tile>();
+                            edgeSpan.Clear();
                             edgeSpan.Add(tile);
                             continue;
                         }
@@ -177,7 +177,7 @@ namespace Models.Map.Regions
                         if (Math.Abs(tile.X - lastSpanTile.X) > 1)
                         {
                             spans.Add(new EdgeSpan(edgeSpan[0], EdgeSpanDirection.Up, edgeSpan.Count));
-                            edgeSpan = new List<Tile>();
+                            edgeSpan.Clear();
                             edgeSpan.Add(tile);
                             continue;
                         }
