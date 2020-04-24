@@ -13,6 +13,8 @@ namespace Models.Map.Pathing
     {
         public static PathFinder Instance { get; private set; }
 
+        public bool UseRegionalPathfinding { get; set; }
+
         public int TaskCount => taskList.Count;
 
         private List<Task<PathResult>> taskList;
@@ -74,68 +76,74 @@ namespace Models.Map.Pathing
             sw.Start();
 
             PathResult result;
-            var regionPath = GetRegionPath(_request);
-            if (regionPath != null)
+
+            var regionPath = UseRegionalPathfinding ? GetRegionPath(_request) : null;
+            if (UseRegionalPathfinding && regionPath == null)
             {
-                var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
-                var nodeClosedSet = new HashSet<Node>();
+                sw.Stop();
+                result = new PathResult(_request, new Path(null, false, sw.ElapsedMilliseconds));
+                return Task.FromResult(result);
+            }
 
-                var gCosts = new float[World.Instance.Size];
-                var hCosts = new float[World.Instance.Size];
+            var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
+            var nodeClosedSet = new HashSet<Node>();
 
-                var parents = new Node[World.Instance.Size];
+            var gCosts = new float[World.Instance.Size];
+            var hCosts = new float[World.Instance.Size];
 
-                hCosts[_request.Start.ID] = Heuristic(_request.Start, _request.End);
+            var parents = new Node[World.Instance.Size];
 
-                nodeOpenSet.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
+            hCosts[_request.Start.ID] = Heuristic(_request.Start, _request.End);
 
-                while (nodeOpenSet.Count != 0)
+            nodeOpenSet.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
+
+            while (nodeOpenSet.Count != 0)
+            {
+                var currentNode = nodeOpenSet.Dequeue();
+
+                nodeClosedSet.Add(currentNode);
+
+                if (currentNode == _request.End)
                 {
-                    var currentNode = nodeOpenSet.Dequeue();
+                    sw.Stop();
+                    result = new PathResult(_request,
+                        new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds));
+                    return Task.FromResult(result);
+                }
 
-                    nodeClosedSet.Add(currentNode);
-
-                    if (currentNode == _request.End)
+                foreach (var node in currentNode.Neighbours)
+                {
+                    if (UseRegionalPathfinding)
                     {
-                        sw.Stop();
-                        result = new PathResult(_request,
-                            new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds));
-                        return Task.FromResult(result);
+                        var tile = World.Instance.GetTileAt(node.X, node.Y);
+                        if (!regionPath.Contains(tile.Region)) continue;
                     }
 
-                    foreach (var node in currentNode.Neighbours)
+                    if (!node.Pathable || nodeClosedSet.Contains(node))
                     {
-                        if (!node.Pathable || nodeClosedSet.Contains(node))
+                        continue;
+                    }
+
+                    var movementCostToNeighbour =
+                        gCosts[currentNode.ID] + Heuristic(currentNode, node) + node.MovementCost;
+
+                    if (movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
+                    {
+                        gCosts[node.ID] = movementCostToNeighbour;
+                        hCosts[node.ID] = Heuristic(node, _request.End);
+                        parents[node.ID] = currentNode;
+
+                        if (!nodeOpenSet.Contains(node))
                         {
-                            continue;
+                            nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
                         }
-
-                        var tile = World.Instance.GetTileAt(node.X, node.Y);
-
-                        if (!regionPath.Contains(tile.Region)) continue;
-
-                        var movementCostToNeighbour =
-                            gCosts[currentNode.ID] + Heuristic(_request.Start, node) + node.MovementCost;
-
-                        if (movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
+                        else
                         {
-                            gCosts[node.ID] = movementCostToNeighbour;
-                            hCosts[node.ID] = Heuristic(node, _request.End);
-                            parents[node.ID] = currentNode;
-
-                            if (!nodeOpenSet.Contains(node))
-                            {
-                                nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
-                            }
-                            else
-                            {
-                                nodeOpenSet.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
-                            }
+                            nodeOpenSet.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
                         }
                     }
                 }
             }
-
 
             sw.Stop();
             // If every node was evaluated and the end node wasn't found, then invoke the callback with an invalid empty path.
@@ -229,9 +237,10 @@ namespace Models.Map.Pathing
         /// <returns></returns>
         private float Heuristic(Node _node, Node _end)
         {
-            var dx = Mathf.Abs(_node.X - _end.X);
-            var dy = Mathf.Abs(_node.Y - _end.Y);
+            float dx = Mathf.Abs(_node.X - _end.X);
+            float dy = Mathf.Abs(_node.Y - _end.Y);
 
+            //return 1.0f * (dx + dy) + (1.4f - 2.0f * 1.0f) * Mathf.Min(dx, dy);
             return dx + dy;
         }
 
