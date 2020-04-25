@@ -8,6 +8,8 @@ namespace Controllers.Dev
 {
     public class PathDebugTool : MonoBehaviour
     {
+        [SerializeField] private GameObject pathDebugRoot;
+
         [SerializeField] private TMP_Text pathQueueText;
         [SerializeField] private TMP_Text pathTestText;
         [SerializeField] private TMP_Text regionalStatusText;
@@ -53,9 +55,15 @@ namespace Controllers.Dev
             RequestPath();
         }
 
+        public void Toggle()
+        {
+            pathDebugRoot.SetActive(!pathDebugRoot.activeSelf);
+            if (!pathDebugRoot.activeSelf) OnDisable();
+        }
+
         private void MouseClick(Tile _tile, bool _ui)
         {
-            if (_ui) return;
+            if (_ui || !pathDebugRoot.activeSelf) return;
             if (pathStart != null && pathEnd != null)
             {
                 pathStart = null;

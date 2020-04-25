@@ -6,13 +6,13 @@ namespace Controllers.Dev
     {
         public static DevToolManager Instance { get; private set; }
 
-        [SerializeField] private GameObject pathDebugRoot;
         [SerializeField] private GameObject jobsInfoRoot;
 
         private TileNodesTool tileNodesTool;
         private ItemsDevTool itemDevTool;
         private AreasDebugTool areasDebugTool;
         private RegionsDebugTool regionsDebugTool;
+        private PathDebugTool pathDebugTool;
 
         private void Awake()
         {
@@ -22,6 +22,7 @@ namespace Controllers.Dev
             areasDebugTool = FindObjectOfType<AreasDebugTool>();
             itemDevTool = FindObjectOfType<ItemsDevTool>();
             regionsDebugTool = FindObjectOfType<RegionsDebugTool>();
+            pathDebugTool = FindObjectOfType<PathDebugTool>();
         }
 
         public void ToggleTileNodes()
@@ -51,7 +52,7 @@ namespace Controllers.Dev
 
         public void TogglePathDebug()
         {
-            pathDebugRoot.SetActive(!pathDebugRoot.activeSelf);
+            pathDebugTool.Toggle();
         }
 
         public void ToggleJobsInfo()

@@ -678,7 +678,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &109235251
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9100,7 +9100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df64d31db5e24c94875eceb4b638112b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathDebugRoot: {fileID: 109235250}
   jobsInfoRoot: {fileID: 325630631}
 --- !u!4 &1988782201
 Transform:
@@ -9187,11 +9186,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988782199}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52b9a39db5377664c914178d3f42db0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathDebugRoot: {fileID: 109235250}
   pathQueueText: {fileID: 562226202}
   pathTestText: {fileID: 116285642}
   regionalStatusText: {fileID: 1776884390}
