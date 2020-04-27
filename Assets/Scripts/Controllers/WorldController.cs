@@ -164,7 +164,7 @@ namespace Controllers
         /// Event for when a tile has been modified. E.g. a wall removed etc.
         /// </summary>
         /// <param name="_tile"></param>
-        public void OnTileChanged(Tile _tile)
+        private void OnTileChanged(Tile _tile)
         {
             if (_tile == null)
             {
@@ -191,7 +191,7 @@ namespace Controllers
         /// Event for when the definition of a tile has been changed.
         /// </summary>
         /// <param name="_tile"></param>
-        public void OnTileDefinitionChanged(Tile _tile)
+        private void OnTileDefinitionChanged(Tile _tile)
         {
             worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
         }
@@ -200,7 +200,7 @@ namespace Controllers
         /// Event for when a new entity is spawned into the world.
         /// </summary>
         /// <param name="_entity"></param>
-        public void OnEntitySpawn(Entity _entity)
+        private void OnEntitySpawn(Entity _entity)
         {
             if (_entity is LivingEntity living)
             {
@@ -224,7 +224,7 @@ namespace Controllers
         /// Event for when an entity gets removed from the world.
         /// </summary>
         /// <param name="_entity"></param>
-        public void OnEntityRemoved(Entity _entity)
+        private void OnEntityRemoved(Entity _entity)
         {
             if (_entity is LivingEntity living)
             {
