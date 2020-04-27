@@ -15,6 +15,7 @@ MonoBehaviour:
   objectSpriteData: {fileID: 11400000, guid: b6ef022f09ea6fb45a763b84c085c167, type: 2}
   dynamicSprite: 0
   objectName: Wooden Door
+  draggable: 0
   buildable: 1
   fellable: 0
   mineable: 0

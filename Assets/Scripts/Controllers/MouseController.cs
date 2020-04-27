@@ -14,8 +14,9 @@ namespace Controllers
 {
     public enum MouseMode
     {
-        Select,
-        Process
+        Select, // Use for selecting something..
+        Process, // Previews over dragged area.
+        Process_Single // Previews only over mouse position. Ignores drag.
     }
 
     public class MouseController : MonoBehaviour
@@ -64,6 +65,10 @@ namespace Controllers
         /// Default color of the draggable cursor object.
         /// </summary>
         private Color defaultCursorColor;
+
+        private Color previewInvalidColor = new Color(1.0f, 0.3f, 0.3f, 0.4f);
+        private Color previewValidColor = new Color(0.3f, 1.0f, 0.3f, 0.4f);
+        private Color previewOverlayColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 
         private Tile lastFrameTile;
 
@@ -166,8 +171,7 @@ namespace Controllers
                     selectionPosition = dragStartPosition - selectionSize / 2;
                 }
             }
-
-            if (Mode == MouseMode.Process)
+            else if (Mode == MouseMode.Process)
             {
                 // Calculate size of drag area. Add one as the world starts at 0, 0
                 selectionSize.x = _dragData.EndX - _dragData.StartX + 1.0f;
@@ -177,7 +181,7 @@ namespace Controllers
                 // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
                 selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
 
-                draggableCursor.SetActive(Mode == MouseMode.Select);
+                draggableCursor.SetActive(false);
 
                 var areaValid = true;
 
@@ -212,8 +216,8 @@ namespace Controllers
                             // Tint the preview color based on if the structure position is valid.
                             previewRenderer.color =
                                 !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, tile)
-                                    ? new Color(1.0f, 0.3f, 0.3f, 0.4f)
-                                    : new Color(0.3f, 1.0f, 0.3f, 0.4f);
+                                    ? previewInvalidColor
+                                    : previewValidColor;
                         }
                         else if (BuildModeController.Mode == BuildMode.Demolish)
                         {
@@ -221,7 +225,7 @@ namespace Controllers
                             if (tile.HasObject && tile.Object.Buildable)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 0);
-                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+                                previewRenderer.color = previewOverlayColor;
                             }
                             else
                             {
@@ -236,13 +240,13 @@ namespace Controllers
                             if (!area.CanPlace(tile) || _dragData.SizeX < area.MinimumSize.x ||
                                 _dragData.SizeY < area.MinimumSize.y)
                             {
-                                draggableCursorRenderer.color = new Color(1.0f, 0.3f, 0.3f, 0.4f);
+                                draggableCursorRenderer.color = previewInvalidColor;
                                 areaValid = false;
                             }
                             else
                             {
                                 if (!areaValid) break;
-                                draggableCursorRenderer.color = new Color(0.3f, 1.0f, 0.3f, 0.4f);
+                                draggableCursorRenderer.color = previewValidColor;
                             }
                         }
                         else if (BuildModeController.Mode == BuildMode.Mine)
@@ -250,7 +254,7 @@ namespace Controllers
                             if (tile.HasObject && tile.Object.Mineable)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 1);
-                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+                                previewRenderer.color = previewOverlayColor;
                             }
                             else
                             {
@@ -262,29 +266,38 @@ namespace Controllers
                             if (tile.HasObject && tile.Object.Fellable)
                             {
                                 previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 2);
-                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+                                previewRenderer.color = previewOverlayColor;
                             }
                             else
                             {
                                 previewRenderer.sprite = null;
                             }
                         }
-                        /*else if (BuildModeController.Mode == BuildMode.Harvest)
-                        {
-                            if (tile.HasObject && tile.Object.Harvestable)
-                            {
-                                previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 2);
-                                previewRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.35f);
-                            }
-                            else
-                            {
-                                previewRenderer.sprite = null;
-                            }
-                        }*/
 
                         previewObjects.Add(previewObject);
                     }
                 }
+            }
+            else if (Mode == MouseMode.Process_Single)
+            {
+                var previewObject = previewPool.GetAvailable();
+                var previewPos = currentMousePosition;
+                previewPos.x = Mathf.FloorToInt(currentMousePosition.x + 0.5f);
+                previewPos.y = Mathf.FloorToInt(currentMousePosition.y + 0.5f);
+                previewObject.transform.position = previewPos;
+                var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
+                previewRenderer.sprite = null;
+
+                if (BuildModeController.Mode == BuildMode.Object)
+                {
+                    previewRenderer.sprite = BuildModeController.ObjectToBuild.GetIcon();
+                    previewRenderer.color =
+                        !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, GetTileUnderMouse())
+                            ? previewInvalidColor
+                            : previewValidColor;
+                }
+
+                previewObjects.Add(previewObject);
             }
 
             draggableCursor.transform.position = selectionPosition;

@@ -215,7 +215,7 @@ namespace Controllers
         /// <param name="_object"></param>
         public void SetBuildMode(TileObject _object)
         {
-            MouseController.Instance.Mode = MouseMode.Process;
+            MouseController.Instance.Mode = _object.Draggable ? MouseMode.Process : MouseMode.Process_Single;
             Mode = BuildMode.Object;
             ObjectToBuild = _object;
         }
