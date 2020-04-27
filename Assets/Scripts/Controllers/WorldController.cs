@@ -177,7 +177,7 @@ namespace Controllers
             }
 
             var spriteRenderer = tileObjectRenderers[_tile];
-            spriteRenderer.sprite = SpriteCache.GetSprite(_tile.Object);
+            spriteRenderer.sprite = _tile.HasObject ? SpriteCache.GetSprite(_tile.Object) : null;
 
             if (_tile.HasObject)
             {
