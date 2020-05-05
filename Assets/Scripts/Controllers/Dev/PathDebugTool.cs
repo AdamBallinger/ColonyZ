@@ -23,7 +23,7 @@ namespace Controllers.Dev
             MouseController.Instance.mouseClickEvent += MouseClick;
             lineRenderer.startWidth = 1.0f;
             lineRenderer.endWidth = 1.0f;
-            lineRenderer.widthMultiplier = 0.65f;
+            lineRenderer.widthMultiplier = 0.2f;
 
             var state = PathFinder.Instance.UseRegionalPathfinding;
             regionalStatusText.text = state
