@@ -23,11 +23,6 @@ namespace Models.Map.Regions
         /// </summary>
         public Dictionary<int, List<Tile>> AccessMap { get; private set; }
 
-        /// <summary>
-        /// Tiles along the edge of the region.
-        /// </summary>
-        public HashSet<Tile> EdgeTiles { get; } = new HashSet<Tile>();
-
         public bool IsDoor { get; private set; }
 
         private List<EdgeSpan> spans = new List<EdgeSpan>();
@@ -64,7 +59,6 @@ namespace Models.Map.Regions
             AccessMap[1].Clear();
             AccessMap[2].Clear();
             AccessMap[3].Clear();
-            EdgeTiles.Clear();
 
             foreach (var tile in Tiles)
             {
@@ -95,28 +89,24 @@ namespace Models.Map.Regions
                     && tile.Left?.Region != tile.Region)
                 {
                     AccessMap[0].Add(tile);
-                    EdgeTiles.Add(tile);
                 }
 
                 if (tile.Right?.GetEnterability() != TileEnterability.None
                     && tile.Right?.Region != tile.Region)
                 {
                     AccessMap[1].Add(tile.Right);
-                    EdgeTiles.Add(tile);
                 }
 
                 if (tile.Up?.GetEnterability() != TileEnterability.None
                     && tile.Up?.Region != tile.Region)
                 {
                     AccessMap[2].Add(tile.Up);
-                    EdgeTiles.Add(tile);
                 }
 
                 if (tile.Down?.GetEnterability() != TileEnterability.None
                     && tile.Down?.Region != tile.Region)
                 {
                     AccessMap[3].Add(tile);
-                    EdgeTiles.Add(tile);
                 }
             }
 

@@ -17,11 +17,9 @@ namespace Controllers.Dev
         [SerializeField] private Color regionOverlayColor;
         [SerializeField] private Color regionNeighbourColor;
         [SerializeField] private Color regionBridgeColor;
-        [SerializeField] private Color regionEdgeColor;
 
         [SerializeField] private bool drawNeighbours;
         [SerializeField] private bool drawBridges;
-        [SerializeField] private bool drawEdges;
 
         private bool displayLinkData;
 
@@ -120,18 +118,6 @@ namespace Controllers.Dev
                 }
             }
 
-            if (drawEdges)
-            {
-                foreach (var tile in _region.EdgeTiles)
-                {
-                    var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                    meshColors[vertIndex] = regionEdgeColor;
-                    meshColors[vertIndex + 1] = regionEdgeColor;
-                    meshColors[vertIndex + 2] = regionEdgeColor;
-                    meshColors[vertIndex + 3] = regionEdgeColor;
-                }
-            }
-
             tileMesh.SetColors(meshColors);
         }
 
@@ -209,11 +195,6 @@ namespace Controllers.Dev
         public void ToggleBridges()
         {
             drawBridges = !drawBridges;
-        }
-
-        public void ToggleEdges()
-        {
-            drawEdges = !drawEdges;
         }
 
         public void ToggleLinks()
