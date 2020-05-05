@@ -64,7 +64,7 @@ namespace Models.Map.Regions
 
             foreach (var region in newRegions)
             {
-                region.CalculateBoundaryTiles();
+                region.BuildLinks();
             }
 
             newRegions.Clear();
@@ -90,7 +90,7 @@ namespace Models.Map.Regions
 
             foreach (var region in newRegions)
             {
-                region.CalculateBoundaryTiles();
+                region.BuildLinks();
             }
 
             newRegions.Clear();

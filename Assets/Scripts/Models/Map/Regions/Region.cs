@@ -21,7 +21,7 @@ namespace Models.Map.Regions
         /// 0 - Tiles granting access from the right.
         /// 1 - Tiles granting access upwards.
         /// </summary>
-        public Dictionary<int, List<Tile>> BoundaryMap { get; private set; }
+        public Dictionary<int, List<Tile>> AccessMap { get; private set; }
 
         /// <summary>
         /// Tiles along the edge of the region.
@@ -49,21 +49,21 @@ namespace Models.Map.Regions
             _tile.Region = this;
         }
 
-        public void CalculateBoundaryTiles()
+        public void BuildLinks()
         {
-            if (BoundaryMap == null)
+            if (AccessMap == null)
             {
-                BoundaryMap = new Dictionary<int, List<Tile>>();
-                BoundaryMap.Add(0, new List<Tile>()); // Left
-                BoundaryMap.Add(1, new List<Tile>()); // Right
-                BoundaryMap.Add(2, new List<Tile>()); // Up
-                BoundaryMap.Add(3, new List<Tile>()); // Down
+                AccessMap = new Dictionary<int, List<Tile>>();
+                AccessMap.Add(0, new List<Tile>()); // Left
+                AccessMap.Add(1, new List<Tile>()); // Right
+                AccessMap.Add(2, new List<Tile>()); // Up
+                AccessMap.Add(3, new List<Tile>()); // Down
             }
 
-            BoundaryMap[0].Clear();
-            BoundaryMap[1].Clear();
-            BoundaryMap[2].Clear();
-            BoundaryMap[3].Clear();
+            AccessMap[0].Clear();
+            AccessMap[1].Clear();
+            AccessMap[2].Clear();
+            AccessMap[3].Clear();
             EdgeTiles.Clear();
 
             foreach (var tile in Tiles)
@@ -73,14 +73,14 @@ namespace Models.Map.Regions
                     // Door is a up/down access.
                     if (tile.Left != null && tile.Left.HasObject)
                     {
-                        BoundaryMap[2].Add(tile.Up);
-                        BoundaryMap[3].Add(tile);
+                        AccessMap[2].Add(tile.Up);
+                        AccessMap[3].Add(tile);
                     }
                     // Door is left/right access.
                     else
                     {
-                        BoundaryMap[0].Add(tile);
-                        BoundaryMap[1].Add(tile.Right);
+                        AccessMap[0].Add(tile);
+                        AccessMap[1].Add(tile.Right);
                     }
 
                     break;
@@ -94,28 +94,28 @@ namespace Models.Map.Regions
                 if (tile.Left?.GetEnterability() != TileEnterability.None
                     && tile.Left?.Region != tile.Region)
                 {
-                    BoundaryMap[0].Add(tile);
+                    AccessMap[0].Add(tile);
                     EdgeTiles.Add(tile);
                 }
 
                 if (tile.Right?.GetEnterability() != TileEnterability.None
                     && tile.Right?.Region != tile.Region)
                 {
-                    BoundaryMap[1].Add(tile.Right);
+                    AccessMap[1].Add(tile.Right);
                     EdgeTiles.Add(tile);
                 }
 
                 if (tile.Up?.GetEnterability() != TileEnterability.None
                     && tile.Up?.Region != tile.Region)
                 {
-                    BoundaryMap[2].Add(tile.Up);
+                    AccessMap[2].Add(tile.Up);
                     EdgeTiles.Add(tile);
                 }
 
                 if (tile.Down?.GetEnterability() != TileEnterability.None
                     && tile.Down?.Region != tile.Region)
                 {
-                    BoundaryMap[3].Add(tile);
+                    AccessMap[3].Add(tile);
                     EdgeTiles.Add(tile);
                 }
             }
@@ -124,19 +124,17 @@ namespace Models.Map.Regions
             // correctly organised when detecting edge spans.
             if (!IsDoor)
             {
-                BoundaryMap[0].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
-                BoundaryMap[1].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
-                BoundaryMap[2].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
-                BoundaryMap[3].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+                AccessMap[0].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
+                AccessMap[1].Sort((_tile, _tile1) => _tile.Y.CompareTo(_tile1.Y));
+                AccessMap[2].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
+                AccessMap[3].Sort((_tile, _tile1) => _tile.X.CompareTo(_tile1.X));
             }
 
-            GenerateEdgeSpans();
+            BuildEdgeSpans();
         }
 
-        private void GenerateEdgeSpans()
+        private void BuildEdgeSpans()
         {
-            // TODO: This function need to be re written to properly detect edge spans that are not directly on the
-            // boundary of a region.. Hard af to explain.. Its down to the sorting of the boundary map tiles..
             spans.Clear();
 
             foreach (var link in Links)
@@ -146,7 +144,7 @@ namespace Models.Map.Regions
 
             Links.Clear();
 
-            foreach (var pair in BoundaryMap)
+            foreach (var pair in AccessMap)
             {
                 edgeSpan.Clear();
                 var newSpan = true;

@@ -107,7 +107,7 @@ namespace Controllers.Dev
 
             if (drawBridges)
             {
-                foreach (var pair in _region.BoundaryMap)
+                foreach (var pair in _region.AccessMap)
                 {
                     foreach (var tile in pair.Value)
                     {
