@@ -39,9 +39,20 @@ namespace ColonyZ.Models.Saving
             SaveEntities();
         }
 
+        public void LoadWorldData(WorldDataProvider _provider)
+        {
+            var worldJson = JObject.Parse(File.ReadAllText(WorldFile));
+            _provider.OnLoad(worldJson);
+        }
+
         public void LoadAll()
         {
-            LoadWorld();
+            if (World.Instance == null)
+            {
+                Debug.LogError("Can't call SaveGameHandler::LoadAll until world instance has been created.");
+                return;
+            }
+
             LoadObjects();
             LoadEntities();
         }
@@ -53,7 +64,7 @@ namespace ColonyZ.Models.Saving
             var writer = new JsonTextWriter(sw);
             writer.Formatting = Formatting.Indented;
             writer.WriteStartObject();
-            World.Instance.OnSave(writer);
+            World.Instance.WorldProvider.OnSave(writer);
             writer.WriteEndObject();
 
             WriteJsonToFile(sb.ToString(), WorldFile);
@@ -89,20 +100,13 @@ namespace ColonyZ.Models.Saving
             File.WriteAllText(_file, _json);
         }
 
-        private void LoadWorld()
-        {
-        }
-
         private void LoadObjects()
         {
             var objectsJson = JArray.Parse(File.ReadAllText(ObjectsFile));
 
             for (var i = 0; i < objectsJson.Count; i++)
             {
-                //var x = objectsJson[i]["tile_x"].Value<int>();
-                //var y = objectsJson[i]["tile_y"].Value<int>();
                 var obj = TileObjectCache.GetObject(objectsJson[i]["id"].ToString());
-                //World.Instance.GetTileAt(x, y).SetObject(obj, false);
                 obj.OnLoad(objectsJson[i]);
             }
         }

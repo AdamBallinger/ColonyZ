@@ -8,20 +8,13 @@ using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
-using ColonyZ.Models.Saving;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace ColonyZ.Models.Map
 {
-    public class World : IEnumerable, ISaveable
+    public class World : IEnumerable
     {
-        private World()
-        {
-        }
-
         public static World Instance { get; private set; }
 
         public int Width { get; private set; }
@@ -32,9 +25,9 @@ namespace ColonyZ.Models.Map
         /// </summary>
         public int Size => Width * Height;
 
-        public WorldGridLayout WorldGrid { get; private set; }
+        public WorldDataProvider WorldProvider { get; private set; }
 
-        public SaveGameHandler SaveGameHandler { get; private set; }
+        public WorldGridLayout WorldGrid { get; private set; }
 
         public List<LivingEntity> Characters { get; private set; }
 
@@ -54,21 +47,25 @@ namespace ColonyZ.Models.Map
         /// </summary>
         public event Action<Entity> onEntityRemoved;
 
+        private World()
+        {
+        }
+
         /// <summary>
         ///     Creates a new instance of World.Instance
         /// </summary>
-        /// <param name="_width"></param>
-        /// <param name="_height"></param>
+        /// <param name="_worldDataProvider"></param>
         /// <param name="_tileDefinitionChangeListener"></param>
         /// <param name="_tileChangedListener"></param>
-        public static void CreateWorld(int _width, int _height, Action<Tile> _tileDefinitionChangeListener,
+        public static void CreateWorld(WorldDataProvider _worldDataProvider, Action<Tile> _tileDefinitionChangeListener,
             Action<Tile> _tileChangedListener)
         {
             Instance = new World
             {
-                Width = _width,
-                Height = _height,
-                Tiles = new Tile[_width * _height],
+                WorldProvider = _worldDataProvider,
+                Width = _worldDataProvider.WorldWidth,
+                Height = _worldDataProvider.WorldHeight,
+                Tiles = new Tile[_worldDataProvider.WorldWidth * _worldDataProvider.WorldHeight],
                 Characters = new List<LivingEntity>(),
                 Items = new List<ItemEntity>(),
                 Objects = new List<TileObject>()
@@ -78,7 +75,6 @@ namespace ColonyZ.Models.Map
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
             Instance.WorldGrid = new WorldGridLayout(Instance);
             RegionManager.Create();
-            Instance.SaveGameHandler = new SaveGameHandler();
         }
 
         public void Update()
@@ -316,23 +312,5 @@ namespace ColonyZ.Models.Map
         }
 
         #endregion
-
-        public bool CanSave()
-        {
-            return true;
-        }
-
-        public void OnSave(JsonTextWriter _writer)
-        {
-            _writer.WritePropertyName("width");
-            _writer.WriteValue(Width);
-            _writer.WritePropertyName("height");
-            _writer.WriteValue(Height);
-        }
-
-        public void OnLoad(JToken _dataToken)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

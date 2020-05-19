@@ -16,11 +16,14 @@ namespace ColonyZ.Controllers.UI.MainMenu
 
         public void OnNewGamePressed()
         {
+            WorldController.LOADING_TYPE = WorldLoadType.New;
             SceneManager.LoadScene("world");
         }
 
         public void OnLoadGamePressed()
         {
+            WorldController.LOADING_TYPE = WorldLoadType.Load;
+            SceneManager.LoadScene("world");
         }
     }
 }

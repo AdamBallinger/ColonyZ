@@ -11,6 +11,7 @@ using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
+using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.TimeSystem;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace ColonyZ.Controllers
     [RequireComponent(typeof(WorldRenderer))]
     public class WorldController : MonoBehaviour
     {
+        public static WorldLoadType LOADING_TYPE;
+
         private Transform _transform;
 
         [SerializeField] private DataLoader dataLoader;
@@ -40,6 +43,9 @@ namespace ColonyZ.Controllers
         private WorldRenderer worldRenderer;
         [SerializeField] private int worldWidth = 100;
 
+        private SaveGameHandler saveGameHandler;
+        private WorldDataProvider worldProvider;
+
         private void Awake()
         {
             _transform = transform;
@@ -58,7 +64,7 @@ namespace ColonyZ.Controllers
         private void OnDestroy()
         {
             if (shouldSaveLoad)
-                World.Instance.SaveGameHandler.SaveAll();
+                saveGameHandler.SaveAll();
         }
 
         private void SetupWorld()
@@ -67,17 +73,31 @@ namespace ColonyZ.Controllers
             ZoneManager.Create();
             TimeManager.Create(6, 30, 1);
             JobManager.Create();
+
+            saveGameHandler = new SaveGameHandler();
+            worldProvider = new WorldDataProvider(worldWidth, worldHeight);
+
+            if (LOADING_TYPE == WorldLoadType.Load)
+            {
+                saveGameHandler.LoadWorldData(worldProvider);
+                worldWidth = worldProvider.WorldWidth;
+                worldHeight = worldProvider.WorldHeight;
+            }
+
             NodeGraph.Create(worldWidth, worldHeight);
 
-            World.CreateWorld(worldWidth, worldHeight, OnTileDefinitionChanged, OnTileChanged);
+            World.CreateWorld(worldProvider, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;
             World.Instance.onEntityRemoved += OnEntityRemoved;
 
             worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
 
-            for (var i = 0; i < initialCharacterCount; i++)
-                World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2,
-                    worldHeight / 2, 5));
+            if (LOADING_TYPE == WorldLoadType.New)
+            {
+                for (var i = 0; i < initialCharacterCount; i++)
+                    World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2,
+                        worldHeight / 2, 5));
+            }
 
             foreach (var tile in World.Instance)
             {
@@ -87,12 +107,15 @@ namespace ColonyZ.Controllers
                     continue;
                 }
 
-                if (Random.Range(1, 100) <= treeSpawnChance) tile.SetObject(TileObjectCache.GetObject("Tree"), false);
+                if (LOADING_TYPE == WorldLoadType.New)
+                {
+                    if (Random.Range(1, 100) <= treeSpawnChance)
+                        tile.SetObject(TileObjectCache.GetObject("Tree"), false);
+                }
             }
 
-            // TEMPORARY!!!
-            if (shouldSaveLoad)
-                World.Instance.SaveGameHandler.LoadAll();
+            if (LOADING_TYPE == WorldLoadType.Load)
+                saveGameHandler.LoadAll();
 
             foreach (var tile in World.Instance)
                 if (tile != null && tile.Area == null && !(tile.HasObject && tile.Object.EnclosesRoom))
