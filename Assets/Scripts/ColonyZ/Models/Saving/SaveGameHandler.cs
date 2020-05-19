@@ -59,6 +59,7 @@ namespace ColonyZ.Models.Saving
             var writer = new JsonTextWriter(sw);
             writer.Formatting = Formatting.Indented;
 
+            writer.WriteStartArray();
             foreach (var obj in World.Instance.Objects)
             {
                 // Don't need to write tree edges to file.
@@ -67,6 +68,8 @@ namespace ColonyZ.Models.Saving
                 obj.OnSave(writer);
                 writer.WriteEndObject();
             }
+
+            writer.WriteEnd();
 
             WriteJsonToFile(sb.ToString(), ObjectsFile);
         }
