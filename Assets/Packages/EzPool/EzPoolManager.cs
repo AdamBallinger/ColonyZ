@@ -8,24 +8,19 @@ namespace EzPool
     [DisallowMultipleComponent]
     public class EzPoolManager : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject pooledPrefab;
-
-        // Max number of objects that can be pooled.
-        [SerializeField]
-        private int maxPoolCount;
-
-        // Number of prefab instantiations to be made on start.
-        [SerializeField]
-        private uint prePoolCount;
-
         // List of active objects (Enabled in scene and being used).
-        [SerializeField]
-        private List<GameObject> activeObjects;
+        [SerializeField] private List<GameObject> activeObjects;
 
         // List of inactive objects (Disabled in scene and available to unpool).
-        [SerializeField]
-        private List<GameObject> inactiveObjects;
+        [SerializeField] private List<GameObject> inactiveObjects;
+
+        // Max number of objects that can be pooled.
+        [SerializeField] private int maxPoolCount;
+
+        [SerializeField] private GameObject pooledPrefab;
+
+        // Number of prefab instantiations to be made on start.
+        [SerializeField] private uint prePoolCount;
 
 
         private void Start()
@@ -33,15 +28,12 @@ namespace EzPool
             activeObjects = new List<GameObject>(maxPoolCount);
             inactiveObjects = new List<GameObject>(maxPoolCount);
 
-            if(pooledPrefab != null)
-            {
-                PrewarmPool();
-            }
+            if (pooledPrefab != null) PrewarmPool();
         }
 
         /// <summary>
-        /// Gets the next available inactive object reference in the pool. If none are available, a new object will be added
-        /// to the pool if the current pool count hasn't exceeded the max pool count allowed.
+        ///     Gets the next available inactive object reference in the pool. If none are available, a new object will be added
+        ///     to the pool if the current pool count hasn't exceeded the max pool count allowed.
         /// </summary>
         /// <returns></returns>
         public GameObject GetAvailable()
@@ -67,7 +59,8 @@ namespace EzPool
         }
 
         /// <summary>
-        /// Puts given object back into the inactive pool ready for use again later on. The object given must exist inside the pool for this manager.
+        ///     Puts given object back into the inactive pool ready for use again later on. The object given must exist inside the
+        ///     pool for this manager.
         /// </summary>
         /// <param name="_obj"></param>
         public void PoolObject(GameObject _obj)
@@ -81,7 +74,7 @@ namespace EzPool
         }
 
         /// <summary>
-        /// Returns the number of total pooled objects (Both active and inactive).
+        ///     Returns the number of total pooled objects (Both active and inactive).
         /// </summary>
         /// <returns></returns>
         public int GetPoolCount()
@@ -90,24 +83,18 @@ namespace EzPool
         }
 
         /// <summary>
-        /// Clears the pool manager.
+        ///     Clears the pool manager.
         /// </summary>
         /// <param name="_destroySceneObjects">Should the objects in the scene also be destroyed?</param>
         public void ClearPool(bool _destroySceneObjects)
         {
             if (_destroySceneObjects)
             {
-                for (var i = activeObjects.Count; i > 0; i--)
-                {
-                    Destroy(activeObjects[i]);
-                }
+                for (var i = activeObjects.Count; i > 0; i--) Destroy(activeObjects[i]);
 
-                for (var i = inactiveObjects.Count; i > 0; i--)
-                {
-                    Destroy(inactiveObjects[i]);
-                }
+                for (var i = inactiveObjects.Count; i > 0; i--) Destroy(inactiveObjects[i]);
             }
-          
+
             activeObjects.Clear();
             inactiveObjects.Clear();
         }
@@ -115,10 +102,8 @@ namespace EzPool
         private GameObject CreateNew()
         {
             if (GetPoolCount() == maxPoolCount)
-            {
                 //Debug.LogWarning(string.Format("Failed to create new instance as the pool has reached its assigned limit of {0}.", maxPoolCount));
                 return null;
-            }
 
             var obj = Instantiate(pooledPrefab, Vector3.zero, Quaternion.identity);
             obj.SetActive(false);
@@ -129,19 +114,14 @@ namespace EzPool
         private void PrewarmPool()
         {
             if (prePoolCount > 0)
-            {
                 for (var i = 0; i < prePoolCount; i++)
                 {
                     var obj = CreateNew();
 
-                    if (obj == null)
-                    {
-                        break;
-                    }
+                    if (obj == null) break;
 
                     inactiveObjects.Add(obj);
                 }
-            }
         }
 
         //private void TestUnPool()
@@ -186,4 +166,3 @@ namespace EzPool
         //}
     }
 }
-

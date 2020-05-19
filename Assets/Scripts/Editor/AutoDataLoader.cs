@@ -1,7 +1,7 @@
-﻿using Controllers.Loaders;
-using Models.Items;
-using Models.Map.Tiles.Objects;
-using Models.Sprites;
+﻿using ColonyZ.Controllers.Loaders;
+using ColonyZ.Models.Items;
+using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Sprites;
 using UnityEditor;
 using UnityEngine;
 
