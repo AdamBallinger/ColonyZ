@@ -736,7 +736,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -76.4, y: -228}
+  m_AnchoredPosition: {x: -76.3999, y: -228}
   m_SizeDelta: {x: 240, y: 47}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &116285642
@@ -8258,12 +8258,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataLoader: {fileID: 1523355955}
+  shouldSaveLoad: 1
   initialCharacterCount: 0
   itemEntityPrefab: {fileID: 4256605384353934779, guid: cf0a6cd49092b8d4cbe1a2441751f071,
     type: 3}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
-  treeSpawnChance: 11
+  treeSpawnChance: 9
   worldHeight: 64
   worldWidth: 64
 --- !u!114 &1920970006
