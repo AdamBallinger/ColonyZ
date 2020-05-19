@@ -54,6 +54,11 @@ namespace ColonyZ.Controllers
             SetupWorld();
         }
 
+        private void OnDestroy()
+        {
+            World.Instance.SaveGameHandler.SaveAll();
+        }
+
         private void SetupWorld()
         {
             AreaManager.Create();

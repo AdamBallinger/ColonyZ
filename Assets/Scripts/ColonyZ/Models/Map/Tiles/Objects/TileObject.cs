@@ -1,10 +1,12 @@
+using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    public abstract class TileObject : ScriptableObject, ISelectable
+    public abstract class TileObject : ScriptableObject, ISelectable, ISaveable
     {
         /// <summary>
         ///     The Tile this object originates from. If the object is a multi tile object, then this is the "base" tile
@@ -154,5 +156,28 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         }
 
         #endregion
+
+        public void OnSave(JsonTextWriter _writer)
+        {
+            _writer.WritePropertyName("id");
+            _writer.WriteValue(ObjectName);
+            _writer.WritePropertyName("tile_x");
+            _writer.WriteValue(Tile.X);
+            _writer.WritePropertyName("tile_y");
+            if (MultiTile)
+            {
+                _writer.WritePropertyName("origin_x");
+                _writer.WriteValue(OriginTile.X);
+                _writer.WritePropertyName("origin_y");
+                _writer.WriteValue(OriginTile.Y);
+            }
+
+            _writer.WriteValue(Tile.Y);
+        }
+
+        public void OnLoad()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

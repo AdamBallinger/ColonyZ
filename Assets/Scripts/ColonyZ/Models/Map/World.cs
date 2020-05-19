@@ -8,12 +8,14 @@ using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Saving;
+using Newtonsoft.Json;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace ColonyZ.Models.Map
 {
-    public class World : IEnumerable
+    public class World : IEnumerable, ISaveable
     {
         private World()
         {
@@ -30,6 +32,8 @@ namespace ColonyZ.Models.Map
         public int Size => Width * Height;
 
         public WorldGridLayout WorldGrid { get; private set; }
+
+        public SaveGameHandler SaveGameHandler { get; private set; }
 
         public List<LivingEntity> Characters { get; private set; }
 
@@ -73,6 +77,7 @@ namespace ColonyZ.Models.Map
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
             Instance.WorldGrid = new WorldGridLayout(Instance);
             RegionManager.Create();
+            Instance.SaveGameHandler = new SaveGameHandler();
         }
 
         public void Update()
@@ -310,5 +315,18 @@ namespace ColonyZ.Models.Map
         }
 
         #endregion
+
+        public void OnSave(JsonTextWriter _writer)
+        {
+            _writer.WritePropertyName("width");
+            _writer.WriteValue(Width);
+            _writer.WritePropertyName("height");
+            _writer.WriteValue(Height);
+        }
+
+        public void OnLoad()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
