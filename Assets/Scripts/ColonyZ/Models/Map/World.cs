@@ -10,6 +10,7 @@ using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Saving;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -316,6 +317,11 @@ namespace ColonyZ.Models.Map
 
         #endregion
 
+        public bool CanSave()
+        {
+            return true;
+        }
+
         public void OnSave(JsonTextWriter _writer)
         {
             _writer.WritePropertyName("width");
@@ -324,7 +330,7 @@ namespace ColonyZ.Models.Map
             _writer.WriteValue(Height);
         }
 
-        public void OnLoad()
+        public void OnLoad(JToken _dataToken)
         {
             throw new NotImplementedException();
         }

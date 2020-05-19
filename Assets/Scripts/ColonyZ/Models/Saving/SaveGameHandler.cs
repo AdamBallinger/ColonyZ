@@ -2,24 +2,24 @@
 using System.IO;
 using System.Text;
 using ColonyZ.Models.Map;
+using ColonyZ.Models.Map.Tiles.Objects;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Saving
 {
     public class SaveGameHandler
     {
-        private string Save_Game_Root { get; }
-        private string WorldFile { get; }
-        private string ObjectsFile { get; }
-        private string EntitiesFile { get; }
+        private static string Save_Game_Root { get; }
+            = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\ColonyZTest";
+
+        private static string WorldFile { get; } = Save_Game_Root + "\\world.json";
+        private static string ObjectsFile { get; } = Save_Game_Root + "\\objects.json";
+        private static string EntitiesFile { get; } = Save_Game_Root + "\\entities.json";
 
         public SaveGameHandler()
         {
-            Save_Game_Root = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\ColonyZTest";
-            WorldFile = Save_Game_Root + "\\world.json";
-            ObjectsFile = Save_Game_Root + "\\objects.json";
-            EntitiesFile = Save_Game_Root + "\\entities.json";
             ValidateSaveGameDirectory();
         }
 
@@ -37,6 +37,13 @@ namespace ColonyZ.Models.Saving
             SaveWorld();
             SaveObjects();
             SaveEntities();
+        }
+
+        public void LoadAll()
+        {
+            LoadWorld();
+            LoadObjects();
+            LoadEntities();
         }
 
         private void SaveWorld()
@@ -70,7 +77,6 @@ namespace ColonyZ.Models.Saving
             }
 
             writer.WriteEnd();
-
             WriteJsonToFile(sb.ToString(), ObjectsFile);
         }
 
@@ -83,8 +89,31 @@ namespace ColonyZ.Models.Saving
             File.WriteAllText(_file, _json);
         }
 
-        public void Load()
+        private void LoadWorld()
         {
+        }
+
+        private void LoadObjects()
+        {
+            var objectsJson = JArray.Parse(File.ReadAllText(ObjectsFile));
+
+            for (var i = 0; i < objectsJson.Count; i++)
+            {
+                //var x = objectsJson[i]["tile_x"].Value<int>();
+                //var y = objectsJson[i]["tile_y"].Value<int>();
+                var obj = TileObjectCache.GetObject(objectsJson[i]["id"].ToString());
+                //World.Instance.GetTileAt(x, y).SetObject(obj, false);
+                obj.OnLoad(objectsJson[i]);
+            }
+        }
+
+        private void LoadEntities()
+        {
+        }
+
+        public static bool SaveGamePresent()
+        {
+            return File.Exists(WorldFile);
         }
     }
 }

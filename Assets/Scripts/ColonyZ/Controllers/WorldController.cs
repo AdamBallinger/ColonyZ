@@ -24,6 +24,7 @@ namespace ColonyZ.Controllers
 
         [SerializeField] private DataLoader dataLoader;
 
+        [SerializeField] private bool shouldSaveLoad = true;
         [SerializeField] [Range(0, 10)] private int initialCharacterCount = 1;
         private Dictionary<ItemEntity, GameObject> itemEntityObjects;
         [SerializeField] private GameObject itemEntityPrefab;
@@ -56,7 +57,8 @@ namespace ColonyZ.Controllers
 
         private void OnDestroy()
         {
-            World.Instance.SaveGameHandler.SaveAll();
+            if (shouldSaveLoad)
+                World.Instance.SaveGameHandler.SaveAll();
         }
 
         private void SetupWorld()
@@ -71,11 +73,11 @@ namespace ColonyZ.Controllers
             World.Instance.onEntitySpawn += OnEntitySpawn;
             World.Instance.onEntityRemoved += OnEntityRemoved;
 
+            worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
+
             for (var i = 0; i < initialCharacterCount; i++)
                 World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2,
                     worldHeight / 2, 5));
-
-            worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
 
             foreach (var tile in World.Instance)
             {
@@ -87,6 +89,10 @@ namespace ColonyZ.Controllers
 
                 if (Random.Range(1, 100) <= treeSpawnChance) tile.SetObject(TileObjectCache.GetObject("Tree"), false);
             }
+
+            // TEMPORARY!!!
+            if (shouldSaveLoad)
+                World.Instance.SaveGameHandler.LoadAll();
 
             foreach (var tile in World.Instance)
                 if (tile != null && tile.Area == null && !(tile.HasObject && tile.Object.EnclosesRoom))

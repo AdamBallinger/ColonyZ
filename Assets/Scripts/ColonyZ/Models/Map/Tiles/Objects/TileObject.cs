@@ -2,6 +2,7 @@ using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
@@ -55,6 +56,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         ///     Returns whether this object occupies more than 1 tile.
         /// </summary>
         public bool MultiTile => Width > 1 || Height > 1;
+
+        /// <summary>
+        /// Flag used to only save the origin tile for multi tile objects.
+        /// </summary>
+        private bool shouldSave = true;
 
         public virtual void Update()
         {
@@ -157,6 +163,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         #endregion
 
+        public bool CanSave()
+        {
+            return shouldSave;
+        }
+
         public void OnSave(JsonTextWriter _writer)
         {
             _writer.WritePropertyName("id");
@@ -164,20 +175,17 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             _writer.WritePropertyName("tile_x");
             _writer.WriteValue(Tile.X);
             _writer.WritePropertyName("tile_y");
-            if (MultiTile)
-            {
-                _writer.WritePropertyName("origin_x");
-                _writer.WriteValue(OriginTile.X);
-                _writer.WritePropertyName("origin_y");
-                _writer.WriteValue(OriginTile.Y);
-            }
-
             _writer.WriteValue(Tile.Y);
+
+            if (MultiTile) shouldSave = false;
         }
 
-        public void OnLoad()
+        public void OnLoad(JToken _dataToken)
         {
-            throw new System.NotImplementedException();
+            var x = _dataToken["tile_x"].Value<int>();
+            var y = _dataToken["tile_y"].Value<int>();
+
+            World.Instance.GetTileAt(x, y).SetObject(this, false);
         }
     }
 }
