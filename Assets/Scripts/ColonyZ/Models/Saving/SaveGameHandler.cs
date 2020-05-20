@@ -81,7 +81,7 @@ namespace ColonyZ.Models.Saving
             foreach (var obj in World.Instance.Objects)
             {
                 // Don't need to write tree edges to file.
-                if (obj.OriginTile.IsMapEdge) continue;
+                if (obj.OriginTile.IsMapEdge || !obj.CanSave()) continue;
                 writer.WriteStartObject();
                 obj.OnSave(writer);
                 writer.WriteEndObject();
