@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ColonyZ.Models.Entities;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles.Objects;
 using Newtonsoft.Json.Linq;
@@ -90,6 +91,26 @@ namespace ColonyZ.Models.Saving
 
         private void SaveEntities()
         {
+            saveWriter.BeginObject();
+            SaveItems();
+            //SaveCharacters();
+            saveWriter.EndObject();
+
+            WriteJsonToFile(saveWriter.GetJson(), EntitiesFile);
+        }
+
+        private void SaveItems()
+        {
+            saveWriter.WriteProperty("Items");
+            saveWriter.BeginArray();
+            foreach (var item in World.Instance.Items)
+            {
+                saveWriter.BeginObject();
+                item.OnSave(saveWriter);
+                saveWriter.EndObject();
+            }
+
+            saveWriter.EndArray();
         }
 
         private void WriteJsonToFile(string _json, string _file)
@@ -110,6 +131,12 @@ namespace ColonyZ.Models.Saving
 
         private void LoadEntities()
         {
+            var entityJson = JObject.Parse(File.ReadAllText(EntitiesFile));
+            foreach (var itemData in entityJson["Items"])
+            {
+                var tempEntity = new ItemEntity();
+                tempEntity.OnLoad(itemData);
+            }
         }
 
         public static bool SaveGamePresent()

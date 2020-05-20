@@ -45,6 +45,11 @@ namespace ColonyZ.Models.Saving
             writer.WriteValue(_value);
         }
 
+        public void WriteProperty(string _name)
+        {
+            writer.WritePropertyName(_name);
+        }
+
         public void WriteSet<T>(string _name, params T[] _values)
         {
             writer.WritePropertyName(_name);
