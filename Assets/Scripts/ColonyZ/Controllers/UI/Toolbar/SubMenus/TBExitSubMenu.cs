@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
 {
@@ -6,10 +7,7 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
     {
         protected override void OnEnabled()
         {
-            // TODO: Save game, then switch to menu when there is one.
-            AddItem("Menu", null, null);
-
-            // TODO: Save game before quitting to desktop.
+            AddItem("Menu", null, () => SceneManager.LoadScene("_menu_"));
             AddItem("Desktop", null, Application.Quit);
         }
     }
