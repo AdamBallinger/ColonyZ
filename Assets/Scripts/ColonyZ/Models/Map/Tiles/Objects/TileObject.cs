@@ -1,7 +1,6 @@
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -168,14 +167,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             return shouldSave;
         }
 
-        public void OnSave(JsonTextWriter _writer)
+        public void OnSave(SaveGameWriter _writer)
         {
-            _writer.WritePropertyName("id");
-            _writer.WriteValue(ObjectName);
-            _writer.WritePropertyName("tile_x");
-            _writer.WriteValue(Tile.X);
-            _writer.WritePropertyName("tile_y");
-            _writer.WriteValue(Tile.Y);
+            _writer.WriteProperty("id", ObjectName);
+            _writer.WriteProperty("tile_x", Tile.X);
+            _writer.WriteProperty("tile_y", Tile.Y);
 
             if (MultiTile) shouldSave = false;
         }

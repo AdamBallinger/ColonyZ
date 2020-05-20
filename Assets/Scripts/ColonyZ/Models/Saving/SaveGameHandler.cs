@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles.Objects;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -18,8 +16,11 @@ namespace ColonyZ.Models.Saving
         private static string ObjectsFile { get; } = Save_Game_Root + "\\objects.json";
         private static string EntitiesFile { get; } = Save_Game_Root + "\\entities.json";
 
+        private SaveGameWriter saveWriter;
+
         public SaveGameHandler()
         {
+            saveWriter = new SaveGameWriter();
             ValidateSaveGameDirectory();
         }
 
@@ -34,8 +35,11 @@ namespace ColonyZ.Models.Saving
 
         public void SaveAll()
         {
+            saveWriter.StartNew();
             SaveWorld();
+            saveWriter.StartNew();
             SaveObjects();
+            saveWriter.StartNew();
             SaveEntities();
         }
 
@@ -59,36 +63,29 @@ namespace ColonyZ.Models.Saving
 
         private void SaveWorld()
         {
-            var sb = new StringBuilder();
-            var sw = new StringWriter(sb);
-            var writer = new JsonTextWriter(sw);
-            writer.Formatting = Formatting.Indented;
-            writer.WriteStartObject();
-            World.Instance.WorldProvider.OnSave(writer);
-            writer.WriteEndObject();
+            saveWriter.BeginObject();
+            World.Instance.WorldProvider.OnSave(saveWriter);
+            saveWriter.EndObject();
 
-            WriteJsonToFile(sb.ToString(), WorldFile);
+            WriteJsonToFile(saveWriter.GetJson(), WorldFile);
         }
 
         private void SaveObjects()
         {
-            var sb = new StringBuilder();
-            var sw = new StringWriter(sb);
-            var writer = new JsonTextWriter(sw);
-            writer.Formatting = Formatting.Indented;
+            saveWriter.BeginArray();
 
-            writer.WriteStartArray();
             foreach (var obj in World.Instance.Objects)
             {
-                // Don't need to write tree edges to file.
+                // Don't need to write tree edges to file, or objects that no longer need saving.
                 if (obj.OriginTile.IsMapEdge || !obj.CanSave()) continue;
-                writer.WriteStartObject();
-                obj.OnSave(writer);
-                writer.WriteEndObject();
+                saveWriter.BeginObject();
+                obj.OnSave(saveWriter);
+                saveWriter.EndObject();
             }
 
-            writer.WriteEnd();
-            WriteJsonToFile(sb.ToString(), ObjectsFile);
+            saveWriter.EndArray();
+
+            WriteJsonToFile(saveWriter.GetJson(), ObjectsFile);
         }
 
         private void SaveEntities()

@@ -1,6 +1,5 @@
 ﻿using ColonyZ.Models.Saving;
 using ColonyZ.Models.TimeSystem;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ColonyZ.Models.Map
@@ -21,18 +20,14 @@ namespace ColonyZ.Models.Map
             return true;
         }
 
-        public void OnSave(JsonTextWriter _writer)
+        public void OnSave(SaveGameWriter _writer)
         {
-            _writer.WritePropertyName("width");
-            _writer.WriteValue(WorldWidth);
-            _writer.WritePropertyName("height");
-            _writer.WriteValue(WorldWidth);
-            _writer.WritePropertyName("Time");
-            _writer.WriteStartArray();
-            _writer.WriteValue(TimeManager.Instance.Day);
-            _writer.WriteValue(TimeManager.Instance.Hour);
-            _writer.WriteValue(TimeManager.Instance.Minute);
-            _writer.WriteEnd();
+            _writer.WriteProperty("width", WorldWidth);
+            _writer.WriteProperty("height", WorldHeight);
+            _writer.WriteSet("Time",
+                TimeManager.Instance.Day,
+                TimeManager.Instance.Hour,
+                TimeManager.Instance.Minute);
         }
 
         public void OnLoad(JToken _dataToken)

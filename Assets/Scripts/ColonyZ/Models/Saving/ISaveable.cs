@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace ColonyZ.Models.Saving
 {
@@ -11,7 +10,7 @@ namespace ColonyZ.Models.Saving
     {
         bool CanSave();
 
-        void OnSave(JsonTextWriter _writer);
+        void OnSave(SaveGameWriter _writer);
 
         void OnLoad(JToken _dataToken);
     }
