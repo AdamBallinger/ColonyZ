@@ -15,10 +15,6 @@ namespace ColonyZ.Models.Map
 {
     public class World : IEnumerable
     {
-        private World()
-        {
-        }
-
         public static World Instance { get; private set; }
 
         public int Width { get; private set; }
@@ -28,6 +24,8 @@ namespace ColonyZ.Models.Map
         ///     Returns the number of tiles in the world.
         /// </summary>
         public int Size => Width * Height;
+
+        public WorldDataProvider WorldProvider { get; private set; }
 
         public WorldGridLayout WorldGrid { get; private set; }
 
@@ -49,21 +47,25 @@ namespace ColonyZ.Models.Map
         /// </summary>
         public event Action<Entity> onEntityRemoved;
 
+        private World()
+        {
+        }
+
         /// <summary>
         ///     Creates a new instance of World.Instance
         /// </summary>
-        /// <param name="_width"></param>
-        /// <param name="_height"></param>
+        /// <param name="_worldDataProvider"></param>
         /// <param name="_tileDefinitionChangeListener"></param>
         /// <param name="_tileChangedListener"></param>
-        public static void CreateWorld(int _width, int _height, Action<Tile> _tileDefinitionChangeListener,
+        public static void CreateWorld(WorldDataProvider _worldDataProvider, Action<Tile> _tileDefinitionChangeListener,
             Action<Tile> _tileChangedListener)
         {
             Instance = new World
             {
-                Width = _width,
-                Height = _height,
-                Tiles = new Tile[_width * _height],
+                WorldProvider = _worldDataProvider,
+                Width = _worldDataProvider.WorldWidth,
+                Height = _worldDataProvider.WorldHeight,
+                Tiles = new Tile[_worldDataProvider.WorldWidth * _worldDataProvider.WorldHeight],
                 Characters = new List<LivingEntity>(),
                 Items = new List<ItemEntity>(),
                 Objects = new List<TileObject>()
@@ -224,12 +226,13 @@ namespace ColonyZ.Models.Map
         ///     Spawns a new character entity in the world.
         /// </summary>
         /// <param name="_tile"></param>
-        public void SpawnCharacter(Tile _tile)
+        public LivingEntity SpawnCharacter(Tile _tile)
         {
             var entity = new HumanEntity(_tile);
             Characters.Add(entity);
 
             onEntitySpawn?.Invoke(entity);
+            return entity;
         }
 
         /// <summary>

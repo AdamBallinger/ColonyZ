@@ -83,13 +83,32 @@ namespace ColonyZ.Models.TimeSystem
         /// <param name="_hour"></param>
         /// <param name="_minute"></param>
         /// <param name="_day"></param>
-        public static void Create(int _hour, int _minute, int _day)
+        /// <param name="_timeMode"></param>
+        public static void Create(int _hour, int _minute, int _day, TimeMode _timeMode = TimeMode.x1)
         {
             if (Instance == null)
                 Instance = new TimeManager
                 {
-                    Hour = _hour, millis = _minute, Day = _day, TimeMode = TimeMode.x10
+                    Hour = _hour, Minute = _minute, Day = _day, TimeMode = _timeMode
                 };
+        }
+
+        public void SetTime(int _hour, int _minute, int _day)
+        {
+            _hour = Math.Min(_hour, 24);
+            _minute = Math.Min(_minute, 59);
+
+            if (Day != _day)
+            {
+                Day = _day;
+                newDayEvent?.Invoke(Day);
+            }
+
+            Hour = _hour;
+            Minute = _minute;
+            millis = 0;
+
+            timeChangedEvent?.Invoke(Hour, Minute);
         }
 
         /// <summary>

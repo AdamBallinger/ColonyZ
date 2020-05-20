@@ -1,11 +1,13 @@
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
+using ColonyZ.Models.Saving;
 using ColonyZ.Models.UI;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Entities
 {
-    public abstract class Entity : ISelectable
+    public abstract class Entity : ISelectable, ISaveable
     {
         protected Entity(Tile _tile)
         {
@@ -58,5 +60,19 @@ namespace ColonyZ.Models.Entities
         }
 
         public abstract void Update();
+
+        public virtual bool CanSave()
+        {
+            return true;
+        }
+
+        public virtual void OnSave(SaveGameWriter _writer)
+        {
+            _writer.WriteProperty("entity_name", Name);
+            _writer.WriteProperty("tile_x", CurrentTile.X);
+            _writer.WriteProperty("tile_y", CurrentTile.Y);
+        }
+
+        public abstract void OnLoad(JToken _dataToken);
     }
 }
