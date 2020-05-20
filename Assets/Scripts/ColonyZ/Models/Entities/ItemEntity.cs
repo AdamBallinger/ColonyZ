@@ -54,8 +54,6 @@ namespace ColonyZ.Models.Entities
 
         public override void OnLoad(JToken _dataToken)
         {
-            base.OnLoad(_dataToken);
-
             var item = ItemManager.CreateItem(_dataToken["entity_name"].Value<string>());
             var quantity = _dataToken["item_quantity"].Value<int>();
             var tileX = _dataToken["tile_x"].Value<int>();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ColonyZ.Models.Entities;
+using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles.Objects;
 using Newtonsoft.Json.Linq;
@@ -93,7 +94,7 @@ namespace ColonyZ.Models.Saving
         {
             saveWriter.BeginObject();
             SaveItems();
-            //SaveCharacters();
+            SaveLiving();
             saveWriter.EndObject();
 
             WriteJsonToFile(saveWriter.GetJson(), EntitiesFile);
@@ -107,6 +108,20 @@ namespace ColonyZ.Models.Saving
             {
                 saveWriter.BeginObject();
                 item.OnSave(saveWriter);
+                saveWriter.EndObject();
+            }
+
+            saveWriter.EndArray();
+        }
+
+        private void SaveLiving()
+        {
+            saveWriter.WriteProperty("Living");
+            saveWriter.BeginArray();
+            foreach (var living in World.Instance.Characters)
+            {
+                saveWriter.BeginObject();
+                living.OnSave(saveWriter);
                 saveWriter.EndObject();
             }
 
@@ -136,6 +151,12 @@ namespace ColonyZ.Models.Saving
             {
                 var tempEntity = new ItemEntity();
                 tempEntity.OnLoad(itemData);
+            }
+
+            foreach (var livingData in entityJson["Living"])
+            {
+                var tempEntity = new LivingEntity();
+                tempEntity.OnLoad(livingData);
             }
         }
 

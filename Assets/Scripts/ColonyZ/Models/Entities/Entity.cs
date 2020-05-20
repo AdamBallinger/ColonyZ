@@ -73,8 +73,6 @@ namespace ColonyZ.Models.Entities
             _writer.WriteProperty("tile_y", CurrentTile.Y);
         }
 
-        public virtual void OnLoad(JToken _dataToken)
-        {
-        }
+        public abstract void OnLoad(JToken _dataToken);
     }
 }

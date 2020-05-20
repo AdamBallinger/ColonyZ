@@ -226,12 +226,13 @@ namespace ColonyZ.Models.Map
         ///     Spawns a new character entity in the world.
         /// </summary>
         /// <param name="_tile"></param>
-        public void SpawnCharacter(Tile _tile)
+        public LivingEntity SpawnCharacter(Tile _tile)
         {
             var entity = new HumanEntity(_tile);
             Characters.Add(entity);
 
             onEntitySpawn?.Invoke(entity);
+            return entity;
         }
 
         /// <summary>
