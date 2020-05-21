@@ -116,21 +116,6 @@ namespace ColonyZ.Models.Map
         }
 
         /// <summary>
-        ///     Sets a tile's properties at given world X and Y.
-        /// </summary>
-        /// <param name="_x"></param>
-        /// <param name="_y"></param>
-        /// <param name="_definition"></param>
-        public void SetTileAt(int _x, int _y, TileDefinition _definition)
-        {
-            var tile = GetTileAt(_x, _y);
-
-            if (tile == null) return;
-
-            tile.TileDefinition = _definition;
-        }
-
-        /// <summary>
         ///     Returns a tile at the given world coordinates.
         /// </summary>
         /// <param name="_x"></param>
