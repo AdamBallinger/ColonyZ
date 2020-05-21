@@ -35,9 +35,9 @@ namespace ColonyZ.Models.Map.Zones
             if (!Zones.Contains(_zone))
             {
                 Zones.Add(_zone);
-                for (var x = _zone.Origin.x; x <= _zone.Size.x; x++)
+                for (var x = _zone.Origin.x; x <= _zone.Origin.x + _zone.Size.x; x++)
                 {
-                    for (var y = _zone.Origin.y; y <= _zone.Size.y; y++)
+                    for (var y = _zone.Origin.y; y <= _zone.Origin.y + _zone.Size.y; y++)
                     {
                         World.Instance.GetTileAt(x, y).Zone = _zone;
                     }
