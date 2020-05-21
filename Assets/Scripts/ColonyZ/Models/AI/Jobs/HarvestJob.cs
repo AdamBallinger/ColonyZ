@@ -1,6 +1,8 @@
+using System;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using Newtonsoft.Json.Linq;
 
 namespace ColonyZ.Models.AI.Jobs
 {
@@ -25,6 +27,11 @@ namespace ColonyZ.Models.AI.Jobs
 
             TargetTile.RemoveObject();
             World.Instance.SpawnItem(resourceObject.Item, resourceObject.Quantity, TargetTile);
+        }
+
+        public override void OnLoad(JToken _dataToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

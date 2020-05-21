@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
@@ -19,6 +20,7 @@ namespace ColonyZ.Models.Saving
         private static string ObjectsFile { get; } = Save_Game_Root + "\\objects.json";
         private static string EntitiesFile { get; } = Save_Game_Root + "\\entities.json";
         private static string ZonesFile { get; } = Save_Game_Root + "\\zones.json";
+        private static string JobsFile { get; } = Save_Game_Root + "\\jobs.json";
 
         private SaveGameWriter saveWriter;
 
@@ -47,6 +49,8 @@ namespace ColonyZ.Models.Saving
             SaveEntities();
             saveWriter.StartNew();
             SaveZones();
+            saveWriter.StartNew();
+            SaveJobs();
         }
 
         public void LoadWorldData(WorldDataProvider _provider)
@@ -66,6 +70,7 @@ namespace ColonyZ.Models.Saving
             LoadObjects();
             LoadEntities();
             LoadZones();
+            LoadJobs();
         }
 
         private void SaveWorld()
@@ -121,6 +126,24 @@ namespace ColonyZ.Models.Saving
             saveWriter.EndObject();
 
             WriteJsonToFile(saveWriter.GetJson(), ZonesFile);
+        }
+
+        private void SaveJobs()
+        {
+            saveWriter.BeginObject();
+            saveWriter.WriteProperty("Jobs");
+            saveWriter.BeginArray();
+            foreach (var job in JobManager.Instance.Jobs)
+            {
+                saveWriter.BeginObject();
+                job.OnSave(saveWriter);
+                saveWriter.EndObject();
+            }
+
+            saveWriter.EndArray();
+            saveWriter.EndObject();
+
+            WriteJsonToFile(saveWriter.GetJson(), JobsFile);
         }
 
         private void SaveItems()
@@ -197,6 +220,25 @@ namespace ColonyZ.Models.Saving
 
                 var tempZone = Activator.CreateInstance(zoneType) as Zone;
                 tempZone?.OnLoad(zoneData);
+            }
+        }
+
+        private void LoadJobs()
+        {
+            var jobsJson = JObject.Parse(File.ReadAllText(JobsFile));
+            foreach (var jobData in jobsJson["Jobs"])
+            {
+                var jobType = Type.GetType(jobData["job_type"].Value<string>());
+                if (jobType == null)
+                {
+                    Debug.LogError("Attempted to load a null job type. Skipping...");
+                    continue;
+                }
+
+                var jobTarget = World.Instance.GetTileAt(jobData["target"].Value<int>());
+                var job = (Job) Activator.CreateInstance(jobType, jobTarget);
+                job.OnLoad(jobData);
+                JobManager.Instance.AddJob(job);
             }
         }
 

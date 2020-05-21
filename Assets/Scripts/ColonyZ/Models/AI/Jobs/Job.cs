@@ -1,10 +1,13 @@
 using ColonyZ.Models.Entities.Living;
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
+using ColonyZ.Models.Saving;
 using ColonyZ.Models.TimeSystem;
+using Newtonsoft.Json.Linq;
 
 namespace ColonyZ.Models.AI.Jobs
 {
-    public abstract class Job
+    public abstract class Job : ISaveable
     {
         protected Job(Tile _targetTile)
         {
@@ -67,6 +70,23 @@ namespace ColonyZ.Models.AI.Jobs
         {
             AssignedEntity.SetJob(null, true);
             TargetTile.CurrentJob = null;
+        }
+
+        public bool CanSave()
+        {
+            return !Complete;
+        }
+
+        public virtual void OnSave(SaveGameWriter _writer)
+        {
+            _writer.WriteProperty("job_type", GetType().FullName);
+            _writer.WriteProperty("target", World.Instance.GetTileIndex(TargetTile));
+            _writer.WriteProperty("progress", Progress);
+        }
+
+        public virtual void OnLoad(JToken _dataToken)
+        {
+            Progress = _dataToken["progress"].Value<int>();
         }
     }
 }
