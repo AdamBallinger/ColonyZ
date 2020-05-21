@@ -1,13 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Items;
+using ColonyZ.Models.Map.Areas;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Zones;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -75,6 +78,9 @@ namespace ColonyZ.Models.Map
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
             Instance.WorldGrid = new WorldGridLayout(Instance);
             NodeGraph.Create();
+            AreaManager.Create();
+            ZoneManager.Create();
+            JobManager.Create();
             RegionManager.Create();
         }
 

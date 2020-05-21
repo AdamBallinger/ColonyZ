@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using ColonyZ.Controllers.Loaders;
 using ColonyZ.Controllers.Render;
 using ColonyZ.Controllers.UI;
+using ColonyZ.Controllers.UI.Jobs;
 using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
@@ -76,13 +77,6 @@ namespace ColonyZ.Controllers
 
         private void SetupWorld()
         {
-            AreaManager.Create();
-            ZoneManager.Create();
-            TimeManager.Create(6, 30, 1);
-            JobManager.Create();
-
-            FindObjectOfType<ZoneOverlayManager>().Init();
-
             saveGameHandler = new SaveGameHandler();
             worldProvider = new WorldDataProvider(worldWidth, worldHeight);
 
@@ -96,6 +90,9 @@ namespace ColonyZ.Controllers
             World.CreateWorld(worldProvider, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;
             World.Instance.onEntityRemoved += OnEntityRemoved;
+
+            FindObjectOfType<ZoneOverlayManager>().Init();
+            FindObjectOfType<JobListController>().Init();
 
             worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
 

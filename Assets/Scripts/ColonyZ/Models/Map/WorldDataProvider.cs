@@ -13,6 +13,7 @@ namespace ColonyZ.Models.Map
         {
             WorldWidth = _width;
             WorldHeight = _height;
+            TimeManager.Create(6, 0, 1);
         }
 
         public bool CanSave()

@@ -24,7 +24,7 @@ namespace ColonyZ.Controllers.UI.Jobs
 
         private RectTransform rTransform;
 
-        private void Start()
+        public void Init()
         {
             jobEntryMap = new Dictionary<Job, GameObject>();
             rTransform = GetComponent<RectTransform>();
