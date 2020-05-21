@@ -42,7 +42,7 @@ namespace ColonyZ.Models.AI.Jobs
         /// <summary>
         ///     List of all created jobs.
         /// </summary>
-        private List<Job> Jobs { get; set; }
+        public List<Job> Jobs { get; private set; }
 
         /// <summary>
         ///     A map for each job that keeps track of which entities can't reach it.
@@ -224,7 +224,7 @@ namespace ColonyZ.Models.AI.Jobs
             return closestTile != null;
         }
 
-        private void AddJob(Job _job)
+        public void AddJob(Job _job)
         {
             if (_job == null) return;
 
