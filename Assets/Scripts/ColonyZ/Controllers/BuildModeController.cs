@@ -30,7 +30,7 @@ namespace ColonyZ.Controllers
         public BuildModeController()
         {
             Mode = BuildMode.Object;
-            GodMode = true;
+            GodMode = World.Instance.WorldProvider.GodMode;
         }
 
         public BuildMode Mode { get; private set; }

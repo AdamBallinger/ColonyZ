@@ -1,4 +1,5 @@
-﻿using ColonyZ.Models.Saving;
+﻿using ColonyZ.Controllers;
+using ColonyZ.Models.Saving;
 using ColonyZ.Models.TimeSystem;
 using Newtonsoft.Json.Linq;
 
@@ -8,6 +9,8 @@ namespace ColonyZ.Models.Map
     {
         public int WorldWidth { get; private set; }
         public int WorldHeight { get; private set; }
+
+        public bool GodMode { get; private set; }
 
         public WorldDataProvider(int _width, int _height)
         {
@@ -25,6 +28,8 @@ namespace ColonyZ.Models.Map
         {
             _writer.WriteProperty("width", WorldWidth);
             _writer.WriteProperty("height", WorldHeight);
+            // TODO: Move god mode into a settings class, and save/load settings into world.json
+            _writer.WriteProperty("god_mode", MouseController.Instance.BuildModeController.GodMode);
             _writer.WriteSet("Time",
                 TimeManager.Instance.Day,
                 TimeManager.Instance.Hour,
@@ -38,6 +43,7 @@ namespace ColonyZ.Models.Map
             var day = _dataToken["Time"][0].Value<int>();
             var hour = _dataToken["Time"][1].Value<int>();
             var minute = _dataToken["Time"][2].Value<int>();
+            GodMode = _dataToken["god_mode"].Value<bool>();
 
             TimeManager.Instance.SetTime(hour, minute, day);
         }
