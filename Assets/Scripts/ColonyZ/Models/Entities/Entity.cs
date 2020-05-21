@@ -69,8 +69,7 @@ namespace ColonyZ.Models.Entities
         public virtual void OnSave(SaveGameWriter _writer)
         {
             _writer.WriteProperty("entity_name", Name);
-            _writer.WriteProperty("tile_x", CurrentTile.X);
-            _writer.WriteProperty("tile_y", CurrentTile.Y);
+            _writer.WriteProperty("t_index", World.Instance.GetTileIndex(CurrentTile));
         }
 
         public abstract void OnLoad(JToken _dataToken);

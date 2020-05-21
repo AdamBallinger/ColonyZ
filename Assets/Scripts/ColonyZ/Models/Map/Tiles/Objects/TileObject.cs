@@ -170,18 +170,16 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         public void OnSave(SaveGameWriter _writer)
         {
             _writer.WriteProperty("id", ObjectName);
-            _writer.WriteProperty("tile_x", Tile.X);
-            _writer.WriteProperty("tile_y", Tile.Y);
+            _writer.WriteProperty("t_index", World.Instance.GetTileIndex(Tile));
 
             if (MultiTile) shouldSave = false;
         }
 
         public void OnLoad(JToken _dataToken)
         {
-            var x = _dataToken["tile_x"].Value<int>();
-            var y = _dataToken["tile_y"].Value<int>();
+            var tileIndex = _dataToken["t_index"].Value<int>();
 
-            World.Instance.GetTileAt(x, y).SetObject(this, false);
+            World.Instance.GetTileAt(tileIndex).SetObject(this, false);
         }
     }
 }

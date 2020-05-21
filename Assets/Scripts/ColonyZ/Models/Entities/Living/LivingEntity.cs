@@ -70,12 +70,11 @@ namespace ColonyZ.Models.Entities.Living
         public override void OnLoad(JToken _dataToken)
         {
             var name = _dataToken["entity_name"].Value<string>();
-            var x = _dataToken["tile_x"].Value<int>();
-            var y = _dataToken["tile_y"].Value<int>();
+            var tileIndex = _dataToken["t_index"].Value<int>();
             var health = _dataToken["health"].Value<int>();
             var headID = _dataToken["head_id"].Value<int>();
             var bodyID = _dataToken["body_id"].Value<int>();
-            var entity = World.Instance.SpawnCharacter(World.Instance.GetTileAt(x, y));
+            var entity = World.Instance.SpawnCharacter(World.Instance.GetTileAt(tileIndex));
             entity.Name = name;
             entity.Health = health;
             entity.HeadId = headID;

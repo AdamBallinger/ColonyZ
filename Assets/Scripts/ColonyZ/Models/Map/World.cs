@@ -146,6 +146,17 @@ namespace ColonyZ.Models.Map
             return GetTileAt(Mathf.FloorToInt(_pos.x), Mathf.FloorToInt(_pos.y));
         }
 
+        public Tile GetTileAt(int _index)
+        {
+            if (_index < 0 || _index >= Size) return null;
+            return Tiles[_index];
+        }
+
+        public int GetTileIndex(Tile _tile)
+        {
+            return _tile.X * Width + _tile.Y;
+        }
+
         /// <summary>
         ///     Returns a random world tile.
         /// </summary>
