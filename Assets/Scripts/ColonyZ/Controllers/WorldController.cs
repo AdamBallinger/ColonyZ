@@ -66,8 +66,10 @@ namespace ColonyZ.Controllers
         {
             if (shouldSaveLoad)
                 saveGameHandler.SaveAll();
+            AreaManager.Destroy();
             ZoneManager.Destroy();
-            // TODO: Destroy other singleton managers.
+            TimeManager.Destroy();
+            JobManager.Destroy();
         }
 
         private void SetupWorld()

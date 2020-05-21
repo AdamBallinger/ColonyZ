@@ -32,6 +32,11 @@ namespace ColonyZ.Models.Map.Areas
             Instance = new AreaManager();
         }
 
+        public static void Destroy()
+        {
+            Instance = null;
+        }
+
         public int GetAreaID(Area _area)
         {
             return Areas.IndexOf(_area) + 1;

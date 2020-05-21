@@ -93,6 +93,11 @@ namespace ColonyZ.Models.TimeSystem
                 };
         }
 
+        public static void Destroy()
+        {
+            Instance = null;
+        }
+
         public void SetTime(int _hour, int _minute, int _day)
         {
             _hour = Math.Min(_hour, 24);

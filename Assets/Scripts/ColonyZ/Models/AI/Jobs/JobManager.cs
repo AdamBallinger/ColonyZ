@@ -73,6 +73,11 @@ namespace ColonyZ.Models.AI.Jobs
             }
         }
 
+        public static void Destroy()
+        {
+            Instance = null;
+        }
+
         private void Init()
         {
             Jobs = new List<Job>();
