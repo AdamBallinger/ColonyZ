@@ -125,7 +125,7 @@ namespace ColonyZ.Controllers
                 saveGameHandler.LoadAll();
 
             foreach (var tile in World.Instance)
-                if (tile != null && tile.Area == null && !(tile.HasObject && tile.Object.EnclosesRoom))
+                if (tile.Area == null && !(tile.HasObject && tile.Object.EnclosesRoom))
                     AreaManager.Instance.CheckForArea(tile);
 
             RegionManager.Instance.BuildRegions();
