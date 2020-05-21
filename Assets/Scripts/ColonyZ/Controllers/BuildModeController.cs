@@ -102,8 +102,7 @@ namespace ColonyZ.Controllers
 
             ZoneManager.Instance.AddZone(ZoneToBuild);
 
-            foreach (var tile in enumerable) tile.Zone = ZoneToBuild;
-
+            // Create new template instance for the zone being built.
             ZoneToBuild = (Zone) Activator.CreateInstance(ZoneToBuild.GetType());
         }
 

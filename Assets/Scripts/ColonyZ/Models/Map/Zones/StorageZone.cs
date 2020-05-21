@@ -1,5 +1,6 @@
 using ColonyZ.Models.Items;
 using ColonyZ.Models.Map.Tiles;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Zones
@@ -12,7 +13,7 @@ namespace ColonyZ.Models.Map.Zones
         {
             ZoneName = "Storage";
             CanContainObjects = false;
-            MinimumSize = new Vector2(3, 2);
+            MinimumSize = new Vector2Int(3, 2);
         }
 
         public override void SetSize(int _width, int _height)
@@ -36,6 +37,18 @@ namespace ColonyZ.Models.Map.Zones
                     return tile;
 
             return null;
+        }
+
+        public override void OnLoad(JToken _dataToken)
+        {
+            var tIndex = _dataToken["t_index"].Value<int>();
+            var sizeX = _dataToken["size_x"].Value<int>();
+            var sizeY = _dataToken["size_y"].Value<int>();
+
+            SetOrigin(World.Instance.GetTileAt(tIndex));
+            SetSize(sizeX, sizeY);
+
+            ZoneManager.Instance.AddZone(this);
         }
     }
 }

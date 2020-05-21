@@ -6,7 +6,7 @@ namespace ColonyZ.Models.Map.Zones
 {
     public class ZoneManager
     {
-        private readonly List<Zone> zones = new List<Zone>();
+        public List<Zone> Zones { get; } = new List<Zone>();
 
         private ZoneManager()
         {
@@ -25,20 +25,33 @@ namespace ColonyZ.Models.Map.Zones
                 Debug.LogWarning("ZoneManager already created!");
         }
 
+        public static void Destroy()
+        {
+            Instance = null;
+        }
+
         public void AddZone(Zone _zone)
         {
-            if (!zones.Contains(_zone))
+            if (!Zones.Contains(_zone))
             {
-                zones.Add(_zone);
+                Zones.Add(_zone);
+                for (var x = _zone.Origin.x; x <= _zone.Size.x; x++)
+                {
+                    for (var y = _zone.Origin.y; y <= _zone.Size.y; y++)
+                    {
+                        World.Instance.GetTileAt(x, y).Zone = _zone;
+                    }
+                }
+
                 zoneCreatedEvent?.Invoke(_zone);
             }
         }
 
         public void RemoveZone(Zone _zone)
         {
-            if (zones.Contains(_zone))
+            if (Zones.Contains(_zone))
             {
-                zones.Remove(_zone);
+                Zones.Remove(_zone);
                 zoneDeletedEvent?.Invoke(_zone);
             }
         }

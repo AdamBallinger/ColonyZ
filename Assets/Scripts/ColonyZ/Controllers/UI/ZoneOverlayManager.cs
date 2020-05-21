@@ -9,7 +9,7 @@ namespace ColonyZ.Controllers.UI
         private Dictionary<Zone, GameObject> overlayMap;
         [SerializeField] private GameObject overlayPrefab;
 
-        private void Start()
+        public void Init()
         {
             overlayMap = new Dictionary<Zone, GameObject>();
             ZoneManager.Instance.zoneCreatedEvent += CreateOverlay;

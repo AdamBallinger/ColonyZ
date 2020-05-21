@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ColonyZ.Controllers.Loaders;
 using ColonyZ.Controllers.Render;
+using ColonyZ.Controllers.UI;
 using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
@@ -65,6 +66,8 @@ namespace ColonyZ.Controllers
         {
             if (shouldSaveLoad)
                 saveGameHandler.SaveAll();
+            ZoneManager.Destroy();
+            // TODO: Destroy other singleton managers.
         }
 
         private void SetupWorld()
@@ -73,6 +76,8 @@ namespace ColonyZ.Controllers
             ZoneManager.Create();
             TimeManager.Create(6, 30, 1);
             JobManager.Create();
+
+            FindObjectOfType<ZoneOverlayManager>().Init();
 
             saveGameHandler = new SaveGameHandler();
             worldProvider = new WorldDataProvider(worldWidth, worldHeight);

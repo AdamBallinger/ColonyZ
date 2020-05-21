@@ -4,6 +4,7 @@ using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Zones;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace ColonyZ.Models.Saving
         private static string WorldFile { get; } = Save_Game_Root + "\\world.json";
         private static string ObjectsFile { get; } = Save_Game_Root + "\\objects.json";
         private static string EntitiesFile { get; } = Save_Game_Root + "\\entities.json";
+        private static string ZonesFile { get; } = Save_Game_Root + "\\zones.json";
 
         private SaveGameWriter saveWriter;
 
@@ -43,6 +45,8 @@ namespace ColonyZ.Models.Saving
             SaveObjects();
             saveWriter.StartNew();
             SaveEntities();
+            saveWriter.StartNew();
+            SaveZones();
         }
 
         public void LoadWorldData(WorldDataProvider _provider)
@@ -61,6 +65,7 @@ namespace ColonyZ.Models.Saving
 
             LoadObjects();
             LoadEntities();
+            LoadZones();
         }
 
         private void SaveWorld()
@@ -98,6 +103,24 @@ namespace ColonyZ.Models.Saving
             saveWriter.EndObject();
 
             WriteJsonToFile(saveWriter.GetJson(), EntitiesFile);
+        }
+
+        private void SaveZones()
+        {
+            saveWriter.BeginObject();
+            saveWriter.WriteProperty("Zones");
+            saveWriter.BeginArray();
+            foreach (var zone in ZoneManager.Instance.Zones)
+            {
+                saveWriter.BeginObject();
+                zone.OnSave(saveWriter);
+                saveWriter.EndObject();
+            }
+
+            saveWriter.EndArray();
+            saveWriter.EndObject();
+
+            WriteJsonToFile(saveWriter.GetJson(), ZonesFile);
         }
 
         private void SaveItems()
@@ -157,6 +180,23 @@ namespace ColonyZ.Models.Saving
             {
                 var tempEntity = new LivingEntity();
                 tempEntity.OnLoad(livingData);
+            }
+        }
+
+        private void LoadZones()
+        {
+            var zonesJson = JObject.Parse(File.ReadAllText(ZonesFile));
+            foreach (var zoneData in zonesJson["Zones"])
+            {
+                var zoneType = Type.GetType(zoneData["zone_type"].Value<string>());
+                if (zoneType == null)
+                {
+                    Debug.LogError("Attempted to load a null zone type. Skipping...");
+                    continue;
+                }
+
+                var tempZone = Activator.CreateInstance(zoneType) as Zone;
+                tempZone?.OnLoad(zoneData);
             }
         }
 
