@@ -1,7 +1,7 @@
-using System;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Saving;
 using Newtonsoft.Json.Linq;
 
 namespace ColonyZ.Models.AI.Jobs
@@ -9,6 +9,8 @@ namespace ColonyZ.Models.AI.Jobs
     public class HarvestJob : Job
     {
         private ResourceObject resourceObject;
+
+        private string harvestType;
 
         /// <summary>
         ///     Create a new harvest job
@@ -19,6 +21,15 @@ namespace ColonyZ.Models.AI.Jobs
         {
             JobName = $"{_harvestType}: {_targetTile.Object.ObjectName}";
             resourceObject = _targetTile.Object as ResourceObject;
+            harvestType = _harvestType;
+        }
+
+        /// <summary>
+        /// Used for loading only.
+        /// </summary>
+        /// <param name="_targetTile"></param>
+        public HarvestJob(Tile _targetTile) : this(_targetTile, string.Empty)
+        {
         }
 
         public override void OnComplete()
@@ -29,9 +40,18 @@ namespace ColonyZ.Models.AI.Jobs
             World.Instance.SpawnItem(resourceObject.Item, resourceObject.Quantity, TargetTile);
         }
 
+        public override void OnSave(SaveGameWriter _writer)
+        {
+            base.OnSave(_writer);
+            _writer.WriteProperty("harvest_type", harvestType);
+        }
+
         public override void OnLoad(JToken _dataToken)
         {
-            throw new NotImplementedException();
+            base.OnLoad(_dataToken);
+
+            harvestType = _dataToken["harvest_type"].Value<string>();
+            JobName = $"{harvestType}: {TargetTile.Object.ObjectName}";
         }
     }
 }
