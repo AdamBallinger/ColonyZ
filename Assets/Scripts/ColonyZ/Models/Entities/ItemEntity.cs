@@ -54,12 +54,11 @@ namespace ColonyZ.Models.Entities
 
         public override void OnLoad(JToken _dataToken)
         {
+            base.OnLoad(_dataToken);
             var item = ItemManager.CreateItem(_dataToken["entity_name"].Value<string>());
             var quantity = _dataToken["item_quantity"].Value<int>();
-            var tileX = _dataToken["tile_x"].Value<int>();
-            var tileY = _dataToken["tile_y"].Value<int>();
 
-            World.Instance.SpawnItem(item, quantity, World.Instance.GetTileAt(tileX, tileY));
+            World.Instance.SpawnItem(item, quantity, CurrentTile);
         }
     }
 }

@@ -72,6 +72,10 @@ namespace ColonyZ.Models.Entities
             _writer.WriteProperty("t_index", World.Instance.GetTileIndex(CurrentTile));
         }
 
-        public abstract void OnLoad(JToken _dataToken);
+        public virtual void OnLoad(JToken _dataToken)
+        {
+            var tileIndex = _dataToken["t_index"].Value<int>();
+            CurrentTile = World.Instance.GetTileAt(tileIndex);
+        }
     }
 }
