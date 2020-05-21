@@ -21,11 +21,9 @@ namespace ColonyZ.Models.Map.Tiles.Objects
                 return;
             }
 
-            // Don't add foundation to the cache, but instead the global reference.
             if (_object is FoundationObject)
             {
                 FoundationObject = _object;
-                return;
             }
 
             TileObjects.Add(_object);
