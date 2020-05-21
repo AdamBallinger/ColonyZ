@@ -34,6 +34,11 @@ namespace ColonyZ.Models.Map.Pathing
             };
         }
 
+        public static void Destroy()
+        {
+            Instance = null;
+        }
+
         /// <summary>
         ///     Create a new pathfinding request for the PathFinder. The path will be passed back to the onCompleteCallback given.
         /// </summary>

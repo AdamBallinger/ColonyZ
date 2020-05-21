@@ -74,6 +74,7 @@ namespace ColonyZ.Models.Map
             TileManager.LoadDefinitions();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
             Instance.WorldGrid = new WorldGridLayout(Instance);
+            NodeGraph.Create();
             RegionManager.Create();
         }
 

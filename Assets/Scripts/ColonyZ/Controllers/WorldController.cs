@@ -70,6 +70,8 @@ namespace ColonyZ.Controllers
             ZoneManager.Destroy();
             TimeManager.Destroy();
             JobManager.Destroy();
+            RegionManager.Destroy();
+            NodeGraph.Destroy();
         }
 
         private void SetupWorld()
@@ -90,8 +92,6 @@ namespace ColonyZ.Controllers
                 worldWidth = worldProvider.WorldWidth;
                 worldHeight = worldProvider.WorldHeight;
             }
-
-            NodeGraph.Create(worldWidth, worldHeight);
 
             World.CreateWorld(worldProvider, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;

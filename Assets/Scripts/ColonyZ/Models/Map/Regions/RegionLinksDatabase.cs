@@ -24,5 +24,10 @@ namespace ColonyZ.Models.Map.Regions
         {
             Links.Remove(_link.Span.UniqueHashCode());
         }
+
+        public static void Clear()
+        {
+            Links.Clear();
+        }
     }
 }

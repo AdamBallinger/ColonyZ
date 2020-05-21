@@ -29,6 +29,12 @@ namespace ColonyZ.Models.Map.Regions
             Instance = new RegionManager();
         }
 
+        public static void Destroy()
+        {
+            RegionLinksDatabase.Clear();
+            Instance = null;
+        }
+
         /// <summary>
         ///     Update regions when a tile has an object placed / removed.
         /// </summary>

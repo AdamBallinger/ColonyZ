@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using ColonyZ.Models.Map.Tiles;
-using UnityEngine;
 
 namespace ColonyZ.Models.Map.Pathing
 {
@@ -9,7 +7,6 @@ namespace ColonyZ.Models.Map.Pathing
     {
         public static NodeGraph Instance;
 
-        private Action onBuildGraphCallback;
         private Action onUpdateGraphCallback;
 
         private NodeGraph()
@@ -24,14 +21,12 @@ namespace ColonyZ.Models.Map.Pathing
         /// <summary>
         ///     Creates a new instance of the Node Graph.
         /// </summary>
-        /// <param name="_width"></param>
-        /// <param name="_height"></param>
-        public static void Create(int _width, int _height)
+        public static void Create()
         {
             Instance = new NodeGraph
             {
-                Width = _width,
-                Height = _height
+                Width = World.Instance.Width,
+                Height = World.Instance.Height
             };
 
             Instance.Nodes = new Node[Instance.Width, Instance.Height];
@@ -41,25 +36,28 @@ namespace ColonyZ.Models.Map.Pathing
             PathFinder.Create();
         }
 
+        public static void Destroy()
+        {
+            PathFinder.Destroy();
+            Instance = null;
+        }
+
         /// <summary>
-        ///     Re-Builds the entire Node Graph.
-        ///     This should only ever be used once on initialization, and UpdateGraph should be used for updating the graph.
+        ///     Runs first time build for the graph.
         /// </summary>
         private void BuildFullGraph()
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var nodeID = 0;
 
             for (var x = 0; x < Width; x++)
             for (var y = 0; y < Height; y++)
-                Nodes[x, y] = new Node(nodeID++, x, y, 1.0f, World.Instance?.GetTileAt(x, y).Object == null);
+                Nodes[x, y] = new Node(nodeID++,
+                    x,
+                    y,
+                    1.0f,
+                    World.Instance.GetTileAt(x, y).GetEnterability() != TileEnterability.None);
 
             BuildNodeNeighbours();
-            sw.Stop();
-            onBuildGraphCallback?.Invoke();
-            //UnityEngine.Debug.Log("Graph build time: " + sw.ElapsedMilliseconds + "ms.");
         }
 
         /// <summary>
@@ -71,9 +69,6 @@ namespace ColonyZ.Models.Map.Pathing
         /// <param name="_endY"></param>
         public void UpdateGraph(int _startX, int _startY, int _endX, int _endY)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             // Iterate each node and update its Pathable property.
             for (var x = _startX; x <= _endX; x++)
             {
@@ -88,9 +83,7 @@ namespace ColonyZ.Models.Map.Pathing
                 }
             }
 
-            sw.Stop();
             onUpdateGraphCallback?.Invoke();
-            //UnityEngine.Debug.Log("Graph update time: " + sw.ElapsedMilliseconds + "ms.");
         }
 
         /// <summary>
@@ -119,16 +112,6 @@ namespace ColonyZ.Models.Map.Pathing
             if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
 
             return Nodes[_x, _y];
-        }
-
-        public Node GetNodeAt(Vector2 _position)
-        {
-            return GetNodeAt(Mathf.FloorToInt(_position.x), Mathf.FloorToInt(_position.y));
-        }
-
-        public void RegisterGraphBuildCallback(Action _callback)
-        {
-            onBuildGraphCallback += _callback;
         }
 
         public void RegisterGraphUpdateCallback(Action _callback)
