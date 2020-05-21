@@ -25,5 +25,10 @@ namespace ColonyZ.Controllers.UI.MainMenu
             WorldController.LOADING_TYPE = WorldLoadType.Load;
             SceneManager.LoadScene("world");
         }
+
+        public void OnQuitPressed()
+        {
+            Application.Quit();
+        }
     }
 }
