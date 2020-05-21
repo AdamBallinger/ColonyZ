@@ -1,5 +1,4 @@
 using ColonyZ.Models.Map.Tiles;
-using Newtonsoft.Json.Linq;
 
 namespace ColonyZ.Models.AI.Jobs
 {
@@ -15,11 +14,6 @@ namespace ColonyZ.Models.AI.Jobs
             base.OnComplete();
 
             TargetTile.RemoveObject();
-        }
-
-        public override void OnLoad(JToken _dataToken)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
