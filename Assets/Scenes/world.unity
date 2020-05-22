@@ -618,17 +618,22 @@ PrefabInstance:
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.21000099
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 837813154976711901, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
@@ -4452,17 +4457,22 @@ PrefabInstance:
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.21000099
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0.00000047683716
+      objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 837813154976711901, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
@@ -6377,17 +6387,22 @@ PrefabInstance:
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.21000099
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0.00000047683716
+      objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 837813154976711901, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
@@ -8296,8 +8311,8 @@ MonoBehaviour:
     type: 3}
   treeSpawnChance: 9
   worldSize:
-    <Width>k__BackingField: 76
-    <Height>k__BackingField: 76
+    <Width>k__BackingField: 96
+    <Height>k__BackingField: 96
 --- !u!114 &1920970006
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -23,8 +23,6 @@ namespace ColonyZ.Controllers
     [RequireComponent(typeof(WorldRenderer))]
     public class WorldController : MonoBehaviour
     {
-        public static WorldLoadType LOADING_TYPE;
-
         private Transform _transform;
 
         [SerializeField] private DataLoader dataLoader;
@@ -57,7 +55,18 @@ namespace ColonyZ.Controllers
             dataLoader.Load();
 
             worldRenderer = GetComponent<WorldRenderer>();
-            Debug.Log(worldSize.ToString());
+
+            // This is only needed when starting the game from the world scene.
+            if (WorldLoadSettings.WORLD_SIZE.Name == null)
+            {
+                Debug.Log("Defaulting to WorldController defined size.");
+                WorldLoadSettings.WORLD_SIZE = worldSize;
+            }
+            else
+            {
+                // If not loading from world scene, set cached to same as WorldLoadSettings..
+                worldSize = WorldLoadSettings.WORLD_SIZE;
+            }
 
             SetupWorld();
         }
@@ -77,9 +86,9 @@ namespace ColonyZ.Controllers
         private void SetupWorld()
         {
             saveGameHandler = new SaveGameHandler();
-            worldProvider = new WorldDataProvider(worldSize);
+            worldProvider = new WorldDataProvider(WorldLoadSettings.WORLD_SIZE);
 
-            if (LOADING_TYPE == WorldLoadType.Load)
+            if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.Load)
             {
                 saveGameHandler.LoadWorldData(worldProvider);
             }
@@ -93,7 +102,7 @@ namespace ColonyZ.Controllers
 
             worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
 
-            if (LOADING_TYPE == WorldLoadType.New)
+            if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.New)
             {
                 for (var i = 0; i < initialCharacterCount; i++)
                     World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldSize.Width / 2,
@@ -108,14 +117,14 @@ namespace ColonyZ.Controllers
                     continue;
                 }
 
-                if (LOADING_TYPE == WorldLoadType.New)
+                if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.New)
                 {
                     if (Random.Range(1, 100) <= treeSpawnChance)
                         tile.SetObject(TileObjectCache.GetObject("Tree"), false);
                 }
             }
 
-            if (LOADING_TYPE == WorldLoadType.Load)
+            if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.Load)
                 saveGameHandler.LoadAll();
 
             foreach (var tile in World.Instance)

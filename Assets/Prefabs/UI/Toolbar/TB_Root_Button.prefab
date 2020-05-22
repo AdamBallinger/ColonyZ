@@ -177,7 +177,6 @@ GameObject:
   - component: {fileID: 114816994023854686}
   - component: {fileID: 114154831640705258}
   - component: {fileID: 114783606319223130}
-  - component: {fileID: 556281035077903824}
   m_Layer: 5
   m_Name: TB_Root_Button
   m_TagString: Untagged
@@ -309,22 +308,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuObject: {fileID: 0}
---- !u!95 &556281035077903824
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1799130084233306}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0

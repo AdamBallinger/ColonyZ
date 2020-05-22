@@ -9,6 +9,9 @@ namespace ColonyZ.Controllers.UI.MainMenu
     {
         [SerializeField] private Button loadGameButton;
 
+        [SerializeField] private GameObject mainButtonsParent;
+        [SerializeField] private GameObject sizeSelectionParent;
+
         private void Start()
         {
             loadGameButton.interactable = SaveGameHandler.SaveGamePresent();
@@ -16,19 +19,27 @@ namespace ColonyZ.Controllers.UI.MainMenu
 
         public void OnNewGamePressed()
         {
-            WorldController.LOADING_TYPE = WorldLoadType.New;
-            SceneManager.LoadScene("world");
+            WorldLoadSettings.LOAD_TYPE = WorldLoadType.New;
+            // TODO: Display size selection buttons.
+            sizeSelectionParent.SetActive(true);
+            mainButtonsParent.SetActive(false);
         }
 
         public void OnLoadGamePressed()
         {
-            WorldController.LOADING_TYPE = WorldLoadType.Load;
+            WorldLoadSettings.LOAD_TYPE = WorldLoadType.Load;
             SceneManager.LoadScene("world");
         }
 
         public void OnQuitPressed()
         {
             Application.Quit();
+        }
+
+        public void BackToMainMenu()
+        {
+            sizeSelectionParent.SetActive(false);
+            mainButtonsParent.SetActive(true);
         }
     }
 }
