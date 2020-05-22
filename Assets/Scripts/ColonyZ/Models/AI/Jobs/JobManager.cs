@@ -12,6 +12,8 @@ namespace ColonyZ.Models.AI.Jobs
 {
     public class JobManager
     {
+        public static JobManager Instance { get; private set; }
+
         /// <summary>
         ///     Time in seconds between each automatic evaluation of errored jobs.
         /// </summary>
@@ -21,8 +23,6 @@ namespace ColonyZ.Models.AI.Jobs
         ///     Current timer for auto checking errored jobs.
         /// </summary>
         private float jobErrorTimer;
-
-        public static JobManager Instance { get; private set; }
 
         /// <summary>
         ///     Total number of current jobs.

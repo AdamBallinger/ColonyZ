@@ -8,6 +8,9 @@ namespace ColonyZ.Models.AI
 {
     public class AIMotor
     {
+        private const float ADJACENT_DISTANCE = 1.0f;
+        private const float DIAGONAL_DISTANCE = 1.414214f;
+
         /// <summary>
         ///     Stores the distance between the entities current tile and the next tile in the path.
         /// </summary>
@@ -100,6 +103,8 @@ namespace ColonyZ.Models.AI
                 DirectionIndex = pathX == entityX ? 0 : pathX > entityX ? 1 : 2;
             else if (pathY > entityY) // Moving up
                 DirectionIndex = pathX == entityX ? 3 : pathX > entityX ? 1 : 2;
+            else // Moving directly left / right
+                DirectionIndex = pathX < entityX ? 2 : 1;
 
             // The amount the entity will move this frame.
             var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier *
@@ -160,8 +165,10 @@ namespace ColonyZ.Models.AI
 
         private float GetDistance()
         {
-            return Mathf.Sqrt(Mathf.Pow(Entity.CurrentTile.X - path.CurrentTile.X, 2) +
-                              Mathf.Pow(Entity.CurrentTile.Y - path.CurrentTile.Y, 2));
+            if (Entity.CurrentTile.X == path.CurrentTile.X || Entity.CurrentTile.Y == path.CurrentTile.Y)
+                return ADJACENT_DISTANCE;
+
+            return DIAGONAL_DISTANCE;
         }
     }
 }
