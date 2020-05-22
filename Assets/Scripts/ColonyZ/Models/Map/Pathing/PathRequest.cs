@@ -11,9 +11,18 @@ namespace ColonyZ.Models.Map.Pathing
         public Action<Path> onPathCompleteCallback;
 
         /// <summary>
-        ///     Create a new path request that will generate a path from start to end and pass it back to the given callback
-        ///     function when
-        ///     the path has been completed.
+        ///     The starting Node for the path request.
+        /// </summary>
+        public Node Start { get; }
+
+        /// <summary>
+        ///     The end node the path request will attempt to generate a path to from start.
+        /// </summary>
+        public Node End { get; }
+
+        /// <summary>
+        ///     Create a new path request that will generate a path from start to end and pass it
+        ///     back to the given callback function when the path has been completed.
         /// </summary>
         /// <param name="_start"></param>
         /// <param name="_end"></param>
@@ -32,15 +41,5 @@ namespace ColonyZ.Models.Map.Pathing
 
             onPathCompleteCallback += _onCompleteCallback;
         }
-
-        /// <summary>
-        ///     The starting Node for the path request.
-        /// </summary>
-        public Node Start { get; }
-
-        /// <summary>
-        ///     The end node the path request will attempt to generate a path to from start.
-        /// </summary>
-        public Node End { get; }
     }
 }

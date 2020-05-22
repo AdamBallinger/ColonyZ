@@ -7,11 +7,6 @@ namespace ColonyZ.Models.Map.Zones
 {
     public abstract class Zone : ISaveable
     {
-        protected Zone()
-        {
-            MinimumSize = Vector2Int.one;
-        }
-
         public string ZoneName { get; protected set; }
 
         // TODO: Maybe change this so that the tile with an object just isn't a part of the zone?
@@ -29,6 +24,11 @@ namespace ColonyZ.Models.Map.Zones
         public Vector2Int Origin { get; protected set; }
 
         public Vector2Int Size { get; protected set; }
+
+        protected Zone()
+        {
+            MinimumSize = Vector2Int.one;
+        }
 
         public virtual void SetOrigin(int _x, int _y)
         {

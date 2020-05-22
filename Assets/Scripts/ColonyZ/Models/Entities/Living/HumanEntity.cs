@@ -6,11 +6,11 @@ namespace ColonyZ.Models.Entities.Living
 {
     public class HumanEntity : LivingEntity
     {
+        public Job CurrentJob { get; private set; }
+
         public HumanEntity(Tile _tile) : base(_tile)
         {
         }
-
-        public Job CurrentJob { get; private set; }
 
         public bool SetJob(Job _job, bool _forceStop = false)
         {

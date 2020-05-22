@@ -13,16 +13,16 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             var west = World.Instance.GetTileAt(Tile.X - 1, Tile.Y);
 
             if (east != null && west != null)
-                if (east.Object != null && east.Object.GetType() == typeof(WallObject) &&
-                    west.Object != null && west.Object.GetType() == typeof(WallObject))
+                if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
+                    west.HasObject && west.Object.GetType() == typeof(WallObject))
                     return isOpen ? 1 : 0;
 
             var north = World.Instance.GetTileAt(Tile.X, Tile.Y + 1);
             var south = World.Instance.GetTileAt(Tile.X, Tile.Y - 1);
 
             if (north != null && south != null)
-                if (north.Object != null && north.Object.GetType() == typeof(WallObject) &&
-                    south.Object != null && south.Object.GetType() == typeof(WallObject))
+                if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
+                    south.HasObject && south.Object.GetType() == typeof(WallObject))
                     return isOpen ? 3 : 2;
 
             return 0;
@@ -36,14 +36,14 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             var south = World.Instance.GetTileAt(_tile.X, _tile.Y - 1);
 
             if (east != null && west != null)
-                if (east.Object != null && east.Object.GetType() == typeof(WallObject) &&
-                    west.Object != null && west.Object.GetType() == typeof(WallObject))
+                if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
+                    west.HasObject && west.Object.GetType() == typeof(WallObject))
                     if (north?.Object == null && south?.Object == null)
                         return true;
 
             if (north != null && south != null)
-                if (north.Object != null && north.Object.GetType() == typeof(WallObject) &&
-                    south.Object != null && south.Object.GetType() == typeof(WallObject))
+                if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
+                    south.HasObject && south.Object.GetType() == typeof(WallObject))
                     if (east?.Object == null && west?.Object == null)
                         return true;
 

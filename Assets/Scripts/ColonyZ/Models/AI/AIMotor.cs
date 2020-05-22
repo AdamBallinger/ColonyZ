@@ -23,12 +23,6 @@ namespace ColonyZ.Models.AI
         /// </summary>
         private float travelProgress;
 
-        public AIMotor(LivingEntity _entity)
-        {
-            Working = false;
-            Entity = _entity;
-        }
-
         /// <summary>
         ///     Determines if the motor is currently moving the entity, or waiting for a path to be returned by the Path finder.
         /// </summary>
@@ -49,6 +43,12 @@ namespace ColonyZ.Models.AI
         public Tile TargetTile { get; private set; }
 
         private LivingEntity Entity { get; }
+
+        public AIMotor(LivingEntity _entity)
+        {
+            Working = false;
+            Entity = _entity;
+        }
 
         /// <summary>
         ///     Update the tile the motor moves the entity towards.

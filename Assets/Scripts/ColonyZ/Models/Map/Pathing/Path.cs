@@ -7,6 +7,24 @@ namespace ColonyZ.Models.Map.Pathing
     {
         private int currentIndex;
 
+        public bool IsValid { get; private set; }
+
+        /// <summary>
+        ///     Returns the time in milliseconds taken to compute the path.
+        /// </summary>
+        public float ComputeTime { get; }
+
+        public int Size => TilePath.Count;
+
+        public Tile CurrentTile => currentIndex < Size ? TilePath?[currentIndex] : null;
+
+        /// <summary>
+        ///     The list of remaining tiles in the path.
+        /// </summary>
+        public List<Tile> TilePath { get; }
+
+        private List<Node> Nodes { get; }
+
         public Path(List<Node> _nodePath, bool _isValid, float _computeTime)
         {
             TilePath = new List<Tile>();
@@ -27,24 +45,6 @@ namespace ColonyZ.Models.Map.Pathing
                 Next();
             }
         }
-
-        public bool IsValid { get; private set; }
-
-        /// <summary>
-        ///     Returns the time in milliseconds taken to compute the path.
-        /// </summary>
-        public float ComputeTime { get; }
-
-        public int Size => TilePath.Count;
-
-        public Tile CurrentTile => currentIndex < Size ? TilePath?[currentIndex] : null;
-
-        /// <summary>
-        ///     The list of remaining tiles in the path.
-        /// </summary>
-        public List<Tile> TilePath { get; }
-
-        private List<Node> Nodes { get; }
 
         public void Next()
         {

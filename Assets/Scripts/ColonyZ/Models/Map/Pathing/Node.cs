@@ -8,17 +8,6 @@ namespace ColonyZ.Models.Map.Pathing
     {
         private bool _pathable = true;
 
-        public Node(int _id, int _x, int _y, float _movementCost, bool _pathable)
-        {
-            ID = _id;
-            X = _x;
-            Y = _y;
-            MovementCost = _movementCost;
-            Paths = new List<Path>();
-            Pathable = _pathable;
-            Neighbours = new List<Node>();
-        }
-
         /// <summary>
         ///     ID of the node in the node graph. Used for fetching node costs during search.
         /// </summary>
@@ -64,6 +53,17 @@ namespace ColonyZ.Models.Map.Pathing
         ///     A list of all neighbouring nodes adjacent to this node.
         /// </summary>
         public List<Node> Neighbours { get; }
+
+        public Node(int _id, int _x, int _y, float _movementCost, bool _pathable)
+        {
+            ID = _id;
+            X = _x;
+            Y = _y;
+            MovementCost = _movementCost;
+            Paths = new List<Path>();
+            Pathable = _pathable;
+            Neighbours = new List<Node>();
+        }
 
         public bool Equals(Node other)
         {

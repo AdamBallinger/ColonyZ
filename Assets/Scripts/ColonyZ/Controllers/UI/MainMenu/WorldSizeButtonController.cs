@@ -10,10 +10,10 @@ namespace ColonyZ.Controllers.UI.MainMenu
         [SerializeField] private TMP_Text buttonName;
         [SerializeField] private TMP_Text buttonLabel;
 
-        private WorldSize size;
-        private Action<WorldSize> onClick;
+        private WorldSizeTypes.WorldSize size;
+        private Action<WorldSizeTypes.WorldSize> onClick;
 
-        public void SetSize(WorldSize _size, Action<WorldSize> _onClick)
+        public void SetSize(WorldSizeTypes.WorldSize _size, Action<WorldSizeTypes.WorldSize> _onClick)
         {
             size = _size;
             buttonName.text = size.Name;

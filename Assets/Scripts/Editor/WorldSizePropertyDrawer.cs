@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Editor
 {
-    [CustomPropertyDrawer(typeof(WorldSize))]
+    [CustomPropertyDrawer(typeof(WorldSizeTypes.WorldSize))]
     public class WorldSizePropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property,

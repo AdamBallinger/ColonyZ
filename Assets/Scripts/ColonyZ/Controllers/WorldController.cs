@@ -28,17 +28,18 @@ namespace ColonyZ.Controllers
         [SerializeField] private DataLoader dataLoader;
 
         [SerializeField] private bool shouldSaveLoad = true;
-        [SerializeField] [Range(0, 10)] private int initialCharacterCount = 1;
-        private Dictionary<ItemEntity, GameObject> itemEntityObjects;
-        [SerializeField] private GameObject itemEntityPrefab;
-        private Dictionary<LivingEntity, GameObject> livingEntityObjects;
 
+        [SerializeField] [Range(0, 10)] private int initialCharacterCount = 1;
+        [SerializeField] [Range(0, 100)] private int treeSpawnChance = 25;
+
+        [SerializeField] private GameObject itemEntityPrefab;
         [SerializeField] private GameObject livingEntityPrefab;
 
-        private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
+        [SerializeField] private WorldSizeTypes.WorldSize worldSize = WorldSizeTypes.MEDIUM;
 
-        [SerializeField] [Range(0, 100)] private int treeSpawnChance = 25;
-        [SerializeField] private WorldSize worldSize = WorldSizeTypes.MEDIUM;
+        private Dictionary<ItemEntity, GameObject> itemEntityObjects;
+        private Dictionary<LivingEntity, GameObject> livingEntityObjects;
+        private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
 
         private WorldRenderer worldRenderer;
         private SaveGameHandler saveGameHandler;
@@ -47,7 +48,6 @@ namespace ColonyZ.Controllers
         private void Awake()
         {
             _transform = transform;
-
             tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
             itemEntityObjects = new Dictionary<ItemEntity, GameObject>();

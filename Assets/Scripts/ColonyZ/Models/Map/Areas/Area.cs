@@ -6,12 +6,6 @@ namespace ColonyZ.Models.Map.Areas
 {
     public class Area
     {
-        public Area()
-        {
-            Tiles = new HashSet<Tile>();
-            LinkedAreas = new HashSet<Area>();
-        }
-
         /// <summary>
         ///     Unique ID for this area.
         /// </summary>
@@ -23,6 +17,12 @@ namespace ColonyZ.Models.Map.Areas
         public HashSet<Tile> Tiles { get; }
 
         public HashSet<Area> LinkedAreas { get; }
+
+        public Area()
+        {
+            Tiles = new HashSet<Tile>();
+            LinkedAreas = new HashSet<Area>();
+        }
 
         public void AssignTile(Tile _tile)
         {

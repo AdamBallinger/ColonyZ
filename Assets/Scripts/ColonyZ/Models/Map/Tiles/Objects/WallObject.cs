@@ -7,7 +7,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
     {
         public override bool CanPlace(Tile _tile)
         {
-            return _tile.Object == null;
+            return !_tile.HasObject;
         }
 
         public override bool ConnectsWith(TileObject _other)

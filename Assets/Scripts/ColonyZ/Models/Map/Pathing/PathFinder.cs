@@ -11,17 +11,17 @@ namespace ColonyZ.Models.Map.Pathing
 {
     public class PathFinder
     {
-        private List<Task<PathResult>> taskList;
-
-        private PathFinder()
-        {
-        }
-
         public static PathFinder Instance { get; private set; }
 
         public bool UseRegionalPathfinding { get; set; }
 
         public int TaskCount => taskList.Count;
+
+        private List<Task<PathResult>> taskList;
+
+        private PathFinder()
+        {
+        }
 
         /// <summary>
         ///     Creates a new Instance of the PathFinder class.

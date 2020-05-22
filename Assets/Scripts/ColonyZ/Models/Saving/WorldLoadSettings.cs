@@ -11,6 +11,6 @@ namespace ColonyZ.Models.Saving
     public static class WorldLoadSettings
     {
         public static WorldLoadType LOAD_TYPE = WorldLoadType.New;
-        public static WorldSize WORLD_SIZE;
+        public static WorldSizeTypes.WorldSize WORLD_SIZE;
     }
 }

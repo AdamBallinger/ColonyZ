@@ -6,16 +6,16 @@ namespace ColonyZ.Models.Map.Zones
 {
     public class ZoneManager
     {
+        public static ZoneManager Instance { get; private set; }
+
         public List<Zone> Zones { get; } = new List<Zone>();
+
+        public event Action<Zone> zoneCreatedEvent;
+        public event Action<Zone> zoneDeletedEvent;
 
         private ZoneManager()
         {
         }
-
-        public static ZoneManager Instance { get; private set; }
-
-        public event Action<Zone> zoneCreatedEvent;
-        public event Action<Zone> zoneDeletedEvent;
 
         public static void Create()
         {

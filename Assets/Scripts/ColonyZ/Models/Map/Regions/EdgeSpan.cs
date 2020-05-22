@@ -8,7 +8,7 @@ namespace ColonyZ.Models.Map.Regions
         Up
     }
 
-    public struct EdgeSpan
+    public readonly struct EdgeSpan
     {
         private Tile Root { get; }
 

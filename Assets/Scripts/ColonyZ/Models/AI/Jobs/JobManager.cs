@@ -22,10 +22,6 @@ namespace ColonyZ.Models.AI.Jobs
         /// </summary>
         private float jobErrorTimer;
 
-        private JobManager()
-        {
-        }
-
         public static JobManager Instance { get; private set; }
 
         /// <summary>
@@ -63,6 +59,10 @@ namespace ColonyZ.Models.AI.Jobs
         ///     Event called when a job has been completed.
         /// </summary>
         public event Action<Job> jobCompletedEvent;
+
+        private JobManager()
+        {
+        }
 
         public static void Create()
         {

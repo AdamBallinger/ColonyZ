@@ -10,6 +10,16 @@ namespace ColonyZ.Models.Entities.Living
 {
     public class LivingEntity : Entity
     {
+        public float MovementSpeed { get; set; }
+
+        public AIMotor Motor { get; }
+
+        public int HeadId { get; protected set; }
+
+        public int BodyId { get; protected set; }
+
+        protected int Health { get; set; }
+
         protected LivingEntity(Tile _tile) : base(_tile)
         {
             MovementSpeed = 1.0f;
@@ -23,16 +33,6 @@ namespace ColonyZ.Models.Entities.Living
         public LivingEntity() : base(null)
         {
         }
-
-        public float MovementSpeed { get; set; }
-
-        public AIMotor Motor { get; }
-
-        public int HeadId { get; protected set; }
-
-        public int BodyId { get; protected set; }
-
-        protected int Health { get; set; }
 
         public override void Update()
         {

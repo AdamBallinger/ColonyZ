@@ -21,20 +21,14 @@ namespace ColonyZ.Models.Map.Tiles
         private TileDefinition definition, oldDefinition;
 
         /// <summary>
-        ///     Create a tile at the given x and y from a provided tile definition.
+        ///     Event called when the tile has changed (Object added or removed etc.).
         /// </summary>
-        /// <param name="_x"></param>
-        /// <param name="_y"></param>
-        /// <param name="_definition"></param>
-        public Tile(int _x, int _y, TileDefinition _definition)
-        {
-            X = _x;
-            Y = _y;
-            TileDefinition = _definition;
-            LivingEntities = new List<LivingEntity>();
-            Neighbours = new List<Tile>();
-            DirectNeighbours = new List<Tile>();
-        }
+        public event Action<Tile> onTileChanged;
+
+        /// <summary>
+        ///     Event called when the tile definition has changed.
+        /// </summary>
+        public event Action<Tile> onTileDefinitionChanged;
 
         public int X { get; }
         public int Y { get; }
@@ -86,27 +80,26 @@ namespace ColonyZ.Models.Map.Tiles
 
         public ItemEntity Item { get; private set; }
 
-        public bool Equals(Tile other)
+        /// <summary>
+        ///     Create a tile at the given x and y from a provided tile definition.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <param name="_definition"></param>
+        public Tile(int _x, int _y, TileDefinition _definition)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return X == other.X && Y == other.Y;
+            X = _x;
+            Y = _y;
+            TileDefinition = _definition;
+            LivingEntities = new List<LivingEntity>();
+            Neighbours = new List<Tile>();
+            DirectNeighbours = new List<Tile>();
         }
 
         public ItemStack GetItemStack()
         {
             return Item?.ItemStack;
         }
-
-        /// <summary>
-        ///     Event called when the tile has changed (Object added or removed etc.).
-        /// </summary>
-        public event Action<Tile> onTileChanged;
-
-        /// <summary>
-        ///     Event called when the tile definition has changed.
-        /// </summary>
-        public event Action<Tile> onTileDefinitionChanged;
 
         public void SetObject(TileObject _object, bool _checkForAreas = true)
         {
@@ -170,6 +163,13 @@ namespace ColonyZ.Models.Map.Tiles
         public override string ToString()
         {
             return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectName : "None")}";
+        }
+
+        public bool Equals(Tile other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return X == other.X && Y == other.Y;
         }
 
         public override bool Equals(object obj)

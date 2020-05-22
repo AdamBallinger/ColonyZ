@@ -9,13 +9,6 @@ namespace ColonyZ.Models.Map.Areas
 {
     public class AreaManager
     {
-        private bool shouldTriggerUpdate;
-
-        private AreaManager()
-        {
-            Areas = new List<Area>();
-        }
-
         public static AreaManager Instance { get; private set; }
 
         public List<Area> Areas { get; }
@@ -24,6 +17,13 @@ namespace ColonyZ.Models.Map.Areas
         ///     Event called after new area have been created, or old areas deleted.
         /// </summary>
         public event Action areasUpdatedEvent;
+
+        private bool shouldTriggerUpdate;
+
+        private AreaManager()
+        {
+            Areas = new List<Area>();
+        }
 
         public static void Create()
         {

@@ -10,6 +10,8 @@ namespace ColonyZ.Models.Entities
 {
     public class ItemEntity : Entity
     {
+        public ItemStack ItemStack { get; private set; }
+
         public ItemEntity(Tile _tile, ItemStack _itemStack) : base(_tile)
         {
             ItemStack = _itemStack;
@@ -22,8 +24,6 @@ namespace ColonyZ.Models.Entities
         public ItemEntity() : base(null)
         {
         }
-
-        public ItemStack ItemStack { get; private set; }
 
         public override void Update()
         {

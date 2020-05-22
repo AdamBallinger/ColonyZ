@@ -9,13 +9,6 @@ namespace ColonyZ.Models.AI.Jobs
 {
     public abstract class Job : ISaveable
     {
-        protected Job(Tile _targetTile)
-        {
-            TargetTile = _targetTile;
-            WorkingTile = _targetTile;
-            WorkTime = 1.0f;
-        }
-
         /// <summary>
         ///     Name of the job that is displayed on the UI.
         /// </summary>
@@ -55,6 +48,13 @@ namespace ColonyZ.Models.AI.Jobs
         ///     The tile the entity will complete the job on. Defaults to the target tile.
         /// </summary>
         public Tile WorkingTile { get; set; }
+
+        protected Job(Tile _targetTile)
+        {
+            TargetTile = _targetTile;
+            WorkingTile = _targetTile;
+            WorkTime = 1.0f;
+        }
 
         public virtual void Update()
         {

@@ -9,14 +9,14 @@ namespace ColonyZ.Models.Map.Pathing
 
         private Action onUpdateGraphCallback;
 
-        private NodeGraph()
-        {
-        }
-
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public Node[,] Nodes { get; private set; }
+        private Node[,] Nodes { get; set; }
+
+        private NodeGraph()
+        {
+        }
 
         /// <summary>
         ///     Creates a new instance of the Node Graph.

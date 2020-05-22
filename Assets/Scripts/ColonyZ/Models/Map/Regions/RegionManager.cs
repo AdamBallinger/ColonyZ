@@ -7,20 +7,20 @@ namespace ColonyZ.Models.Map.Regions
 {
     public class RegionManager
     {
-        private List<Region> newRegions = new List<Region>();
-
-        private RegionManager()
-        {
-        }
-
         public static RegionManager Instance { get; private set; }
-
-        private List<Region> Regions { get; set; }
 
         /// <summary>
         ///     Event called when regions get updated.
         /// </summary>
         public event Action regionsUpdateEvent;
+
+        private List<Region> newRegions = new List<Region>();
+
+        private List<Region> Regions { get; set; }
+
+        private RegionManager()
+        {
+        }
 
         public static void Create()
         {

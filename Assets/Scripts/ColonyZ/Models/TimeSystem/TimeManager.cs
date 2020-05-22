@@ -5,29 +5,6 @@ namespace ColonyZ.Models.TimeSystem
 {
     public class TimeManager
     {
-        /// <summary>
-        ///     How many game time seconds pass per real life second.
-        /// </summary>
-        private const int millisPerSecond = 1000;
-
-        /// <summary>
-        ///     Number of in game seconds per minute.
-        /// </summary>
-        private const int millisPerMinute = 1 * 1000;
-
-        /// <summary>
-        ///     Current milliseconds passed.
-        /// </summary>
-        public int millis;
-
-        private TimeMode timeMode;
-
-        private TimeMode toggleTimeMode;
-
-        private TimeManager()
-        {
-        }
-
         public static TimeManager Instance { get; private set; }
 
         /// <summary>
@@ -76,6 +53,29 @@ namespace ColonyZ.Models.TimeSystem
         ///     Event called when a new day (Time reaches 00:00) starts. The current day number is passed as a parameter.
         /// </summary>
         public event Action<int> newDayEvent;
+
+        /// <summary>
+        ///     How many game time seconds pass per real life second.
+        /// </summary>
+        private const int millisPerSecond = 1000;
+
+        /// <summary>
+        ///     Number of in game seconds per minute.
+        /// </summary>
+        private const int millisPerMinute = 1 * 1000;
+
+        /// <summary>
+        ///     Current milliseconds passed.
+        /// </summary>
+        public int millis;
+
+        private TimeMode timeMode;
+
+        private TimeMode toggleTimeMode;
+
+        private TimeManager()
+        {
+        }
 
         /// <summary>
         ///     Create the TimeManager at the given time (24h).

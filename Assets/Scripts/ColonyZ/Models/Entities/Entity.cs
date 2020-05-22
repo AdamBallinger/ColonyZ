@@ -9,12 +9,6 @@ namespace ColonyZ.Models.Entities
 {
     public abstract class Entity : ISelectable, ISaveable
     {
-        protected Entity(Tile _tile)
-        {
-            CurrentTile = _tile;
-            TileOffset = Vector2.zero;
-        }
-
         /// <summary>
         ///     Precise X coordinate of entity.
         /// </summary>
@@ -36,6 +30,12 @@ namespace ColonyZ.Models.Entities
         public Tile CurrentTile { get; set; }
 
         public Vector2 TileOffset { get; set; }
+
+        protected Entity(Tile _tile)
+        {
+            CurrentTile = _tile;
+            TileOffset = Vector2.zero;
+        }
 
         public abstract Sprite GetSelectionIcon();
 

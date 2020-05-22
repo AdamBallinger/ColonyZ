@@ -5,6 +5,8 @@ namespace ColonyZ.Models.Map
 {
     public class WorldGridLayout
     {
+        public List<WorldChunk> Chunks { get; }
+
         private const int CHUNK_SIZE = 12;
 
         private World world;
@@ -15,8 +17,6 @@ namespace ColonyZ.Models.Map
             Chunks = new List<WorldChunk>();
             BuildWorldGrid();
         }
-
-        public List<WorldChunk> Chunks { get; }
 
         public WorldChunk GetChunkAt(int _x, int _y)
         {

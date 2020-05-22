@@ -12,7 +12,7 @@ namespace ColonyZ.Models.Map
 
         public bool GodMode { get; private set; }
 
-        public WorldDataProvider(WorldSize _worldSize)
+        public WorldDataProvider(WorldSizeTypes.WorldSize _worldSize)
         {
             WorldWidth = _worldSize.Width;
             WorldHeight = _worldSize.Height;
