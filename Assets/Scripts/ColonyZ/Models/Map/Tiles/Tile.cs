@@ -103,6 +103,12 @@ namespace ColonyZ.Models.Map.Tiles
 
         public void SetObject(TileObject _object, bool _checkForAreas = true)
         {
+            // Remove existing object so it is removed from world object list.
+            if (HasObject)
+            {
+                RemoveObject(false);
+            }
+
             for (var xOffset = 0; xOffset < _object.Width; xOffset++)
             for (var yOffset = 0; yOffset < _object.Height; yOffset++)
             {
