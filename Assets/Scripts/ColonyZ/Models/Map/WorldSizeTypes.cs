@@ -13,12 +13,15 @@ namespace ColonyZ.Models.Map
             [field: SerializeField] public int Width { get; set; }
             [field: SerializeField] public int Height { get; set; }
 
-            internal WorldSize(string _name, int _width, int _height)
+            public bool Available { get; }
+
+            internal WorldSize(string _name, int _width, int _height, bool _available = true)
             {
                 Name = _name;
                 Width = _width;
                 Height = _height;
-                WorldSizeTypes.SIZES.Add(this);
+                Available = _available;
+                SIZES.Add(this);
             }
 
             public override string ToString()
@@ -29,6 +32,7 @@ namespace ColonyZ.Models.Map
 
         public static readonly List<WorldSize> SIZES = new List<WorldSize>();
 
+        public static readonly WorldSize TINY = new WorldSize("Tiny", 48, 48);
         public static readonly WorldSize SMALL = new WorldSize("Small", 96, 96);
         public static readonly WorldSize MEDIUM = new WorldSize("Medium", 128, 128);
         public static readonly WorldSize LARGE = new WorldSize("Large", 160, 160);

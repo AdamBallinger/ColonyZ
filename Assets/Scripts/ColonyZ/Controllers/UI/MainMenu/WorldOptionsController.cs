@@ -14,6 +14,7 @@ namespace ColonyZ.Controllers.UI.MainMenu
         {
             foreach (var size in WorldSizeTypes.SIZES)
             {
+                if (!size.Available) continue;
                 var button = Instantiate(worldSizeButtonPrefab, sizeButtonParent);
                 button.GetComponent<WorldSizeButtonController>().SetSize(size, OnSizeSelected);
             }
