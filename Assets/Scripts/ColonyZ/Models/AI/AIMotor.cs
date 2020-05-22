@@ -1,5 +1,6 @@
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map.Pathing;
+using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.TimeSystem;
 using UnityEngine;
@@ -64,12 +65,18 @@ namespace ColonyZ.Models.AI
             // Don't try move to the same tile the entity is currently on.
             if (Entity.CurrentTile.Position == _tile.Position) return;
 
+            if (_tile.GetEnterability() == TileEnterability.None) return;
+
             // If the entities current area has no connection to the targets room,
             // then we already know there's no valid path.
-            // if (Entity.CurrentTile.Area != null && !Entity.CurrentTile.Area.HasConnection(_tile.Area))
-            // {
-            //     return;
-            // }
+            //if (Entity.CurrentTile.Area != null && !Entity.CurrentTile.Area.HasConnection(_tile.Area))
+            //{
+            //    return;
+            //}
+
+            // Same as above but temp until area system works better.
+            if (!RegionReachabilityChecker.CanReachRegion(Entity.CurrentTile.Region, _tile.Region))
+                return;
 
             Working = true;
             TargetTile = _tile;
@@ -159,6 +166,7 @@ namespace ColonyZ.Models.AI
             Working = false;
             path = null;
             travelProgress = 0.0f;
+            distance = 0.0f;
             Entity.TileOffset = Vector2.zero;
             DirectionIndex = 0;
         }
