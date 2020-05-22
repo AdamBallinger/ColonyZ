@@ -5506,16 +5506,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Jobs count: 10
+  m_text: 'Jobs count:
 
-    Jobs Active: 3
+    Jobs Active:
 
-    Jobs Errored: 2
+    Jobs Errored:
 
     Jobs Inactive:
-    5
 
-    Available Characters: 222'
+    Available
+    Characters:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6f57c5dc066b7ad4dab2491e096cdb1c, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 43127aa0f01cadf49831c6c8e4987901, type: 2}

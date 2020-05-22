@@ -16,6 +16,8 @@ namespace ColonyZ.Controllers.Dev
             JobManager.Instance.jobCreatedEvent += j => UpdateInfo();
             JobManager.Instance.jobStateChangedEvent += j => UpdateInfo();
             JobManager.Instance.jobCompletedEvent += j => UpdateInfo();
+
+            UpdateInfo();
         }
 
         private void UpdateInfo()
