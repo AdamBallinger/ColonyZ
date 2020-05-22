@@ -9,7 +9,7 @@ namespace ColonyZ.Models.Map
         [Serializable]
         public struct WorldSize
         {
-            public string Name { get; }
+            [field: SerializeField] public string Name { get; private set; }
             [field: SerializeField] public int Width { get; set; }
             [field: SerializeField] public int Height { get; set; }
 

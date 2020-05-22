@@ -14,6 +14,7 @@ namespace Editor
             var index = 0;
 
             // Get the auto generated field names for auto properties.
+            var n = property.FindPropertyRelative("<Name>k__BackingField");
             var w = property.FindPropertyRelative("<Width>k__BackingField");
             var h = property.FindPropertyRelative("<Height>k__BackingField");
 
@@ -32,6 +33,7 @@ namespace Editor
             if (EditorGUI.EndChangeCheck())
             {
                 var size = WorldSizeTypes.SIZES[index];
+                n.stringValue = size.Name;
                 w.intValue = size.Width;
                 h.intValue = size.Height;
             }
