@@ -620,6 +620,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.21000099
       objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 837813154976711901, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_Mesh
@@ -1505,7 +1515,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4280,7 +4290,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4443,6 +4453,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.21000099
+      objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 837813154976711901, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
@@ -6359,6 +6379,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.21000099
       objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 224519119694237934, guid: 506cc0b186cce3e4790885f9b3655284,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 837813154976711901, guid: 506cc0b186cce3e4790885f9b3655284,
         type: 3}
       propertyPath: m_Mesh
@@ -8265,8 +8295,9 @@ MonoBehaviour:
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   treeSpawnChance: 9
-  worldHeight: 64
-  worldWidth: 64
+  worldSize:
+    <Width>k__BackingField: 76
+    <Height>k__BackingField: 76
 --- !u!114 &1920970006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9409,7 +9440,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -40,11 +40,9 @@ namespace ColonyZ.Controllers
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
 
         [SerializeField] [Range(0, 100)] private int treeSpawnChance = 25;
-        [SerializeField] private int worldHeight = 100;
+        [SerializeField] private WorldSize worldSize = WorldSizeTypes.MEDIUM;
 
         private WorldRenderer worldRenderer;
-        [SerializeField] private int worldWidth = 100;
-
         private SaveGameHandler saveGameHandler;
         private WorldDataProvider worldProvider;
 
@@ -59,6 +57,7 @@ namespace ColonyZ.Controllers
             dataLoader.Load();
 
             worldRenderer = GetComponent<WorldRenderer>();
+            Debug.Log(worldSize.ToString());
 
             SetupWorld();
         }
@@ -78,13 +77,11 @@ namespace ColonyZ.Controllers
         private void SetupWorld()
         {
             saveGameHandler = new SaveGameHandler();
-            worldProvider = new WorldDataProvider(worldWidth, worldHeight);
+            worldProvider = new WorldDataProvider(worldSize);
 
             if (LOADING_TYPE == WorldLoadType.Load)
             {
                 saveGameHandler.LoadWorldData(worldProvider);
-                worldWidth = worldProvider.WorldWidth;
-                worldHeight = worldProvider.WorldHeight;
             }
 
             World.CreateWorld(worldProvider, OnTileDefinitionChanged, OnTileChanged);
@@ -94,13 +91,13 @@ namespace ColonyZ.Controllers
             FindObjectOfType<ZoneOverlayManager>().Init();
             FindObjectOfType<JobListController>().Init();
 
-            worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
+            worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
 
             if (LOADING_TYPE == WorldLoadType.New)
             {
                 for (var i = 0; i < initialCharacterCount; i++)
-                    World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldWidth / 2,
-                        worldHeight / 2, 5));
+                    World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldSize.Width / 2,
+                        worldSize.Height / 2, 5));
             }
 
             foreach (var tile in World.Instance)
@@ -196,7 +193,7 @@ namespace ColonyZ.Controllers
         /// <param name="_tile"></param>
         private void OnTileDefinitionChanged(Tile _tile)
         {
-            worldRenderer.GenerateWorldMesh(worldWidth, worldHeight);
+            worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
         }
 
         /// <summary>
