@@ -57,15 +57,11 @@ namespace ColonyZ.Controllers
             worldRenderer = GetComponent<WorldRenderer>();
 
             // This is only needed when starting the game from the world scene.
-            if (WorldLoadSettings.WORLD_SIZE.Name == null)
+            if (WorldLoadSettings.LOAD_TYPE != WorldLoadType.Load &&
+                WorldLoadSettings.WORLD_SIZE.Name == null)
             {
                 Debug.Log("Defaulting to WorldController defined size.");
                 WorldLoadSettings.WORLD_SIZE = worldSize;
-            }
-            else
-            {
-                // If not loading from world scene, set cached to same as WorldLoadSettings..
-                worldSize = WorldLoadSettings.WORLD_SIZE;
             }
 
             SetupWorld();
@@ -92,6 +88,8 @@ namespace ColonyZ.Controllers
             {
                 saveGameHandler.LoadWorldData(worldProvider);
             }
+
+            worldSize = worldProvider.Size;
 
             World.CreateWorld(worldProvider, OnTileDefinitionChanged, OnTileChanged);
             World.Instance.onEntitySpawn += OnEntitySpawn;
