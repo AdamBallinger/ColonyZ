@@ -26,7 +26,10 @@ namespace ColonyZ.Models.Entities.Living
             base.Update();
 
             if (!Motor.Working && CurrentJob == null)
+            {
                 Motor.SetTargetTile(World.Instance.GetRandomTileAround(CurrentTile, 16));
+                return;
+            }
 
             if (CurrentJob == null) return;
 
@@ -58,12 +61,17 @@ namespace ColonyZ.Models.Entities.Living
             }
 
             // If a new closest tile is found for the job, switch to it.
+            // TODO: Optimise this so that it only checks when the angle to the job changed?
             var closeTile =
                 JobManager.Instance.GetClosestEnterableNeighbour(this, CurrentJob.TargetTile.DirectNeighbours);
             if (closeTile != null && closeTile != CurrentJob.WorkingTile)
             {
                 CurrentJob.WorkingTile = closeTile;
                 Motor.SetTargetTile(closeTile);
+            }
+            else if (closeTile == null)
+            {
+                JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
             }
 
             CurrentJob?.Update();

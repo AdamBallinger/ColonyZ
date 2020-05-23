@@ -17,7 +17,7 @@ namespace ColonyZ.Models.AI.Jobs
         /// <summary>
         ///     Time in seconds between each automatic evaluation of errored jobs.
         /// </summary>
-        private const float ERROR_JOB_CHECK_INTERVAL = 2.0f;
+        private const float ERROR_JOB_CHECK_INTERVAL = 3.0f;
 
         /// <summary>
         ///     Current timer for auto checking errored jobs.
@@ -171,6 +171,10 @@ namespace ColonyZ.Models.AI.Jobs
             // TODO: Only get players entities in future.
             var entities = World.Instance.Characters;
 
+            var idleJob = Jobs.FirstOrDefault(j => j.State == JobState.Idle);
+
+            if (idleJob == null) return;
+
             for (var i = 0; i < entities.Count; i++)
             {
                 var entity = entities[i] as HumanEntity;
@@ -178,31 +182,31 @@ namespace ColonyZ.Models.AI.Jobs
                 // Only use entities that are available.
                 if (entity?.CurrentJob != null) continue;
 
-                var job = Jobs.FirstOrDefault(j => j.State == JobState.Idle);
-
-                if (job == null) break;
-
-                if (jobNoAccessMap[job].Contains(entity))
+                if (jobNoAccessMap[idleJob].Contains(entity))
                 {
-                    continue;
+                    if (!CanEntityReachJob(entity, idleJob))
+                        continue;
+
+                    jobNoAccessMap[idleJob].Remove(entity);
                 }
 
-                var closestTile = GetClosestEnterableNeighbour(entity, job.TargetTile.DirectNeighbours);
+                var closestTile = GetClosestEnterableNeighbour(entity, idleJob.TargetTile.DirectNeighbours);
 
                 if (closestTile != null)
                 {
-                    job.WorkingTile = closestTile;
-                    AssignEntityJob(entity, job);
+                    idleJob.WorkingTile = closestTile;
+                    AssignEntityJob(entity, idleJob);
                     break;
                 }
 
                 // Entity can't reach the job so add it to the jobs map.
-                jobNoAccessMap[job].Add(entity);
+                jobNoAccessMap[idleJob].Add(entity);
 
                 // If the last entity can't reach the job, then the job must be unreachable.
+                // TODO: This is possibly flawed? Likely not needed.
                 if (i == entities.Count - 1)
                 {
-                    SetJobState(job, JobState.Error);
+                    SetJobState(idleJob, JobState.Error);
                 }
             }
         }
@@ -210,6 +214,7 @@ namespace ColonyZ.Models.AI.Jobs
         private void SetJobState(Job _job, JobState _state)
         {
             _job.State = _state;
+            // TODO: Move jobs UI to separate canvas as it causes lag when updating job states.
             jobStateChangedEvent?.Invoke(_job);
         }
 
@@ -247,6 +252,16 @@ namespace ColonyZ.Models.AI.Jobs
             }
         }
 
+        public void DeleteJob(Job _job)
+        {
+            Jobs.Remove(_job);
+            jobNoAccessMap.Remove(_job);
+            // Don't use job.OnComplete here as it actually performs the jobs action.
+            _job.AssignedEntity?.SetJob(null, true);
+            _job.TargetTile.CurrentJob = null;
+            jobCompletedEvent?.Invoke(_job);
+        }
+
         /// <summary>
         ///     Notifies the job manager that an active job has become invalid.
         /// </summary>
@@ -256,7 +271,11 @@ namespace ColonyZ.Models.AI.Jobs
             jobNoAccessMap[_job].Add(_job.AssignedEntity);
             _job.AssignedEntity.SetJob(null, true);
 
-            SetJobState(_job, JobState.Error);
+            // Experimental
+            SetJobState(_job, jobNoAccessMap[_job].Count >= World.Instance.Characters.Count
+                ? JobState.Error
+                : JobState.Idle);
+            //SetJobState(_job, JobState.Error);
         }
 
         public Tile GetClosestEnterableNeighbour(Entity _entity, IReadOnlyCollection<Tile> _tiles)
@@ -274,7 +293,7 @@ namespace ColonyZ.Models.AI.Jobs
                 //if (entityTile.Area == null) continue;
                 // Skip the tile if entities current room has no connection to the tiles room.
                 //if (!entityTile.Area.HasConnection(tile.Area)) continue;
-                //if (!RegionReachabilityChecker.CanReachRegion(entityTile.Region, tile.Region)) continue;
+                if (!RegionReachabilityChecker.CanReachRegion(entityTile.Region, tile.Region)) continue;
 
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
 
