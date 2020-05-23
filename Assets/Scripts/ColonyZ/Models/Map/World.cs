@@ -243,6 +243,7 @@ namespace ColonyZ.Models.Map
         {
             var entity = new HumanEntity(_tile);
             Characters.Add(entity);
+            _tile.LivingEntities.Add(entity);
 
             onEntitySpawn?.Invoke(entity);
             return entity;
