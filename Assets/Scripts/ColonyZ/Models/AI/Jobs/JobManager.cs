@@ -4,6 +4,7 @@ using System.Linq;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
+using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.TimeSystem;
@@ -23,6 +24,11 @@ namespace ColonyZ.Models.AI.Jobs
         ///     Current timer for auto checking errored jobs.
         /// </summary>
         private float jobErrorTimer;
+
+        /// <summary>
+        /// Flag to determine if the manager is allowed to evaluate jobs in error state.
+        /// </summary>
+        private bool canEvaluateErrored = true;
 
         /// <summary>
         ///     Total number of current jobs.
@@ -82,6 +88,10 @@ namespace ColonyZ.Models.AI.Jobs
         {
             Jobs = new List<Job>();
             jobNoAccessMap = new Dictionary<Job, List<HumanEntity>>();
+
+            // When the world is changed, allow the manager to check error state jobs again.
+            // TODO: This could be improved further by requiring specific chunks to have updated?
+            NodeGraph.Instance.RegisterGraphUpdateCallback(() => canEvaluateErrored = true);
         }
 
         /// <summary>
@@ -101,7 +111,11 @@ namespace ColonyZ.Models.AI.Jobs
         /// </summary>
         private void EvaluateErrorJobs()
         {
+            if (!canEvaluateErrored) return;
+
             var entities = World.Instance.Characters;
+
+            var anyChanged = false;
 
             foreach (var job in Jobs)
             {
@@ -132,9 +146,12 @@ namespace ColonyZ.Models.AI.Jobs
 
                 if (isJobReachable && job.State != JobState.Active)
                 {
+                    anyChanged = true;
                     SetJobState(job, JobState.Idle);
                 }
             }
+
+            if (!anyChanged) canEvaluateErrored = false;
         }
 
         private void AssignEntityJob(HumanEntity _entity, Job _job)
@@ -161,8 +178,8 @@ namespace ColonyZ.Models.AI.Jobs
             {
                 jobErrorTimer = 0.0f;
                 // EXPERIMENTAL: Only evaluate if there are no idle jobs?
-                if (IdleCount == 0)
-                    EvaluateErrorJobs();
+                //if (IdleCount == 0)
+                EvaluateErrorJobs();
             }
 
             for (var i = Jobs.Count - 1; i >= 0; i--)
