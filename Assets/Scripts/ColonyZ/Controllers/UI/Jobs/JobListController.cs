@@ -17,7 +17,7 @@ namespace ColonyZ.Controllers.UI.Jobs
 
         private bool isOpen;
 
-        private Dictionary<Job, GameObject> jobEntryMap;
+        private Dictionary<Job, JobEntryController> jobEntryMap;
         [SerializeField] private GameObject jobEntryPrefab;
 
         [SerializeField] private Color openTextColor;
@@ -26,7 +26,7 @@ namespace ColonyZ.Controllers.UI.Jobs
 
         public void Init()
         {
-            jobEntryMap = new Dictionary<Job, GameObject>();
+            jobEntryMap = new Dictionary<Job, JobEntryController>();
             rTransform = GetComponent<RectTransform>();
             Close();
 
@@ -40,23 +40,24 @@ namespace ColonyZ.Controllers.UI.Jobs
             if (jobEntryMap.ContainsKey(_job)) return;
 
             var entry = Instantiate(jobEntryPrefab, entryContainer.transform);
-            entry.GetComponent<JobEntryController>().Set(_job);
+            var ec = entry.GetComponent<JobEntryController>();
+            ec.Set(_job);
 
-            jobEntryMap.Add(_job, entry);
+            jobEntryMap.Add(_job, ec);
         }
 
         private void UpdateEntry(Job _job)
         {
             if (!jobEntryMap.ContainsKey(_job)) return;
 
-            jobEntryMap[_job].GetComponent<JobEntryController>().Set(_job);
+            jobEntryMap[_job].Set(_job);
         }
 
         private void DeleteEntry(Job _job)
         {
             if (!jobEntryMap.ContainsKey(_job)) return;
 
-            Destroy(jobEntryMap[_job]);
+            Destroy(jobEntryMap[_job].gameObject);
             jobEntryMap.Remove(_job);
         }
 
