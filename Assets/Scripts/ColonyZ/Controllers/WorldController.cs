@@ -104,7 +104,7 @@ namespace ColonyZ.Controllers
             {
                 for (var i = 0; i < initialCharacterCount; i++)
                     World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldSize.Width / 2,
-                        worldSize.Height / 2, 5));
+                        worldSize.Height / 2, 5, true));
             }
 
             foreach (var tile in World.Instance)
@@ -141,11 +141,11 @@ namespace ColonyZ.Controllers
             foreach (var pair in livingEntityObjects)
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
 
-            if (Input.GetKeyDown(KeyCode.C)) World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+            if (Input.GetKeyDown(KeyCode.C)) World.Instance.SpawnCharacter(World.Instance.GetRandomTile(true));
 
             if (Input.GetKeyDown(KeyCode.X))
                 for (var i = 0; i < 10; i++)
-                    World.Instance.SpawnCharacter(World.Instance.GetRandomTile());
+                    World.Instance.SpawnCharacter(World.Instance.GetRandomTile(true));
 
             if (Input.GetKeyDown(KeyCode.Space)) TimeManager.Instance.Toggle();
         }
