@@ -3,6 +3,7 @@ using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Saving;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace ColonyZ.Models.AI.Jobs
 {
@@ -19,9 +20,17 @@ namespace ColonyZ.Models.AI.Jobs
         /// <param name="_harvestType">Type of harvest which names the job. E.g "Fell", "Mine"</param>
         public HarvestJob(Tile _targetTile, string _harvestType) : base(_targetTile)
         {
-            JobName = $"{_harvestType}: {_targetTile.Object.ObjectName}";
-            resourceObject = _targetTile.Object as ResourceObject;
-            harvestType = _harvestType;
+            if (_targetTile.HasObject)
+            {
+                JobName = $"{_harvestType}: {_targetTile.Object.ObjectName}";
+                resourceObject = _targetTile.Object as ResourceObject;
+                harvestType = _harvestType;
+            }
+            else
+            {
+                Debug.LogError($"[HarvestJob] Tile index: {World.Instance.GetTileIndex(_targetTile)}" +
+                               " has no object to harvest! Save file was modified and is not supported!");
+            }
         }
 
         /// <summary>
