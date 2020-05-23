@@ -14,7 +14,7 @@ namespace ColonyZ.Controllers.UI.MainMenu
         {
             foreach (var size in WorldSizeTypes.SIZES)
             {
-#if !UNITY_EDITOR || !DEVELOPMENT_BUILD
+#if !UNITY_EDITOR && !DEVELOPMENT_BUILD
                 if (!size.Available) continue;
 #endif
                 var button = Instantiate(worldSizeButtonPrefab, sizeButtonParent);
