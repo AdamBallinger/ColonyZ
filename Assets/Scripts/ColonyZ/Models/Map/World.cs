@@ -153,9 +153,9 @@ namespace ColonyZ.Models.Map
         ///     Returns a random world tile.
         /// </summary>
         /// <returns></returns>
-        public Tile GetRandomTile()
+        public Tile GetRandomTile(bool _requireEmpty = false)
         {
-            return GetTileAt(Random.Range(0, Width), Random.Range(0, Height));
+            return GetRandomTile(1, 1, Width - 1, Height - 1, _requireEmpty);
         }
 
         /// <summary>
@@ -164,15 +164,16 @@ namespace ColonyZ.Models.Map
         /// <param name="_x"></param>
         /// <param name="_y"></param>
         /// <param name="_radius"></param>
+        /// <param name="_requireEmpty"></param>
         /// <returns></returns>
-        public Tile GetRandomTileAround(int _x, int _y, int _radius)
+        public Tile GetRandomTileAround(int _x, int _y, int _radius, bool _requireEmpty = false)
         {
-            return GetRandomTile(_x - _radius, _y - _radius, _x + _radius, _y + _radius);
+            return GetRandomTile(_x - _radius, _y - _radius, _x + _radius, _y + _radius, _requireEmpty);
         }
 
-        public Tile GetRandomTileAround(Tile _tile, int _radius)
+        public Tile GetRandomTileAround(Tile _tile, int _radius, bool _requiresEmpty = false)
         {
-            return GetRandomTileAround(_tile.X, _tile.Y, _radius);
+            return GetRandomTileAround(_tile.X, _tile.Y, _radius, _requiresEmpty);
         }
 
         /// <summary>
@@ -183,16 +184,25 @@ namespace ColonyZ.Models.Map
         /// <param name="_yRangeMin"></param>
         /// <param name="_xRangeMax"></param>
         /// <param name="_yRangeMax"></param>
+        /// <param name="_requiresEmpty"></param>
         /// <returns></returns>
-        private Tile GetRandomTile(int _xRangeMin, int _yRangeMin, int _xRangeMax, int _yRangeMax)
+        private Tile GetRandomTile(int _xRangeMin, int _yRangeMin, int _xRangeMax, int _yRangeMax,
+            bool _requiresEmpty = false)
         {
-            _xRangeMin = Mathf.Clamp(_xRangeMin, 0, Width);
-            _xRangeMax = Mathf.Clamp(_xRangeMax, 0, Width);
-            _yRangeMin = Mathf.Clamp(_yRangeMin, 0, Height);
-            _yRangeMax = Mathf.Clamp(_yRangeMax, 0, Height);
+            Tile tile = null;
 
-            return GetTileAt(Random.Range(_xRangeMin, _xRangeMax),
-                Random.Range(_yRangeMin, _yRangeMax));
+            while (tile == null || _requiresEmpty && tile.HasObject)
+            {
+                _xRangeMin = Mathf.Clamp(_xRangeMin, 0, Width);
+                _xRangeMax = Mathf.Clamp(_xRangeMax, 0, Width);
+                _yRangeMin = Mathf.Clamp(_yRangeMin, 0, Height);
+                _yRangeMax = Mathf.Clamp(_yRangeMax, 0, Height);
+
+                tile = GetTileAt(Random.Range(_xRangeMin, _xRangeMax),
+                    Random.Range(_yRangeMin, _yRangeMax));
+            }
+
+            return tile;
         }
 
         /// <summary>
