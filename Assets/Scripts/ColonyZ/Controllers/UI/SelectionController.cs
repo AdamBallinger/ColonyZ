@@ -8,7 +8,7 @@ namespace ColonyZ.Controllers.UI
 {
     public class SelectionController : MonoBehaviour
     {
-        private ISelectable currentSelection;
+        public static ISelectable currentSelection;
 
         [SerializeField] private TMP_Text description;
 
