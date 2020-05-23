@@ -6,7 +6,6 @@ using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
-using Object = UnityEngine.Object;
 
 namespace ColonyZ.Controllers
 {
@@ -113,14 +112,14 @@ namespace ColonyZ.Controllers
             foreach (var tile in _tiles)
                 if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile))
                 {
-                    var obj = Object.Instantiate(ObjectToBuild);
+                    var obj = TileObjectCache.GetObject(ObjectToBuild);
                     if (GodMode)
                     {
                         tile.SetObject(obj);
                     }
                     else
                     {
-                        var foundation = Object.Instantiate(TileObjectCache.FoundationObject) as FoundationObject;
+                        var foundation = TileObjectCache.GetFoundation();
                         tile.SetObject(foundation);
                         jobs.Add(new BuildJob(tile, obj));
                     }
@@ -135,14 +134,21 @@ namespace ColonyZ.Controllers
             {
                 foreach (var tile in _tiles)
                     if (tile.HasObject && ObjectCompatWithMode(tile.Object))
+                    {
                         tile.RemoveObject();
+
+                        if (tile.CurrentJob != null)
+                        {
+                            JobManager.Instance.DeleteJob(tile.CurrentJob);
+                        }
+                    }
 
                 return;
             }
 
             var jobs = (from tile in _tiles
                 where tile.HasObject && ObjectCompatWithMode(tile.Object)
-                select new DemolishJob(tile)).Cast<Job>();
+                select new DemolishJob(tile));
 
             JobManager.Instance.AddJobs(jobs);
         }
@@ -153,14 +159,21 @@ namespace ColonyZ.Controllers
             {
                 foreach (var tile in _tiles)
                     if (tile.HasObject && ObjectCompatWithMode(tile.Object))
+                    {
                         tile.RemoveObject();
+
+                        if (tile.CurrentJob != null)
+                        {
+                            JobManager.Instance.DeleteJob(tile.CurrentJob);
+                        }
+                    }
 
                 return;
             }
 
             var jobs = (from tile in _tiles
                 where tile.HasObject && ObjectCompatWithMode(tile.Object)
-                select new HarvestJob(tile, Mode.ToString())).Cast<Job>();
+                select new HarvestJob(tile, Mode.ToString()));
 
             JobManager.Instance.AddJobs(jobs);
         }
