@@ -17,6 +17,9 @@ namespace ColonyZ.Controllers.Dev
             JobManager.Instance.jobStateChangedEvent += j => UpdateInfo();
             JobManager.Instance.jobCompletedEvent += j => UpdateInfo();
 
+            World.Instance.onEntitySpawn += e => UpdateInfo();
+            World.Instance.onEntityRemoved += e => UpdateInfo();
+
             UpdateInfo();
         }
 
