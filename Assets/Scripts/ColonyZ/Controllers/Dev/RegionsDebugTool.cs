@@ -12,21 +12,25 @@ namespace ColonyZ.Controllers.Dev
         private Color clearColor = Color.clear;
 
         private bool displayLinkData;
-        [SerializeField] private bool drawBridges;
 
+        [SerializeField] private bool drawBridges;
         [SerializeField] private bool drawNeighbours;
+        [SerializeField] private bool drawEdges;
 
         [SerializeField] private GameObject infoRoot;
+
         [SerializeField] private TMP_Text infoText;
-        private Color[] meshColors;
+
         [SerializeField] private MeshFilter meshFilter;
+
         [SerializeField] private Color regionBridgeColor;
         [SerializeField] private Color regionNeighbourColor;
-
         [SerializeField] private Color regionOverlayColor;
+        [SerializeField] private Color regionEdgesColor;
 
         private Tile selectedTile;
 
+        private Color[] meshColors;
         private Mesh tileMesh;
 
         private void Start()
@@ -56,14 +60,22 @@ namespace ColonyZ.Controllers.Dev
 
             if (_ui) return;
 
-            for (var i = 0; i < meshColors.Length; i++) meshColors[i] = clearColor;
+            for (var i = 0; i < meshColors.Length; i++)
+            {
+                meshColors[i] = clearColor;
+            }
 
             infoText.text = string.Empty;
 
             if (displayLinkData)
+            {
                 foreach (var link in _region.Links)
-                    infoText.text += $"Hash: [{link.Span.UniqueHashCode()}]  Size: [{link.Span.Size}]" +
-                                     $"    Dir: [{link.Span.Direction.ToString()}]\n";
+                {
+                    infoText.text += $"Hash: [{link.Span.UniqueHashCode()}]" +
+                                     $"  Size: [{link.Span.Size}]" +
+                                     $"  Dir: [{link.Span.Direction.ToString()}]\n";
+                }
+            }
 
             foreach (var tile in _region.Tiles)
             {
@@ -75,6 +87,7 @@ namespace ColonyZ.Controllers.Dev
             }
 
             if (drawNeighbours)
+            {
                 foreach (var link in _region.Links)
                 {
                     var neighbour = link.GetOther(_region);
@@ -89,17 +102,34 @@ namespace ColonyZ.Controllers.Dev
                         meshColors[vertIndex + 3] = regionNeighbourColor;
                     }
                 }
+            }
 
-            if (drawBridges)
-                foreach (var pair in _region.AccessMap)
-                foreach (var tile in pair.Value)
+            if (drawEdges)
+            {
+                foreach (var tile in _region.EdgeTiles)
                 {
                     var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                    meshColors[vertIndex] = regionBridgeColor;
-                    meshColors[vertIndex + 1] = regionBridgeColor;
-                    meshColors[vertIndex + 2] = regionBridgeColor;
-                    meshColors[vertIndex + 3] = regionBridgeColor;
+                    meshColors[vertIndex] = regionEdgesColor;
+                    meshColors[vertIndex + 1] = regionEdgesColor;
+                    meshColors[vertIndex + 2] = regionEdgesColor;
+                    meshColors[vertIndex + 3] = regionEdgesColor;
                 }
+            }
+
+            if (drawBridges)
+            {
+                foreach (var pair in _region.AccessMap)
+                {
+                    foreach (var tile in pair.Value)
+                    {
+                        var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
+                        meshColors[vertIndex] = regionBridgeColor;
+                        meshColors[vertIndex + 1] = regionBridgeColor;
+                        meshColors[vertIndex + 2] = regionBridgeColor;
+                        meshColors[vertIndex + 3] = regionBridgeColor;
+                    }
+                }
+            }
 
             tileMesh.SetColors(meshColors);
         }
@@ -175,6 +205,11 @@ namespace ColonyZ.Controllers.Dev
         public void ToggleLinks()
         {
             displayLinkData = !displayLinkData;
+        }
+
+        public void ToggleEdges()
+        {
+            drawEdges = !drawEdges;
         }
     }
 }

@@ -26,6 +26,8 @@ namespace ColonyZ.Models.Map.Regions
         /// </summary>
         public Dictionary<int, List<Tile>> AccessMap { get; private set; }
 
+        public List<Tile> EdgeTiles { get; } = new List<Tile>();
+
         public bool IsDoor { get; private set; }
 
         public void Add(Tile _tile)
@@ -53,6 +55,7 @@ namespace ColonyZ.Models.Map.Regions
             AccessMap[1].Clear();
             AccessMap[2].Clear();
             AccessMap[3].Clear();
+            EdgeTiles.Clear();
 
             foreach (var tile in Tiles)
             {
@@ -71,6 +74,7 @@ namespace ColonyZ.Models.Map.Regions
                         AccessMap[1].Add(tile.Right);
                     }
 
+                    EdgeTiles.Add(tile);
                     break;
                 }
 
@@ -81,19 +85,31 @@ namespace ColonyZ.Models.Map.Regions
 
                 if (tile.Left?.GetEnterability() != TileEnterability.None
                     && tile.Left?.Region != tile.Region)
+                {
                     AccessMap[0].Add(tile);
+                    EdgeTiles.Add(tile);
+                }
 
                 if (tile.Right?.GetEnterability() != TileEnterability.None
                     && tile.Right?.Region != tile.Region)
+                {
                     AccessMap[1].Add(tile.Right);
+                    EdgeTiles.Add(tile);
+                }
 
                 if (tile.Up?.GetEnterability() != TileEnterability.None
                     && tile.Up?.Region != tile.Region)
+                {
                     AccessMap[2].Add(tile.Up);
+                    EdgeTiles.Add(tile);
+                }
 
                 if (tile.Down?.GetEnterability() != TileEnterability.None
                     && tile.Down?.Region != tile.Region)
+                {
                     AccessMap[3].Add(tile);
+                    EdgeTiles.Add(tile);
+                }
             }
 
             // Sort because the regions are created from a floodfill which means the bridges wont be
