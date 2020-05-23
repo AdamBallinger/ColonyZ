@@ -7,7 +7,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
     {
         public static List<TileObject> TileObjects { get; } = new List<TileObject>();
 
-        public static TileObject FoundationObject { get; private set; }
+        private static TileObject FoundationObject { get; set; }
 
         public static void Add(TileObject _object)
         {
@@ -45,6 +45,25 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             }
 
             return null;
+        }
+
+        /// <summary>
+        ///     Returns a copy of the provided object.
+        /// </summary>
+        /// <param name="_object"></param>
+        /// <returns></returns>
+        public static TileObject GetObject(TileObject _object)
+        {
+            return GetObject(_object.ObjectName);
+        }
+
+        /// <summary>
+        ///     Returns a new instance of the foundation object.
+        /// </summary>
+        /// <returns></returns>
+        public static TileObject GetFoundation()
+        {
+            return Object.Instantiate(FoundationObject);
         }
     }
 }
