@@ -191,7 +191,7 @@ namespace ColonyZ.Models.Map
         {
             Tile tile = null;
 
-            while (tile == null || _requiresEmpty && tile.GetEnterability() == TileEnterability.Immediate)
+            while (tile == null || _requiresEmpty && tile.GetEnterability() != TileEnterability.Immediate)
             {
                 _xRangeMin = Mathf.Clamp(_xRangeMin, 0, Width);
                 _xRangeMax = Mathf.Clamp(_xRangeMax, 0, Width);
