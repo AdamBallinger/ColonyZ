@@ -32,6 +32,7 @@ namespace ColonyZ.Models.Map
 
         public static readonly List<WorldSize> SIZES = new List<WorldSize>();
 
+        public static readonly WorldSize MINI = new WorldSize("Mini", 16, 16, false);
         public static readonly WorldSize TINY = new WorldSize("Tiny", 48, 48, false);
         public static readonly WorldSize SMALL = new WorldSize("Small", 96, 96);
         public static readonly WorldSize MEDIUM = new WorldSize("Medium", 128, 128);
