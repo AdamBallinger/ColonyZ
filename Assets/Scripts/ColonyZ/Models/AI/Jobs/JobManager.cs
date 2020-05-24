@@ -346,13 +346,14 @@ namespace ColonyZ.Models.AI.Jobs
             }
         }
 
-        public void DeleteJob(Job _job)
+        public void CancelJob(Job _job)
         {
             Jobs.Remove(_job);
             jobNoAccessMap.Remove(_job);
             // Don't use job.OnComplete here as it actually performs the jobs action.
             _job.AssignedEntity?.SetJob(null, true);
             _job.TargetTile.CurrentJob = null;
+            _job.OnCancelled();
             jobCompletedEvent?.Invoke(_job);
         }
     }

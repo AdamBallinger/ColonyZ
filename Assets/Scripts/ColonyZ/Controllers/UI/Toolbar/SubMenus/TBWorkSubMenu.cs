@@ -14,6 +14,9 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
 
             AddItem("Fell", SpriteCache.GetSprite("Overlay", 2),
                 () => MouseController.Instance.BuildModeController.SetFellMode());
+
+            AddItem("Cancel", SpriteCache.GetSprite("Overlay", 3),
+                () => MouseController.Instance.BuildModeController.SetCancelMode());
         }
     }
 }

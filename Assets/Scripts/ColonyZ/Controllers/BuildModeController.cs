@@ -16,7 +16,8 @@ namespace ColonyZ.Controllers
         Demolish,
         Fell,
         Mine,
-        Harvest
+        Harvest,
+        Cancel
     }
 
     /// <summary>
@@ -85,6 +86,9 @@ namespace ColonyZ.Controllers
                 case BuildMode.Harvest:
                     HandleGather(_tiles);
                     break;
+                case BuildMode.Cancel:
+                    HandleCancel(_tiles);
+                    break;
             }
         }
 
@@ -139,7 +143,7 @@ namespace ColonyZ.Controllers
 
                         if (tile.CurrentJob != null)
                         {
-                            JobManager.Instance.DeleteJob(tile.CurrentJob);
+                            JobManager.Instance.CancelJob(tile.CurrentJob);
                         }
                     }
 
@@ -164,7 +168,7 @@ namespace ColonyZ.Controllers
 
                         if (tile.CurrentJob != null)
                         {
-                            JobManager.Instance.DeleteJob(tile.CurrentJob);
+                            JobManager.Instance.CancelJob(tile.CurrentJob);
                         }
                     }
 
@@ -176,6 +180,17 @@ namespace ColonyZ.Controllers
                 select new HarvestJob(tile, Mode.ToString()));
 
             JobManager.Instance.AddJobs(jobs);
+        }
+
+        private void HandleCancel(IEnumerable<Tile> _tiles)
+        {
+            foreach (var tile in _tiles)
+            {
+                if (tile.CurrentJob != null && !tile.CurrentJob.Complete)
+                {
+                    JobManager.Instance.CancelJob(tile.CurrentJob);
+                }
+            }
         }
 
         private bool ObjectCompatWithMode(TileObject _object)
@@ -238,6 +253,12 @@ namespace ColonyZ.Controllers
         {
             MouseController.Instance.Mode = MouseMode.Process;
             Mode = BuildMode.Harvest;
+        }
+
+        public void SetCancelMode()
+        {
+            MouseController.Instance.Mode = MouseMode.Process;
+            Mode = BuildMode.Cancel;
         }
     }
 }

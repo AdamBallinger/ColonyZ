@@ -72,6 +72,13 @@ namespace ColonyZ.Models.AI.Jobs
             TargetTile.CurrentJob = null;
         }
 
+        /// <summary>
+        /// Called when the job was cancelled before completion.
+        /// </summary>
+        public virtual void OnCancelled()
+        {
+        }
+
         public bool CanSave()
         {
             return !Complete;

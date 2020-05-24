@@ -256,6 +256,18 @@ namespace ColonyZ.Controllers
                             previewRenderer.sprite = null;
                         }
                     }
+                    else if (BuildModeController.Mode == BuildMode.Cancel)
+                    {
+                        if (tile.CurrentJob != null)
+                        {
+                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 3);
+                            previewRenderer.color = previewOverlayColor;
+                        }
+                        else
+                        {
+                            previewRenderer.sprite = null;
+                        }
+                    }
 
                     previewObjects.Add(previewObject);
                 }

@@ -30,6 +30,11 @@ namespace ColonyZ.Models.AI.Jobs
             TargetTile.SetObject(tileObject);
         }
 
+        public override void OnCancelled()
+        {
+            TargetTile.RemoveObject();
+        }
+
         public override void OnSave(SaveGameWriter _writer)
         {
             base.OnSave(_writer);
