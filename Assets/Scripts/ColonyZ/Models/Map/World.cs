@@ -40,6 +40,8 @@ namespace ColonyZ.Models.Map
 
         private Tile[] Tiles { get; set; }
 
+        public WorldGenerator WorldGenerator { get; private set; }
+
         /// <summary>
         ///     Event called when a new entity is created.
         /// </summary>
@@ -76,6 +78,7 @@ namespace ColonyZ.Models.Map
 
             TileManager.LoadDefinitions();
             Instance.WorldGrid = new WorldGridLayout(Instance);
+            Instance.WorldGenerator = new WorldGenerator(Random.Range(0, 1000000));
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
             Instance.WorldGrid.BuildWorldGrid();
             NodeGraph.Create();

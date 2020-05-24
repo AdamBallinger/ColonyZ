@@ -30,12 +30,24 @@ namespace ColonyZ.Controllers
         [SerializeField] private bool shouldSaveLoad = true;
 
         [SerializeField] [Range(0, 10)] private int initialCharacterCount = 1;
-        [SerializeField] [Range(0, 100)] private int treeSpawnChance = 25;
+        [SerializeField] [Range(0, 100)] private int treeSpawnChance;
 
         [SerializeField] private GameObject itemEntityPrefab;
         [SerializeField] private GameObject livingEntityPrefab;
 
         [SerializeField] private WorldSizeTypes.WorldSize worldSize = WorldSizeTypes.MEDIUM;
+
+        [Header("World Gen Noise Settings")] [SerializeField]
+        private bool overrideSeed = true;
+
+        [SerializeField] [Range(1, 1000000)] private int seed;
+        [SerializeField] [Range(1, 8)] private int octaves;
+
+        [SerializeField] [Range(0, 1)] private float persistance;
+        [SerializeField] private float lacunarity;
+        [SerializeField] private float noiseScale;
+        [SerializeField] [Range(0, 1)] private float stoneThreshold;
+
 
         private Dictionary<ItemEntity, GameObject> itemEntityObjects;
         private Dictionary<LivingEntity, GameObject> livingEntityObjects;
@@ -100,26 +112,37 @@ namespace ColonyZ.Controllers
 
             worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
 
-            if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.New)
-            {
-                for (var i = 0; i < initialCharacterCount; i++)
-                    World.Instance.SpawnCharacter(World.Instance.GetRandomTileAround(worldSize.Width / 2,
-                        worldSize.Height / 2, 5, true));
-            }
-
             foreach (var tile in World.Instance)
             {
                 if (tile.IsMapEdge)
                 {
                     tile.SetObject(TileObjectCache.GetObject("Tree"), false);
-                    continue;
                 }
+            }
 
-                if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.New)
+            if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.New)
+            {
+                if (overrideSeed)
+                    WorldGenerator.seed = seed;
+                WorldGenerator.octaves = octaves;
+                WorldGenerator.persistance = persistance;
+                WorldGenerator.lacunarity = lacunarity;
+                WorldGenerator.noiseScale = noiseScale;
+                WorldGenerator.stoneThreshold = stoneThreshold;
+                World.Instance.WorldGenerator.Generate();
+
+                foreach (var tile in World.Instance)
                 {
-                    if (Random.Range(1, 100) <= treeSpawnChance)
+                    if (tile.HasObject) continue;
+                    var rand = Random.Range(1, 100);
+                    if (rand <= treeSpawnChance)
                         tile.SetObject(TileObjectCache.GetObject("Tree"), false);
                 }
+
+                for (var i = 0; i < initialCharacterCount; i++)
+                    World.Instance.SpawnCharacter(
+                        World.Instance.GetRandomTileAround(worldSize.Width / 2,
+                            worldSize.Height / 2, 5, true));
             }
 
             if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.Load)
