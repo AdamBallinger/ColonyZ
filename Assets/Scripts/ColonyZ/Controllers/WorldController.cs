@@ -126,8 +126,10 @@ namespace ColonyZ.Controllers
                 saveGameHandler.LoadAll();
 
             foreach (var tile in World.Instance)
+            {
                 if (tile.Area == null && !(tile.HasObject && tile.Object.EnclosesRoom))
                     AreaManager.Instance.CheckForArea(tile);
+            }
 
             RegionManager.Instance.BuildRegions();
         }
@@ -139,15 +141,21 @@ namespace ColonyZ.Controllers
             World.Instance.Update();
 
             foreach (var pair in livingEntityObjects)
+            {
                 pair.Value.transform.position = new Vector2(pair.Key.X, pair.Key.Y);
+            }
 
-            if (Input.GetKeyDown(KeyCode.C)) World.Instance.SpawnCharacter(World.Instance.GetRandomTile(true));
+            if (Input.GetKeyDown(KeyCode.C))
+                World.Instance.SpawnCharacter(World.Instance.GetRandomTile(true));
 
             if (Input.GetKeyDown(KeyCode.X))
                 for (var i = 0; i < 10; i++)
+                {
                     World.Instance.SpawnCharacter(World.Instance.GetRandomTile(true));
+                }
 
-            if (Input.GetKeyDown(KeyCode.Space)) TimeManager.Instance.Toggle();
+            if (Input.GetKeyDown(KeyCode.Space))
+                TimeManager.Instance.Toggle();
         }
 
         /// <summary>
@@ -157,8 +165,10 @@ namespace ColonyZ.Controllers
         private void UpdateTileNeighbourSprites(Tile _tile)
         {
             foreach (var tile in _tile.Neighbours)
+            {
                 if (tile.HasObject)
                     tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
+            }
         }
 
         /// <summary>
