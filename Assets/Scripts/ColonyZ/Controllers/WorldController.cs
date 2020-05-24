@@ -48,7 +48,6 @@ namespace ColonyZ.Controllers
         [SerializeField] private float noiseScale;
         [SerializeField] [Range(0, 1)] private float stoneThreshold;
 
-
         private Dictionary<ItemEntity, GameObject> itemEntityObjects;
         private Dictionary<LivingEntity, GameObject> livingEntityObjects;
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
@@ -202,6 +201,7 @@ namespace ColonyZ.Controllers
         {
             var object_GO = new GameObject("Tile Object");
             var object_SR = object_GO.AddComponent<SpriteRenderer>();
+            object_SR.sharedMaterial.enableInstancing = true;
 
             object_GO.transform.position = new Vector2(_tile.X, _tile.Y);
             object_GO.transform.SetParent(_transform);

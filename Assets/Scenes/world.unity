@@ -8854,7 +8854,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1920970004
 Transform:
@@ -8885,14 +8885,16 @@ MonoBehaviour:
   dataLoader: {fileID: 1523355955}
   shouldSaveLoad: 1
   initialCharacterCount: 0
+  treeSpawnChance: 8
   itemEntityPrefab: {fileID: 4256605384353934779, guid: cf0a6cd49092b8d4cbe1a2441751f071,
     type: 3}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   worldSize:
-    <Name>k__BackingField: Medium
-    <Width>k__BackingField: 128
-    <Height>k__BackingField: 128
+    <Name>k__BackingField: Small
+    <Width>k__BackingField: 96
+    <Height>k__BackingField: 96
+  overrideSeed: 1
   seed: 42736
   octaves: 4
   persistance: 0.5
