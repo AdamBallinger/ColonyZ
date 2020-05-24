@@ -75,8 +75,9 @@ namespace ColonyZ.Models.Map
             };
 
             TileManager.LoadDefinitions();
-            Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
             Instance.WorldGrid = new WorldGridLayout(Instance);
+            Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
+            Instance.WorldGrid.BuildWorldGrid();
             NodeGraph.Create();
             AreaManager.Create();
             ZoneManager.Create();
@@ -103,6 +104,7 @@ namespace ColonyZ.Models.Map
                 var tile = new Tile(x, y, TileManager.GetTileDefinition("Grass"));
                 tile.onTileDefinitionChanged += _tileDefinitionChangeListener;
                 tile.onTileChanged += _tileChangedListener;
+                tile.onTileChanged += WorldGrid.NotifyChunkUpdate;
                 Tiles[x * Width + y] = tile;
             }
 
@@ -114,6 +116,8 @@ namespace ColonyZ.Models.Map
                 tile.Neighbours.AddRange(GetTileNeighbours(tile));
             }
         }
+
+        #region GetTile Region
 
         /// <summary>
         ///     Returns a tile at the given world coordinates.
@@ -234,6 +238,8 @@ namespace ColonyZ.Models.Map
 
             return neighbours;
         }
+
+        #endregion
 
         /// <summary>
         ///     Spawns a new character entity in the world.

@@ -4,7 +4,6 @@ using System.Linq;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
-using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.TimeSystem;
@@ -26,9 +25,14 @@ namespace ColonyZ.Models.AI.Jobs
         private float jobErrorTimer;
 
         /// <summary>
-        /// Flag to determine if the manager is allowed to evaluate jobs in error state.
+        ///     Flag to determine if the manager is allowed to evaluate jobs in error state.
         /// </summary>
         private bool canEvaluateErrored = true;
+
+        /// <summary>
+        ///     List of chunks required to be able to evaluate error state jobs again.
+        /// </summary>
+        private List<WorldChunk> requiredChunks;
 
         /// <summary>
         ///     Total number of current jobs.
@@ -81,6 +85,7 @@ namespace ColonyZ.Models.AI.Jobs
 
         public static void Destroy()
         {
+            World.Instance.WorldGrid.chunkUpdateEvent -= Instance.OnChunkUpdate;
             Instance = null;
         }
 
@@ -88,10 +93,18 @@ namespace ColonyZ.Models.AI.Jobs
         {
             Jobs = new List<Job>();
             jobNoAccessMap = new Dictionary<Job, List<HumanEntity>>();
+            requiredChunks = new List<WorldChunk>();
 
-            // When the world is changed, allow the manager to check error state jobs again.
-            // TODO: This could be improved further by requiring specific chunks to have updated?
-            NodeGraph.Instance.RegisterGraphUpdateCallback(() => canEvaluateErrored = true);
+            World.Instance.WorldGrid.chunkUpdateEvent += OnChunkUpdate;
+        }
+
+        private void OnChunkUpdate(WorldChunk _chunk)
+        {
+            // TODO: Broke, as it means it only checks again if the chunk the jobs are in changed..
+            //if (requiredChunks.Contains(_chunk))
+            {
+                canEvaluateErrored = true;
+            }
         }
 
         /// <summary>
@@ -112,6 +125,8 @@ namespace ColonyZ.Models.AI.Jobs
         private void EvaluateErrorJobs()
         {
             if (!canEvaluateErrored) return;
+
+            requiredChunks.Clear();
 
             var entities = World.Instance.Characters;
 
@@ -142,6 +157,15 @@ namespace ColonyZ.Models.AI.Jobs
                             }
                         }
                     }
+
+                    // Add all chunks around the target tile to the required list if it
+                    // can't be reached.
+                    foreach (var tile in job.TargetTile.DirectNeighbours)
+                    {
+                        var chunk = World.Instance.WorldGrid.GetChunkAt(tile);
+                        if (requiredChunks.Contains(chunk)) continue;
+                        requiredChunks.Add(chunk);
+                    }
                 }
 
                 if (isJobReachable && job.State != JobState.Active)
@@ -151,7 +175,10 @@ namespace ColonyZ.Models.AI.Jobs
                 }
             }
 
-            if (!anyChanged) canEvaluateErrored = false;
+            if (!anyChanged)
+            {
+                canEvaluateErrored = false;
+            }
         }
 
         private void AssignEntityJob(HumanEntity _entity, Job _job)

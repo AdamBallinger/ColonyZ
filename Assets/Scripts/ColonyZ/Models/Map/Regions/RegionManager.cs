@@ -41,7 +41,7 @@ namespace ColonyZ.Models.Map.Regions
         /// <param name="_tile"></param>
         public void Update(Tile _tile)
         {
-            var rootChunk = World.Instance.WorldGrid.GetChunkAt(_tile.X, _tile.Y);
+            var rootChunk = World.Instance.WorldGrid.GetChunkAt(_tile);
 
             var chunksToUpdate = new List<WorldChunk>();
             chunksToUpdate.Add(rootChunk);

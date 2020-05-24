@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using ColonyZ.Models.Map.Tiles;
 
 namespace ColonyZ.Models.Map
 {
     public class WorldGridLayout
     {
         public List<WorldChunk> Chunks { get; }
+
+        public event Action<WorldChunk> chunkUpdateEvent;
 
         private const int CHUNK_SIZE = 12;
 
@@ -15,14 +18,18 @@ namespace ColonyZ.Models.Map
         {
             world = _world;
             Chunks = new List<WorldChunk>();
-            BuildWorldGrid();
         }
 
-        public WorldChunk GetChunkAt(int _x, int _y)
+        private WorldChunk GetChunkAt(int _x, int _y)
         {
             var cX = _x / CHUNK_SIZE;
             var cY = _y / CHUNK_SIZE;
             return Chunks.Find(c => c.X == cX && c.Y == cY);
+        }
+
+        public WorldChunk GetChunkAt(Tile _tile)
+        {
+            return GetChunkAt(_tile.X, _tile.Y);
         }
 
         public List<WorldChunk> GetChunkNeighbours(WorldChunk _chunk)
@@ -42,8 +49,15 @@ namespace ColonyZ.Models.Map
             return chunks;
         }
 
-        private void BuildWorldGrid()
+        public void NotifyChunkUpdate(Tile _tile)
         {
+            chunkUpdateEvent?.Invoke(GetChunkAt(_tile));
+        }
+
+        public void BuildWorldGrid()
+        {
+            if (Chunks.Count > 0) return;
+
             var chunksWidth = world.Width / CHUNK_SIZE;
             chunksWidth += world.Width / chunksWidth;
 
