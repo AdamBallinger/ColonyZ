@@ -6,23 +6,12 @@ using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
-using ColonyZ.Models.TimeSystem;
 
 namespace ColonyZ.Models.AI.Jobs
 {
     public class JobManager
     {
         public static JobManager Instance { get; private set; }
-
-        /// <summary>
-        ///     Time in seconds between each automatic evaluation of errored jobs.
-        /// </summary>
-        private const float ERROR_JOB_CHECK_INTERVAL = 3.0f;
-
-        /// <summary>
-        ///     Current timer for auto checking errored jobs.
-        /// </summary>
-        private float jobErrorTimer;
 
         /// <summary>
         ///     Flag to determine if the manager is allowed to evaluate jobs in error state.
@@ -116,6 +105,7 @@ namespace ColonyZ.Models.AI.Jobs
             Jobs.Remove(_completedJob);
             _completedJob.TargetTile.CurrentJob = null;
             _completedJob.OnComplete();
+            EvaluateErrorJobs();
             jobCompletedEvent?.Invoke(_completedJob);
         }
 
@@ -194,19 +184,9 @@ namespace ColonyZ.Models.AI.Jobs
 
         public void Update()
         {
-            jobErrorTimer += TimeManager.Instance.UnscaledDeltaTime;
-
             if (Jobs.Count == 0)
             {
                 return;
-            }
-
-            if (jobErrorTimer >= ERROR_JOB_CHECK_INTERVAL)
-            {
-                jobErrorTimer = 0.0f;
-                // EXPERIMENTAL: Only evaluate if there are no idle jobs?
-                //if (IdleCount == 0)
-                EvaluateErrorJobs();
             }
 
             for (var i = Jobs.Count - 1; i >= 0; i--)
@@ -234,6 +214,13 @@ namespace ColonyZ.Models.AI.Jobs
 
                     if (jobNoAccessMap[job].Contains(entity))
                     {
+                        if (CanEntityReachJob(entity, job))
+                        {
+                            jobNoAccessMap[job].Remove(entity);
+                            AssignEntityJob(entity, job);
+                            break;
+                        }
+
                         continue;
                     }
 
