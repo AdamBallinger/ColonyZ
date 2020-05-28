@@ -32,12 +32,13 @@ namespace ColonyZ.Models.Map
             for (var i = 0; i < noiseMap.Length; i++)
             {
                 var tile = World.Instance.GetTileAt(i);
+                if (tile.IsMapEdge) continue;
 
                 if (noiseMap[i] > stoneThreshold)
                 {
                     // TODO: Dont place anything within center chunk.
                     tile.RemoveObject(false);
-                    tile.SetObject(TileObjectCache.GetObject("Steel Wall"), false);
+                    tile.SetObject(TileObjectCache.GetObject("Stone"), false);
                 }
             }
         }
