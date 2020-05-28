@@ -1,283 +1,151 @@
 fileFormatVersion: 2
-guid: 63752c3fa3257ce4f82bd5fdaafe2e18
+guid: afdd4d612fa844641924c18437741b6a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 21300000
-    second: tileset_foundation_base_0
+      213: 121061991231955953
+    second: tileset_stone_0
   - first:
-      213: 21300002
-    second: tileset_foundation_base_1
+      213: 7874336832421175788
+    second: tileset_stone_1
   - first:
-      213: 21300004
-    second: tileset_foundation_base_2
+      213: -1966753847253382821
+    second: tileset_stone_2
   - first:
-      213: 21300006
-    second: tileset_foundation_base_3
+      213: 8319020034250414250
+    second: tileset_stone_3
   - first:
-      213: 21300008
-    second: tileset_construction_base_4
+      213: -4688431888296644698
+    second: tileset_stone_4
   - first:
-      213: 21300010
-    second: tileset_construction_base_5
+      213: 4987697875940155546
+    second: tileset_stone_5
   - first:
-      213: 21300012
-    second: tileset_construction_base_6
+      213: 1731031125024003823
+    second: tileset_stone_6
   - first:
-      213: 21300014
-    second: tileset_construction_base_7
+      213: 8176353302824001335
+    second: tileset_stone_7
   - first:
-      213: 21300016
-    second: tileset_construction_base_8
+      213: 2103515024922149537
+    second: tileset_stone_8
   - first:
-      213: 21300018
-    second: tileset_construction_base_9
+      213: 1473838260266028068
+    second: tileset_stone_9
   - first:
-      213: 21300020
-    second: tileset_construction_base_10
+      213: -5592343955438125635
+    second: tileset_stone_10
   - first:
-      213: 21300022
-    second: tileset_construction_base_11
+      213: 1971668693529893474
+    second: tileset_stone_11
   - first:
-      213: 21300024
-    second: tileset_construction_base_12
+      213: 2990897524949638328
+    second: tileset_stone_12
   - first:
-      213: 21300026
-    second: tileset_construction_base_13
+      213: 7267282957485931235
+    second: tileset_stone_13
   - first:
-      213: 21300028
-    second: tileset_construction_base_14
+      213: 8703373632864207479
+    second: tileset_stone_14
   - first:
-      213: 21300030
-    second: tileset_construction_base_15
+      213: 3080936355263143290
+    second: tileset_stone_15
   - first:
-      213: 21300032
-    second: tileset_construction_base_16
+      213: -8852797910940472058
+    second: tileset_stone_16
   - first:
-      213: 21300034
-    second: tileset_construction_base_17
+      213: 388472438134305515
+    second: tileset_stone_17
   - first:
-      213: 21300036
-    second: tileset_construction_base_18
+      213: 4730776472915543211
+    second: tileset_stone_18
   - first:
-      213: 21300038
-    second: tileset_construction_base_19
+      213: -409914749018707824
+    second: tileset_stone_19
   - first:
-      213: 21300040
-    second: tileset_construction_base_20
+      213: -5976130111844829930
+    second: tileset_stone_20
   - first:
-      213: 21300042
-    second: tileset_construction_base_21
+      213: -4011889766287532625
+    second: tileset_stone_21
   - first:
-      213: 21300044
-    second: tileset_construction_base_22
+      213: 6992074553390532066
+    second: tileset_stone_22
   - first:
-      213: 21300046
-    second: tileset_construction_base_23
+      213: -5147005097781165867
+    second: tileset_stone_23
   - first:
-      213: 21300048
-    second: tileset_construction_base_24
+      213: 3999797852783800686
+    second: tileset_stone_24
   - first:
-      213: 21300050
-    second: tileset_construction_base_25
+      213: 7567726805507540634
+    second: tileset_stone_25
   - first:
-      213: 21300052
-    second: tileset_construction_base_26
+      213: 7722324903116138724
+    second: tileset_stone_26
   - first:
-      213: 21300054
-    second: tileset_construction_base_27
+      213: 4064666544890909069
+    second: tileset_stone_27
   - first:
-      213: 21300056
-    second: tileset_construction_base_28
+      213: -1560601550267064880
+    second: tileset_stone_28
   - first:
-      213: 21300058
-    second: tileset_construction_base_29
+      213: -7600431845825181912
+    second: tileset_stone_29
   - first:
-      213: 21300060
-    second: tileset_construction_base_30
+      213: 3082883784127959152
+    second: tileset_stone_30
   - first:
-      213: 21300062
-    second: tileset_construction_base_31
+      213: -892576960127178994
+    second: tileset_stone_31
   - first:
-      213: 21300064
-    second: tileset_construction_base_32
+      213: -5854922423121654209
+    second: tileset_stone_32
   - first:
-      213: 21300066
-    second: tileset_construction_base_33
+      213: -7568619153986714226
+    second: tileset_stone_33
   - first:
-      213: 21300068
-    second: tileset_construction_base_34
+      213: -4313841515479595047
+    second: tileset_stone_34
   - first:
-      213: 21300070
-    second: tileset_construction_base_35
+      213: -8873546346104636270
+    second: tileset_stone_35
   - first:
-      213: 21300072
-    second: tileset_construction_base_36
+      213: -420129769966689301
+    second: tileset_stone_36
   - first:
-      213: 21300074
-    second: tileset_construction_base_37
+      213: -5193281289288856680
+    second: tileset_stone_37
   - first:
-      213: 21300076
-    second: tileset_construction_base_38
+      213: 7310110737851581297
+    second: tileset_stone_38
   - first:
-      213: 21300078
-    second: tileset_construction_base_39
+      213: 6332823333820896030
+    second: tileset_stone_39
   - first:
-      213: 21300080
-    second: tileset_construction_base_40
+      213: 4652972654677730822
+    second: tileset_stone_40
   - first:
-      213: 21300082
-    second: tileset_construction_base_41
+      213: -6273459984656075315
+    second: tileset_stone_41
   - first:
-      213: 21300084
-    second: tileset_construction_base_42
+      213: -2578175444023247523
+    second: tileset_stone_42
   - first:
-      213: 21300086
-    second: tileset_construction_base_43
+      213: 7567565498487116383
+    second: tileset_stone_43
   - first:
-      213: 21300088
-    second: tileset_construction_base_44
+      213: -3730854965655607463
+    second: tileset_stone_44
   - first:
-      213: 21300090
-    second: tileset_construction_base_45
+      213: -8543054291280589410
+    second: tileset_stone_45
   - first:
-      213: 21300092
-    second: tileset_construction_base_46
+      213: 6146310766497214223
+    second: tileset_stone_46
   - first:
-      213: 21300094
-    second: tileset_construction_base_47
-  - first:
-      213: 21300096
-    second: tileset_foundation_base_4
-  - first:
-      213: 21300098
-    second: tileset_foundation_base_5
-  - first:
-      213: 21300100
-    second: tileset_foundation_base_6
-  - first:
-      213: 21300102
-    second: tileset_foundation_base_7
-  - first:
-      213: 21300104
-    second: tileset_foundation_base_8
-  - first:
-      213: 21300106
-    second: tileset_foundation_base_9
-  - first:
-      213: 21300108
-    second: tileset_foundation_base_10
-  - first:
-      213: 21300110
-    second: tileset_foundation_base_11
-  - first:
-      213: 21300112
-    second: tileset_foundation_base_12
-  - first:
-      213: 21300114
-    second: tileset_foundation_base_13
-  - first:
-      213: 21300116
-    second: tileset_foundation_base_14
-  - first:
-      213: 21300118
-    second: tileset_foundation_base_15
-  - first:
-      213: 21300120
-    second: tileset_foundation_base_16
-  - first:
-      213: 21300122
-    second: tileset_foundation_base_17
-  - first:
-      213: 21300124
-    second: tileset_foundation_base_18
-  - first:
-      213: 21300126
-    second: tileset_foundation_base_19
-  - first:
-      213: 21300128
-    second: tileset_foundation_base_20
-  - first:
-      213: 21300130
-    second: tileset_foundation_base_21
-  - first:
-      213: 21300132
-    second: tileset_foundation_base_22
-  - first:
-      213: 21300134
-    second: tileset_foundation_base_23
-  - first:
-      213: 21300136
-    second: tileset_foundation_base_24
-  - first:
-      213: 21300138
-    second: tileset_foundation_base_25
-  - first:
-      213: 21300140
-    second: tileset_foundation_base_26
-  - first:
-      213: 21300142
-    second: tileset_foundation_base_27
-  - first:
-      213: 21300144
-    second: tileset_foundation_base_28
-  - first:
-      213: 21300146
-    second: tileset_foundation_base_29
-  - first:
-      213: 21300148
-    second: tileset_foundation_base_30
-  - first:
-      213: 21300150
-    second: tileset_foundation_base_31
-  - first:
-      213: 21300152
-    second: tileset_foundation_base_32
-  - first:
-      213: 21300154
-    second: tileset_foundation_base_33
-  - first:
-      213: 21300156
-    second: tileset_foundation_base_34
-  - first:
-      213: 21300158
-    second: tileset_foundation_base_35
-  - first:
-      213: 21300160
-    second: tileset_foundation_base_36
-  - first:
-      213: 21300162
-    second: tileset_foundation_base_37
-  - first:
-      213: 21300164
-    second: tileset_foundation_base_38
-  - first:
-      213: 21300166
-    second: tileset_foundation_base_39
-  - first:
-      213: 21300168
-    second: tileset_foundation_base_40
-  - first:
-      213: 21300170
-    second: tileset_foundation_base_41
-  - first:
-      213: 21300172
-    second: tileset_foundation_base_42
-  - first:
-      213: 21300174
-    second: tileset_foundation_base_43
-  - first:
-      213: 21300176
-    second: tileset_foundation_base_44
-  - first:
-      213: 21300178
-    second: tileset_foundation_base_45
-  - first:
-      213: 21300180
-    second: tileset_foundation_base_46
-  - first:
-      213: 21300182
-    second: tileset_foundation_base_47
+      213: 415902661604846738
+    second: tileset_stone_47
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -317,7 +185,7 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
+  spriteExtrude: 0
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
@@ -333,7 +201,7 @@ TextureImporter:
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
-  applyGammaDecoding: 1
+  applyGammaDecoding: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -363,7 +231,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tileset_foundation_base_0
+      name: tileset_stone_0
       rect:
         serializedVersion: 2
         x: 0
@@ -377,14 +245,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 95edbb2acb9398345af42a62d38a2215
-      internalID: 21300000
+      spriteID: 1f3ae275d391ea100800000000000000
+      internalID: 121061991231955953
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_1
+      name: tileset_stone_1
       rect:
         serializedVersion: 2
         x: 32
@@ -398,14 +266,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d873b0ac6c6feea48bf6cabc619516ec
-      internalID: 21300002
+      spriteID: ce12d3a01a3474d60800000000000000
+      internalID: 7874336832421175788
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_2
+      name: tileset_stone_2
       rect:
         serializedVersion: 2
         x: 64
@@ -419,14 +287,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9d1c0851c9f78024cb1d89a9577a4f37
-      internalID: 21300004
+      spriteID: b5944d5dbcfa4b4e0800000000000000
+      internalID: -1966753847253382821
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_3
+      name: tileset_stone_3
       rect:
         serializedVersion: 2
         x: 96
@@ -440,14 +308,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4cfffc98aaf71904a824ce228a36fc53
-      internalID: 21300006
+      spriteID: aa89ad425a8137370800000000000000
+      internalID: 8319020034250414250
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_4
+      name: tileset_stone_4
       rect:
         serializedVersion: 2
         x: 128
@@ -461,14 +329,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b958ef455d05f4b4eb8260fd12f490ba
-      internalID: 21300096
+      spriteID: 6afe678b9085feeb0800000000000000
+      internalID: -4688431888296644698
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_5
+      name: tileset_stone_5
       rect:
         serializedVersion: 2
         x: 160
@@ -482,14 +350,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cc7ac75fc68b74d458fbf5b90982f9b3
-      internalID: 21300098
+      spriteID: a90226ecaccd73540800000000000000
+      internalID: 4987697875940155546
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_6
+      name: tileset_stone_6
       rect:
         serializedVersion: 2
         x: 192
@@ -503,14 +371,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a823233653d60a5419e31bf13f04725f
-      internalID: 21300100
+      spriteID: fe6533603abd50810800000000000000
+      internalID: 1731031125024003823
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_7
+      name: tileset_stone_7
       rect:
         serializedVersion: 2
         x: 224
@@ -524,14 +392,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a57c01571c0359041b324658b3be2eaa
-      internalID: 21300102
+      spriteID: 73f9aec320e387170800000000000000
+      internalID: 8176353302824001335
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_8
+      name: tileset_stone_8
       rect:
         serializedVersion: 2
         x: 0
@@ -545,14 +413,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aaccd76921091ba4c9d485aa68d8979e
-      internalID: 21300104
+      spriteID: 1a28e2035cf213d10800000000000000
+      internalID: 2103515024922149537
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_9
+      name: tileset_stone_9
       rect:
         serializedVersion: 2
         x: 32
@@ -566,14 +434,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4029aac2b03f4a34e89de009350e7ae0
-      internalID: 21300106
+      spriteID: 42c4987c610247410800000000000000
+      internalID: 1473838260266028068
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_10
+      name: tileset_stone_10
       rect:
         serializedVersion: 2
         x: 64
@@ -587,14 +455,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dbf29c59c77487b45823e9ccfdcc9f11
-      internalID: 21300108
+      spriteID: dbdbe425dc00462b0800000000000000
+      internalID: -5592343955438125635
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_11
+      name: tileset_stone_11
       rect:
         serializedVersion: 2
         x: 96
@@ -608,14 +476,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 973e6401bc5c96740bbb268035dc551a
-      internalID: 21300110
+      spriteID: 26a9b9cfa36cc5b10800000000000000
+      internalID: 1971668693529893474
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_12
+      name: tileset_stone_12
       rect:
         serializedVersion: 2
         x: 128
@@ -629,14 +497,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8a6864836ae65bd4f952208da2412c2f
-      internalID: 21300112
+      spriteID: 8bcd736d37dc18920800000000000000
+      internalID: 2990897524949638328
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_13
+      name: tileset_stone_13
       rect:
         serializedVersion: 2
         x: 160
@@ -650,14 +518,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a143adb77bdebc14ca2e92bc901dfb04
-      internalID: 21300114
+      spriteID: 3eaf23b98539ad460800000000000000
+      internalID: 7267282957485931235
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_14
+      name: tileset_stone_14
       rect:
         serializedVersion: 2
         x: 192
@@ -671,14 +539,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0c0eb23128362d74fa261a2da511c655
-      internalID: 21300116
+      spriteID: 7724f56e43898c870800000000000000
+      internalID: 8703373632864207479
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_15
+      name: tileset_stone_15
       rect:
         serializedVersion: 2
         x: 224
@@ -692,14 +560,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f8496b6b97ddda64ea3436445cdd7bc3
-      internalID: 21300118
+      spriteID: a7ddb07aa4fa1ca20800000000000000
+      internalID: 3080936355263143290
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_16
+      name: tileset_stone_16
       rect:
         serializedVersion: 2
         x: 0
@@ -713,14 +581,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6667327508bb7df4891b0a917f7adb6e
-      internalID: 21300120
+      spriteID: 60da212443b842580800000000000000
+      internalID: -8852797910940472058
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_17
+      name: tileset_stone_17
       rect:
         serializedVersion: 2
         x: 32
@@ -734,14 +602,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 08ffd818d400ef04eabfaa188e6350a0
-      internalID: 21300122
+      spriteID: be27600df91246500800000000000000
+      internalID: 388472438134305515
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_18
+      name: tileset_stone_18
       rect:
         serializedVersion: 2
         x: 64
@@ -755,14 +623,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 70ce71427f00769478e8b010750b246a
-      internalID: 21300124
+      spriteID: ba408eb232817a140800000000000000
+      internalID: 4730776472915543211
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_19
+      name: tileset_stone_19
       rect:
         serializedVersion: 2
         x: 96
@@ -776,14 +644,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 90bebe831809c8d4e8929a2021782985
-      internalID: 21300126
+      spriteID: 098eb8425b0bf4af0800000000000000
+      internalID: -409914749018707824
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_20
+      name: tileset_stone_20
       rect:
         serializedVersion: 2
         x: 128
@@ -797,14 +665,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec6b9623072354d4983960971cf84231
-      internalID: 21300128
+      spriteID: 61539ff7355801da0800000000000000
+      internalID: -5976130111844829930
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_21
+      name: tileset_stone_21
       rect:
         serializedVersion: 2
         x: 160
@@ -818,14 +686,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bae86512d37a892499a93a7c88efda70
-      internalID: 21300130
+      spriteID: fad18627387e258c0800000000000000
+      internalID: -4011889766287532625
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_22
+      name: tileset_stone_22
       rect:
         serializedVersion: 2
         x: 192
@@ -839,14 +707,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c32e2996ff461074680a6ad6311d8019
-      internalID: 21300132
+      spriteID: 2e504edb2c6d80160800000000000000
+      internalID: 6992074553390532066
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_23
+      name: tileset_stone_23
       rect:
         serializedVersion: 2
         x: 224
@@ -860,14 +728,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b9d56500337cc7c4eb2faa8346dabc9d
-      internalID: 21300134
+      spriteID: 5d001a1322a2298b0800000000000000
+      internalID: -5147005097781165867
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_24
+      name: tileset_stone_24
       rect:
         serializedVersion: 2
         x: 0
@@ -881,14 +749,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a3687da05bd3e994a9b3e12f8880fed6
-      internalID: 21300136
+      spriteID: e617c8c84f2228730800000000000000
+      internalID: 3999797852783800686
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_25
+      name: tileset_stone_25
       rect:
         serializedVersion: 2
         x: 32
@@ -902,14 +770,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b77dff22ccc78c047802557230b86b65
-      internalID: 21300138
+      spriteID: a968a7f1f67f50960800000000000000
+      internalID: 7567726805507540634
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_26
+      name: tileset_stone_26
       rect:
         serializedVersion: 2
         x: 64
@@ -923,14 +791,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d03edd4369114c54fa95487e5b592047
-      internalID: 21300140
+      spriteID: 4e8e362b5953b2b60800000000000000
+      internalID: 7722324903116138724
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_27
+      name: tileset_stone_27
       rect:
         serializedVersion: 2
         x: 96
@@ -944,14 +812,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 791f545a322df0f4e8cede9db53de92b
-      internalID: 21300142
+      spriteID: d8113a2efa8986830800000000000000
+      internalID: 4064666544890909069
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_28
+      name: tileset_stone_28
       rect:
         serializedVersion: 2
         x: 128
@@ -965,14 +833,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9a3e4f987618a0b45ade06b5c2efb95b
-      internalID: 21300144
+      spriteID: 0dd58609821a75ae0800000000000000
+      internalID: -1560601550267064880
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_29
+      name: tileset_stone_29
       rect:
         serializedVersion: 2
         x: 160
@@ -986,14 +854,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 34cf12c8adb6e0848bc45df9691a479b
-      internalID: 21300146
+      spriteID: 827060a4187d58690800000000000000
+      internalID: -7600431845825181912
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_30
+      name: tileset_stone_30
       rect:
         serializedVersion: 2
         x: 192
@@ -1007,14 +875,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27670c877ca554147bc8269ae2532f86
-      internalID: 21300148
+      spriteID: 07052c4c77a98ca20800000000000000
+      internalID: 3082883784127959152
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_31
+      name: tileset_stone_31
       rect:
         serializedVersion: 2
         x: 224
@@ -1028,14 +896,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5f5020fb8204e2a4982c4c054c5ce7a0
-      internalID: 21300150
+      spriteID: e07ebecdbfdec93f0800000000000000
+      internalID: -892576960127178994
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_32
+      name: tileset_stone_32
       rect:
         serializedVersion: 2
         x: 0
@@ -1049,14 +917,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9c4f049a2a7e55148b465ab16fa763ef
-      internalID: 21300152
+      spriteID: f3e4d5ea3132fbea0800000000000000
+      internalID: -5854922423121654209
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_33
+      name: tileset_stone_33
       rect:
         serializedVersion: 2
         x: 32
@@ -1070,14 +938,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: afa5b0a4af40c414dbf10f677d4d96b8
-      internalID: 21300154
+      spriteID: e85876ecafcd6f690800000000000000
+      internalID: -7568619153986714226
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_34
+      name: tileset_stone_34
       rect:
         serializedVersion: 2
         x: 64
@@ -1091,14 +959,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ab4eb653734ec84cb87980dd5027891
-      internalID: 21300156
+      spriteID: 9d781845ff72224c0800000000000000
+      internalID: -4313841515479595047
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_35
+      name: tileset_stone_35
       rect:
         serializedVersion: 2
         x: 96
@@ -1112,14 +980,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bcdd0446eedc63544aa4b1ec7ac8894f
-      internalID: 21300158
+      spriteID: 29cb77ebc94dad480800000000000000
+      internalID: -8873546346104636270
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_36
+      name: tileset_stone_36
       rect:
         serializedVersion: 2
         x: 128
@@ -1133,14 +1001,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 110ba7690ec9d9348a4d1276c0d32280
-      internalID: 21300160
+      spriteID: be3a19d33366b2af0800000000000000
+      internalID: -420129769966689301
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_37
+      name: tileset_stone_37
       rect:
         serializedVersion: 2
         x: 160
@@ -1154,14 +1022,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb907a54a6fcbcd46a3ce222b7a935da
-      internalID: 21300162
+      spriteID: 89b414dbe22cde7b0800000000000000
+      internalID: -5193281289288856680
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_38
+      name: tileset_stone_38
       rect:
         serializedVersion: 2
         x: 192
@@ -1175,14 +1043,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c7227884153fe1445ad5fc7390254573
-      internalID: 21300164
+      spriteID: 17389664cfab27560800000000000000
+      internalID: 7310110737851581297
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_39
+      name: tileset_stone_39
       rect:
         serializedVersion: 2
         x: 224
@@ -1196,14 +1064,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d235d13d9fb0141499daeda829ffe324
-      internalID: 21300166
+      spriteID: e1313b5f445b2e750800000000000000
+      internalID: 6332823333820896030
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_40
+      name: tileset_stone_40
       rect:
         serializedVersion: 2
         x: 0
@@ -1217,14 +1085,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fcc7e7f7d11286648a40ffddd047f3f9
-      internalID: 21300168
+      spriteID: 6062ca71afda29040800000000000000
+      internalID: 4652972654677730822
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_41
+      name: tileset_stone_41
       rect:
         serializedVersion: 2
         x: 32
@@ -1238,14 +1106,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd3c006e824e6b04d97a12979eb6e83a
-      internalID: 21300170
+      spriteID: dc572f5d16130f8a0800000000000000
+      internalID: -6273459984656075315
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_42
+      name: tileset_stone_42
       rect:
         serializedVersion: 2
         x: 64
@@ -1259,14 +1127,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b498156dc895f08419b4358b65015242
-      internalID: 21300172
+      spriteID: d5dfb5ae71b783cd0800000000000000
+      internalID: -2578175444023247523
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_43
+      name: tileset_stone_43
       rect:
         serializedVersion: 2
         x: 96
@@ -1280,14 +1148,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2bc4de13bc75fd546bdf8e4e465b952c
-      internalID: 21300174
+      spriteID: f5293d7e9b4650960800000000000000
+      internalID: 7567565498487116383
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_44
+      name: tileset_stone_44
       rect:
         serializedVersion: 2
         x: 128
@@ -1301,14 +1169,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 87b810357550b7344ac450ffe800f9f6
-      internalID: 21300176
+      spriteID: 9576897fc27593cc0800000000000000
+      internalID: -3730854965655607463
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_45
+      name: tileset_stone_45
       rect:
         serializedVersion: 2
         x: 160
@@ -1322,14 +1190,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb41d2eb060fce148984e8dc9d7df9e6
-      internalID: 21300178
+      spriteID: e9d08579269f07980800000000000000
+      internalID: -8543054291280589410
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_46
+      name: tileset_stone_46
       rect:
         serializedVersion: 2
         x: 192
@@ -1343,14 +1211,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0125b9e7ebb53bd4190a1aa487955b83
-      internalID: 21300180
+      spriteID: f0fa93cd3151c4550800000000000000
+      internalID: 6146310766497214223
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_foundation_base_47
+      name: tileset_stone_47
       rect:
         serializedVersion: 2
         x: 224
@@ -1364,8 +1232,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 86d3bf617bbb31848bdd978f4d81d428
-      internalID: 21300182
+      spriteID: 29ca816644595c500800000000000000
+      internalID: 415902661604846738
       vertices: []
       indices: 
       edges: []
@@ -1373,7 +1241,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 234488b559647ca42b2094faed49b9ed
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
