@@ -46,7 +46,7 @@ namespace ColonyZ.Models.AI.Jobs
             base.OnComplete();
 
             TargetTile.RemoveObject();
-            World.Instance.SpawnItem(resourceObject.Item, resourceObject.Quantity, TargetTile);
+            //World.Instance.SpawnItem(resourceObject.Item, resourceObject.Quantity, TargetTile);
         }
 
         public override void OnSave(SaveGameWriter _writer)
