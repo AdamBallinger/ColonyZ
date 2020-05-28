@@ -27,9 +27,19 @@ namespace ColonyZ.Models.Map
             return Chunks.Find(c => c.X == cX && c.Y == cY);
         }
 
+        public WorldChunk GetCenterChunk()
+        {
+            return GetChunkAt(world.Width / 2, world.Height / 2);
+        }
+
         public WorldChunk GetChunkAt(Tile _tile)
         {
             return GetChunkAt(_tile.X, _tile.Y);
+        }
+
+        public bool IsInCenterChunk(Tile _tile)
+        {
+            return GetCenterChunk().Contains(_tile);
         }
 
         public List<WorldChunk> GetChunkNeighbours(WorldChunk _chunk)

@@ -36,7 +36,8 @@ namespace ColonyZ.Models.Map
 
                 if (noiseMap[i] > stoneThreshold)
                 {
-                    // TODO: Dont place anything within center chunk.
+                    if (World.Instance.WorldGrid.IsInCenterChunk(tile)) continue;
+
                     tile.RemoveObject(false);
                     tile.SetObject(TileObjectCache.GetObject("Stone"), false);
                 }

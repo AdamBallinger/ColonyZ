@@ -8937,7 +8937,7 @@ MonoBehaviour:
   persistance: 0.5
   lacunarity: 2
   noiseScale: 48
-  stoneThreshold: 0.547
+  stoneThreshold: 0.55
 --- !u!114 &1920970006
 MonoBehaviour:
   m_ObjectHideFlags: 0
