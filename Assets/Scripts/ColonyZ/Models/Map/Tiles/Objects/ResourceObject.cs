@@ -18,5 +18,10 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         {
             return !_tile.HasObject;
         }
+
+        public override bool ConnectsWith(TileObject _other)
+        {
+            return string.CompareOrdinal(_other.ObjectName, ObjectName) == 0;
+        }
     }
 }
