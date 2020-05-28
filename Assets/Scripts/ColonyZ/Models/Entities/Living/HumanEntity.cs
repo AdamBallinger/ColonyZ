@@ -40,15 +40,6 @@ namespace ColonyZ.Models.Entities.Living
 
             if (!HasJob) return;
 
-            // Check if the working tile for the job became unreachable due to another job being completed.
-            // A working tile would have a null area if the tile has an object built on it.
-            // if (CurrentJob.WorkingTile.Area == null
-            //     || !CurrentJob.WorkingTile.Area.HasConnection(CurrentTile.Area))
-            // {
-            //     JobManager.Instance.NotifyActiveJobInvalid(CurrentJob);
-            //     return;
-            // }
-
             if (!Motor.Working ||
                 CurrentJob.WorkingTile.GetEnterability() == TileEnterability.None)
             {
