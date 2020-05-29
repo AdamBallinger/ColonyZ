@@ -7043,6 +7043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData:
+  - {fileID: 11400000, guid: 98b82e5325bc88d4d81ad0370c4675df, type: 2}
   - {fileID: 11400000, guid: ce3c8807adfaab3438ae35e2e0ebe3d4, type: 2}
   objectData:
   - {fileID: 11400000, guid: e399c29c4324be54f87f93cf3b8c3d89, type: 2}
@@ -7059,6 +7060,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f282d678156fac24fa85e1a89f79b2c7, type: 2}
   - {fileID: 11400000, guid: 9f6d9e8b531d4e5418b03508d0febb0a, type: 2}
   - {fileID: 11400000, guid: 73f54200bbe129d4a81129890d0df55a, type: 2}
+  - {fileID: 11400000, guid: c71a80e2a5aff9b4696dcdff2430abb7, type: 2}
   - {fileID: 11400000, guid: 9abb6574cc538474fbf044e87176c243, type: 2}
   - {fileID: 11400000, guid: b6ef022f09ea6fb45a763b84c085c167, type: 2}
   - {fileID: 11400000, guid: ecfda6801bf6a4f43a48ceed825cdb1f, type: 2}

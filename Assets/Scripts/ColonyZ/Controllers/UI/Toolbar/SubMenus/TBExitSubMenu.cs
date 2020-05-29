@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ColonyZ.Models.Sprites;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
@@ -7,8 +8,8 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
     {
         protected override void OnEnabled()
         {
-            AddItem("Menu", null, () => SceneManager.LoadScene("_menu_"));
-            AddItem("Desktop", null, Application.Quit);
+            AddItem("Menu", SpriteCache.GetSprite("UI", 0), () => SceneManager.LoadScene("_menu_"));
+            AddItem("Desktop", SpriteCache.GetSprite("UI", 1), Application.Quit);
         }
     }
 }
