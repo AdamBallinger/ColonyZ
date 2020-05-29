@@ -12,7 +12,7 @@ namespace ColonyZ.Models.Sprites
         public static Sprite GetSprite(string _spriteGroup, int _groupIndex)
         {
             if (spriteCache.ContainsKey(_spriteGroup))
-                if (spriteCache[_spriteGroup].Count >= _groupIndex - 1)
+                if (spriteCache[_spriteGroup].Count > _groupIndex)
                     return spriteCache[_spriteGroup][_groupIndex];
 
             return null;
