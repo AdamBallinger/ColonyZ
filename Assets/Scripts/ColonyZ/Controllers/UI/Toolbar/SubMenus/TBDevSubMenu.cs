@@ -1,4 +1,5 @@
 ﻿using ColonyZ.Controllers.Dev;
+using ColonyZ.Models.Sprites;
 
 namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
 {
@@ -6,15 +7,21 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
     {
         protected override void OnEnabled()
         {
-            AddItem("Tile Nodes", null, () => DevToolManager.Instance.ToggleTileNodes());
-            AddItem("Item Spawner", null, () => DevToolManager.Instance.ToggleItemTool());
-            AddItem("Path Debug", null, () => DevToolManager.Instance.TogglePathDebug());
-            AddItem("Jobs Info", null, () => DevToolManager.Instance.ToggleJobsInfo());
-            AddItem("God Mode", null, () =>
-                MouseController.Instance.BuildModeController.GodMode =
+            AddItem("Tile Nodes", SpriteCache.GetSprite("UI", 2),
+                () => DevToolManager.Instance.ToggleTileNodes());
+            AddItem("Path Debug", SpriteCache.GetSprite("UI", 3),
+                () => DevToolManager.Instance.TogglePathDebug());
+            AddItem("Areas Debug", SpriteCache.GetSprite("UI", 4),
+                () => DevToolManager.Instance.ToggleAreasDebug());
+            AddItem("Regions Debug", SpriteCache.GetSprite("UI", 5),
+                () => DevToolManager.Instance.ToggleRegionsDebug());
+            AddItem("Jobs Info", SpriteCache.GetSprite("UI", 6),
+                () => DevToolManager.Instance.ToggleJobsInfo());
+            AddItem("Item Spawner", SpriteCache.GetSprite("UI", 7),
+                () => DevToolManager.Instance.ToggleItemTool());
+            AddItem("God Mode", SpriteCache.GetSprite("UI", 8),
+                () => MouseController.Instance.BuildModeController.GodMode =
                     !MouseController.Instance.BuildModeController.GodMode);
-            AddItem("Areas Debug", null, () => DevToolManager.Instance.ToggleAreasDebug());
-            AddItem("Regions Debug", null, () => DevToolManager.Instance.ToggleRegionsDebug());
         }
 
         protected override void OnDisabled()
