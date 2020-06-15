@@ -88,7 +88,7 @@ namespace ColonyZ.Models.AI
 
             if (dir.x == -1.0f) MotorDirection = AIMotorDirection.Left;
             else if (dir.x == 1.0f) MotorDirection = AIMotorDirection.Right;
-            else if (dir.y == 1.0f) MotorDirection = AIMotorDirection.Up;
+            else if (dir.y > 0.0f) MotorDirection = AIMotorDirection.Up;
             else MotorDirection = AIMotorDirection.Down;
 
             // The rate in which we move the entity this frame.
