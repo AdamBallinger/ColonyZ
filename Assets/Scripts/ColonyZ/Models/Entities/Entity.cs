@@ -9,15 +9,10 @@ namespace ColonyZ.Models.Entities
 {
     public abstract class Entity : ISelectable, ISaveable
     {
-        /// <summary>
-        ///     Precise X coordinate of entity.
-        /// </summary>
-        public float X => CurrentTile.X + TileOffset.x;
+        public Vector2 Position { get; protected set; }
 
-        /// <summary>
-        ///     Precise Y coordinate of entity.
-        /// </summary>
-        public float Y => CurrentTile.Y + TileOffset.y;
+        public float X => Position.x;
+        public float Y => Position.y;
 
         /// <summary>
         ///     Entity's name.
@@ -25,16 +20,14 @@ namespace ColonyZ.Models.Entities
         public string Name { get; set; }
 
         /// <summary>
-        ///     The current tile the pivot of the entity is placed within.
+        ///     The current tile the entity is on.
         /// </summary>
-        public Tile CurrentTile { get; set; }
-
-        public Vector2 TileOffset { get; set; }
+        public Tile CurrentTile => World.Instance.GetTileAt(Position + Vector2.one * 0.5f);
 
         protected Entity(Tile _tile)
         {
-            CurrentTile = _tile;
-            TileOffset = Vector2.zero;
+            if (_tile == null) return;
+            Position = _tile.Position;
         }
 
         public abstract Sprite GetSelectionIcon();
@@ -49,9 +42,30 @@ namespace ColonyZ.Models.Entities
             return $"Position: ({X:0.#}, {Y:0.#})\n";
         }
 
+        public virtual void SetPosition(Vector2 _pos)
+        {
+            var tileAtPos = World.Instance.GetTileAt(_pos);
+            if (tileAtPos == null)
+            {
+                Debug.LogWarning("Attempt to set entity position to invalid value.");
+                return;
+            }
+
+            if (tileAtPos != CurrentTile)
+            {
+                OnEnterNewTile(tileAtPos);
+            }
+
+            Position = _pos;
+        }
+
+        protected virtual void OnEnterNewTile(Tile _tile)
+        {
+        }
+
         public Vector2 GetPosition()
         {
-            return new Vector2(X, Y);
+            return CurrentTile.Position;
         }
 
         public virtual int GetSortingOrder()
@@ -75,7 +89,7 @@ namespace ColonyZ.Models.Entities
         public virtual void OnLoad(JToken _dataToken)
         {
             var tileIndex = _dataToken["t_index"].Value<int>();
-            CurrentTile = World.Instance.GetTileAt(tileIndex);
+            Position = World.Instance.GetTileAt(tileIndex).Position;
         }
     }
 }

@@ -9,6 +9,7 @@ using ColonyZ.Models.Sprites;
 using EzPool;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 namespace ColonyZ.Controllers
 {
@@ -66,7 +67,7 @@ namespace ColonyZ.Controllers
         /// <summary>
         ///     Event fired when the mouse is clicked. Passes tile clicked on and if the cursor was over UI.
         /// </summary>
-        public event Action<Tile, bool> mouseClickEvent;
+        public event Action<MouseButton, Tile, bool> mouseClickEvent;
 
         /// <summary>
         ///     Event called when the mouse moves over a new tile. Passes new tile and if mouse is over UI.
@@ -105,7 +106,12 @@ namespace ColonyZ.Controllers
 
             if (currentMouseTile != lastFrameTile) mouseTileChangeEvent?.Invoke(currentMouseTile, IsMouseOverUI);
 
-            if (Input.GetMouseButtonDown(0)) mouseClickEvent?.Invoke(currentMouseTile, IsMouseOverUI);
+            if (Input.GetMouseButtonDown(0))
+                mouseClickEvent?.Invoke(MouseButton.LeftMouse, currentMouseTile, IsMouseOverUI);
+            if (Input.GetMouseButtonDown(1))
+                mouseClickEvent?.Invoke(MouseButton.RightMouse, currentMouseTile, IsMouseOverUI);
+            if (Input.GetMouseButtonDown(2))
+                mouseClickEvent?.Invoke(MouseButton.MiddleMouse, currentMouseTile, IsMouseOverUI);
 
             if (!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
             {

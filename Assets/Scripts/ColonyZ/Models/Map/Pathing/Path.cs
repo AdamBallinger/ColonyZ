@@ -5,6 +5,7 @@ namespace ColonyZ.Models.Map.Pathing
 {
     public class Path
     {
+        // https://pastebin.com/vMe9464D
         private int currentIndex;
 
         public bool IsValid { get; private set; }
@@ -16,12 +17,14 @@ namespace ColonyZ.Models.Map.Pathing
 
         public int Size => TilePath.Count;
 
-        public Tile CurrentTile => currentIndex < Size ? TilePath?[currentIndex] : null;
+        public Tile CurrentTile => TilePath[currentIndex];
 
         /// <summary>
-        ///     The list of remaining tiles in the path.
+        ///     The list of tiles in the path.
         /// </summary>
         public List<Tile> TilePath { get; }
+
+        public bool LastTile => currentIndex == Size - 1;
 
         private List<Node> Nodes { get; }
 
@@ -41,8 +44,6 @@ namespace ColonyZ.Models.Map.Pathing
                     node.Paths.Add(this);
                     TilePath.Add(World.Instance.GetTileAt(node.X, node.Y));
                 }
-
-                Next();
             }
         }
 

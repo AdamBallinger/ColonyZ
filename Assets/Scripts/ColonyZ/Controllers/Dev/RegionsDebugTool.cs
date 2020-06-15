@@ -4,6 +4,7 @@ using ColonyZ.Models.Map.Tiles;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 namespace ColonyZ.Controllers.Dev
 {
@@ -37,8 +38,9 @@ namespace ColonyZ.Controllers.Dev
         {
             GenerateTileMesh();
 
-            MouseController.Instance.mouseClickEvent += (t, ui) =>
+            MouseController.Instance.mouseClickEvent += (btn, t, ui) =>
             {
+                if (btn != MouseButton.LeftMouse) return;
                 selectedTile = ui || MouseController.Instance.Mode == MouseMode.Process ? selectedTile : t;
                 UpdateOverlay(selectedTile?.Region, ui);
             };

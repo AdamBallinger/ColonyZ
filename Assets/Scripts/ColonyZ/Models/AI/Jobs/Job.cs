@@ -62,7 +62,7 @@ namespace ColonyZ.Models.AI.Jobs
 
             if (AssignedEntity == null) return;
 
-            if (AssignedEntity.CurrentTile == WorkingTile && TargetTile.LivingEntities.Count == 0)
+            if (AssignedEntity.Position == WorkingTile.Position && TargetTile.LivingEntities.Count == 0)
                 Progress += TimeManager.Instance.DeltaTime;
         }
 

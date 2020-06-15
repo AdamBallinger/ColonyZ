@@ -24,7 +24,7 @@ namespace ColonyZ.Models.Entities.Living
             previousJobCardinal = GetCurrentJobCardinal();
 
             CurrentJob = _job;
-            Motor.Stop();
+            Motor.FinishPath();
             return true;
         }
 

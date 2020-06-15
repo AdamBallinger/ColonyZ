@@ -10,7 +10,7 @@ namespace ColonyZ.Models.Entities.Living
 {
     public class LivingEntity : Entity
     {
-        public float MovementSpeed { get; set; }
+        public float MovementSpeed { get; }
 
         public AIMotor Motor { get; }
 
@@ -37,6 +37,12 @@ namespace ColonyZ.Models.Entities.Living
         public override void Update()
         {
             Motor.Update();
+        }
+
+        protected override void OnEnterNewTile(Tile _tile)
+        {
+            CurrentTile.LivingEntities.Remove(this);
+            _tile.LivingEntities.Add(this);
         }
 
         /// <summary>

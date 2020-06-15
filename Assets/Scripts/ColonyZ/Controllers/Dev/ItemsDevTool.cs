@@ -3,6 +3,7 @@ using ColonyZ.Models.Items;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ColonyZ.Controllers.Dev
 {
@@ -31,8 +32,10 @@ namespace ColonyZ.Controllers.Dev
             panelRoot.SetActive(!panelRoot.activeSelf);
         }
 
-        private void MouseClick(Tile _tile, bool _overUI)
+        private void MouseClick(MouseButton _btn, Tile _tile, bool _overUI)
         {
+            if (_btn != MouseButton.LeftMouse) return;
+
             if (panelRoot.activeSelf && !_overUI && SelectedItemSpawner != null)
                 World.Instance.SpawnItem(SelectedItemSpawner.Item, SelectedItemSpawner.Quantity, _tile);
         }

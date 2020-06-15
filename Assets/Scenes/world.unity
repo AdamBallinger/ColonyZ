@@ -8923,17 +8923,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataLoader: {fileID: 1523355955}
   shouldSaveLoad: 1
-  initialCharacterCount: 4
+  initialCharacterCount: 1
   treeSpawnChance: 8
   itemEntityPrefab: {fileID: 4256605384353934779, guid: cf0a6cd49092b8d4cbe1a2441751f071,
     type: 3}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   worldSize:
-    <Name>k__BackingField: Small
-    <Width>k__BackingField: 96
-    <Height>k__BackingField: 96
-  overrideSeed: 0
+    <Name>k__BackingField: Mini
+    <Width>k__BackingField: 16
+    <Height>k__BackingField: 16
+  overrideSeed: 1
   seed: 42736
   octaves: 4
   persistance: 0.5

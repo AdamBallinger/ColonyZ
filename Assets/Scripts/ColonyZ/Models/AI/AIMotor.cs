@@ -9,23 +9,10 @@ namespace ColonyZ.Models.AI
 {
     public class AIMotor
     {
-        private const float ADJACENT_DISTANCE = 1.0f;
-        private const float DIAGONAL_DISTANCE = 1.414214f;
-
-        /// <summary>
-        ///     Stores the distance between the entities current tile and the next tile in the path.
-        /// </summary>
-        private float distance;
-
         /// <summary>
         ///     The path the motor is currently navigating.
         /// </summary>
-        private Path path;
-
-        /// <summary>
-        ///     Ranging from 0 to 1, the percentage progress of the movement from the current tile to the next tile in the path.
-        /// </summary>
-        private float travelProgress;
+        public Path path;
 
         /// <summary>
         ///     Determines if the motor is currently moving the entity, or waiting for a path to be returned by the Path finder.
@@ -33,18 +20,14 @@ namespace ColonyZ.Models.AI
         public bool Working { get; private set; }
 
         /// <summary>
-        ///     The directional index that the motor is currently moving in.
-        ///     0 - Moving Down / Not moving
-        ///     1 - Moving Right
-        ///     2 - Moving Left
-        ///     3 - Moving Up
+        ///     The direction that the motor is currently moving in.
         /// </summary>
-        public int DirectionIndex { get; private set; }
+        public AIMotorDirection MotorDirection { get; private set; }
 
         /// <summary>
         ///     The tile the motor is moving the entity towards.
         /// </summary>
-        public Tile TargetTile { get; private set; }
+        private Tile TargetTile { get; set; }
 
         private LivingEntity Entity { get; }
 
@@ -60,21 +43,11 @@ namespace ColonyZ.Models.AI
         /// <param name="_tile"></param>
         public void SetTargetTile(Tile _tile)
         {
-            Stop();
-
-            // Don't try move to the same tile the entity is currently on.
-            if (Entity.CurrentTile.Position == _tile.Position) return;
+            FinishPath();
 
             if (_tile.GetEnterability() == TileEnterability.None) return;
 
-            // If the entities current area has no connection to the targets room,
-            // then we already know there's no valid path.
-            //if (Entity.CurrentTile.Area != null && !Entity.CurrentTile.Area.HasConnection(_tile.Area))
-            //{
-            //    return;
-            //}
-
-            // Same as above but temp until area system works better.
+            // TODO: Change back to area system when area detection is faster.
             if (!RegionReachabilityChecker.CanReachRegion(Entity.CurrentTile.Region, _tile.Region))
                 return;
 
@@ -83,15 +56,10 @@ namespace ColonyZ.Models.AI
             PathFinder.NewRequest(Entity.CurrentTile, TargetTile, OnPathReceived);
         }
 
-        public void Stop()
-        {
-            // TODO: Find a way to end a path without breaking the motor or causing the entity to teleport because of the tile offset.
-            FinishPath();
-        }
-
         public void Update()
         {
-            if (path == null) return;
+            if (path == null)
+                return;
 
             if (!path.IsValid)
             {
@@ -101,47 +69,33 @@ namespace ColonyZ.Models.AI
                 return;
             }
 
-            var pathX = path.CurrentTile.X;
-            var pathY = path.CurrentTile.Y;
-            var entityX = Entity.CurrentTile.X;
-            var entityY = Entity.CurrentTile.Y;
+            var dist = Vector2.Distance(Entity.Position, path.CurrentTile.Position);
+            var dt = TimeManager.Instance.DeltaTime;
+            var dir = (path.CurrentTile.Position - Entity.Position).normalized;
 
-            if (pathY < entityY) // Moving down
-                DirectionIndex = pathX == entityX ? 0 : pathX > entityX ? 1 : 2;
-            else if (pathY > entityY) // Moving up
-                DirectionIndex = pathX == entityX ? 3 : pathX > entityX ? 1 : 2;
-            else // Moving directly left / right
-                DirectionIndex = pathX < entityX ? 2 : 1;
-
-            // The amount the entity will move this frame.
-            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier *
-                                TimeManager.Instance.DeltaTime;
-            var travelPercentageThisFrame = movementDelta / distance;
-            travelProgress += travelPercentageThisFrame;
-
-            if (travelProgress >= 1.0f)
+            if (dist <= 0.0f)
             {
-                Entity.CurrentTile.LivingEntities.Remove(Entity);
-                Entity.CurrentTile = path.CurrentTile;
-                Entity.CurrentTile.LivingEntities.Add(Entity);
-                path.Next();
-
-                // Check if at the end of the path.
-                if (path.CurrentTile == null)
+                // If the tile we were pathing to was the last tile in the path.
+                if (path.LastTile)
                 {
                     FinishPath();
                     return;
                 }
 
-                distance = GetDistance();
-
-                var overlap = Mathf.Clamp01(travelProgress - 1.0f);
-                travelProgress = overlap;
-
-                // TODO: only set travel progress to overlap if the next tile in the path is actually pathable. Otherwise path ends.
+                path.Next();
+                return;
             }
 
-            Entity.TileOffset = (path.CurrentTile.Position - Entity.CurrentTile.Position) * travelProgress;
+            if (dir.x == -1.0f) MotorDirection = AIMotorDirection.Left;
+            else if (dir.x == 1.0f) MotorDirection = AIMotorDirection.Right;
+            else if (dir.y == 1.0f) MotorDirection = AIMotorDirection.Up;
+            else MotorDirection = AIMotorDirection.Down;
+
+            // The rate in which we move the entity this frame.
+            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * dt;
+
+            var position = Vector2.MoveTowards(Entity.Position, Entity.Position + dir * dist, movementDelta);
+            Entity.SetPosition(position);
         }
 
         private void OnPathReceived(Path _path)
@@ -150,9 +104,6 @@ namespace ColonyZ.Models.AI
             {
                 Working = true;
                 path = _path;
-                // Get the distance between the entities current tile and the next tile in the path.
-                distance = GetDistance();
-                travelProgress = 0.0f;
             }
             else
             {
@@ -161,22 +112,11 @@ namespace ColonyZ.Models.AI
             }
         }
 
-        private void FinishPath()
+        public void FinishPath()
         {
             Working = false;
             path = null;
-            travelProgress = 0.0f;
-            distance = 0.0f;
-            Entity.TileOffset = Vector2.zero;
-            DirectionIndex = 0;
-        }
-
-        private float GetDistance()
-        {
-            if (Entity.CurrentTile.X == path.CurrentTile.X || Entity.CurrentTile.Y == path.CurrentTile.Y)
-                return ADJACENT_DISTANCE;
-
-            return DIAGONAL_DISTANCE;
+            MotorDirection = 0;
         }
     }
 }

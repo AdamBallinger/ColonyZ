@@ -1,8 +1,11 @@
-﻿using ColonyZ.Models.Map;
+﻿using ColonyZ.Controllers.UI;
+using ColonyZ.Models.Entities.Living;
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ColonyZ.Controllers.Dev
 {
@@ -19,7 +22,10 @@ namespace ColonyZ.Controllers.Dev
 
         private void Start()
         {
-            MouseController.Instance.mouseClickEvent += MouseClick;
+            MouseController.Instance.mouseClickEvent += (_btn, _tile, _ui) =>
+            {
+                if (_btn == MouseButton.RightMouse) MouseClick(_tile, _ui);
+            };
             lineRenderer.startWidth = 1.0f;
             lineRenderer.endWidth = 1.0f;
             lineRenderer.widthMultiplier = 0.2f;
@@ -88,7 +94,7 @@ namespace ColonyZ.Controllers.Dev
 
         private void OnPath(Path _p)
         {
-            if (!_p.IsValid)
+            if (_p == null || !_p.IsValid)
             {
                 pathTestText.text = "Invalid path.";
                 lineRenderer.positionCount = 0;
@@ -110,6 +116,23 @@ namespace ColonyZ.Controllers.Dev
             }
 
             lineRenderer.SetPositions(vectors);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (SelectionController.currentSelection is LivingEntity)
+            {
+                var le = SelectionController.currentSelection as LivingEntity;
+                OnPath(le?.Motor.path);
+
+                if (le?.Motor?.path == null) return;
+
+                var current = le.Motor.path.CurrentTile.Position;
+                Gizmos.color = Color.blue;
+                Gizmos.DrawCube(current, Vector2.one * 0.35f);
+                Gizmos.color = Color.red;
+                Gizmos.DrawCube(le.CurrentTile.Position, Vector2.one * 0.15f);
+            }
         }
     }
 }
