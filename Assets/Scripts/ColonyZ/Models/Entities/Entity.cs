@@ -22,7 +22,7 @@ namespace ColonyZ.Models.Entities
         /// <summary>
         ///     The current tile the entity is on.
         /// </summary>
-        public Tile CurrentTile => World.Instance.GetTileAt(Position + Vector2.one * 0.5f);
+        public Tile CurrentTile => World.Instance.GetTileAt(Position);
 
         protected Entity(Tile _tile)
         {

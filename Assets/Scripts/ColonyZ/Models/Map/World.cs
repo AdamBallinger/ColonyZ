@@ -142,6 +142,7 @@ namespace ColonyZ.Models.Map
         /// <returns></returns>
         public Tile GetTileAt(Vector2 _pos)
         {
+            _pos += Vector2.one * 0.5f;
             return GetTileAt(Mathf.FloorToInt(_pos.x), Mathf.FloorToInt(_pos.y));
         }
 

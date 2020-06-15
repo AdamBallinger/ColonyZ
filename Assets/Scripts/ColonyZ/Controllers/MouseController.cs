@@ -377,10 +377,7 @@ namespace ColonyZ.Controllers
 
         private Tile GetTileUnderMouse()
         {
-            var pos = currentMousePosition;
-            pos.x += 0.5f;
-            pos.y += 0.5f;
-            return World.Instance.GetTileAt(pos);
+            return World.Instance.GetTileAt(currentMousePosition);
         }
     }
 
