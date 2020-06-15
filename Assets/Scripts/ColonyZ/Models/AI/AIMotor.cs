@@ -46,6 +46,7 @@ namespace ColonyZ.Models.AI
             FinishPath();
 
             if (_tile.GetEnterability() == TileEnterability.None) return;
+            if (Entity.Position == _tile.Position) return;
 
             // TODO: Change back to area system when area detection is faster.
             if (!RegionReachabilityChecker.CanReachRegion(Entity.CurrentTile.Region, _tile.Region))
