@@ -74,9 +74,13 @@ namespace ColonyZ.Models.AI
             var dt = TimeManager.Instance.DeltaTime;
             var dir = (path.CurrentTile.Position - Entity.Position).normalized;
 
-            if (dist <= 0.0f)
+            // Allow small tolerance for floating point precision.
+            if (dist <= 0.0001f)
             {
-                // If the tile we were pathing to was the last tile in the path.
+                // Set the entity position to make sure it is not off by a small value due to precision issues.
+                Entity.SetPosition(path.CurrentTile.Position);
+
+                // If the tile we were pathing to was the last tile in the path, then the path is finished.
                 if (path.LastTile)
                 {
                     FinishPath();
@@ -117,7 +121,7 @@ namespace ColonyZ.Models.AI
         {
             Working = false;
             path = null;
-            MotorDirection = 0;
+            //MotorDirection = 0;
         }
     }
 }
