@@ -272,7 +272,7 @@ namespace ColonyZ.Models.AI.Jobs
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
 
                 // Make tiles that have a job assigned appear more expensive.
-                if (tile.CurrentJob != null) dist += 1000.0f;
+                if (tile.CurrentJob != null) dist += 10000.0f;
 
                 if (dist < closestDist)
                 {

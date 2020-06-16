@@ -52,7 +52,6 @@ namespace ColonyZ.Models.AI.Jobs
         protected Job(Tile _targetTile)
         {
             TargetTile = _targetTile;
-            WorkingTile = _targetTile;
             WorkTime = 1.0f;
         }
 
