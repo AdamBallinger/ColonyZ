@@ -39,7 +39,7 @@ namespace ColonyZ.Models.Entities.Living
             Motor.Update();
         }
 
-        protected override void OnEnterNewTile(Tile _tile)
+        protected override void OnTileChanged(Tile _tile)
         {
             CurrentTile.LivingEntities.Remove(this);
             _tile.LivingEntities.Add(this);

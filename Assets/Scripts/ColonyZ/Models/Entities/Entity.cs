@@ -9,7 +9,7 @@ namespace ColonyZ.Models.Entities
 {
     public abstract class Entity : ISelectable, ISaveable
     {
-        public Vector2 Position { get; protected set; }
+        public Vector2 Position { get; private set; }
 
         public float X => Position.x;
         public float Y => Position.y;
@@ -53,13 +53,17 @@ namespace ColonyZ.Models.Entities
 
             if (tileAtPos != CurrentTile)
             {
-                OnEnterNewTile(tileAtPos);
+                OnTileChanged(tileAtPos);
             }
 
             Position = _pos;
         }
 
-        protected virtual void OnEnterNewTile(Tile _tile)
+        /// <summary>
+        /// Event called when the tile the entity is on changes.
+        /// </summary>
+        /// <param name="_tile"></param>
+        protected virtual void OnTileChanged(Tile _tile)
         {
         }
 
