@@ -123,13 +123,21 @@ namespace ColonyZ.Controllers.Dev
             if (SelectionController.currentSelection is LivingEntity)
             {
                 var le = SelectionController.currentSelection as LivingEntity;
-                OnPath(le?.Motor.path);
+                if (le?.Motor.path == null || le.Motor.path.IsValid == false) return;
 
-                if (le?.Motor?.path == null) return;
+                OnPath(le.Motor.path);
 
                 var current = le.Motor.path.CurrentTile.Position;
+
+                // Display where the path started.
+                Gizmos.color = Color.green;
+                Gizmos.DrawCube(le.Motor.path.TilePath[0].Position, Vector2.one * 0.5f);
+
+                // Display where the motor is heading.
                 Gizmos.color = Color.blue;
                 Gizmos.DrawCube(current, Vector2.one * 0.35f);
+
+                // Display the tile the entity is currently considered on.
                 Gizmos.color = Color.red;
                 Gizmos.DrawCube(le.CurrentTile.Position, Vector2.one * 0.15f);
             }
