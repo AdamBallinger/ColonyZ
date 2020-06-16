@@ -17,9 +17,9 @@ namespace ColonyZ.Models.Entities.Living
         /// <summary>
         /// Time in seconds between being able to check if a new working tile is available when cardinal direction changes.
         /// </summary>
-        private const float CARDINAL_CHECK_TIMER = 2.0f;
+        private const float CARDINAL_CHECK_TIMER = 1.0f;
 
-        private float currentCardinalCheckTime = 0.0f;
+        private float currentCardinalCheckTime;
 
         public HumanEntity(Tile _tile) : base(_tile)
         {
@@ -56,7 +56,9 @@ namespace ColonyZ.Models.Entities.Living
             }
 
             var currentJobCardinal = GetCurrentJobCardinal();
-            if (currentJobCardinal != previousJobCardinal && currentCardinalCheckTime >= CARDINAL_CHECK_TIMER)
+            if (currentJobCardinal != previousJobCardinal
+                && currentCardinalCheckTime >= CARDINAL_CHECK_TIMER
+                && CurrentTile != CurrentJob.WorkingTile)
             {
                 currentCardinalCheckTime = 0.0f;
                 // If a new closest tile is found for the job, switch to it.
