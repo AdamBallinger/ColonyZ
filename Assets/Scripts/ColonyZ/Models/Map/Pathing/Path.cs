@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ColonyZ.Models.Map.Tiles;
+using UnityEngine;
 
 namespace ColonyZ.Models.Map.Pathing
 {
@@ -15,22 +16,24 @@ namespace ColonyZ.Models.Map.Pathing
         /// </summary>
         public float ComputeTime { get; }
 
-        public int Size => TilePath.Count;
+        public List<Vector2> VectorPath { get; }
 
-        public Tile CurrentTile => TilePath[currentIndex];
+        public Vector2 Current => VectorPath[currentIndex];
+
+        public int Size => VectorPath.Count;
+
+        public bool IsLastPoint => currentIndex == Size - 1;
 
         /// <summary>
         ///     The list of tiles in the path.
         /// </summary>
-        public List<Tile> TilePath { get; }
-
-        public bool LastTile => currentIndex == Size - 1;
+        private List<Tile> TilePath { get; }
 
         private List<Node> Nodes { get; }
 
         public Path(List<Node> _nodePath, bool _isValid, float _computeTime)
         {
-            TilePath = new List<Tile>();
+            VectorPath = new List<Vector2>();
             IsValid = _isValid;
             ComputeTime = _computeTime;
             currentIndex = 0;
@@ -42,8 +45,10 @@ namespace ColonyZ.Models.Map.Pathing
                 foreach (var node in _nodePath)
                 {
                     node.Paths.Add(this);
-                    TilePath.Add(World.Instance.GetTileAt(node.X, node.Y));
+                    VectorPath.Add(new Vector2(node.X, node.Y));
                 }
+
+                // TODO: Smooth vector path using Catmullrom.
             }
         }
 

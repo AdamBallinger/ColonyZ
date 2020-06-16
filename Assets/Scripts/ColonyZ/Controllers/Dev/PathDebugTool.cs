@@ -102,15 +102,15 @@ namespace ColonyZ.Controllers.Dev
             }
 
             pathTestText.text = $"Compute time: {_p.ComputeTime}ms\n" +
-                                $"Path length: {_p.TilePath.Count}";
+                                $"Path length: {_p.Size}";
 
-            lineRenderer.positionCount = _p.TilePath.Count;
+            lineRenderer.positionCount = _p.Size;
 
-            var vectors = new Vector3[_p.TilePath.Count];
+            var vectors = new Vector3[_p.Size];
 
-            for (var i = 0; i < _p.TilePath.Count; i++)
+            for (var i = 0; i < _p.Size; i++)
             {
-                Vector3 pos = _p.TilePath[i].Position;
+                Vector3 pos = _p.VectorPath[i];
                 pos.z = 0.0f;
                 vectors[i] = pos;
             }
@@ -127,11 +127,11 @@ namespace ColonyZ.Controllers.Dev
 
                 OnPath(le.Motor.path);
 
-                var current = le.Motor.path.CurrentTile.Position;
+                var current = le.Motor.path.Current;
 
                 // Display where the path started.
                 Gizmos.color = Color.green;
-                Gizmos.DrawCube(le.Motor.path.TilePath[0].Position, Vector2.one * 0.5f);
+                Gizmos.DrawCube(le.Motor.path.VectorPath[0], Vector2.one * 0.5f);
 
                 // Display where the motor is heading.
                 Gizmos.color = Color.blue;

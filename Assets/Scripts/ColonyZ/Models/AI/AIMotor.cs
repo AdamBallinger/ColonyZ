@@ -70,18 +70,18 @@ namespace ColonyZ.Models.AI
                 return;
             }
 
-            var dist = Vector2.Distance(Entity.Position, path.CurrentTile.Position);
+            var dist = Vector2.Distance(Entity.Position, path.Current);
             var dt = TimeManager.Instance.DeltaTime;
-            var dir = (path.CurrentTile.Position - Entity.Position).normalized;
+            var dir = (path.Current - Entity.Position).normalized;
 
             // Allow small tolerance for floating point precision.
             if (dist <= 0.0001f)
             {
                 // Set the entity position to make sure it is not off by a small value due to precision issues.
-                Entity.SetPosition(path.CurrentTile.Position);
+                Entity.SetPosition(path.Current);
 
                 // If the tile we were pathing to was the last tile in the path, then the path is finished.
-                if (path.LastTile)
+                if (path.IsLastPoint)
                 {
                     FinishPath();
                     return;
@@ -97,7 +97,7 @@ namespace ColonyZ.Models.AI
             else MotorDirection = AIMotorDirection.Down;
 
             // The rate in which we move the entity this frame.
-            var movementDelta = Entity.MovementSpeed * path.CurrentTile.TileDefinition.MovementModifier * dt;
+            var movementDelta = Entity.MovementSpeed * Entity.CurrentTile.TileDefinition.MovementModifier * dt;
 
             var position = Vector2.MoveTowards(Entity.Position, Entity.Position + dir * dist, movementDelta);
             Entity.SetPosition(position);
