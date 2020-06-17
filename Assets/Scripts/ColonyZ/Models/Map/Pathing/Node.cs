@@ -72,6 +72,16 @@ namespace ColonyZ.Models.Map.Pathing
             return _pathable == other._pathable && ID == other.ID && X == other.X && Y == other.Y;
         }
 
+        public void InvalidatePaths()
+        {
+            foreach (var path in Paths)
+            {
+                path.Invalidate();
+            }
+
+            Paths.Clear();
+        }
+
         /// <summary>
         ///     Updates the neighbours list for this Node.
         /// </summary>
