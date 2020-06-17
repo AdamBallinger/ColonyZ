@@ -222,6 +222,9 @@ namespace ColonyZ.Models.Map.Pathing
                 _lastNode = _parents[_lastNode.ID];
             }
 
+            if (list.Count > 1)
+                list.RemoveAt(list.Count - 1);
+
             list.Reverse();
 
             return list;
