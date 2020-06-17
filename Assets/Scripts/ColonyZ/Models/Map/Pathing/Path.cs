@@ -72,7 +72,8 @@ namespace ColonyZ.Models.Map.Pathing
                 }
 
                 // Remove the tiny curve generated at the end of a path.
-                SmoothPath.RemoveRange(SmoothSize - (NUMBER_OF_SMOOTHING_POINTS + 1), NUMBER_OF_SMOOTHING_POINTS);
+                if (SmoothSize > NUMBER_OF_SMOOTHING_POINTS)
+                    SmoothPath.RemoveRange(SmoothSize - (NUMBER_OF_SMOOTHING_POINTS + 1), NUMBER_OF_SMOOTHING_POINTS);
             }
         }
 
