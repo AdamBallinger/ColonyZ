@@ -17,16 +17,21 @@ namespace ColonyZ.Models.Map.Pathing
         /// </summary>
         public float ComputeTime { get; }
 
+        /// <summary>
+        /// Current point in the path being targeted.
+        /// </summary>
+        public int CurrentIndex { get; private set; }
+
         public List<Vector2> SmoothPath { get; }
 
         /// <summary>
         /// The current point the path is targeting.
         /// </summary>
-        public Vector2 Current => VectorPath[currentIndex];
+        public Vector2 Current => SmoothPath[CurrentIndex];
 
         public int SmoothSize => SmoothPath.Count;
 
-        public bool IsLastPoint => currentIndex == Size - 1;
+        public bool IsLastPoint => CurrentIndex >= SmoothSize - 1;
 
         private int Size => VectorPath.Count;
 
@@ -34,15 +39,13 @@ namespace ColonyZ.Models.Map.Pathing
 
         private List<Vector2> VectorPath { get; }
 
-        private int currentIndex;
-
         public Path(List<Node> _nodePath, bool _isValid, float _computeTime)
         {
             SmoothPath = new List<Vector2>();
             VectorPath = new List<Vector2>();
             IsValid = _isValid;
             ComputeTime = _computeTime;
-            currentIndex = 0;
+            CurrentIndex = 0;
 
             if (IsValid)
             {
@@ -58,11 +61,17 @@ namespace ColonyZ.Models.Map.Pathing
 
                 for (var i = 0; i < Size; i++)
                 {
+                    // Don't create any smoothing points at the end of the path.
+                    if (i == Size - 1)
+                    {
+                        SmoothPath.Add(VectorPath[i]);
+                        break;
+                    }
+
                     var p0 = GetPointAt(i - 1);
                     var p1 = GetPointAt(i);
                     var p2 = GetPointAt(i + 1);
                     var p3 = GetPointAt(i + 2);
-
 
                     for (var t = 0.0f; t < 1.0f; t += resolution)
                     {
@@ -70,21 +79,17 @@ namespace ColonyZ.Models.Map.Pathing
                         SmoothPath.Add(pos);
                     }
                 }
-
-                // Remove the tiny curve generated at the end of a path.
-                if (SmoothSize > NUMBER_OF_SMOOTHING_POINTS)
-                    SmoothPath.RemoveRange(SmoothSize - (NUMBER_OF_SMOOTHING_POINTS + 1), NUMBER_OF_SMOOTHING_POINTS);
             }
         }
 
         public void Next()
         {
-            if (currentIndex % NUMBER_OF_SMOOTHING_POINTS == 0)
+            if (CurrentIndex % NUMBER_OF_SMOOTHING_POINTS == 0)
             {
-                Nodes[currentIndex / NUMBER_OF_SMOOTHING_POINTS].Paths.Remove(this);
+                Nodes[CurrentIndex / NUMBER_OF_SMOOTHING_POINTS].Paths.Remove(this);
             }
 
-            currentIndex++;
+            CurrentIndex++;
         }
 
         public void Invalidate()
