@@ -83,6 +83,9 @@ namespace ColonyZ.Models.Entities.Living
 
             if (closestTile != null)
             {
+                // If the current working tile is the closest then do nothing.
+                if (closestTile == CurrentJob.WorkingTile) return;
+
                 CurrentJob.WorkingTile = closestTile;
                 Motor.SetTargetTile(CurrentJob.WorkingTile);
             }
