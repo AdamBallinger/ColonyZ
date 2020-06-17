@@ -68,8 +68,7 @@ namespace ColonyZ.Models.Map.Pathing
 
             var task = await Task.WhenAny(taskList.ToArray());
             taskList.Remove(task);
-            var result = task.Result;
-            result.InvokeCallback();
+            task.Result.InvokeCallback();
         }
 
         /// <summary>

@@ -50,7 +50,8 @@ namespace ColonyZ.Models.AI
             if (Entity.Position == _tile.Position) return;
 
             // TODO: Change back to area system when area detection is faster.
-            if (!RegionReachabilityChecker.CanReachRegion(Entity.CurrentTile.Region, _tile.Region))
+            if (Entity.CurrentTile.Region != null
+                && !RegionReachabilityChecker.CanReachRegion(Entity.CurrentTile.Region, _tile.Region))
                 return;
 
             Working = true;
