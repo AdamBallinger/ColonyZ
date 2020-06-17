@@ -94,8 +94,8 @@ namespace ColonyZ.Models.AI
             var dt = TimeManager.Instance.DeltaTime;
             var dir = (path.Current - Entity.Position).normalized;
 
-            if (dir.x == -1.0f) MotorDirection = AIMotorDirection.Left;
-            else if (dir.x == 1.0f) MotorDirection = AIMotorDirection.Right;
+            if (dir.x < 0.0f) MotorDirection = AIMotorDirection.Left;
+            else if (dir.x > 0.0f) MotorDirection = AIMotorDirection.Right;
             else if (dir.y > 0.0f) MotorDirection = AIMotorDirection.Up;
             else MotorDirection = AIMotorDirection.Down;
 

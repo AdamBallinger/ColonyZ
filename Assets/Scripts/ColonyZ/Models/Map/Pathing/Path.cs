@@ -63,6 +63,7 @@ namespace ColonyZ.Models.Map.Pathing
                     var p2 = GetPointAt(i + 1);
                     var p3 = GetPointAt(i + 2);
 
+
                     for (var t = 0.0f; t < 1.0f; t += resolution)
                     {
                         var pos = GetCatmullRom(t, p0, p1, p2, p3);
@@ -70,6 +71,7 @@ namespace ColonyZ.Models.Map.Pathing
                     }
                 }
 
+                // Remove the tiny curve generated at the end of a path.
                 SmoothPath.RemoveRange(SmoothSize - (NUMBER_OF_SMOOTHING_POINTS + 1), NUMBER_OF_SMOOTHING_POINTS);
             }
         }
@@ -94,6 +96,14 @@ namespace ColonyZ.Models.Map.Pathing
             if (_index >= Size)
                 return VectorPath[Size - 1];
             return _index < 0 ? VectorPath[0] : VectorPath[_index];
+        }
+
+        private float GetT(float _t, Vector2 _p0, Vector2 _p1)
+        {
+            var a = Mathf.Pow(_p1.x - _p0.x, 2.0f) + Mathf.Pow(_p1.y - _p0.y, 2.0f);
+            var b = Mathf.Pow(a, 0.5f * 0.5f);
+
+            return b + _t;
         }
 
         private Vector2 GetCatmullRom(float _t, Vector2 _p0, Vector2 _p1, Vector2 _p2, Vector2 _p3)
