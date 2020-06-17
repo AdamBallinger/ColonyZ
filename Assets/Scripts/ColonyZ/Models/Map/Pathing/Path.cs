@@ -8,7 +8,7 @@ namespace ColonyZ.Models.Map.Pathing
         /// <summary>
         /// The number of additional points to add in-between each tile in the path.
         /// </summary>
-        private const int NUMBER_OF_SMOOTHING_POINTS = 3;
+        private const int NUMBER_OF_SMOOTHING_POINTS = 4;
 
         public bool IsValid { get; private set; }
 
@@ -96,14 +96,6 @@ namespace ColonyZ.Models.Map.Pathing
             if (_index >= Size)
                 return VectorPath[Size - 1];
             return _index < 0 ? VectorPath[0] : VectorPath[_index];
-        }
-
-        private float GetT(float _t, Vector2 _p0, Vector2 _p1)
-        {
-            var a = Mathf.Pow(_p1.x - _p0.x, 2.0f) + Mathf.Pow(_p1.y - _p0.y, 2.0f);
-            var b = Mathf.Pow(a, 0.5f * 0.5f);
-
-            return b + _t;
         }
 
         private Vector2 GetCatmullRom(float _t, Vector2 _p0, Vector2 _p1, Vector2 _p2, Vector2 _p3)
