@@ -1,4 +1,5 @@
 using ColonyZ.Models.Entities.Living;
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
@@ -71,8 +72,6 @@ namespace ColonyZ.Models.AI
             }
 
             var dist = Vector2.Distance(Entity.Position, path.Current);
-            var dt = TimeManager.Instance.DeltaTime;
-            var dir = (path.Current - Entity.Position).normalized;
 
             // Allow small tolerance for floating point precision.
             if (dist <= 0.0001f)
@@ -83,13 +82,17 @@ namespace ColonyZ.Models.AI
                 // If the tile we were pathing to was the last tile in the path, then the path is finished.
                 if (path.IsLastPoint)
                 {
+                    Entity.SetPosition(World.Instance.GetTileAt(path.Current).Position);
                     FinishPath();
                     return;
                 }
 
                 path.Next();
-                return;
+                dist = Vector2.Distance(Entity.Position, path.Current);
             }
+
+            var dt = TimeManager.Instance.DeltaTime;
+            var dir = (path.Current - Entity.Position).normalized;
 
             if (dir.x == -1.0f) MotorDirection = AIMotorDirection.Left;
             else if (dir.x == 1.0f) MotorDirection = AIMotorDirection.Right;

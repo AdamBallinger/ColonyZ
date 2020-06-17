@@ -5,6 +5,11 @@ namespace ColonyZ.Models.Map.Pathing
 {
     public class Path
     {
+        /// <summary>
+        /// The number of additional points to add in-between each tile in the path.
+        /// </summary>
+        private const int NUMBER_OF_SMOOTHING_POINTS = 3;
+
         public bool IsValid { get; private set; }
 
         /// <summary>
@@ -21,9 +26,9 @@ namespace ColonyZ.Models.Map.Pathing
 
         public int SmoothSize => SmoothPath.Count;
 
-        private int Size => VectorPath.Count;
-
         public bool IsLastPoint => currentIndex == Size - 1;
+
+        private int Size => VectorPath.Count;
 
         private List<Node> Nodes { get; }
 
@@ -49,6 +54,8 @@ namespace ColonyZ.Models.Map.Pathing
                     VectorPath.Add(new Vector2(node.X, node.Y));
                 }
 
+                const float resolution = 1.0f / NUMBER_OF_SMOOTHING_POINTS;
+
                 for (var i = 0; i < Size; i++)
                 {
                     var p0 = GetPointAt(i - 1);
@@ -56,18 +63,24 @@ namespace ColonyZ.Models.Map.Pathing
                     var p2 = GetPointAt(i + 1);
                     var p3 = GetPointAt(i + 2);
 
-                    for (var t = 0.0f; t < 1.0f; t += 0.25f)
+                    for (var t = 0.0f; t < 1.0f; t += resolution)
                     {
                         var pos = GetCatmullRom(t, p0, p1, p2, p3);
                         SmoothPath.Add(pos);
                     }
                 }
+
+                SmoothPath.RemoveRange(SmoothSize - (NUMBER_OF_SMOOTHING_POINTS + 1), NUMBER_OF_SMOOTHING_POINTS);
             }
         }
 
         public void Next()
         {
-            Nodes[currentIndex].Paths.Remove(this);
+            if (currentIndex % NUMBER_OF_SMOOTHING_POINTS == 0)
+            {
+                Nodes[currentIndex / NUMBER_OF_SMOOTHING_POINTS].Paths.Remove(this);
+            }
+
             currentIndex++;
         }
 
@@ -80,9 +93,7 @@ namespace ColonyZ.Models.Map.Pathing
         {
             if (_index >= Size)
                 return VectorPath[Size - 1];
-            if (_index < 0) return VectorPath[0];
-
-            return VectorPath[_index];
+            return _index < 0 ? VectorPath[0] : VectorPath[_index];
         }
 
         private Vector2 GetCatmullRom(float _t, Vector2 _p0, Vector2 _p1, Vector2 _p2, Vector2 _p3)
