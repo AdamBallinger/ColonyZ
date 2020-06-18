@@ -84,6 +84,7 @@ namespace ColonyZ.Models.AI
                 if (path.IsLastPoint)
                 {
                     Entity.SetPosition(World.Instance.GetTileAt(path.Current).Position);
+                    path.Next();
                     FinishPath();
                     return;
                 }

@@ -95,6 +95,11 @@ namespace ColonyZ.Models.Map.Pathing
         public void Invalidate()
         {
             IsValid = false;
+
+            foreach (var node in Nodes)
+            {
+                node.Paths.Remove(this);
+            }
         }
 
         private Vector2 GetPointAt(int _index)
