@@ -23,10 +23,11 @@ namespace ColonyZ.Controllers.Render
         {
             if (entity == null) return;
 
-            headRenderer.sprite = SpriteCache.GetSprite("Living_Heads", entity.HeadId + entity.Motor.DirectionIndex);
+            headRenderer.sprite =
+                SpriteCache.GetSprite("Living_Heads", entity.HeadId + (int) entity.Motor.MotorDirection);
             // TODO: Change this when I have sprites for side view bodies.
             bodyRenderer.sprite =
-                SpriteCache.GetSprite("Living_Bodies", entity.BodyId + entity.Motor.DirectionIndex > 2 ? 1 : 0);
+                SpriteCache.GetSprite("Living_Bodies", entity.BodyId + (int) entity.Motor.MotorDirection > 2 ? 1 : 0);
             // TODO: Set item renderer sprite when items and character equipment exists.
 
             headRenderer.sortingOrder = entity.GetSortingOrder();

@@ -114,13 +114,22 @@ namespace ColonyZ.Models.Map.Pathing
         {
             if (!Pathable)
             {
-                foreach (var path in Paths) path?.Invalidate();
-
-                Paths.Clear();
+                InvalidatePaths();
             }
 
             ComputeNeighbours();
             NotifyNeighboursToUpdate();
+        }
+
+        /// <summary>
+        /// Notifies any paths on this node that they are no longer valid.
+        /// </summary>
+        private void InvalidatePaths()
+        {
+            for (var i = Paths.Count - 1; i >= 0; i--)
+            {
+                Paths[i].Invalidate();
+            }
         }
 
         private void NotifyNeighboursToUpdate()

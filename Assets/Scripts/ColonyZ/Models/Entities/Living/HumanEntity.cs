@@ -2,6 +2,7 @@
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Sprites;
+using ColonyZ.Models.TimeSystem;
 
 namespace ColonyZ.Models.Entities.Living
 {
@@ -13,6 +14,13 @@ namespace ColonyZ.Models.Entities.Living
 
         private Cardinals previousJobCardinal;
 
+        /// <summary>
+        /// Time in seconds between being able to check if a new working tile is available when cardinal direction changes.
+        /// </summary>
+        private const float CARDINAL_CHECK_TIMER = 1.0f;
+
+        private float currentCardinalCheckTime;
+
         public HumanEntity(Tile _tile) : base(_tile)
         {
         }
@@ -22,9 +30,10 @@ namespace ColonyZ.Models.Entities.Living
             if (!_forceStop && HasJob && CurrentJob.Complete) return false;
 
             previousJobCardinal = GetCurrentJobCardinal();
+            currentCardinalCheckTime = 0.0f;
 
             CurrentJob = _job;
-            Motor.Stop();
+            Motor.FinishPath();
             return true;
         }
 
@@ -47,12 +56,16 @@ namespace ColonyZ.Models.Entities.Living
             }
 
             var currentJobCardinal = GetCurrentJobCardinal();
-            if (currentJobCardinal != previousJobCardinal)
+            if (currentJobCardinal != previousJobCardinal
+                && currentCardinalCheckTime >= CARDINAL_CHECK_TIMER
+                && CurrentTile != CurrentJob.WorkingTile)
             {
+                currentCardinalCheckTime = 0.0f;
                 // If a new closest tile is found for the job, switch to it.
                 RecalculateWorkingTile();
             }
 
+            currentCardinalCheckTime += TimeManager.Instance.UnscaledDeltaTime;
             CurrentJob?.Update();
             previousJobCardinal = currentJobCardinal;
         }
@@ -70,6 +83,9 @@ namespace ColonyZ.Models.Entities.Living
 
             if (closestTile != null)
             {
+                // If the current working tile is the closest then do nothing.
+                if (closestTile == CurrentJob.WorkingTile) return;
+
                 CurrentJob.WorkingTile = closestTile;
                 Motor.SetTargetTile(CurrentJob.WorkingTile);
             }

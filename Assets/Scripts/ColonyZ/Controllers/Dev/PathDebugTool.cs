@@ -1,8 +1,11 @@
-﻿using ColonyZ.Models.Map;
+﻿using ColonyZ.Controllers.UI;
+using ColonyZ.Models.Entities.Living;
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ColonyZ.Controllers.Dev
 {
@@ -19,7 +22,10 @@ namespace ColonyZ.Controllers.Dev
 
         private void Start()
         {
-            MouseController.Instance.mouseClickEvent += MouseClick;
+            MouseController.Instance.mouseClickEvent += (_btn, _tile, _ui) =>
+            {
+                if (_btn == MouseButton.RightMouse) MouseClick(_tile, _ui);
+            };
             lineRenderer.startWidth = 1.0f;
             lineRenderer.endWidth = 1.0f;
             lineRenderer.widthMultiplier = 0.2f;
@@ -88,7 +94,7 @@ namespace ColonyZ.Controllers.Dev
 
         private void OnPath(Path _p)
         {
-            if (!_p.IsValid)
+            if (_p == null || !_p.IsValid)
             {
                 pathTestText.text = "Invalid path.";
                 lineRenderer.positionCount = 0;
@@ -96,20 +102,45 @@ namespace ColonyZ.Controllers.Dev
             }
 
             pathTestText.text = $"Compute time: {_p.ComputeTime}ms\n" +
-                                $"Path length: {_p.TilePath.Count}";
+                                $"Path length: {_p.SmoothSize}";
 
-            lineRenderer.positionCount = _p.TilePath.Count;
+            lineRenderer.positionCount = _p.SmoothSize;
 
-            var vectors = new Vector3[_p.TilePath.Count];
+            var vectors = new Vector3[_p.SmoothSize];
 
-            for (var i = 0; i < _p.TilePath.Count; i++)
+            for (var i = 0; i < _p.SmoothSize; i++)
             {
-                Vector3 pos = _p.TilePath[i].Position;
+                Vector3 pos = _p.SmoothPath[i];
                 pos.z = 0.0f;
                 vectors[i] = pos;
             }
 
             lineRenderer.SetPositions(vectors);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (SelectionController.currentSelection is LivingEntity)
+            {
+                var le = SelectionController.currentSelection as LivingEntity;
+                if (le?.Motor.path == null || le.Motor.path.IsValid == false) return;
+
+                OnPath(le.Motor.path);
+
+                var current = le.Motor.path.Current;
+
+                // Display where the path started.
+                Gizmos.color = Color.green;
+                Gizmos.DrawCube(le.Motor.path.SmoothPath[0], Vector2.one * 0.5f);
+
+                // Display where the motor is heading.
+                Gizmos.color = Color.blue;
+                Gizmos.DrawCube(current, Vector2.one * 0.35f);
+
+                // Display the tile the entity is currently considered on.
+                Gizmos.color = Color.red;
+                Gizmos.DrawCube(le.CurrentTile.Position, Vector2.one * 0.15f);
+            }
         }
     }
 }

@@ -68,8 +68,7 @@ namespace ColonyZ.Models.Map.Pathing
 
             var task = await Task.WhenAny(taskList.ToArray());
             taskList.Remove(task);
-            var result = task.Result;
-            result.InvokeCallback();
+            task.Result.InvokeCallback();
         }
 
         /// <summary>
@@ -221,6 +220,9 @@ namespace ColonyZ.Models.Map.Pathing
                 list.Add(_parents[_lastNode.ID]);
                 _lastNode = _parents[_lastNode.ID];
             }
+
+            if (list.Count > 1)
+                list.RemoveAt(list.Count - 1);
 
             list.Reverse();
 
