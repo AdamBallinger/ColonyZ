@@ -107,7 +107,7 @@ namespace ColonyZ.Controllers
             World.Instance.onEntityRemoved += OnEntityRemoved;
 
             FindObjectOfType<ZoneOverlayManager>().Init();
-            FindObjectOfType<JobListController>().Init();
+            FindObjectOfType<JobListController>()?.Init();
 
             worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
 
