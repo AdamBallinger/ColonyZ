@@ -84,6 +84,7 @@ namespace ColonyZ.Models.AI
                 if (path.IsLastPoint)
                 {
                     Entity.SetPosition(World.Instance.GetTileAt(path.Current).Position);
+                    // Move next so that the path is properly removed from the node at that tile.
                     path.Next();
                     FinishPath();
                     return;
