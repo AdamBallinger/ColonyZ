@@ -12,9 +12,6 @@ namespace ColonyZ.Models.Map.Regions
     /// </summary>
     public class Region
     {
-        private List<Tile> edgeSpan = new List<Tile>(12);
-
-        private List<EdgeSpan> spans = new List<EdgeSpan>();
         public HashSet<Tile> Tiles { get; } = new HashSet<Tile>();
 
         public List<RegionLink> Links { get; } = new List<RegionLink>();
@@ -26,9 +23,11 @@ namespace ColonyZ.Models.Map.Regions
         /// </summary>
         public Dictionary<int, List<Tile>> AccessMap { get; private set; }
 
-        public List<Tile> EdgeTiles { get; } = new List<Tile>();
+        private bool IsDoor { get; set; }
 
-        public bool IsDoor { get; private set; }
+        private List<Tile> edgeSpan = new List<Tile>(12);
+
+        private List<EdgeSpan> spans = new List<EdgeSpan>();
 
         public void Add(Tile _tile)
         {
@@ -55,7 +54,6 @@ namespace ColonyZ.Models.Map.Regions
             AccessMap[1].Clear();
             AccessMap[2].Clear();
             AccessMap[3].Clear();
-            EdgeTiles.Clear();
 
             foreach (var tile in Tiles)
             {
@@ -74,7 +72,6 @@ namespace ColonyZ.Models.Map.Regions
                         AccessMap[1].Add(tile.Right);
                     }
 
-                    EdgeTiles.Add(tile);
                     break;
                 }
 
@@ -87,28 +84,24 @@ namespace ColonyZ.Models.Map.Regions
                     && tile.Left?.Region != tile.Region)
                 {
                     AccessMap[0].Add(tile);
-                    EdgeTiles.Add(tile);
                 }
 
                 if (tile.Right?.GetEnterability() != TileEnterability.None
                     && tile.Right?.Region != tile.Region)
                 {
                     AccessMap[1].Add(tile.Right);
-                    EdgeTiles.Add(tile);
                 }
 
                 if (tile.Up?.GetEnterability() != TileEnterability.None
                     && tile.Up?.Region != tile.Region)
                 {
                     AccessMap[2].Add(tile.Up);
-                    EdgeTiles.Add(tile);
                 }
 
                 if (tile.Down?.GetEnterability() != TileEnterability.None
                     && tile.Down?.Region != tile.Region)
                 {
                     AccessMap[3].Add(tile);
-                    EdgeTiles.Add(tile);
                 }
             }
 

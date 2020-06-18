@@ -16,7 +16,6 @@ namespace ColonyZ.Controllers.Dev
 
         [SerializeField] private bool drawBridges;
         [SerializeField] private bool drawNeighbours;
-        [SerializeField] private bool drawEdges;
 
         [SerializeField] private GameObject infoRoot;
 
@@ -27,7 +26,6 @@ namespace ColonyZ.Controllers.Dev
         [SerializeField] private Color regionBridgeColor;
         [SerializeField] private Color regionNeighbourColor;
         [SerializeField] private Color regionOverlayColor;
-        [SerializeField] private Color regionEdgesColor;
 
         private Tile selectedTile;
 
@@ -103,18 +101,6 @@ namespace ColonyZ.Controllers.Dev
                         meshColors[vertIndex + 2] = regionNeighbourColor;
                         meshColors[vertIndex + 3] = regionNeighbourColor;
                     }
-                }
-            }
-
-            if (drawEdges)
-            {
-                foreach (var tile in _region.EdgeTiles)
-                {
-                    var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
-                    meshColors[vertIndex] = regionEdgesColor;
-                    meshColors[vertIndex + 1] = regionEdgesColor;
-                    meshColors[vertIndex + 2] = regionEdgesColor;
-                    meshColors[vertIndex + 3] = regionEdgesColor;
                 }
             }
 
@@ -207,11 +193,6 @@ namespace ColonyZ.Controllers.Dev
         public void ToggleLinks()
         {
             displayLinkData = !displayLinkData;
-        }
-
-        public void ToggleEdges()
-        {
-            drawEdges = !drawEdges;
         }
     }
 }
