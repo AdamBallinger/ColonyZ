@@ -95,10 +95,28 @@ namespace ColonyZ.Models.AI
             var dt = TimeManager.Instance.DeltaTime;
             var dir = (path.Current - Entity.Position).normalized;
 
-            if (dir.x < 0.0f) MotorDirection = AIMotorDirection.Left;
-            else if (dir.x > 0.0f) MotorDirection = AIMotorDirection.Right;
-            else if (dir.y > 0.0f) MotorDirection = AIMotorDirection.Up;
-            else MotorDirection = AIMotorDirection.Down;
+            var dirAngle = Vector2.Dot(Vector2.up, dir);
+
+            if (dirAngle > 0.75f)
+            {
+                MotorDirection = AIMotorDirection.Up;
+            }
+            else if (dirAngle > 0.0f)
+            {
+                MotorDirection = path.Current.x < Entity.X ? AIMotorDirection.Left : AIMotorDirection.Right;
+            }
+            else if (dirAngle < -0.75f)
+            {
+                MotorDirection = AIMotorDirection.Down;
+            }
+            else if (dirAngle < 0.0f)
+            {
+                MotorDirection = path.Current.x < Entity.X ? AIMotorDirection.Left : AIMotorDirection.Right;
+            }
+            else if (dirAngle == 0.0f)
+            {
+                MotorDirection = path.Current.x < Entity.X ? AIMotorDirection.Left : AIMotorDirection.Right;
+            }
 
             // The rate in which we move the entity this frame.
             var movementDelta = Entity.MovementSpeed * Entity.CurrentTile.TileDefinition.MovementModifier * dt;
