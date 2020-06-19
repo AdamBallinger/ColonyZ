@@ -125,8 +125,10 @@ namespace ColonyZ.Models.Map.Tiles
             NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
 
             if (_checkForAreas && _object.EnclosesRoom)
+            {
                 //AreaManager.Instance.CheckForArea(this);
-                RegionManager.Instance.Update(this);
+                //RegionManager.Instance.Update(this);
+            }
 
             onTileChanged?.Invoke(this);
         }
@@ -141,11 +143,13 @@ namespace ColonyZ.Models.Map.Tiles
             Object = null;
             HasObject = false;
             NodeGraph.Instance.UpdateGraph(X, Y);
-            onTileChanged?.Invoke(this);
 
             if (shouldCheckForArea)
+            {
                 //AreaManager.Instance.CheckForArea(this);
-                RegionManager.Instance.Update(this);
+            }
+
+            onTileChanged?.Invoke(this);
         }
 
         public void SetItem(ItemEntity _entity)
@@ -230,7 +234,8 @@ namespace ColonyZ.Models.Map.Tiles
             // TODO: Only include area id in selection details for development build / debug mode?
             return $"Position: ({X}, {Y})\n" +
                    $"Area ID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
-                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n";
+                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n" +
+                   $"Chunk: {World.Instance.WorldGrid.GetChunkAt(this)}\n";
         }
 
         public Vector2 GetPosition()

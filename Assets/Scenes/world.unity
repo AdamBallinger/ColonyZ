@@ -4351,7 +4351,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00012207031, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0.00024414062, y: 0.000061035156}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1110402560
@@ -8617,15 +8617,15 @@ MonoBehaviour:
   dataLoader: {fileID: 1523355955}
   shouldSaveLoad: 1
   initialCharacterCount: 1
-  treeSpawnChance: 8
+  treeSpawnChance: 0
   itemEntityPrefab: {fileID: 4256605384353934779, guid: cf0a6cd49092b8d4cbe1a2441751f071,
     type: 3}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   worldSize:
-    <Name>k__BackingField: Mini
-    <Width>k__BackingField: 16
-    <Height>k__BackingField: 16
+    <Name>k__BackingField: Medium
+    <Width>k__BackingField: 128
+    <Height>k__BackingField: 128
   overrideSeed: 1
   seed: 42736
   octaves: 4

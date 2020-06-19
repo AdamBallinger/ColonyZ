@@ -96,6 +96,7 @@ namespace ColonyZ.Models.Map
 
             for (var i = Items.Count - 1; i >= 0; i--) Items[i].Update();
 
+            WorldGrid.RebuildDirty();
             PathFinder.Instance?.ProcessNext();
         }
 

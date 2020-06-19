@@ -3,7 +3,7 @@ using ColonyZ.Models.Map.Tiles;
 
 namespace ColonyZ.Models.Map
 {
-    public struct WorldChunk
+    public class WorldChunk
     {
         public int X { get; }
 
@@ -11,11 +11,22 @@ namespace ColonyZ.Models.Map
 
         public HashSet<Tile> Tiles { get; }
 
+        /// <summary>
+        /// Determines if the chunk has been modified this frame and should be rebuilt at the end.
+        /// </summary>
+        public bool IsDirty { get; private set; }
+
         public WorldChunk(int _x, int _y)
         {
             X = _x;
             Y = _y;
             Tiles = new HashSet<Tile>();
+            IsDirty = false;
+        }
+
+        public void SetDirty(bool _dirty)
+        {
+            IsDirty = _dirty;
         }
 
         public void Add(Tile _tile)
@@ -28,6 +39,11 @@ namespace ColonyZ.Models.Map
         public bool Contains(Tile _tile)
         {
             return Tiles.Contains(_tile);
+        }
+
+        public override string ToString()
+        {
+            return $"Chunk X: {X} Y:{Y} Dirty: {IsDirty}";
         }
     }
 }

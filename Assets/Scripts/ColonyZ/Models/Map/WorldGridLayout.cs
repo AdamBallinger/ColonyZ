@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 
 namespace ColonyZ.Models.Map
@@ -18,6 +19,16 @@ namespace ColonyZ.Models.Map
         {
             world = _world;
             Chunks = new List<WorldChunk>();
+        }
+
+        public void SetDirty(Tile _tile, bool _dirty)
+        {
+            var source = GetChunkAt(_tile);
+            source.SetDirty(_dirty);
+            foreach (var chunk in GetChunkNeighbours(source))
+            {
+                chunk.SetDirty(_dirty);
+            }
         }
 
         private WorldChunk GetChunkAt(int _x, int _y)
@@ -62,6 +73,18 @@ namespace ColonyZ.Models.Map
         public void NotifyChunkUpdate(Tile _tile)
         {
             chunkUpdateEvent?.Invoke(GetChunkAt(_tile));
+        }
+
+        public void RebuildDirty()
+        {
+            foreach (var chunk in Chunks)
+            {
+                if (chunk.IsDirty)
+                {
+                    RegionManager.Instance.UpdateChunk(chunk);
+                    chunk.SetDirty(false);
+                }
+            }
         }
 
         public void BuildWorldGrid()

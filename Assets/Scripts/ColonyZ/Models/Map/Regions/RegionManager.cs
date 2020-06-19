@@ -36,30 +36,25 @@ namespace ColonyZ.Models.Map.Regions
         }
 
         /// <summary>
-        ///     Update regions when a tile has an object placed / removed.
+        ///     Update regions when a chunk was modified this frame.
         /// </summary>
-        /// <param name="_tile"></param>
-        public void Update(Tile _tile)
+        /// <param name="_chunk"></param>
+        public void UpdateChunk(WorldChunk _chunk)
         {
-            var rootChunk = World.Instance.WorldGrid.GetChunkAt(_tile);
-
-            var chunksToUpdate = new List<WorldChunk>();
-            chunksToUpdate.Add(rootChunk);
-
-            //if (_tile.Region != null && _tile.Region.EdgeTiles.Contains(_tile))
-            //{
-            // TODO: This is a hacky work around for now.
-            chunksToUpdate.AddRange(World.Instance.WorldGrid.GetChunkNeighbours(rootChunk));
-            //}
-
-            foreach (var chunk in chunksToUpdate)
-            foreach (var tile in chunk.Tiles)
+            foreach (var tile in _chunk.Tiles)
+            {
                 if (tile.Region != null)
+                {
                     DeleteRegion(tile.Region);
+                }
+            }
 
-            foreach (var chunk in chunksToUpdate) FloodChunk(chunk);
+            FloodChunk(_chunk);
 
-            foreach (var region in newRegions) region.BuildLinks();
+            foreach (var region in newRegions)
+            {
+                region.BuildLinks();
+            }
 
             newRegions.Clear();
             regionsUpdateEvent?.Invoke();
