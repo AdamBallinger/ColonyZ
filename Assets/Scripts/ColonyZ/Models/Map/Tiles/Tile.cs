@@ -101,7 +101,7 @@ namespace ColonyZ.Models.Map.Tiles
             return Item?.ItemStack;
         }
 
-        public void SetObject(TileObject _object, bool _checkForAreas = true)
+        public void SetObject(TileObject _object, bool _markDirty = true)
         {
             // Remove existing object so it is removed from world object list.
             if (HasObject)
@@ -124,29 +124,30 @@ namespace ColonyZ.Models.Map.Tiles
             World.Instance.Objects.Add(_object);
             NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
 
-            if (_checkForAreas && _object.EnclosesRoom)
+            if (_markDirty && _object.EnclosesRoom)
             {
                 //AreaManager.Instance.CheckForArea(this);
-                //RegionManager.Instance.Update(this);
+                World.Instance.WorldGrid.SetDirty(this, true);
             }
 
             onTileChanged?.Invoke(this);
         }
 
-        public void RemoveObject(bool _checkForAreas = true)
+        public void RemoveObject(bool _markDirty = true)
         {
             if (!HasObject) return;
 
-            var shouldCheckForArea = _checkForAreas && Object.EnclosesRoom;
+            var shouldMarkDirty = _markDirty && Object.EnclosesRoom;
 
             World.Instance.Objects.Remove(Object);
             Object = null;
             HasObject = false;
             NodeGraph.Instance.UpdateGraph(X, Y);
 
-            if (shouldCheckForArea)
+            if (shouldMarkDirty)
             {
                 //AreaManager.Instance.CheckForArea(this);
+                World.Instance.WorldGrid.SetDirty(this, true);
             }
 
             onTileChanged?.Invoke(this);

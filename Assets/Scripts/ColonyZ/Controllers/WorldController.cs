@@ -224,8 +224,6 @@ namespace ColonyZ.Controllers
 
             if (_tile.HasObject) spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
 
-            World.Instance.WorldGrid.SetDirty(_tile, true);
-
             UpdateTileNeighbourSprites(_tile);
         }
 
