@@ -235,8 +235,7 @@ namespace ColonyZ.Models.Map.Tiles
             // TODO: Only include area id in selection details for development build / debug mode?
             return $"Position: ({X}, {Y})\n" +
                    $"Area ID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
-                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n" +
-                   $"Chunk: {World.Instance.WorldGrid.GetChunkAt(this)}\n";
+                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n";
         }
 
         public Vector2 GetPosition()
