@@ -70,10 +70,8 @@ namespace ColonyZ.Controllers
             switch (Mode)
             {
                 case BuildMode.Area:
-
                     if (ZoneToBuild.MinimumSize.x <= _width && ZoneToBuild.MinimumSize.y <= _height)
                         HandleBuildArea(_tiles, _x, _y, _width, _height);
-
                     break;
                 case BuildMode.Object:
                     HandleBuild(_tiles);
@@ -97,8 +95,10 @@ namespace ColonyZ.Controllers
             var enumerable = _tiles.ToArray();
 
             foreach (var tile in enumerable)
+            {
                 if (!ZoneToBuild.CanPlace(tile))
                     return;
+            }
 
             ZoneToBuild.SetOrigin(_x, _y);
             ZoneToBuild.SetSize(_width, _height);
@@ -137,6 +137,7 @@ namespace ColonyZ.Controllers
             if (GodMode)
             {
                 foreach (var tile in _tiles)
+                {
                     if (tile.HasObject && ObjectCompatWithMode(tile.Object))
                     {
                         tile.RemoveObject();
@@ -146,6 +147,7 @@ namespace ColonyZ.Controllers
                             JobManager.Instance.CancelJob(tile.CurrentJob);
                         }
                     }
+                }
 
                 return;
             }
@@ -162,6 +164,7 @@ namespace ColonyZ.Controllers
             if (GodMode)
             {
                 foreach (var tile in _tiles)
+                {
                     if (tile.HasObject && ObjectCompatWithMode(tile.Object))
                     {
                         tile.RemoveObject();
@@ -171,6 +174,7 @@ namespace ColonyZ.Controllers
                             JobManager.Instance.CancelJob(tile.CurrentJob);
                         }
                     }
+                }
 
                 return;
             }

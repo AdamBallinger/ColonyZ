@@ -66,35 +66,83 @@ namespace ColonyZ.Models.Map.Areas
             // An enclosing object was built on this tile.
             if (oldArea != null)
             {
-                // TODO: Try optimise this so it doesnt release all tiles in the area it was placed.
-                // Causes massive slow downs on large maps. This is a downside to not having an
-                // outside area system.. but its going to make stuff so much easier if this works..
-                // Flood each neighbour to see if any are now enclosed.
-                foreach (var tile in _tile.DirectNeighbours)
-                    FloodFiller.Flood(tile,
-                        floodfill_ConditionCheck,
-                        floodfill_PassCheck,
-                        CreateArea);
+                var enclosingCount = 0;
+                foreach (var tile in _tile.Neighbours)
+                {
+                    if (tile != null && tile.HasObject && tile.Object.EnclosesRoom) enclosingCount++;
+                    if (enclosingCount >= 2) break;
+                }
 
-                // Remove the source tile from its current area, as enclosing tiles do not belong
-                // to any areas.
-                oldArea.UnassignTile(_tile);
+                // When an object is placed, we can assume unless it has at least 2 other enclosing objects around it,
+                // then it is not enclosing a new area, and can simply remove the tile from its area.
+                if (enclosingCount >= 2)
+                {
+                    // Flood each neighbour to see if any are now enclosed.
+                    foreach (var tile in _tile.DirectNeighbours)
+                        FloodFiller.Flood(tile,
+                            floodfill_ConditionCheck,
+                            floodfill_PassCheck,
+                            CreateArea);
 
-                // Delete the old source tile area as it is no longer needed.
-                RemoveArea(oldArea);
+                    // Remove the source tile from its current area, as enclosing tiles do not belong
+                    // to any areas.
+                    oldArea.UnassignTile(_tile);
+
+                    // Delete the old source tile area as it is no longer needed.
+                    RemoveArea(oldArea);
+                }
+                else
+                {
+                    // Tile doesn't have at least 2 enclosing tiles around it, so just remove it from the area as
+                    // it can't be enclosing an area.
+                    oldArea.UnassignTile(_tile);
+
+                    // Make sure the area is removed if it no longer has any tiles.
+                    if (oldArea.Size == 0) RemoveArea(oldArea);
+                }
             }
             else
             {
                 // Getting here means the tile previously had an enclosing object (Wall, door etc.) on it
                 // So go through each of the neighbour tiles and remove their area, as it means we could
                 // potentially be merging up to 4 areas together.
-                foreach (var tile in _tile.DirectNeighbours) RemoveArea(tile.Area);
+                //foreach (var tile in _tile.DirectNeighbours) RemoveArea(tile.Area);
 
-                // Old area removed, flood from source to find new areas.
-                FloodFiller.Flood(_tile,
-                    floodfill_ConditionCheck,
-                    floodfill_PassCheck,
-                    CreateArea);
+                var largestAreaSize = 0;
+                Area largestArea = null;
+                foreach (var tile in _tile.DirectNeighbours)
+                {
+                    if (tile.Area != null)
+                    {
+                        if (tile.Area.Size > largestAreaSize)
+                        {
+                            largestAreaSize = tile.Area.Size;
+                            largestArea = tile.Area;
+                        }
+                    }
+                }
+
+                // If a larger area exists around the tile removed, then merge all surrounding areas into it.
+                if (largestArea != null)
+                {
+                    largestArea.AssignTile(_tile);
+                    foreach (var tile in _tile.DirectNeighbours)
+                    {
+                        if (tile.Area != null && tile.Area != largestArea)
+                        {
+                            MergeAreas(tile.Area, largestArea);
+                        }
+                    }
+
+                    shouldTriggerUpdate = true;
+                }
+                else // No area was detected around the removed tile, so create a new one.
+                {
+                    FloodFiller.Flood(_tile,
+                        floodfill_ConditionCheck,
+                        floodfill_PassCheck,
+                        CreateArea);
+                }
             }
 
             if (shouldTriggerUpdate)
@@ -115,6 +163,18 @@ namespace ColonyZ.Models.Map.Areas
                 Areas.Add(area);
                 shouldTriggerUpdate = true;
             }
+        }
+
+        /// <summary>
+        /// Merges target area into the source area.
+        /// </summary>
+        /// <param name="_target"></param>
+        /// <param name="_source"></param>
+        private void MergeAreas(Area _target, Area _source)
+        {
+            _target.ReleaseTo(_source);
+            RemoveArea(_target);
+            shouldTriggerUpdate = true;
         }
 
         private void ComputeAreaLinks()

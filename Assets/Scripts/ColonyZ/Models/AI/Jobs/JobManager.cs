@@ -264,10 +264,10 @@ namespace ColonyZ.Models.AI.Jobs
             foreach (var tile in _tiles)
             {
                 if (tile.GetEnterability() == TileEnterability.None) continue;
-                //if (entityTile.Area == null) continue;
+                if (entityTile.Area == null) continue;
                 // Skip the tile if entities current room has no connection to the tiles room.
-                //if (!entityTile.Area.HasConnection(tile.Area)) continue;
-                if (!RegionReachabilityChecker.CanReachRegion(entityTile.Region, tile.Region)) continue;
+                if (!entityTile.Area.HasConnection(tile.Area)) continue;
+                //if (!RegionReachabilityChecker.CanReachRegion(entityTile.Region, tile.Region)) continue;
 
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
 
@@ -306,8 +306,8 @@ namespace ColonyZ.Models.AI.Jobs
                 return _job.WorkingTile != null;
             }
 
-            return RegionReachabilityChecker.CanReachRegion(_entity.CurrentTile.Region,
-                _job.WorkingTile.Region);
+            return _entity.CurrentTile.Area?.HasConnection(_job.WorkingTile.Area)
+                   ?? RegionReachabilityChecker.CanReachRegion(_entity.CurrentTile.Region, _job.WorkingTile.Region);
         }
 
         public void AddJob(Job _job)

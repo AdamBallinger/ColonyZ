@@ -11,12 +11,17 @@ namespace ColonyZ.Models.Map.Areas
         /// </summary>
         public int AreaID => AreaManager.Instance.GetAreaID(this);
 
-        /// <summary>
-        ///     List of tiles that assigned to this area.
-        /// </summary>
-        public HashSet<Tile> Tiles { get; }
-
         public HashSet<Area> LinkedAreas { get; }
+
+        /// <summary>
+        /// Number of tiles inside the area.
+        /// </summary>
+        public int Size => Tiles.Count;
+
+        /// <summary>
+        ///     List of tiles that are assigned to this area.
+        /// </summary>
+        private HashSet<Tile> Tiles { get; }
 
         public Area()
         {
@@ -26,9 +31,7 @@ namespace ColonyZ.Models.Map.Areas
 
         public void AssignTile(Tile _tile)
         {
-            // Remove tile from its previous area.
             _tile.Area?.UnassignTile(_tile);
-
             Tiles.Add(_tile);
             _tile.Area = this;
         }
@@ -48,8 +51,21 @@ namespace ColonyZ.Models.Map.Areas
         /// </summary>
         public void ReleaseTiles()
         {
-            var tiles = Tiles.ToList();
-            for (var i = Tiles.Count - 1; i >= 0; i--) tiles[i].Area?.UnassignTile(tiles[i]);
+            foreach (var tile in Tiles)
+            {
+                tile.Area = null;
+            }
+
+            Tiles.Clear();
+        }
+
+        public void ReleaseTo(Area _area)
+        {
+            var list = Tiles.ToList();
+            for (var i = list.Count - 1; i >= 0; i--)
+            {
+                _area.AssignTile(list[i]);
+            }
         }
 
         public void AddConnection(Area _area)

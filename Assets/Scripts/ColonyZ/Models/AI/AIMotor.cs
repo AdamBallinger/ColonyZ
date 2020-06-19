@@ -1,7 +1,6 @@
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
-using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.TimeSystem;
 using UnityEngine;
@@ -49,9 +48,10 @@ namespace ColonyZ.Models.AI
             if (_tile.GetEnterability() == TileEnterability.None) return;
             if (Entity.Position == _tile.Position) return;
 
-            // TODO: Change back to area system when area detection is faster.
-            if (Entity.CurrentTile.Region != null
-                && !RegionReachabilityChecker.CanReachRegion(Entity.CurrentTile.Region, _tile.Region))
+            // Don't make a path request if the current area the entity is in has no link to the target area.
+            // Checks that the entities current area isn't null to ensure that entities that get stuck inside of
+            // objects can get out.
+            if (Entity.CurrentTile.Area != null && !Entity.CurrentTile.Area.HasConnection(_tile.Area))
                 return;
 
             Working = true;
