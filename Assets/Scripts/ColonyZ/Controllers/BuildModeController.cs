@@ -38,7 +38,7 @@ namespace ColonyZ.Controllers
         public bool GodMode
         {
             get => _godMode;
-            set
+            private set
             {
                 if (value != _godMode)
                 {
@@ -56,6 +56,11 @@ namespace ColonyZ.Controllers
         public Zone ZoneToBuild { get; private set; }
 
         public event Action<bool> godModeChangeEvent;
+
+        public void ToggleGodMode()
+        {
+            GodMode = !GodMode;
+        }
 
         /// <summary>
         ///     Processes the given tiles based on the current mode.

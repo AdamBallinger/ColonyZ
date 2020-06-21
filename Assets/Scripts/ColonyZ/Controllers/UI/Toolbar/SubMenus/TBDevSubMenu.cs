@@ -20,8 +20,7 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
             AddItem("Item Spawner", SpriteCache.GetSprite("UI", 7),
                 () => DevToolManager.Instance.ToggleItemTool());
             AddItem("God Mode", SpriteCache.GetSprite("UI", 8),
-                () => MouseController.Instance.BuildModeController.GodMode =
-                    !MouseController.Instance.BuildModeController.GodMode);
+                () => MouseController.Instance.BuildModeController.ToggleGodMode());
         }
 
         protected override void OnDisabled()

@@ -171,10 +171,15 @@ namespace ColonyZ.Controllers
                 World.Instance.SpawnCharacter(World.Instance.GetRandomTile(true));
 
             if (Input.GetKeyDown(KeyCode.X))
+            {
                 for (var i = 0; i < 10; i++)
                 {
                     World.Instance.SpawnCharacter(World.Instance.GetRandomTile(true));
                 }
+            }
+
+            if (Input.GetKeyDown(KeyCode.G))
+                MouseController.Instance.BuildModeController.ToggleGodMode();
 
             if (Input.GetKeyDown(KeyCode.Space))
                 TimeManager.Instance.Toggle();
