@@ -193,10 +193,7 @@ namespace ColonyZ.Models.Map.Tiles
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (X * 397) ^ Y;
-            }
+            return World.Instance.GetTileIndex(this);
         }
 
         public static bool operator ==(Tile left, Tile right)
