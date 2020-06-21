@@ -1,20 +1,4 @@
-﻿Regions:
-- Split world into chunks, and flood each chunk to get the individual regions. Work out how to calculate
-adjacent regions and store them.
-
-Pathing:
-- Look into splitting the node graph into chunks to try speed up the pathfinder on large maps?
-- This would be tricky to handle if chunks are split into multiple accessible parts though. Eg. Inaccessible 
-"rooms" being created or formed in the chunk, or spread into other chunks.
-
-Jobs:
-- Updating the closest working tile for a job as the entity gets closer? Currently looks odd when the characters
-go to the closest tile assigned from where the entity was assigned the job, which could change by the time
-the entity reaches the job. Old system was slow as it was constantly checking surrounding tiles of the job
-for a new closest based on the entities current position. Maybe do this only if the entity position changes on
-the x or y to signal the entity is now on a different "side" of the target tile from when it was assigned?
-
-Flooring:
+﻿Flooring:
 - How to handle building flooring on a tile?? Should this modify the actual tile graphic through the world
 shader, or should it be a new buildable object, separate to the TileObject system currently. 
 - Same for building paths outside.
@@ -24,3 +8,16 @@ World Shader:
 
 Toolbar:
 - This is a mess again and could do with being reworked properly so its not a spaghetti mess..
+
+BuildModeController:
+- Should be moved outside of Controller namespace and into models since it isn't a class that integrates with Unity.. 
+Should be an instance created inside of world. Could also do with a rename to something more "Work" related, 
+as that is effectively what it is.
+
+Items / Objects / Sprites:
+- Ditch scriptable objects? Load this data through json? Needs work, as I don't like mixing the scriptable object
+stuff into the Models namespace, and makes the loading process a pain.
+
+Regions:
+- Region updates currently force all neighbouring chunks to be rebuilt. Need a way of detecting which neighbours, if
+any, should be updated instead.
