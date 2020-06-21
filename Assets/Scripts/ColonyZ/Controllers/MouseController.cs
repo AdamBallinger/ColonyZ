@@ -221,7 +221,7 @@ namespace ColonyZ.Controllers
                             previewRenderer.sprite = null;
                         }
                     }
-                    else if (BuildModeController.Mode == BuildMode.Area)
+                    else if (BuildModeController.Mode == BuildMode.Zone)
                     {
                         draggableCursor.SetActive(true);
                         var area = BuildModeController.ZoneToBuild;
@@ -350,7 +350,7 @@ namespace ColonyZ.Controllers
                 tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
             }
 
-            if (BuildModeController.Mode == BuildMode.Object || BuildModeController.Mode == BuildMode.Area)
+            if (BuildModeController.Mode == BuildMode.Object || BuildModeController.Mode == BuildMode.Zone)
             {
                 BuildModeController.Process(tiles.Cast<Tile>(), _dragData.StartX, _dragData.StartY, _dragData.SizeX,
                     _dragData.SizeY);

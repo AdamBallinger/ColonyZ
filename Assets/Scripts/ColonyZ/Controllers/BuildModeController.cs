@@ -11,7 +11,7 @@ namespace ColonyZ.Controllers
 {
     public enum BuildMode
     {
-        Area,
+        Zone,
         Object,
         Demolish,
         Fell,
@@ -74,9 +74,9 @@ namespace ColonyZ.Controllers
         {
             switch (Mode)
             {
-                case BuildMode.Area:
+                case BuildMode.Zone:
                     if (ZoneToBuild.MinimumSize.x <= _width && ZoneToBuild.MinimumSize.y <= _height)
-                        HandleBuildArea(_tiles, _x, _y, _width, _height);
+                        HandleBuildZone(_tiles, _x, _y, _width, _height);
                     break;
                 case BuildMode.Object:
                     HandleBuild(_tiles);
@@ -95,7 +95,7 @@ namespace ColonyZ.Controllers
             }
         }
 
-        private void HandleBuildArea(IEnumerable<Tile> _tiles, int _x, int _y, int _width, int _height)
+        private void HandleBuildZone(IEnumerable<Tile> _tiles, int _x, int _y, int _width, int _height)
         {
             var enumerable = _tiles.ToArray();
 
@@ -222,7 +222,7 @@ namespace ColonyZ.Controllers
         public void SetZone(Zone _zoneToBuild)
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            Mode = BuildMode.Area;
+            Mode = BuildMode.Zone;
             ZoneToBuild = _zoneToBuild;
         }
 
