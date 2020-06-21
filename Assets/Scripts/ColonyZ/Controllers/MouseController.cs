@@ -179,7 +179,7 @@ namespace ColonyZ.Controllers
                 for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
                 for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                 {
-                    if (BuildModeController.Mode == BuildMode.Object)
+                    if (BuildModeController.BuildMode == BuildMode.Object)
                         if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX &&
                             y != _dragData.EndY)
                             continue;
@@ -198,7 +198,7 @@ namespace ColonyZ.Controllers
                     var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                     previewRenderer.sprite = null;
 
-                    if (BuildModeController.Mode == BuildMode.Object)
+                    if (BuildModeController.BuildMode == BuildMode.Object)
                     {
                         previewRenderer.sprite = BuildModeController.ObjectToBuild.GetIcon();
 
@@ -208,7 +208,7 @@ namespace ColonyZ.Controllers
                                 ? previewInvalidColor
                                 : previewValidColor;
                     }
-                    else if (BuildModeController.Mode == BuildMode.Demolish)
+                    else if (BuildModeController.BuildMode == BuildMode.Demolish)
                     {
                         // Only allow buildable objects to be demolished.
                         if (tile.HasObject && tile.Object.Buildable)
@@ -221,7 +221,7 @@ namespace ColonyZ.Controllers
                             previewRenderer.sprite = null;
                         }
                     }
-                    else if (BuildModeController.Mode == BuildMode.Zone)
+                    else if (BuildModeController.BuildMode == BuildMode.Zone)
                     {
                         draggableCursor.SetActive(true);
                         var area = BuildModeController.ZoneToBuild;
@@ -238,7 +238,8 @@ namespace ColonyZ.Controllers
                             draggableCursorRenderer.color = previewValidColor;
                         }
                     }
-                    else if (BuildModeController.Mode == BuildMode.Mine)
+                    else if (BuildModeController.BuildMode == BuildMode.Gather &&
+                             BuildModeController.GatherMode == GatherMode.Mine)
                     {
                         if (tile.HasObject && tile.Object.Mineable)
                         {
@@ -250,7 +251,8 @@ namespace ColonyZ.Controllers
                             previewRenderer.sprite = null;
                         }
                     }
-                    else if (BuildModeController.Mode == BuildMode.Fell)
+                    else if (BuildModeController.BuildMode == BuildMode.Gather &&
+                             BuildModeController.GatherMode == GatherMode.Fell)
                     {
                         if (tile.HasObject && tile.Object.Fellable)
                         {
@@ -262,7 +264,7 @@ namespace ColonyZ.Controllers
                             previewRenderer.sprite = null;
                         }
                     }
-                    else if (BuildModeController.Mode == BuildMode.Cancel)
+                    else if (BuildModeController.BuildMode == BuildMode.Cancel)
                     {
                         if (tile.CurrentJob != null)
                         {
@@ -288,7 +290,7 @@ namespace ColonyZ.Controllers
                 var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                 previewRenderer.sprite = null;
 
-                if (BuildModeController.Mode == BuildMode.Object)
+                if (BuildModeController.BuildMode == BuildMode.Object)
                 {
                     previewRenderer.sprite = BuildModeController.ObjectToBuild.GetIcon();
                     previewRenderer.color =
@@ -334,7 +336,7 @@ namespace ColonyZ.Controllers
             for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
             for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
             {
-                if (BuildModeController.Mode == BuildMode.Object)
+                if (BuildModeController.BuildMode == BuildMode.Object)
                     // Only when building objects should the drag area only include the edge of the dragged area.
                     if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX &&
                         y != _dragData.EndY)
@@ -350,7 +352,7 @@ namespace ColonyZ.Controllers
                 tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
             }
 
-            if (BuildModeController.Mode == BuildMode.Object || BuildModeController.Mode == BuildMode.Zone)
+            if (BuildModeController.BuildMode == BuildMode.Object || BuildModeController.BuildMode == BuildMode.Zone)
             {
                 BuildModeController.Process(tiles.Cast<Tile>(), _dragData.StartX, _dragData.StartY, _dragData.SizeX,
                     _dragData.SizeY);

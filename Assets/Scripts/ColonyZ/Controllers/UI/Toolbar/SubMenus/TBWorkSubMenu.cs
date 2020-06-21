@@ -10,10 +10,10 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
                 () => MouseController.Instance.BuildModeController.SetDemolishMode());
 
             AddItem("Mine", SpriteCache.GetSprite("Overlay", 1),
-                () => MouseController.Instance.BuildModeController.SetMineMode());
+                () => MouseController.Instance.BuildModeController.SetGatherMode(GatherMode.Mine));
 
             AddItem("Fell", SpriteCache.GetSprite("Overlay", 2),
-                () => MouseController.Instance.BuildModeController.SetFellMode());
+                () => MouseController.Instance.BuildModeController.SetGatherMode(GatherMode.Fell));
 
             AddItem("Cancel", SpriteCache.GetSprite("Overlay", 3),
                 () => MouseController.Instance.BuildModeController.SetCancelMode());

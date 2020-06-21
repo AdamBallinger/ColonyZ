@@ -14,26 +14,31 @@ namespace ColonyZ.Controllers
         Zone,
         Object,
         Demolish,
-        Fell,
-        Mine,
-        Harvest,
+        Gather,
         Cancel
     }
 
-    /// <summary>
-    ///     TODO: This class is become a shit show and should be re done at some point..
-    /// </summary>
+    public enum GatherMode
+    {
+        Fell,
+        Mine,
+        Harvest
+    }
+
     public class BuildModeController
     {
         private bool _godMode;
 
         public BuildModeController()
         {
-            Mode = BuildMode.Object;
+            BuildMode = BuildMode.Object;
+            GatherMode = GatherMode.Mine;
             GodMode = World.Instance.WorldProvider.GodMode;
         }
 
-        public BuildMode Mode { get; private set; }
+        public BuildMode BuildMode { get; private set; }
+
+        public GatherMode GatherMode { get; private set; }
 
         public bool GodMode
         {
@@ -72,7 +77,7 @@ namespace ColonyZ.Controllers
         /// <param name="_height"></param>
         public void Process(IEnumerable<Tile> _tiles, int _x = 0, int _y = 0, int _width = 0, int _height = 0)
         {
-            switch (Mode)
+            switch (BuildMode)
             {
                 case BuildMode.Zone:
                     if (ZoneToBuild.MinimumSize.x <= _width && ZoneToBuild.MinimumSize.y <= _height)
@@ -84,9 +89,7 @@ namespace ColonyZ.Controllers
                 case BuildMode.Demolish:
                     HandleDemolish(_tiles);
                     break;
-                case BuildMode.Mine:
-                case BuildMode.Fell:
-                case BuildMode.Harvest:
+                case BuildMode.Gather:
                     HandleGather(_tiles);
                     break;
                 case BuildMode.Cancel:
@@ -186,7 +189,7 @@ namespace ColonyZ.Controllers
 
             var jobs = (from tile in _tiles
                 where tile.HasObject && ObjectCompatWithMode(tile.Object)
-                select new HarvestJob(tile, Mode.ToString()));
+                select new HarvestJob(tile, BuildMode.ToString()));
 
             JobManager.Instance.AddJobs(jobs);
         }
@@ -204,16 +207,20 @@ namespace ColonyZ.Controllers
 
         private bool ObjectCompatWithMode(TileObject _object)
         {
-            switch (Mode)
+            switch (BuildMode)
             {
                 case BuildMode.Demolish:
                     return _object.Buildable;
-                case BuildMode.Mine:
-                    return _object.Mineable;
-                case BuildMode.Fell:
-                    return _object.Fellable;
-                case BuildMode.Harvest:
-                    return _object.Harvestable;
+                case BuildMode.Gather:
+                    switch (GatherMode)
+                    {
+                        case GatherMode.Fell:
+                            return _object.Fellable;
+                        case GatherMode.Mine:
+                            return _object.Mineable;
+                    }
+
+                    return false;
             }
 
             return false;
@@ -222,7 +229,7 @@ namespace ColonyZ.Controllers
         public void SetZone(Zone _zoneToBuild)
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            Mode = BuildMode.Zone;
+            BuildMode = BuildMode.Zone;
             ZoneToBuild = _zoneToBuild;
         }
 
@@ -233,7 +240,7 @@ namespace ColonyZ.Controllers
         public void SetBuildMode(TileObject _object)
         {
             MouseController.Instance.Mode = _object.Draggable ? MouseMode.Process : MouseMode.Process_Single;
-            Mode = BuildMode.Object;
+            BuildMode = BuildMode.Object;
             ObjectToBuild = _object;
         }
 
@@ -243,31 +250,20 @@ namespace ColonyZ.Controllers
         public void SetDemolishMode()
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            Mode = BuildMode.Demolish;
+            BuildMode = BuildMode.Demolish;
         }
 
-        public void SetFellMode()
+        public void SetGatherMode(GatherMode _mode)
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            Mode = BuildMode.Fell;
-        }
-
-        public void SetMineMode()
-        {
-            MouseController.Instance.Mode = MouseMode.Process;
-            Mode = BuildMode.Mine;
-        }
-
-        public void SetHarvestMode()
-        {
-            MouseController.Instance.Mode = MouseMode.Process;
-            Mode = BuildMode.Harvest;
+            BuildMode = BuildMode.Gather;
+            GatherMode = _mode;
         }
 
         public void SetCancelMode()
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            Mode = BuildMode.Cancel;
+            BuildMode = BuildMode.Cancel;
         }
     }
 }
