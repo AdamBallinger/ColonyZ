@@ -50,6 +50,7 @@ namespace ColonyZ.Controllers
 
         private Dictionary<ItemEntity, GameObject> itemEntityObjects;
         private Dictionary<LivingEntity, GameObject> livingEntityObjects;
+        private Dictionary<Tile, GameObject> tileObjectGameObjects;
         private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
 
         private WorldRenderer worldRenderer;
@@ -62,6 +63,7 @@ namespace ColonyZ.Controllers
             tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
             itemEntityObjects = new Dictionary<ItemEntity, GameObject>();
+            tileObjectGameObjects = new Dictionary<Tile, GameObject>();
 
             dataLoader.Load();
 
@@ -194,7 +196,11 @@ namespace ColonyZ.Controllers
             foreach (var tile in _tile.Neighbours)
             {
                 if (tile.HasObject)
+                {
                     tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
+                    tileObjectGameObjects[tile].transform.rotation =
+                        Quaternion.Euler(0.0f, 0.0f, _tile.Object.GetObjectRotation());
+                }
             }
         }
 
@@ -205,6 +211,8 @@ namespace ColonyZ.Controllers
         private void CreateTileObject(Tile _tile)
         {
             var object_GO = new GameObject("Tile Object");
+            tileObjectGameObjects.Add(_tile, object_GO);
+
             var object_SR = object_GO.AddComponent<SpriteRenderer>();
             object_SR.sharedMaterial.enableInstancing = true;
 
@@ -220,14 +228,21 @@ namespace ColonyZ.Controllers
         /// <param name="_tile"></param>
         private void OnTileChanged(Tile _tile)
         {
-            if (_tile == null) return;
+            if (_tile == null)
+                return;
 
-            if (!tileObjectRenderers.ContainsKey(_tile)) CreateTileObject(_tile);
+            if (!tileObjectRenderers.ContainsKey(_tile))
+                CreateTileObject(_tile);
 
             var spriteRenderer = tileObjectRenderers[_tile];
             spriteRenderer.sprite = _tile.HasObject ? SpriteCache.GetSprite(_tile.Object) : null;
 
-            if (_tile.HasObject) spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
+            if (_tile.HasObject)
+            {
+                spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
+                tileObjectGameObjects[_tile].transform.rotation =
+                    Quaternion.Euler(0.0f, 0.0f, _tile.Object.GetObjectRotation());
+            }
 
             UpdateTileNeighbourSprites(_tile);
         }

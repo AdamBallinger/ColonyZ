@@ -91,6 +91,15 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         }
 
         /// <summary>
+        ///     Rotation (in degrees) of the object.
+        /// </summary>
+        /// <returns></returns>
+        public virtual int GetObjectRotation()
+        {
+            return 0;
+        }
+
+        /// <summary>
         ///     Checks if the structure can be placed on the given tile.
         /// </summary>
         /// <param name="_tile"></param>
