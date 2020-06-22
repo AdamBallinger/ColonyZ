@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using ColonyZ.Controllers;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.TimeSystem;
 using Newtonsoft.Json.Linq;
@@ -28,9 +27,10 @@ namespace ColonyZ.Models.Map
 
         public void OnSave(SaveGameWriter _writer)
         {
+            _writer.Comment("Modifying this value will likely corrupt your save game. This is not Budz proof.");
             _writer.WriteProperty("size", Size.Name);
             // TODO: Move god mode into a settings class, and save/load settings into world.json
-            _writer.WriteProperty("god_mode", MouseController.Instance.BuildModeController.GodMode);
+            _writer.WriteProperty("god_mode", World.Instance.WorldActionProcessor.GodMode);
             _writer.WriteSet("Time",
                 TimeManager.Instance.Day,
                 TimeManager.Instance.Hour,

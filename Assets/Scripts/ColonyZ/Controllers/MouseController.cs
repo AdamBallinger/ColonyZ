@@ -22,6 +22,22 @@ namespace ColonyZ.Controllers
 
     public class MouseController : MonoBehaviour
     {
+        public static MouseController Instance { get; private set; }
+
+        public MouseMode Mode { get; set; } = MouseMode.Select;
+
+        /// <summary>
+        ///     Event fired when the mouse is clicked. Passes tile clicked on and if the cursor was over UI.
+        /// </summary>
+        public event Action<MouseButton, Tile, bool> mouseClickEvent;
+
+        /// <summary>
+        ///     Event called when the mouse moves over a new tile. Passes new tile and if mouse is over UI.
+        /// </summary>
+        public event Action<Tile, bool> mouseTileChangeEvent;
+
+        private bool IsMouseOverUI { get; set; }
+
         private new Camera camera;
 
         /// <summary>
@@ -48,36 +64,17 @@ namespace ColonyZ.Controllers
         private Tile lastFrameTile;
 
         private Color previewInvalidColor = new Color(1.0f, 0.3f, 0.3f, 0.4f);
-
-        private List<GameObject> previewObjects;
         private Color previewOverlayColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
-
-        private EzPoolManager previewPool;
         private Color previewValidColor = new Color(0.3f, 1.0f, 0.3f, 0.4f);
 
+        private List<GameObject> previewObjects;
+        private EzPoolManager previewPool;
+
         private SelectionController selectionController;
-        public static MouseController Instance { get; private set; }
-
-        public BuildModeController BuildModeController { get; private set; }
-
-        public MouseMode Mode { get; set; } = MouseMode.Select;
-
-        private bool IsMouseOverUI { get; set; }
-
-        /// <summary>
-        ///     Event fired when the mouse is clicked. Passes tile clicked on and if the cursor was over UI.
-        /// </summary>
-        public event Action<MouseButton, Tile, bool> mouseClickEvent;
-
-        /// <summary>
-        ///     Event called when the mouse moves over a new tile. Passes new tile and if mouse is over UI.
-        /// </summary>
-        public event Action<Tile, bool> mouseTileChangeEvent;
 
         private void Awake()
         {
             Instance = this;
-            BuildModeController = new BuildModeController();
         }
 
         private void Start()
@@ -179,7 +176,7 @@ namespace ColonyZ.Controllers
                 for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
                 for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
                 {
-                    if (BuildModeController.BuildMode == BuildMode.Object)
+                    if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object)
                         if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX &&
                             y != _dragData.EndY)
                             continue;
@@ -198,17 +195,18 @@ namespace ColonyZ.Controllers
                     var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                     previewRenderer.sprite = null;
 
-                    if (BuildModeController.BuildMode == BuildMode.Object)
+                    if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object)
                     {
-                        previewRenderer.sprite = BuildModeController.ObjectToBuild.GetIcon();
+                        previewRenderer.sprite = World.Instance.WorldActionProcessor.ObjectToBuild.GetIcon();
 
                         // Tint the preview color based on if the structure position is valid.
                         previewRenderer.color =
-                            !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, tile)
+                            !World.Instance.IsObjectPositionValid(World.Instance.WorldActionProcessor.ObjectToBuild,
+                                tile)
                                 ? previewInvalidColor
                                 : previewValidColor;
                     }
-                    else if (BuildModeController.BuildMode == BuildMode.Demolish)
+                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Demolish)
                     {
                         // Only allow buildable objects to be demolished.
                         if (tile.HasObject && tile.Object.Buildable)
@@ -221,10 +219,10 @@ namespace ColonyZ.Controllers
                             previewRenderer.sprite = null;
                         }
                     }
-                    else if (BuildModeController.BuildMode == BuildMode.Zone)
+                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone)
                     {
                         draggableCursor.SetActive(true);
-                        var area = BuildModeController.ZoneToBuild;
+                        var area = World.Instance.WorldActionProcessor.ZoneToBuild;
 
                         if (!area.CanPlace(tile) || _dragData.SizeX < area.MinimumSize.x ||
                             _dragData.SizeY < area.MinimumSize.y)
@@ -238,8 +236,8 @@ namespace ColonyZ.Controllers
                             draggableCursorRenderer.color = previewValidColor;
                         }
                     }
-                    else if (BuildModeController.BuildMode == BuildMode.Gather &&
-                             BuildModeController.GatherMode == GatherMode.Mine)
+                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Gather &&
+                             World.Instance.WorldActionProcessor.GatherMode == GatherMode.Mine)
                     {
                         if (tile.HasObject && tile.Object.Mineable)
                         {
@@ -251,8 +249,8 @@ namespace ColonyZ.Controllers
                             previewRenderer.sprite = null;
                         }
                     }
-                    else if (BuildModeController.BuildMode == BuildMode.Gather &&
-                             BuildModeController.GatherMode == GatherMode.Fell)
+                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Gather &&
+                             World.Instance.WorldActionProcessor.GatherMode == GatherMode.Fell)
                     {
                         if (tile.HasObject && tile.Object.Fellable)
                         {
@@ -264,7 +262,7 @@ namespace ColonyZ.Controllers
                             previewRenderer.sprite = null;
                         }
                     }
-                    else if (BuildModeController.BuildMode == BuildMode.Cancel)
+                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Cancel)
                     {
                         if (tile.CurrentJob != null)
                         {
@@ -290,11 +288,12 @@ namespace ColonyZ.Controllers
                 var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                 previewRenderer.sprite = null;
 
-                if (BuildModeController.BuildMode == BuildMode.Object)
+                if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object)
                 {
-                    previewRenderer.sprite = BuildModeController.ObjectToBuild.GetIcon();
+                    previewRenderer.sprite = World.Instance.WorldActionProcessor.ObjectToBuild.GetIcon();
                     previewRenderer.color =
-                        !World.Instance.IsObjectPositionValid(BuildModeController.ObjectToBuild, GetTileUnderMouse())
+                        !World.Instance.IsObjectPositionValid(World.Instance.WorldActionProcessor.ObjectToBuild,
+                            GetTileUnderMouse())
                             ? previewInvalidColor
                             : previewValidColor;
                 }
@@ -336,7 +335,7 @@ namespace ColonyZ.Controllers
             for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
             for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
             {
-                if (BuildModeController.BuildMode == BuildMode.Object)
+                if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object)
                     // Only when building objects should the drag area only include the edge of the dragged area.
                     if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX &&
                         y != _dragData.EndY)
@@ -352,9 +351,14 @@ namespace ColonyZ.Controllers
                 tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
             }
 
-            if (BuildModeController.BuildMode == BuildMode.Object || BuildModeController.BuildMode == BuildMode.Zone)
+            if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object
+                || World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone)
             {
-                BuildModeController.Process(tiles.Cast<Tile>(), _dragData.StartX, _dragData.StartY, _dragData.SizeX,
+                World.Instance.WorldActionProcessor.Process(
+                    tiles.Cast<Tile>(),
+                    _dragData.StartX,
+                    _dragData.StartY,
+                    _dragData.SizeX,
                     _dragData.SizeY);
             }
             else
@@ -371,7 +375,7 @@ namespace ColonyZ.Controllers
 
                 sorted.RemoveAll(t => t == null);
 
-                BuildModeController.Process(sorted);
+                World.Instance.WorldActionProcessor.Process(sorted);
             }
 
             NodeGraph.Instance?.UpdateGraph(_dragData.StartX, _dragData.StartY, _dragData.EndX, _dragData.EndY);

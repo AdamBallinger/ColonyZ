@@ -1,4 +1,5 @@
-﻿using ColonyZ.Models.Map.Tiles.Objects;
+﻿using ColonyZ.Models.Map;
+using ColonyZ.Models.Map.Tiles.Objects;
 
 namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
 {
@@ -11,7 +12,7 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
                 if (!obj.Buildable) continue;
 
                 AddItem(obj.ObjectName, obj.GetIcon(),
-                    () => MouseController.Instance.BuildModeController.SetBuildMode(obj));
+                    () => World.Instance.WorldActionProcessor.SetBuildMode(obj));
             }
         }
     }

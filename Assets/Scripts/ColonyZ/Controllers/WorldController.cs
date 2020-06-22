@@ -179,7 +179,7 @@ namespace ColonyZ.Controllers
             }
 
             if (Input.GetKeyDown(KeyCode.G))
-                MouseController.Instance.BuildModeController.ToggleGodMode();
+                World.Instance.WorldActionProcessor.ToggleGodMode();
 
             if (Input.GetKeyDown(KeyCode.Space))
                 TimeManager.Instance.Toggle();

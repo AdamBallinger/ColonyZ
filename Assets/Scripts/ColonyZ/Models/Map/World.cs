@@ -32,6 +32,8 @@ namespace ColonyZ.Models.Map
 
         public WorldGridLayout WorldGrid { get; private set; }
 
+        public ActionProcessor WorldActionProcessor { get; private set; }
+
         public List<LivingEntity> Characters { get; private set; }
 
         public List<ItemEntity> Items { get; private set; }
@@ -79,6 +81,7 @@ namespace ColonyZ.Models.Map
             TileManager.LoadDefinitions();
             Instance.WorldGrid = new WorldGridLayout(Instance);
             Instance.WorldGenerator = new WorldGenerator(Random.Range(0, 1000000));
+            Instance.WorldActionProcessor = new ActionProcessor();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
             Instance.WorldGrid.BuildWorldGrid();
             NodeGraph.Create();

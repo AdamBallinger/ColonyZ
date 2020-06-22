@@ -1,4 +1,5 @@
-﻿using ColonyZ.Models.Sprites;
+﻿using ColonyZ.Models.Map;
+using ColonyZ.Models.Sprites;
 
 namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
 {
@@ -7,16 +8,16 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
         protected override void OnEnabled()
         {
             AddItem("Demolish", SpriteCache.GetSprite("Overlay", 0),
-                () => MouseController.Instance.BuildModeController.SetDemolishMode());
+                () => World.Instance.WorldActionProcessor.SetDemolishMode());
 
             AddItem("Mine", SpriteCache.GetSprite("Overlay", 1),
-                () => MouseController.Instance.BuildModeController.SetGatherMode(GatherMode.Mine));
+                () => World.Instance.WorldActionProcessor.SetGatherMode(GatherMode.Mine));
 
             AddItem("Fell", SpriteCache.GetSprite("Overlay", 2),
-                () => MouseController.Instance.BuildModeController.SetGatherMode(GatherMode.Fell));
+                () => World.Instance.WorldActionProcessor.SetGatherMode(GatherMode.Fell));
 
             AddItem("Cancel", SpriteCache.GetSprite("Overlay", 3),
-                () => MouseController.Instance.BuildModeController.SetCancelMode());
+                () => World.Instance.WorldActionProcessor.SetCancelMode());
         }
     }
 }

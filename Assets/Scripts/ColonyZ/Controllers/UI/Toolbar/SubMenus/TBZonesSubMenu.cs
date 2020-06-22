@@ -1,3 +1,4 @@
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Zones;
 
 namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
@@ -7,7 +8,7 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
         protected override void OnEnabled()
         {
             AddItem("Storage", null,
-                () => MouseController.Instance.BuildModeController.SetZone(new StorageZone()));
+                () => World.Instance.WorldActionProcessor.SetZone(new StorageZone()));
         }
     }
 }

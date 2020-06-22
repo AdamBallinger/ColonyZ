@@ -9,11 +9,6 @@ World Shader:
 Toolbar:
 - This is a mess again and could do with being reworked properly so its not a spaghetti mess..
 
-BuildModeController:
-- Should be moved outside of Controller namespace and into models since it isn't a class that integrates with Unity.. 
-Should be an instance created inside of world. Could also do with a rename to something more "Work" related, 
-as that is effectively what it is.
-
 Items / Objects / Sprites:
 - Ditch scriptable objects? Load this data through json? Needs work, as I don't like mixing the scriptable object
 stuff into the Models namespace, and makes the loading process a pain.

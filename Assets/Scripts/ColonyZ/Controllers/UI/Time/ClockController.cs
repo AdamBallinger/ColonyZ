@@ -1,4 +1,5 @@
-﻿using ColonyZ.Models.TimeSystem;
+﻿using ColonyZ.Models.Map;
+using ColonyZ.Models.TimeSystem;
 using TMPro;
 using UnityEngine;
 
@@ -21,11 +22,11 @@ namespace ColonyZ.Controllers.UI.Time
             TimeManager.Instance.timeModeChangedEvent += OnTimeModeChanged;
             TimeManager.Instance.timeChangedEvent += OnTimeChanged;
             TimeManager.Instance.newDayEvent += day => dayText.text = "Day: " + day;
-            MouseController.Instance.BuildModeController.godModeChangeEvent += OnGodModeChange;
+            World.Instance.WorldActionProcessor.godModeChangeEvent += OnGodModeChange;
 
             modeText.text = $"{(int) TimeManager.Instance.TimeMode}x";
             dayText.text = "Day: " + TimeManager.Instance.Day;
-            OnGodModeChange(MouseController.Instance.BuildModeController.GodMode);
+            OnGodModeChange(World.Instance.WorldActionProcessor.GodMode);
         }
 
         private void OnGodModeChange(bool _state)

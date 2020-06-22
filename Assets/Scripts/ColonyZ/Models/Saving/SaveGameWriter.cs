@@ -62,6 +62,11 @@ namespace ColonyZ.Models.Saving
             writer.WriteEnd();
         }
 
+        public void Comment(string _comment)
+        {
+            writer.WriteComment(_comment);
+        }
+
         public string GetJson()
         {
             return stringBuilder.ToString();

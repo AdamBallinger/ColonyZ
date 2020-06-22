@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ColonyZ.Controllers;
 using ColonyZ.Models.AI.Jobs;
-using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
 
-namespace ColonyZ.Controllers
+namespace ColonyZ.Models.Map
 {
-    public enum BuildMode
+    public enum ProcessMode
     {
         Zone,
         Object,
@@ -25,20 +25,26 @@ namespace ColonyZ.Controllers
         Harvest
     }
 
-    public class BuildModeController
+    /// <summary>
+    /// Class for handling the processing of building, demolishing etc.
+    /// </summary>
+    public class ActionProcessor
     {
-        private bool _godMode;
-
-        public BuildModeController()
-        {
-            BuildMode = BuildMode.Object;
-            GatherMode = GatherMode.Mine;
-            GodMode = World.Instance.WorldProvider.GodMode;
-        }
-
-        public BuildMode BuildMode { get; private set; }
+        /// <summary>
+        /// Current proc
+        /// </summary>
+        public ProcessMode ProcessMode { get; private set; }
 
         public GatherMode GatherMode { get; private set; }
+
+        /// <summary>
+        ///     Reference to the object that will be built on a tile when in Object work mode.
+        /// </summary>
+        public TileObject ObjectToBuild { get; private set; }
+
+        public Zone ZoneToBuild { get; private set; }
+
+        public event Action<bool> godModeChangeEvent;
 
         public bool GodMode
         {
@@ -53,14 +59,14 @@ namespace ColonyZ.Controllers
             }
         }
 
-        /// <summary>
-        ///     Reference to the object that will be built on a tile when in Object build mode.
-        /// </summary>
-        public TileObject ObjectToBuild { get; private set; }
+        private bool _godMode;
 
-        public Zone ZoneToBuild { get; private set; }
-
-        public event Action<bool> godModeChangeEvent;
+        public ActionProcessor()
+        {
+            ProcessMode = ProcessMode.Object;
+            GatherMode = GatherMode.Mine;
+            GodMode = World.Instance.WorldProvider.GodMode;
+        }
 
         public void ToggleGodMode()
         {
@@ -77,22 +83,22 @@ namespace ColonyZ.Controllers
         /// <param name="_height"></param>
         public void Process(IEnumerable<Tile> _tiles, int _x = 0, int _y = 0, int _width = 0, int _height = 0)
         {
-            switch (BuildMode)
+            switch (ProcessMode)
             {
-                case BuildMode.Zone:
+                case ProcessMode.Zone:
                     if (ZoneToBuild.MinimumSize.x <= _width && ZoneToBuild.MinimumSize.y <= _height)
                         HandleBuildZone(_tiles, _x, _y, _width, _height);
                     break;
-                case BuildMode.Object:
+                case ProcessMode.Object:
                     HandleBuild(_tiles);
                     break;
-                case BuildMode.Demolish:
+                case ProcessMode.Demolish:
                     HandleDemolish(_tiles);
                     break;
-                case BuildMode.Gather:
+                case ProcessMode.Gather:
                     HandleGather(_tiles);
                     break;
-                case BuildMode.Cancel:
+                case ProcessMode.Cancel:
                     HandleCancel(_tiles);
                     break;
             }
@@ -189,7 +195,7 @@ namespace ColonyZ.Controllers
 
             var jobs = (from tile in _tiles
                 where tile.HasObject && ObjectCompatWithMode(tile.Object)
-                select new HarvestJob(tile, BuildMode.ToString()));
+                select new HarvestJob(tile, ProcessMode.ToString()));
 
             JobManager.Instance.AddJobs(jobs);
         }
@@ -207,11 +213,11 @@ namespace ColonyZ.Controllers
 
         private bool ObjectCompatWithMode(TileObject _object)
         {
-            switch (BuildMode)
+            switch (ProcessMode)
             {
-                case BuildMode.Demolish:
+                case ProcessMode.Demolish:
                     return _object.Buildable;
-                case BuildMode.Gather:
+                case ProcessMode.Gather:
                     switch (GatherMode)
                     {
                         case GatherMode.Fell:
@@ -229,7 +235,7 @@ namespace ColonyZ.Controllers
         public void SetZone(Zone _zoneToBuild)
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            BuildMode = BuildMode.Zone;
+            ProcessMode = ProcessMode.Zone;
             ZoneToBuild = _zoneToBuild;
         }
 
@@ -240,7 +246,7 @@ namespace ColonyZ.Controllers
         public void SetBuildMode(TileObject _object)
         {
             MouseController.Instance.Mode = _object.Draggable ? MouseMode.Process : MouseMode.Process_Single;
-            BuildMode = BuildMode.Object;
+            ProcessMode = ProcessMode.Object;
             ObjectToBuild = _object;
         }
 
@@ -250,20 +256,20 @@ namespace ColonyZ.Controllers
         public void SetDemolishMode()
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            BuildMode = BuildMode.Demolish;
+            ProcessMode = ProcessMode.Demolish;
         }
 
         public void SetGatherMode(GatherMode _mode)
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            BuildMode = BuildMode.Gather;
+            ProcessMode = ProcessMode.Gather;
             GatherMode = _mode;
         }
 
         public void SetCancelMode()
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            BuildMode = BuildMode.Cancel;
+            ProcessMode = ProcessMode.Cancel;
         }
     }
 }

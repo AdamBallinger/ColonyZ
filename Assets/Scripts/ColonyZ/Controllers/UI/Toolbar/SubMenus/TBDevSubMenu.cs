@@ -1,4 +1,5 @@
 ﻿using ColonyZ.Controllers.Dev;
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Sprites;
 
 namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
@@ -20,7 +21,7 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
             AddItem("Item Spawner", SpriteCache.GetSprite("UI", 7),
                 () => DevToolManager.Instance.ToggleItemTool());
             AddItem("God Mode", SpriteCache.GetSprite("UI", 8),
-                () => MouseController.Instance.BuildModeController.ToggleGodMode());
+                () => World.Instance.WorldActionProcessor.ToggleGodMode());
         }
 
         protected override void OnDisabled()
