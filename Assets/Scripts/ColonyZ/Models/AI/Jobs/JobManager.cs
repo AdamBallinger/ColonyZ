@@ -74,7 +74,7 @@ namespace ColonyZ.Models.AI.Jobs
 
         public static void Destroy()
         {
-            World.Instance.WorldGrid.chunkUpdateEvent -= Instance.OnChunkUpdate;
+            World.Instance.WorldGrid.chunkModifiedEvent -= Instance.OnChunkModified;
             Instance = null;
         }
 
@@ -84,10 +84,10 @@ namespace ColonyZ.Models.AI.Jobs
             jobNoAccessMap = new Dictionary<Job, List<HumanEntity>>();
             requiredChunks = new List<WorldChunk>();
 
-            World.Instance.WorldGrid.chunkUpdateEvent += OnChunkUpdate;
+            World.Instance.WorldGrid.chunkModifiedEvent += OnChunkModified;
         }
 
-        private void OnChunkUpdate(WorldChunk _chunk)
+        private void OnChunkModified(WorldChunk _chunk)
         {
             // TODO: Broke, as it means it only checks again if the chunk the jobs are in changed..
             //if (requiredChunks.Contains(_chunk))

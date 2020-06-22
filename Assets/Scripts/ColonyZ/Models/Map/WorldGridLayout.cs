@@ -9,7 +9,10 @@ namespace ColonyZ.Models.Map
     {
         public List<WorldChunk> Chunks { get; }
 
-        public event Action<WorldChunk> chunkUpdateEvent;
+        /// <summary>
+        /// Event called when the chunk is modified (Object placed/removed etc.).
+        /// </summary>
+        public event Action<WorldChunk> chunkModifiedEvent;
 
         private const int CHUNK_SIZE = 12;
 
@@ -72,7 +75,7 @@ namespace ColonyZ.Models.Map
 
         public void NotifyChunkUpdate(Tile _tile)
         {
-            chunkUpdateEvent?.Invoke(GetChunkAt(_tile));
+            chunkModifiedEvent?.Invoke(GetChunkAt(_tile));
         }
 
         public void RebuildDirty()
