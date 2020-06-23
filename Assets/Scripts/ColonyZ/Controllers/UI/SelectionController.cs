@@ -23,7 +23,7 @@ namespace ColonyZ.Controllers.UI
         /// <summary>
         ///     Determines if the selection container is visible.
         /// </summary>
-        public bool IsVisible { get; private set; }
+        private bool IsVisible { get; set; }
 
         /// <summary>
         ///     Called when the mouse clicks on a tile.
