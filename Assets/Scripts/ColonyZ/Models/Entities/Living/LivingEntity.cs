@@ -3,12 +3,13 @@ using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
+using ColonyZ.Models.UI.Context;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Entities.Living
 {
-    public class LivingEntity : Entity
+    public class LivingEntity : Entity, IContextProvider
     {
         public float MovementSpeed { get; }
 
@@ -36,6 +37,9 @@ namespace ColonyZ.Models.Entities.Living
 
         public override void Update()
         {
+            if (Health <= 0)
+                World.Instance.RemoveCharacter(this);
+
             Motor.Update();
         }
 
@@ -85,6 +89,14 @@ namespace ColonyZ.Models.Entities.Living
             entity.Health = health;
             entity.HeadId = headID;
             entity.BodyId = bodyID;
+        }
+
+        public ContextAction[] GetContextActions()
+        {
+            return new[]
+            {
+                new ContextAction("Kill", () => Health = 0)
+            };
         }
     }
 }
