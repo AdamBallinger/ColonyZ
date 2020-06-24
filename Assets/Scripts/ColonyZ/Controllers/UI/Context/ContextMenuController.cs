@@ -81,11 +81,18 @@ namespace ColonyZ.Controllers.UI.Context
             }
 
             contextWindowRoot.SetActive(false);
+            selectionController.HideCursor();
         }
 
         private void OnMouseClick(MouseButton _btn, Tile _tile, bool _onUI)
         {
-            if (_btn != MouseButton.RightMouse || _tile == null || _tile.IsMapEdge) return;
+            if (_btn != MouseButton.RightMouse) return;
+
+            if (_tile == null || _tile.IsMapEdge)
+            {
+                CloseContextMenu();
+                return;
+            }
 
             anchorPos = _tile.Position + new Vector2(0.5f, 0.0f);
             RepositionMenu();
@@ -94,7 +101,7 @@ namespace ColonyZ.Controllers.UI.Context
             else if (_tile.LivingEntities.Count > 0) OpenContextMenu(_tile.LivingEntities[0]);
             else CloseContextMenu();
 
-            if (!(currentProvider is LivingEntity))
+            if (currentProvider != null && !(currentProvider is LivingEntity))
                 selectionController.SetCursor(_tile.Position);
             else selectionController.HideCursor();
         }
@@ -104,7 +111,6 @@ namespace ColonyZ.Controllers.UI.Context
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 CloseContextMenu();
-                selectionController.HideCursor();
             }
 
             if (contextWindowRoot.activeSelf)
