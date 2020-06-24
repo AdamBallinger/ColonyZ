@@ -199,7 +199,7 @@ namespace ColonyZ.Controllers
                 {
                     tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
                     tileObjectGameObjects[tile].transform.rotation =
-                        Quaternion.Euler(0.0f, 0.0f, _tile.Object.GetObjectRotation());
+                        Quaternion.Euler(0.0f, 0.0f, tile.Object.GetObjectRotation());
                 }
             }
         }
