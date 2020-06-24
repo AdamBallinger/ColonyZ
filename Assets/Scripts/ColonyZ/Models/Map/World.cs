@@ -311,7 +311,7 @@ namespace ColonyZ.Models.Map
         /// <returns></returns>
         public bool IsObjectPositionValid(TileObject _object, Tile _tile)
         {
-            if (_tile == null || _tile.HasObject) return false;
+            if (_tile == null) return false;
 
             if (_object.Width <= 1 && _object.Height <= 1) return _object.CanPlace(_tile);
 

@@ -30,6 +30,8 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         public override bool CanPlace(Tile _tile)
         {
+            if (!base.CanPlace(_tile)) return false;
+
             var east = World.Instance.GetTileAt(_tile.X + 1, _tile.Y);
             var west = World.Instance.GetTileAt(_tile.X - 1, _tile.Y);
             var north = World.Instance.GetTileAt(_tile.X, _tile.Y + 1);

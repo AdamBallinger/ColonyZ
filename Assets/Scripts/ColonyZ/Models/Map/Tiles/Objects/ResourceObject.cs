@@ -14,11 +14,6 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         public int Quantity => quanitity;
 
-        public override bool CanPlace(Tile _tile)
-        {
-            return !_tile.HasObject;
-        }
-
         public override bool ConnectsWith(TileObject _other)
         {
             return string.CompareOrdinal(_other.ObjectName, ObjectName) == 0;

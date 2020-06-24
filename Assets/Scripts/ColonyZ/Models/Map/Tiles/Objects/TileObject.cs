@@ -106,7 +106,10 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// </summary>
         /// <param name="_tile"></param>
         /// <returns></returns>
-        public abstract bool CanPlace(Tile _tile);
+        public virtual bool CanPlace(Tile _tile)
+        {
+            return !_tile.HasObject;
+        }
 
         /// <summary>
         ///     Return an icon sprite for this tile structure. This is used to display the structure in UI.
