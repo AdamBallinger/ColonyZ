@@ -1,6 +1,7 @@
 using ColonyZ.Models.Map;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 namespace ColonyZ.Controllers
 {
@@ -51,7 +52,7 @@ namespace ColonyZ.Controllers
 
         private void HandleCameraMovement()
         {
-            if (Input.GetMouseButton(1) || Input.GetMouseButton(2))
+            if (Input.GetMouseButton((int) MouseButton.MiddleMouse))
                 cameraPivot.Translate(previousMousePosition - currentMousePosition);
 
             cameraPivot.Translate(Vector3.right * (Input.GetAxis("Horizontal") *

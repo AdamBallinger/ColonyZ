@@ -1,12 +1,14 @@
+using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
+using ColonyZ.Models.UI.Context;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    public abstract class TileObject : ScriptableObject, ISelectable, ISaveable
+    public abstract class TileObject : ScriptableObject, ISelectable, ISaveable, IContextProvider
     {
         /// <summary>
         ///     The Tile this object originates from. If the object is a multi tile object, then this is the "base" tile
@@ -189,6 +191,23 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             var tileIndex = _dataToken["t_index"].Value<int>();
 
             World.Instance.GetTileAt(tileIndex).SetObject(this, false);
+        }
+
+        public ContextAction[] GetContextActions()
+        {
+            return new[]
+            {
+                new ContextAction("Remove", () =>
+                {
+                    if (World.Instance.WorldActionProcessor.GodMode) Tile.RemoveObject();
+                    else JobManager.Instance.AddJob(new DemolishJob(Tile));
+                })
+            };
+        }
+
+        public string GetContextMenuName()
+        {
+            return ObjectName;
         }
     }
 }

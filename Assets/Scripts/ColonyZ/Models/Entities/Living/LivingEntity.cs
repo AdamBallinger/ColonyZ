@@ -98,5 +98,10 @@ namespace ColonyZ.Models.Entities.Living
                 new ContextAction("Kill", () => Health = 0)
             };
         }
+
+        public string GetContextMenuName()
+        {
+            return Name;
+        }
     }
 }

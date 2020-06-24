@@ -33,7 +33,7 @@ namespace ColonyZ.Controllers.UI
         {
             if (_tile == null)
             {
-                HideSelectable();
+                HideSelectionInfo();
                 return;
             }
 
@@ -47,6 +47,25 @@ namespace ColonyZ.Controllers.UI
                 Set(_tile);
         }
 
+        public void SetCursor(Vector2 _pos)
+        {
+            selectionObject.SetActive(true);
+            selectionObject.transform.position = _pos;
+        }
+
+        public void HideCursor()
+        {
+            selectionObject.SetActive(false);
+        }
+
+        private void HideSelectionInfo()
+        {
+            IsVisible = false;
+            currentSelection = null;
+            selectionContainer.SetActive(false);
+            HideCursor();
+        }
+
         private void Set(ISelectable _selectable)
         {
             currentSelection = _selectable;
@@ -55,26 +74,18 @@ namespace ColonyZ.Controllers.UI
             description.text = _selectable.GetSelectionDescription();
             IsVisible = true;
             selectionContainer.SetActive(true);
-            selectionObject.SetActive(true);
-            selectionObject.transform.position = currentSelection.GetPosition();
+            SetCursor(_selectable.GetPosition());
         }
 
         private void Update()
         {
-            if (IsVisible && Input.GetKeyDown(KeyCode.Escape)) HideSelectable();
+            if (IsVisible && Input.GetKeyDown(KeyCode.Escape)) HideSelectionInfo();
 
             if (IsVisible)
             {
                 description.text = currentSelection.GetSelectionDescription();
                 selectionObject.transform.position = currentSelection.GetPosition();
             }
-        }
-
-        private void HideSelectable()
-        {
-            IsVisible = false;
-            selectionContainer.SetActive(false);
-            selectionObject.SetActive(false);
         }
     }
 }

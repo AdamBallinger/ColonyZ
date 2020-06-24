@@ -93,7 +93,7 @@ namespace ColonyZ.Models.Map
 
         public void Update()
         {
-            foreach (var character in Characters) character.Update();
+            for (var i = Characters.Count - 1; i >= 0; i--) Characters[i].Update();
 
             for (var i = Objects.Count - 1; i >= 0; i--) Objects[i].Update();
 

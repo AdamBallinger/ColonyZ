@@ -3,5 +3,7 @@
     public interface IContextProvider
     {
         ContextAction[] GetContextActions();
+
+        string GetContextMenuName();
     }
 }
