@@ -229,7 +229,6 @@ namespace ColonyZ.Models.Map.Tiles
 
         public string GetSelectionDescription()
         {
-            // TODO: Only include area id in selection details for development build / debug mode?
             return $"Position: ({X}, {Y})\n" +
                    $"Area ID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
                    $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n";

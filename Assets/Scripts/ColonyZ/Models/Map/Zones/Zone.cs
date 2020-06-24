@@ -9,7 +9,6 @@ namespace ColonyZ.Models.Map.Zones
     {
         public string ZoneName { get; protected set; }
 
-        // TODO: Maybe change this so that the tile with an object just isn't a part of the zone?
         /// <summary>
         ///     Determines if the zone can contain objects when being placed in the word.
         ///     This does not affect the zone when an object is being built after the zone is placed.

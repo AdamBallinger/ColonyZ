@@ -20,7 +20,6 @@ namespace ColonyZ.Controllers.UI.MainMenu
         public void OnNewGamePressed()
         {
             WorldLoadSettings.LOAD_TYPE = WorldLoadType.New;
-            // TODO: Display size selection buttons.
             sizeSelectionParent.SetActive(true);
             mainButtonsParent.SetActive(false);
         }

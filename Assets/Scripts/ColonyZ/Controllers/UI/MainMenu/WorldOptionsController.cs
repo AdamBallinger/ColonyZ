@@ -25,7 +25,6 @@ namespace ColonyZ.Controllers.UI.MainMenu
         private void OnSizeSelected(WorldSizeTypes.WorldSize _size)
         {
             WorldLoadSettings.WORLD_SIZE = _size;
-            // TODO: Should maybe add a confirm button?
             SceneManager.LoadScene("world");
         }
     }
