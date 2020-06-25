@@ -75,6 +75,7 @@ namespace ColonyZ.Models.AI.Jobs
         public static void Destroy()
         {
             World.Instance.WorldGrid.chunkModifiedEvent -= Instance.OnChunkModified;
+            World.Instance.onEntityRemoved -= Instance.OnEntityRemoved;
             Instance = null;
         }
 
@@ -85,6 +86,7 @@ namespace ColonyZ.Models.AI.Jobs
             requiredChunks = new List<WorldChunk>();
 
             World.Instance.WorldGrid.chunkModifiedEvent += OnChunkModified;
+            World.Instance.onEntityRemoved += OnEntityRemoved;
         }
 
         private void OnChunkModified(WorldChunk _chunk)
@@ -93,6 +95,19 @@ namespace ColonyZ.Models.AI.Jobs
             //if (requiredChunks.Contains(_chunk))
             {
                 canEvaluateErrored = true;
+            }
+        }
+
+        private void OnEntityRemoved(Entity _entity)
+        {
+            if (!(_entity is HumanEntity)) return;
+
+            var human = (HumanEntity) _entity;
+            if (human.HasJob)
+            {
+                var job = human.CurrentJob;
+                job.AssignedEntity = null;
+                SetJobState(job, JobState.Idle);
             }
         }
 
