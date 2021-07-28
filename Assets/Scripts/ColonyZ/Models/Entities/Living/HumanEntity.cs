@@ -15,7 +15,7 @@ namespace ColonyZ.Models.Entities.Living
         private Cardinals previousJobCardinal;
 
         /// <summary>
-        /// Time in seconds between being able to check if a new working tile is available when cardinal direction changes.
+        ///     Time in seconds between being able to check if a new working tile is available when cardinal direction changes.
         /// </summary>
         private const float CARDINAL_CHECK_TIMER = 1.0f;
 

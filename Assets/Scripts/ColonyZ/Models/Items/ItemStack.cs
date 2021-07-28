@@ -15,7 +15,7 @@ namespace ColonyZ.Models.Items
         }
 
         /// <summary>
-        /// Takes a given amount from this item stack and returns a new stack with that amount.
+        ///     Takes a given amount from this item stack and returns a new stack with that amount.
         /// </summary>
         /// <param name="_quantity"></param>
         /// <returns></returns>
@@ -33,7 +33,7 @@ namespace ColonyZ.Models.Items
         }
 
         /// <summary>
-        /// Try to merge the provided item stack with this stack.
+        ///     Try to merge the provided item stack with this stack.
         /// </summary>
         /// <param name="_other"></param>
         /// <returns></returns>

@@ -9,11 +9,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         {
             return !_tile.HasObject;
         }
-
-        // Make foundations always appear below anything else.
+        
         public override int GetSortingOrder()
         {
-            return -10;
+            // Make foundations always appear below anything else.
+            return -10000;
         }
 
         public override bool ConnectsWith(TileObject _other)

@@ -59,7 +59,7 @@ namespace ColonyZ.Models.Entities
         }
 
         /// <summary>
-        /// Event called when the tile the entity is on changes.
+        ///     Event called when the tile the entity is on changes.
         /// </summary>
         /// <param name="_tile"></param>
         protected virtual void OnTileChanged(Tile _tile)

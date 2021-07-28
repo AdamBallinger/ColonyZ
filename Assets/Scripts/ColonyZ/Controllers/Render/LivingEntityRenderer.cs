@@ -9,11 +9,11 @@ namespace ColonyZ.Controllers.Render
     {
         [SerializeField] private SpriteRenderer bodyRenderer;
 
-        private LivingEntity entity;
-
         [SerializeField] private SpriteRenderer headRenderer;
 
         [SerializeField] private SpriteRenderer itemRenderer;
+        
+        private LivingEntity entity;
 
         public void SetEntity(LivingEntity _entity)
         {

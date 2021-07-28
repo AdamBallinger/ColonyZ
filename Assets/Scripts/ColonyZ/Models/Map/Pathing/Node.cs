@@ -122,7 +122,7 @@ namespace ColonyZ.Models.Map.Pathing
         }
 
         /// <summary>
-        /// Notifies any paths on this node that they are no longer valid.
+        ///     Notifies any paths on this node that they are no longer valid.
         /// </summary>
         private void InvalidatePaths()
         {

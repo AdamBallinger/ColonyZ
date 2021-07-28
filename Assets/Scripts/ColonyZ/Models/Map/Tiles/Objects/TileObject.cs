@@ -59,7 +59,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         public bool MultiTile => Width > 1 || Height > 1;
 
         /// <summary>
-        /// Flag used to only save the origin tile for multi tile objects.
+        ///     Flag used to only save the origin tile for multi tile objects.
         /// </summary>
         private bool shouldSave = true;
 

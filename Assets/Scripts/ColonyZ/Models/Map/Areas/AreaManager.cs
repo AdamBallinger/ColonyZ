@@ -166,7 +166,7 @@ namespace ColonyZ.Models.Map.Areas
         }
 
         /// <summary>
-        /// Merges target area into the source area.
+        ///     Merges target area into the source area.
         /// </summary>
         /// <param name="_target"></param>
         /// <param name="_source"></param>

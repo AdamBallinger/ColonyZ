@@ -6,7 +6,7 @@ namespace ColonyZ.Models.Map.Pathing
     public class Path
     {
         /// <summary>
-        /// The number of additional points to add in-between each tile in the path.
+        ///     The number of additional points to add in-between each tile in the path.
         /// </summary>
         private const int NUMBER_OF_SMOOTHING_POINTS = 4;
 
@@ -25,7 +25,7 @@ namespace ColonyZ.Models.Map.Pathing
         public List<Vector2> SmoothPath { get; }
 
         /// <summary>
-        /// The current point the path is targeting.
+        ///     The current point the path is targeting.
         /// </summary>
         public Vector2 Current => SmoothPath[CurrentIndex];
 

@@ -11,22 +11,22 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         private bool isOpening;
 
         /// <summary>
-        /// Current time spent waiting to open door.
+        ///     Current time spent waiting to open door.
         /// </summary>
         private float currentOpeningTime;
         
         /// <summary>
-        /// Total time required for the door to open.
+        ///     Total time required for the door to open.
         /// </summary>
         private float openDelay = 0.5f;
         
         /// <summary>
-        /// Current time the door has been open for.
+        ///     Current time the door has been open for.
         /// </summary>
         private float currentOpenTime;
         
         /// <summary>
-        /// Max time the door can remain open for.
+        ///     Max time the door can remain open for.
         /// </summary>
         private float maxOpenTime = 1.25f;
         

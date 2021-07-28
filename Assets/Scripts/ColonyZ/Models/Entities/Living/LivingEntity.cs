@@ -29,7 +29,7 @@ namespace ColonyZ.Models.Entities.Living
         }
 
         /// <summary>
-        /// Used for loading only.
+        ///     Used for loading only.
         /// </summary>
         public LivingEntity() : base(null)
         {

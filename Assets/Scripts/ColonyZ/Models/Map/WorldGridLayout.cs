@@ -10,7 +10,7 @@ namespace ColonyZ.Models.Map
         public List<WorldChunk> Chunks { get; }
 
         /// <summary>
-        /// Event called when the chunk is modified (Object placed/removed etc.).
+        ///     Event called when the chunk is modified (Object placed/removed etc.).
         /// </summary>
         public event Action<WorldChunk> chunkModifiedEvent;
 

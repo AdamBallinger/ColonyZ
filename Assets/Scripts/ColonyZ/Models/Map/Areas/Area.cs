@@ -14,7 +14,7 @@ namespace ColonyZ.Models.Map.Areas
         public HashSet<Area> LinkedAreas { get; }
 
         /// <summary>
-        /// Number of tiles inside the area.
+        ///     Number of tiles inside the area.
         /// </summary>
         public int Size => Tiles.Count;
 

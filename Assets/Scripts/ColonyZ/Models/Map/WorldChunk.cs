@@ -12,7 +12,7 @@ namespace ColonyZ.Models.Map
         public HashSet<Tile> Tiles { get; }
 
         /// <summary>
-        /// Determines if the chunk has been modified this frame and should be rebuilt at the end.
+        ///     Determines if the chunk has been modified this frame and should be rebuilt at the end.
         /// </summary>
         public bool IsDirty { get; private set; }
 

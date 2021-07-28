@@ -53,7 +53,7 @@ namespace ColonyZ.Models.AI
         private float travelDistance;
 
         /// <summary>
-        /// Determines if the motor should wait to move the entity.
+        ///     Determines if the motor should wait to move the entity.
         /// </summary>
         private bool shouldWait;
 

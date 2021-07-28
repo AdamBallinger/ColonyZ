@@ -19,7 +19,7 @@ namespace ColonyZ.Models.Entities
         }
 
         /// <summary>
-        /// Used for loading only.
+        ///     Used for loading only.
         /// </summary>
         public ItemEntity() : base(null)
         {
