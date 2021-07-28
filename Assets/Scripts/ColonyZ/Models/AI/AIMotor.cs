@@ -107,18 +107,19 @@ namespace ColonyZ.Models.AI
 
             if (interpolationTime >= 0.5f)
             {
-                var obj = World.Instance.GetTileAt(path.Current).Object;
-                if (obj is DoorObject doorObject)
+                var tile = World.Instance.GetTileAt(path.Current);
+                if (tile.GetEnterability() == TileEnterability.Delayed)
                 {
-                    if (!doorObject.IsOpen)
+                    var door = tile.Object as DoorObject;
+                    if (!door.IsOpen)
                     {
                         shouldWait = true;
-                        doorObject.OpenDoor();
+                        door.OpenDoor();
                         return;
                     }
-                }
 
-                shouldWait = false;
+                    shouldWait = false;
+                }
             }
 
             if (interpolationTime >= 1.0f)
