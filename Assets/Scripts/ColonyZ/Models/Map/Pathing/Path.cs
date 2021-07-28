@@ -84,6 +84,7 @@ namespace ColonyZ.Models.Map.Pathing
 
         public void Next()
         {
+            // Only remove path from points that are actually on tiles and not extra smoothing points.
             if (CurrentIndex % NUMBER_OF_SMOOTHING_POINTS == 0)
             {
                 Nodes[CurrentIndex / NUMBER_OF_SMOOTHING_POINTS].Paths.Remove(this);

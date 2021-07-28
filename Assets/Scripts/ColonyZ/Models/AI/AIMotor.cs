@@ -1,5 +1,4 @@
 using ColonyZ.Models.Entities.Living;
-using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.TimeSystem;
@@ -30,6 +29,26 @@ namespace ColonyZ.Models.AI
         private Tile TargetTile { get; set; }
 
         private LivingEntity Entity { get; }
+        
+        /// <summary>
+        ///     Curve controlling rate of movement between each path position.
+        /// </summary>
+        private AnimationCurve movementCurve = AnimationCurve.Linear(0, 0, 1, 1);
+        
+        /// <summary>
+        ///     T value used to evaluate movement curve.
+        /// </summary>
+        private float interpolationTime;
+        
+        /// <summary>
+        ///     Position of previous path point the entity is moving from.
+        /// </summary>
+        private Vector2 originPos;
+
+        /// <summary>
+        ///     Distance between the last and current path position.
+        /// </summary>
+        private float travelDistance;
 
         public AIMotor(LivingEntity _entity)
         {
@@ -72,59 +91,54 @@ namespace ColonyZ.Models.AI
                 return;
             }
 
-            var dist = Vector2.Distance(Entity.Position, path.Current);
+            var dt = TimeManager.Instance.DeltaTime;
+            var entityMovementSpeed = Entity.MovementSpeed * Entity.CurrentTile.TileDefinition.MovementModifier;
 
-            // Allow small tolerance for floating point precision.
-            if (dist <= 0.0001f)
+            interpolationTime += dt / (travelDistance / entityMovementSpeed);
+
+            Entity.SetPosition(Vector2.Lerp(originPos, path.Current, movementCurve.Evaluate(interpolationTime)));
+
+            if (interpolationTime >= 1.0f)
             {
-                // Set the entity position to make sure it is not off by a small value due to precision issues.
-                Entity.SetPosition(path.Current);
-
-                // If the tile we were pathing to was the last tile in the path, then the path is finished.
                 if (path.IsLastPoint)
                 {
-                    Entity.SetPosition(World.Instance.GetTileAt(path.Current).Position);
-                    // Move next so that the path is properly removed from the node at that tile.
                     path.Next();
                     FinishPath();
                     return;
                 }
-
+                
+                interpolationTime = 0.0f;
                 path.Next();
-                dist = Vector2.Distance(Entity.Position, path.Current);
+                originPos = Entity.Position;
+                travelDistance = Vector2.Distance(originPos, path.Current);
             }
+            
+            var direction = (path.Current - Entity.Position).normalized;
+            CalculateMotorDirection(Vector2.Dot(Vector2.up, direction));
+        }
 
-            var dt = TimeManager.Instance.DeltaTime;
-            var dir = (path.Current - Entity.Position).normalized;
-
-            var dirAngle = Vector2.Dot(Vector2.up, dir);
-
-            if (dirAngle > 0.75f)
+        private void CalculateMotorDirection(float _angle)
+        {
+            if (_angle > 0.75f)
             {
                 MotorDirection = AIMotorDirection.Up;
             }
-            else if (dirAngle > 0.0f)
+            else if (_angle > 0.0f)
             {
                 MotorDirection = path.Current.x < Entity.X ? AIMotorDirection.Left : AIMotorDirection.Right;
             }
-            else if (dirAngle < -0.75f)
+            else if (_angle < -0.75f)
             {
                 MotorDirection = AIMotorDirection.Down;
             }
-            else if (dirAngle < 0.0f)
+            else if (_angle < 0.0f)
             {
                 MotorDirection = path.Current.x < Entity.X ? AIMotorDirection.Left : AIMotorDirection.Right;
             }
-            else if (dirAngle == 0.0f)
+            else if (_angle == 0.0f)
             {
                 MotorDirection = path.Current.x < Entity.X ? AIMotorDirection.Left : AIMotorDirection.Right;
             }
-
-            // The rate in which we move the entity this frame.
-            var movementDelta = Entity.MovementSpeed * Entity.CurrentTile.TileDefinition.MovementModifier * dt;
-
-            var position = Vector2.MoveTowards(Entity.Position, Entity.Position + dir * dist, movementDelta);
-            Entity.SetPosition(position);
         }
 
         private void OnPathReceived(Path _path)
@@ -133,6 +147,9 @@ namespace ColonyZ.Models.AI
             {
                 Working = true;
                 path = _path;
+                originPos = Entity.Position;
+                interpolationTime = 0.0f;
+                travelDistance = Vector2.Distance(originPos, path.Current);
             }
             else
             {
@@ -145,7 +162,6 @@ namespace ColonyZ.Models.AI
         {
             Working = false;
             path = null;
-            //MotorDirection = 0;
         }
     }
 }
