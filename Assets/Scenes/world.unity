@@ -877,7 +877,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Compute time: 0ms
 
-    Path length: 25'
+    Path length: 37'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5b143fc62cd7ccb40a6c9977088bb083, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 11e0183ab8efa2046bc397c67a952d35, type: 2}
@@ -1259,7 +1259,44 @@ LineRenderer:
   m_SortingLayerID: 1027192665
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Positions: []
+  m_Positions:
+  - {x: 8, y: 12, z: 0}
+  - {x: 8, y: 11.8203125, z: 0}
+  - {x: 8, y: 11.5625, z: 0}
+  - {x: 8, y: 11.2734375, z: 0}
+  - {x: 8, y: 11, z: 0}
+  - {x: 8, y: 10.75, z: 0}
+  - {x: 8, y: 10.5, z: 0}
+  - {x: 8, y: 10.25, z: 0}
+  - {x: 8, y: 10, z: 0}
+  - {x: 8, y: 9.75, z: 0}
+  - {x: 8, y: 9.5, z: 0}
+  - {x: 8, y: 9.25, z: 0}
+  - {x: 8, y: 9, z: 0}
+  - {x: 8, y: 8.75, z: 0}
+  - {x: 8, y: 8.5, z: 0}
+  - {x: 8, y: 8.25, z: 0}
+  - {x: 8, y: 8, z: 0}
+  - {x: 7.9765625, y: 7.75, z: 0}
+  - {x: 7.9375, y: 7.5, z: 0}
+  - {x: 7.9296875, y: 7.25, z: 0}
+  - {x: 8, y: 7, z: 0}
+  - {x: 8.203125, y: 6.75, z: 0}
+  - {x: 8.5, y: 6.5, z: 0}
+  - {x: 8.796875, y: 6.25, z: 0}
+  - {x: 9, y: 6, z: 0}
+  - {x: 9.0703125, y: 5.75, z: 0}
+  - {x: 9.0625, y: 5.5, z: 0}
+  - {x: 9.0234375, y: 5.25, z: 0}
+  - {x: 9, y: 5, z: 0}
+  - {x: 9.0234375, y: 4.75, z: 0}
+  - {x: 9.0625, y: 4.5, z: 0}
+  - {x: 9.0703125, y: 4.25, z: 0}
+  - {x: 9, y: 4, z: 0}
+  - {x: 8.796875, y: 3.7265625, z: 0}
+  - {x: 8.5, y: 3.4375, z: 0}
+  - {x: 8.203125, y: 3.1796875, z: 0}
+  - {x: 8, y: 3, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1.0352988
