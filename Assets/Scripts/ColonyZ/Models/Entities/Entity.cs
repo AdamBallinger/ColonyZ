@@ -47,7 +47,6 @@ namespace ColonyZ.Models.Entities
             var tileAtPos = World.Instance.GetTileAt(_pos);
             if (tileAtPos == null)
             {
-                Debug.LogWarning("Attempt to set entity position to invalid value.");
                 return;
             }
 

@@ -153,6 +153,11 @@ namespace ColonyZ.Models.Map.Tiles
             onTileChanged?.Invoke(this);
         }
 
+        public void MarkDirty()
+        {
+            onTileChanged?.Invoke(this);
+        }
+
         public void SetItem(ItemEntity _entity)
         {
             // Tile already has an item on it.

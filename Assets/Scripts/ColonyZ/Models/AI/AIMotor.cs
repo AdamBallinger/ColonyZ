@@ -1,6 +1,8 @@
 using ColonyZ.Models.Entities.Living;
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
+using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.TimeSystem;
 using UnityEngine;
 
@@ -50,6 +52,11 @@ namespace ColonyZ.Models.AI
         /// </summary>
         private float travelDistance;
 
+        /// <summary>
+        /// Determines if the motor should wait to move the entity.
+        /// </summary>
+        private bool shouldWait;
+
         public AIMotor(LivingEntity _entity)
         {
             Working = false;
@@ -94,9 +101,25 @@ namespace ColonyZ.Models.AI
             var dt = TimeManager.Instance.DeltaTime;
             var entityMovementSpeed = Entity.MovementSpeed * Entity.CurrentTile.TileDefinition.MovementModifier;
 
-            interpolationTime += dt / (travelDistance / entityMovementSpeed);
+            interpolationTime += shouldWait ? 0.0f : dt / (travelDistance / entityMovementSpeed);
 
             Entity.SetPosition(Vector2.Lerp(originPos, path.Current, movementCurve.Evaluate(interpolationTime)));
+
+            if (interpolationTime >= 0.5f)
+            {
+                var obj = World.Instance.GetTileAt(path.Current).Object;
+                if (obj is DoorObject doorObject)
+                {
+                    if (!doorObject.IsOpen)
+                    {
+                        shouldWait = true;
+                        doorObject.OpenDoor();
+                        return;
+                    }
+                }
+
+                shouldWait = false;
+            }
 
             if (interpolationTime >= 1.0f)
             {
