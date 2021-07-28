@@ -41,7 +41,7 @@ namespace ColonyZ.Controllers.Dev
             pathQueueText.text = string.Empty;
             pathTestText.text = string.Empty;
 
-            lineRenderer.positionCount = 0;
+            lineRenderer.SetPositions(null);
         }
 
         private void Update()

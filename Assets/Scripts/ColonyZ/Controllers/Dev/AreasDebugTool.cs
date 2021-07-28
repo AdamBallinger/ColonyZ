@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Areas;
+using ColonyZ.Utils;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace ColonyZ.Controllers.Dev
 {
@@ -82,48 +82,8 @@ namespace ColonyZ.Controllers.Dev
         private void GenerateTileMesh()
         {
             if (meshFilter == null) meshFilter = GetComponent<MeshFilter>();
-
-            meshFilter.mesh = null;
-
-            tileMesh = new Mesh
-            {
-                name = "[Areas Debug Tool] Areas Debug Mesh",
-                indexFormat = IndexFormat.UInt32
-            };
-
-            var combiner = new CombineInstance[World.Instance.Size];
-
-            for (var x = 0; x < World.Instance.Width; x++)
-            for (var y = 0; y < World.Instance.Height; y++)
-            {
-                var tileQuad = new Mesh();
-
-                var quadVerts = new Vector3[4];
-                quadVerts[0] = new Vector2(x - 0.5f, y - 0.5f);
-                quadVerts[1] = new Vector2(x - 0.5f, y + 0.5f);
-                quadVerts[2] = new Vector2(x + 0.5f, y + 0.5f);
-                quadVerts[3] = new Vector2(x + 0.5f, y - 0.5f);
-
-                var quadTris = new int[6];
-                quadTris[0] = 0;
-                quadTris[1] = 1;
-                quadTris[2] = 3;
-                quadTris[3] = 1;
-                quadTris[4] = 2;
-                quadTris[5] = 3;
-
-                var quadColors = new Color[quadVerts.Length];
-                for (var i = 0; i < quadColors.Length; i++) quadColors[i] = new Color(0, 0, 0, 0);
-
-                tileQuad.vertices = quadVerts;
-                tileQuad.triangles = quadTris;
-                tileQuad.colors = quadColors;
-
-                combiner[x * World.Instance.Width + y].mesh = tileQuad;
-            }
-
-            tileMesh.CombineMeshes(combiner, true, false);
-            meshFilter.mesh = tileMesh;
+            var pivot = new Vector2(World.Instance.Width / 2.0f - 0.5f, World.Instance.Height / 2.0f - 0.5f);
+            tileMesh = MeshUtils.CreateMesh("Area Debug Mesh", World.Instance.Width, World.Instance.Height, pivot);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace ColonyZ.Controllers.Dev
         {
             Instance = this;
 
-            tileNodesTool = GetComponent<TileNodesTool>();
+            tileNodesTool = FindObjectOfType<TileNodesTool>();
             areasDebugTool = FindObjectOfType<AreasDebugTool>();
             itemDevTool = FindObjectOfType<ItemsDevTool>();
             regionsDebugTool = FindObjectOfType<RegionsDebugTool>();
@@ -27,12 +27,7 @@ namespace ColonyZ.Controllers.Dev
 
         public void ToggleTileNodes()
         {
-            tileNodesTool.enabled = !tileNodesTool.enabled;
-        }
-
-        public void DisableTileNodes()
-        {
-            tileNodesTool.enabled = false;
+            tileNodesTool.Toggle();
         }
 
         public void ToggleAreasDebug()

@@ -1,7 +1,7 @@
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Sprites;
+using ColonyZ.Utils;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace ColonyZ.Controllers.Render
 {
@@ -40,37 +40,10 @@ namespace ColonyZ.Controllers.Render
                 meshFilter = GetComponent<MeshFilter>();
             }
 
-            var mesh = new Mesh
-            {
-                name = "World Mesh",
-                indexFormat = IndexFormat.UInt16
-            };
+            // offset centre by -0.5f since sprites pivot from centre.
+            var meshPivot = new Vector2(Width / 2.0f - 0.5f, Height / 2.0f - 0.5f);
 
-            var verts = new Vector3[4];
-            verts[0] = new Vector3(-0.5f, -0.5f);
-            verts[1] = new Vector3(-0.5f, Height - 0.5f);
-            verts[2] = new Vector3(Width - 0.5f, Height - 0.5f);
-            verts[3] = new Vector3(Width - 0.5f, -0.5f);
-
-            var tris = new int[6];
-            tris[0] = 0;
-            tris[1] = 1;
-            tris[2] = 3;
-            tris[3] = 1;
-            tris[4] = 2;
-            tris[5] = 3;
-
-            var uv = new Vector2[4];
-            uv[0] = new Vector2(0, 0);
-            uv[1] = new Vector2(0, 1);
-            uv[2] = new Vector2(1, 1);
-            uv[3] = new Vector2(1, 0);
-
-            mesh.vertices = verts;
-            mesh.triangles = tris;
-            mesh.uv = uv;
-
-            meshFilter.mesh = mesh;
+            meshFilter.mesh = MeshUtils.CreateQuad("World Mesh", Width, Height, meshPivot);
             meshRenderer.material.mainTexture = GenerateMapTexture();
             meshRenderer.material.SetInt("_WorldWidth", Width);
             meshRenderer.material.SetInt("_WorldHeight", Height);

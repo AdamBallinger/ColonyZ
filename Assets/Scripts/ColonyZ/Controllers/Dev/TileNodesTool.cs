@@ -1,7 +1,7 @@
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
+using ColonyZ.Utils;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace ColonyZ.Controllers.Dev
 {
@@ -11,59 +11,39 @@ namespace ColonyZ.Controllers.Dev
 
         [SerializeField] private Texture2D nodesTexture;
 
+        private Mesh tileMesh;
+
         private void Start()
         {
+            GenerateTileMesh();
+            
             NodeGraph.Instance.RegisterGraphUpdateCallback(OnNodesUpdated);
         }
 
-        private void OnEnable()
+        public void Toggle()
         {
-            GenerateTileMesh();
-        }
+            enabled = !enabled;
 
-        private void OnDisable()
-        {
-            meshFilter.mesh = null;
+            if (!enabled)
+                meshFilter.mesh = null;
+            else
+                UpdateUVs();
         }
 
         private void OnNodesUpdated()
         {
-            if (!enabled) return;
-
-            GenerateTileMesh();
+            UpdateUVs();
         }
 
-        /// <summary>
-        ///     Generates the full tilemap mesh for the world
-        /// </summary>
-        private void GenerateTileMesh()
+        private void UpdateUVs()
         {
-            if (meshFilter == null) meshFilter = GetComponent<MeshFilter>();
+            if (!enabled || tileMesh == null) return;
+            
+            var uvs = new Vector2[tileMesh.vertexCount];
 
-            meshFilter.mesh = null;
-
-            var mesh = new Mesh
+            for (var i = 0; i < uvs.Length; i += 4)
             {
-                name = "[Tile Nodes Tool] Node Mesh",
-                indexFormat = IndexFormat.UInt32
-            };
-
-            var combiner = new CombineInstance[World.Instance.Size];
-
-            for (var x = 0; x < NodeGraph.Instance.Width; x++)
-            for (var y = 0; y < NodeGraph.Instance.Height; y++)
-            {
-                var tile = World.Instance.GetTileAt(x, y);
-
-                var nodesMesh = new Mesh();
-
-                var quadVerts = new Vector3[4];
-                quadVerts[0] = new Vector2(x - 0.5f, y - 0.5f);
-                quadVerts[1] = new Vector2(x - 0.5f, y + 0.5f);
-                quadVerts[2] = new Vector2(x + 0.5f, y + 0.5f);
-                quadVerts[3] = new Vector2(x + 0.5f, y - 0.5f);
-
-                var quadUV = new Vector2[4];
+                var tile = World.Instance.GetTileAt(i / 4);
 
                 // Calculate the number of textures inside the texture sheet
                 var texturesX = nodesTexture.width / 32;
@@ -83,29 +63,27 @@ namespace ColonyZ.Controllers.Dev
                 // invert the v as it starts at lower left rather than top left. Minus 1 so v points to bottom vertex
                 var v = vSize * (texturesY - nodeY - 1);
 
-                // Set the UV for the tile quad
-                quadUV[0] = new Vector2(u, v);
-                quadUV[1] = new Vector2(u, v + vSize);
-                quadUV[2] = new Vector2(u + uSize, v + vSize);
-                quadUV[3] = new Vector2(u + uSize, v);
-
-                var quadTris = new int[6];
-                quadTris[0] = 0;
-                quadTris[1] = 1;
-                quadTris[2] = 3;
-                quadTris[3] = 1;
-                quadTris[4] = 2;
-                quadTris[5] = 3;
-
-                nodesMesh.vertices = quadVerts;
-                nodesMesh.triangles = quadTris;
-                nodesMesh.uv = quadUV;
-
-                combiner[x * World.Instance.Width + y].mesh = nodesMesh;
+                uvs[i] = new Vector2(u, v);
+                uvs[i + 1] = new Vector2(u, v + vSize);
+                uvs[i + 2] = new Vector2(u + uSize, v + vSize);
+                uvs[i + 3] = new Vector2(u + uSize, v);
             }
 
-            mesh.CombineMeshes(combiner, true, false);
-            meshFilter.mesh = mesh;
+            tileMesh.SetUVs(0, uvs);
+
+            meshFilter.mesh = tileMesh;
+        }
+
+        /// <summary>
+        ///     Generates the full tilemap mesh for the world
+        /// </summary>
+        private void GenerateTileMesh()
+        {
+            if (meshFilter == null) meshFilter = GetComponent<MeshFilter>();
+
+            var pivot = new Vector2(NodeGraph.Instance.Width / 2.0f - 0.5f, NodeGraph.Instance.Height / 2.0f - 0.5f);
+            tileMesh = MeshUtils.CreateMesh("Tile Nodes Mesh", NodeGraph.Instance.Width, NodeGraph.Instance.Height, pivot);
+            UpdateUVs();
         }
     }
 }

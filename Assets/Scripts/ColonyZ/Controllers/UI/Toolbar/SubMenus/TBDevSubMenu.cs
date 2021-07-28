@@ -23,10 +23,5 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
             AddItem("God Mode", SpriteCache.GetSprite("UI", 8),
                 () => World.Instance.WorldActionProcessor.ToggleGodMode());
         }
-
-        protected override void OnDisabled()
-        {
-            DevToolManager.Instance.DisableTileNodes();
-        }
     }
 }
