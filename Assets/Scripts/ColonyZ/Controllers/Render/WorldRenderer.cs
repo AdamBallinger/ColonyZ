@@ -14,6 +14,13 @@ namespace ColonyZ.Controllers.Render
 
         [SerializeField] private Texture2D tileTypesTexture;
 
+        private Texture2D mapTexture;
+        
+        private int Width { get; set; }
+        private int Height { get; set; }
+
+        private Color[] colors;
+
         private void Start()
         {
             SliceTileTypesTexture();
@@ -24,6 +31,9 @@ namespace ColonyZ.Controllers.Render
         /// </summary>
         public void GenerateWorldMesh(int _width, int _height)
         {
+            Width = _width;
+            Height = _height;
+            
             if (meshRenderer == null)
             {
                 meshRenderer = GetComponent<MeshRenderer>();
@@ -38,9 +48,9 @@ namespace ColonyZ.Controllers.Render
 
             var verts = new Vector3[4];
             verts[0] = new Vector3(-0.5f, -0.5f);
-            verts[1] = new Vector3(-0.5f, _height - 0.5f);
-            verts[2] = new Vector3(_width - 0.5f, _height - 0.5f);
-            verts[3] = new Vector3(_width - 0.5f, -0.5f);
+            verts[1] = new Vector3(-0.5f, Height - 0.5f);
+            verts[2] = new Vector3(Width - 0.5f, Height - 0.5f);
+            verts[3] = new Vector3(Width - 0.5f, -0.5f);
 
             var tris = new int[6];
             tris[0] = 0;
@@ -61,31 +71,31 @@ namespace ColonyZ.Controllers.Render
             mesh.uv = uv;
 
             meshFilter.mesh = mesh;
-            meshRenderer.material.mainTexture = GenerateMapTexture(_width, _height);
-            meshRenderer.material.SetInt("_WorldWidth", _width);
-            meshRenderer.material.SetInt("_WorldHeight", _height);
+            meshRenderer.material.mainTexture = GenerateMapTexture();
+            meshRenderer.material.SetInt("_WorldWidth", Width);
+            meshRenderer.material.SetInt("_WorldHeight", Height);
         }
 
-        private Texture2D GenerateMapTexture(int _width, int _height)
+        private Texture2D GenerateMapTexture()
         {
-            var texture = new Texture2D(_width, _height, TextureFormat.ARGB32, false)
+            mapTexture = new Texture2D(Width, Height, TextureFormat.ARGB32, false)
             {
                 filterMode = FilterMode.Point
             };
 
-            var colors = new Color[texture.width * texture.height];
-            for (var x = 0; x < _width; x++)
-            for (var y = 0; y < _height; y++)
+            colors = new Color[mapTexture.width * mapTexture.height];
+            for (var x = 0; x < Width; x++)
+            for (var y = 0; y < Height; y++)
             {
-                var index = x * _width + y;
+                var index = x * Width + y;
                 var tileIndex = World.Instance.GetTileAt(x, y).TileDefinition.TextureIndex;
                 colors[index] = new Color(tileIndex, tileIndex, tileIndex);
             }
 
-            texture.SetPixels(colors);
-            texture.Apply();
+            mapTexture.SetPixels(colors);
+            mapTexture.Apply();
 
-            return texture;
+            return mapTexture;
         }
 
         /// <summary>
