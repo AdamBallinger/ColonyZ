@@ -1,4 +1,5 @@
 using ColonyZ.Models.Entities.Living;
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Sprites;
 using UnityEngine;
 
@@ -30,9 +31,11 @@ namespace ColonyZ.Controllers.Render
                 SpriteCache.GetSprite("Living_Bodies", entity.BodyId + (int) entity.Motor.MotorDirection > 2 ? 1 : 0);
             // TODO: Set item renderer sprite when items and character equipment exists.
 
-            headRenderer.sortingOrder = entity.GetSortingOrder();
-            bodyRenderer.sortingOrder = entity.GetSortingOrder() - 1;
-            itemRenderer.sortingOrder = entity.GetSortingOrder();
+            var orderOffset = entity.Position.y < World.Instance.GetTileAt(entity.Position).Y ? 1 : 0;
+
+            headRenderer.sortingOrder = entity.GetSortingOrder() + orderOffset;
+            bodyRenderer.sortingOrder = entity.GetSortingOrder() - 1 + orderOffset;
+            itemRenderer.sortingOrder = entity.GetSortingOrder() + orderOffset;
         }
     }
 }
