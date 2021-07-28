@@ -8964,7 +8964,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -32768
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &1935454377
 PrefabInstance:
