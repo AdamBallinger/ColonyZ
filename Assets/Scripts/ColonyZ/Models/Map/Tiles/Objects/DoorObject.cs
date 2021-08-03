@@ -108,7 +108,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             {
                 currentOpenTime += TimeManager.Instance.DeltaTime;
 
-                if (currentOpenTime >= maxOpenTime)
+                if (currentOpenTime >= maxOpenTime && Tile.LivingEntities.Count == 0)
                 {
                     IsOpen = false;
                     currentOpenTime = 0.0f;
