@@ -47,7 +47,13 @@ namespace ColonyZ.Models.Entities.Living
                 return;
             }
 
-            if (!HasJob) return;
+            if (!HasJob)
+            {
+                MovementSpeed = 0.35f;
+                return;
+            }
+
+            MovementSpeed = 1.0f;
 
             if (!Motor.Working ||
                 CurrentJob.WorkingTile.GetEnterability() == TileEnterability.None)

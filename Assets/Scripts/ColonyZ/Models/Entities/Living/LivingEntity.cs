@@ -11,7 +11,7 @@ namespace ColonyZ.Models.Entities.Living
 {
     public class LivingEntity : Entity, IContextProvider
     {
-        public float MovementSpeed { get; }
+        public float MovementSpeed { get; protected set; }
 
         public AIMotor Motor { get; }
 
