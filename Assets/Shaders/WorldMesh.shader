@@ -50,7 +50,7 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-		        int numTiles = 2; // TODO: Auto detect this with _TilesTex_TexelSize.
+		        int numTiles = _TilesTex_TexelSize.z / 32;
 
 			    fixed4 sample = tex2D(_MainTex, i.uv);
 			    uint index = sample.r;
