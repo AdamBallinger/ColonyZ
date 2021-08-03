@@ -6,6 +6,7 @@ using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Sprites;
+using ColonyZ.Models.UI;
 using EzPool;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -35,6 +36,11 @@ namespace ColonyZ.Controllers
         ///     Event called when the mouse moves over a new tile. Passes new tile and if mouse is over UI.
         /// </summary>
         public event Action<Tile, bool> mouseTileChangeEvent;
+        
+        /// <summary>
+        ///     Returns whether the mouse is currently dragging.
+        /// </summary>
+        public bool IsDragging { get; private set; }
 
         private bool IsMouseOverUI { get; set; }
 
@@ -58,8 +64,6 @@ namespace ColonyZ.Controllers
         ///     Stores the exact world space position that the mouse drag started.
         /// </summary>
         private Vector2 dragStartPosition;
-
-        private bool isDragging;
 
         private Tile lastFrameTile;
 
@@ -110,22 +114,22 @@ namespace ColonyZ.Controllers
             if (Input.GetMouseButtonDown(2))
                 mouseClickEvent?.Invoke(MouseButton.MiddleMouse, currentMouseTile, IsMouseOverUI);
 
-            if (!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
+            if (!IsDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
             {
-                isDragging = true;
+                IsDragging = true;
                 dragStartPosition = currentMousePosition;
             }
 
-            if (!isDragging) dragStartPosition = currentMousePosition;
+            if (!IsDragging) dragStartPosition = currentMousePosition;
 
             var dragData = GetDragData();
 
             UpdateDragPreview(dragData);
 
-            if (isDragging)
+            if (IsDragging)
                 if (Input.GetMouseButtonUp(0))
                 {
-                    isDragging = false;
+                    IsDragging = false;
 
                     // Abort if dragged over a UI object.
                     if (!IsMouseOverUI) ProcessDragSelection(dragData);
@@ -148,10 +152,10 @@ namespace ColonyZ.Controllers
 
             if (Mode == MouseMode.Select)
             {
-                draggableCursor.SetActive(isDragging);
+                draggableCursor.SetActive(IsDragging);
                 draggableCursorRenderer.color = defaultCursorColor;
 
-                if (isDragging)
+                if (IsDragging)
                 {
                     selectionSize.x = dragStartPosition.x - currentMousePosition.x;
                     selectionSize.y = dragStartPosition.y - currentMousePosition.y;
@@ -206,19 +210,19 @@ namespace ColonyZ.Controllers
                                 ? previewInvalidColor
                                 : previewValidColor;
                     }
-                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Demolish)
-                    {
-                        // Only allow buildable objects to be demolished.
-                        if (tile.HasObject && tile.Object.Buildable)
-                        {
-                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 0);
-                            previewRenderer.color = previewOverlayColor;
-                        }
-                        else
-                        {
-                            previewRenderer.sprite = null;
-                        }
-                    }
+                    // else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Demolish)
+                    // {
+                    //     // Only allow buildable objects to be demolished.
+                    //     if (tile.HasObject && tile.Object.Buildable)
+                    //     {
+                    //         previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 0);
+                    //         previewRenderer.color = previewOverlayColor;
+                    //     }
+                    //     else
+                    //     {
+                    //         previewRenderer.sprite = null;
+                    //     }
+                    // }
                     else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone)
                     {
                         draggableCursor.SetActive(true);
@@ -241,7 +245,7 @@ namespace ColonyZ.Controllers
                     {
                         if (tile.HasObject && tile.Object.Mineable)
                         {
-                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 1);
+                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Pickaxe);
                             previewRenderer.color = previewOverlayColor;
                         }
                         else
@@ -254,7 +258,7 @@ namespace ColonyZ.Controllers
                     {
                         if (tile.HasObject && tile.Object.Fellable)
                         {
-                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 2);
+                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Axe);
                             previewRenderer.color = previewOverlayColor;
                         }
                         else
@@ -266,7 +270,7 @@ namespace ColonyZ.Controllers
                     {
                         if (tile.CurrentJob != null)
                         {
-                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 3);
+                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Cancel);
                             previewRenderer.color = previewOverlayColor;
                         }
                         else
