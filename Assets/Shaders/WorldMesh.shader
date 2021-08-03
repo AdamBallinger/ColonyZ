@@ -50,10 +50,10 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-		        int numTiles = _TilesTex_TexelSize.z / 32;
+				uint numTiles = _TilesTex_TexelSize.z / 32;
 
-			    fixed4 sample = tex2D(_MainTex, i.uv);
-			    uint index = sample.r;
+			    float4 sample = tex2D(_MainTex, i.uv);
+			    uint index = sample.r * 255;
 			    
 			    // uv positions for tile tex.
 			    uint xPos = index % numTiles;
@@ -66,7 +66,8 @@
 			    
 			    uv += float2(xOff, yOff);   
 			    
-				fixed4 col = tex2D(_TilesTex, uv);
+				float4 col = tex2D(_TilesTex, uv);
+				col.a *= sample.a;
 				return col;
 			}
 			ENDCG
