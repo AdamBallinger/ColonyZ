@@ -15,7 +15,11 @@ MonoBehaviour:
   spriteGroupName: Living_Bodies
   sprites:
   - {fileID: 21300004, guid: 84c87cd36328f0f42a8a85aaddf94d2a, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: -94387578618734894, guid: 84c87cd36328f0f42a8a85aaddf94d2a, type: 3}
+  - {fileID: 4706403052155807549, guid: 84c87cd36328f0f42a8a85aaddf94d2a, type: 3}
+  - {fileID: -1741225605422114968, guid: 84c87cd36328f0f42a8a85aaddf94d2a, type: 3}
+  - {fileID: -8530613823429268506, guid: 84c87cd36328f0f42a8a85aaddf94d2a, type: 3}
+  - {fileID: 2623045482200144669, guid: 84c87cd36328f0f42a8a85aaddf94d2a, type: 3}
+  - {fileID: -3011935412463998613, guid: 84c87cd36328f0f42a8a85aaddf94d2a, type: 3}
+  - {fileID: 4783515033339200131, guid: 84c87cd36328f0f42a8a85aaddf94d2a, type: 3}
   uiIconIndex: 0

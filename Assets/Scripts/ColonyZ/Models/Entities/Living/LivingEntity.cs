@@ -26,6 +26,8 @@ namespace ColonyZ.Models.Entities.Living
             MovementSpeed = 1.0f;
             Health = 100;
             Motor = new AIMotor(this);
+            HeadId = Random.Range(0, 2);
+            BodyId = Random.Range(0, 2);
         }
 
         /// <summary>
