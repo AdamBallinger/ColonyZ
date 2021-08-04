@@ -6,6 +6,7 @@ using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Sprites;
+using ColonyZ.Models.UI;
 using EzPool;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -35,6 +36,11 @@ namespace ColonyZ.Controllers
         ///     Event called when the mouse moves over a new tile. Passes new tile and if mouse is over UI.
         /// </summary>
         public event Action<Tile, bool> mouseTileChangeEvent;
+        
+        /// <summary>
+        ///     Returns whether the mouse is currently dragging.
+        /// </summary>
+        public bool IsDragging { get; private set; }
 
         private bool IsMouseOverUI { get; set; }
 
@@ -59,7 +65,7 @@ namespace ColonyZ.Controllers
         /// </summary>
         private Vector2 dragStartPosition;
 
-        private bool isDragging;
+        private DragData currentDragData, previousDragData;
 
         private Tile lastFrameTile;
 
@@ -92,6 +98,7 @@ namespace ColonyZ.Controllers
             HandleDragging();
 
             lastFrameTile = GetTileUnderMouse();
+            previousDragData = currentDragData;
         }
 
         private void HandleDragging()
@@ -110,34 +117,35 @@ namespace ColonyZ.Controllers
             if (Input.GetMouseButtonDown(2))
                 mouseClickEvent?.Invoke(MouseButton.MiddleMouse, currentMouseTile, IsMouseOverUI);
 
-            if (!isDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
+            if (!IsDragging && Input.GetMouseButtonDown(0) && !IsMouseOverUI)
             {
-                isDragging = true;
+                IsDragging = true;
                 dragStartPosition = currentMousePosition;
             }
 
-            if (!isDragging) dragStartPosition = currentMousePosition;
+            if (!IsDragging) dragStartPosition = currentMousePosition;
 
-            var dragData = GetDragData();
+            currentDragData = GetDragData();
 
-            UpdateDragPreview(dragData);
+            UpdateDragPreview();
 
-            if (isDragging)
+            if (IsDragging)
                 if (Input.GetMouseButtonUp(0))
                 {
-                    isDragging = false;
+                    IsDragging = false;
 
                     // Abort if dragged over a UI object.
-                    if (!IsMouseOverUI) ProcessDragSelection(dragData);
+                    if (!IsMouseOverUI) ProcessDragSelection();
                 }
         }
 
         /// <summary>
         ///     Updates the preview for the current mouse drag.
         /// </summary>
-        /// <param name="_dragData"></param>
-        private void UpdateDragPreview(DragData _dragData)
+        private void UpdateDragPreview()
         {
+            if (currentDragData.Size > 1 && currentDragData.Size == previousDragData.Size) return;
+            
             ClearPreviewObjects();
 
             // Hide selection graphic if mouse is off the map.
@@ -148,10 +156,10 @@ namespace ColonyZ.Controllers
 
             if (Mode == MouseMode.Select)
             {
-                draggableCursor.SetActive(isDragging);
+                draggableCursor.SetActive(IsDragging);
                 draggableCursorRenderer.color = defaultCursorColor;
 
-                if (isDragging)
+                if (IsDragging)
                 {
                     selectionSize.x = dragStartPosition.x - currentMousePosition.x;
                     selectionSize.y = dragStartPosition.y - currentMousePosition.y;
@@ -162,23 +170,24 @@ namespace ColonyZ.Controllers
             else if (Mode == MouseMode.Process)
             {
                 // Calculate size of drag area. Add one as the world starts at 0, 0
-                selectionSize.x = _dragData.EndX - _dragData.StartX + 1.0f;
-                selectionSize.y = _dragData.EndY - _dragData.StartY + 1.0f;
+                selectionSize.x = currentDragData.EndX - currentDragData.StartX + 1.0f;
+                selectionSize.y = currentDragData.EndY - currentDragData.StartY + 1.0f;
 
                 // As pivot for the selection cursor is the center, set position based on the drag start + half the selection size.
                 // minus 0.5f from the drag start X and Y so its positioned in the center of the tile (Tile are center pivoted).
-                selectionPosition = new Vector2(_dragData.StartX - 0.5f, _dragData.StartY - 0.5f) + selectionSize / 2;
+                selectionPosition = new Vector2(currentDragData.StartX - 0.5f, currentDragData.StartY - 0.5f) + selectionSize / 2;
 
                 draggableCursor.SetActive(false);
 
                 var areaValid = true;
 
-                for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
-                for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
+                for (var x = currentDragData.StartX; x <= currentDragData.EndX; x++)
+                for (var y = currentDragData.StartY; y <= currentDragData.EndY; y++)
                 {
+                    // Border only building for objects.
                     if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object)
-                        if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX &&
-                            y != _dragData.EndY)
+                        if (x != currentDragData.StartX && y != currentDragData.StartY && x != currentDragData.EndX &&
+                            y != currentDragData.EndY)
                             continue;
 
                     // Don't allow modifying edge of map.
@@ -191,7 +200,6 @@ namespace ColonyZ.Controllers
 
                     var previewObject = previewPool.GetAvailable();
                     previewObject.transform.position = new Vector2(x, y);
-                    // TODO: Should probably pool the SpriteRenderer as well as the GameObject?
                     var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                     previewRenderer.sprite = null;
 
@@ -206,26 +214,13 @@ namespace ColonyZ.Controllers
                                 ? previewInvalidColor
                                 : previewValidColor;
                     }
-                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Demolish)
-                    {
-                        // Only allow buildable objects to be demolished.
-                        if (tile.HasObject && tile.Object.Buildable)
-                        {
-                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 0);
-                            previewRenderer.color = previewOverlayColor;
-                        }
-                        else
-                        {
-                            previewRenderer.sprite = null;
-                        }
-                    }
                     else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone)
                     {
                         draggableCursor.SetActive(true);
                         var area = World.Instance.WorldActionProcessor.ZoneToBuild;
 
-                        if (!area.CanPlace(tile) || _dragData.SizeX < area.MinimumSize.x ||
-                            _dragData.SizeY < area.MinimumSize.y)
+                        if (!area.CanPlace(tile) || currentDragData.SizeX < area.MinimumSize.x ||
+                            currentDragData.SizeY < area.MinimumSize.y)
                         {
                             draggableCursorRenderer.color = previewInvalidColor;
                             areaValid = false;
@@ -236,12 +231,25 @@ namespace ColonyZ.Controllers
                             draggableCursorRenderer.color = previewValidColor;
                         }
                     }
+                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Demolish)
+                    {
+                        // Only allow buildable objects to be demolished.
+                        if (tile.HasObject && tile.Object.Buildable)
+                        {
+                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Hammer);
+                            previewRenderer.color = previewOverlayColor;
+                        }
+                        else
+                        {
+                            previewRenderer.sprite = null;
+                        }
+                    }
                     else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Gather &&
                              World.Instance.WorldActionProcessor.GatherMode == GatherMode.Mine)
                     {
                         if (tile.HasObject && tile.Object.Mineable)
                         {
-                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 1);
+                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Pickaxe);
                             previewRenderer.color = previewOverlayColor;
                         }
                         else
@@ -254,7 +262,7 @@ namespace ColonyZ.Controllers
                     {
                         if (tile.HasObject && tile.Object.Fellable)
                         {
-                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 2);
+                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Axe);
                             previewRenderer.color = previewOverlayColor;
                         }
                         else
@@ -266,7 +274,7 @@ namespace ColonyZ.Controllers
                     {
                         if (tile.CurrentJob != null)
                         {
-                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", 3);
+                            previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Cancel);
                             previewRenderer.color = previewOverlayColor;
                         }
                         else
@@ -323,22 +331,22 @@ namespace ColonyZ.Controllers
             return dragData;
         }
 
-        private void ProcessDragSelection(DragData _dragData)
+        private void ProcessDragSelection()
         {
             if (Mode == MouseMode.Select)
             {
-                selectionController.OnTileSelect(World.Instance.GetTileAt(_dragData.StartX, _dragData.StartY));
+                selectionController.OnTileSelect(World.Instance.GetTileAt(currentDragData.StartX, currentDragData.StartY));
                 return;
             }
 
-            var tiles = new Tile[_dragData.SizeX, _dragData.SizeY];
-            for (var x = _dragData.StartX; x <= _dragData.EndX; x++)
-            for (var y = _dragData.StartY; y <= _dragData.EndY; y++)
+            var tiles = new Tile[currentDragData.SizeX, currentDragData.SizeY];
+            for (var x = currentDragData.StartX; x <= currentDragData.EndX; x++)
+            for (var y = currentDragData.StartY; y <= currentDragData.EndY; y++)
             {
                 if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object)
                     // Only when building objects should the drag area only include the edge of the dragged area.
-                    if (x != _dragData.StartX && y != _dragData.StartY && x != _dragData.EndX &&
-                        y != _dragData.EndY)
+                    if (x != currentDragData.StartX && y != currentDragData.StartY && x != currentDragData.EndX &&
+                        y != currentDragData.EndY)
                         continue;
 
                 // Don't allow modifying the edge of map.
@@ -348,7 +356,7 @@ namespace ColonyZ.Controllers
 
                 if (tile == null) continue;
 
-                tiles[x - _dragData.StartX, y - _dragData.StartY] = tile;
+                tiles[x - currentDragData.StartX, y - currentDragData.StartY] = tile;
             }
 
             if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object
@@ -356,21 +364,21 @@ namespace ColonyZ.Controllers
             {
                 World.Instance.WorldActionProcessor.Process(
                     tiles.Cast<Tile>(),
-                    _dragData.StartX,
-                    _dragData.StartY,
-                    _dragData.SizeX,
-                    _dragData.SizeY);
+                    currentDragData.StartX,
+                    currentDragData.StartY,
+                    currentDragData.SizeX,
+                    currentDragData.SizeY);
             }
             else
             {
                 var sorted = new List<Tile>();
                 // Diagonally process the drag area.
-                for (var line = 1; line <= _dragData.SizeX + _dragData.SizeY - 1; line++)
+                for (var line = 1; line <= currentDragData.SizeX + currentDragData.SizeY - 1; line++)
                 {
-                    var startCol = Math.Max(0, line - _dragData.SizeX);
-                    var count = Math.Min(line, Math.Min(_dragData.SizeY - startCol, _dragData.SizeX));
+                    var startCol = Math.Max(0, line - currentDragData.SizeX);
+                    var count = Math.Min(line, Math.Min(currentDragData.SizeY - startCol, currentDragData.SizeX));
                     for (var i = 0; i < count; i++)
-                        sorted.Add(tiles[Math.Min(_dragData.SizeX, line) - i - 1, startCol + i]);
+                        sorted.Add(tiles[Math.Min(currentDragData.SizeX, line) - i - 1, startCol + i]);
                 }
 
                 sorted.RemoveAll(t => t == null);
@@ -378,7 +386,8 @@ namespace ColonyZ.Controllers
                 World.Instance.WorldActionProcessor.Process(sorted);
             }
 
-            NodeGraph.Instance?.UpdateGraph(_dragData.StartX, _dragData.StartY, _dragData.EndX, _dragData.EndY);
+            NodeGraph.Instance?.UpdateGraph(currentDragData.StartX, currentDragData.StartY,
+                currentDragData.EndX, currentDragData.EndY);
         }
 
         private Tile GetTileUnderMouse()
@@ -396,6 +405,8 @@ namespace ColonyZ.Controllers
 
         public int SizeX => EndX - StartX + 1;
         public int SizeY => EndY - StartY + 1;
+
+        public int Size => SizeX * SizeY;
 
         public void Build(int _startX, int _endX, int _startY, int _endY)
         {

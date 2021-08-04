@@ -11,6 +11,7 @@ using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
+using ColonyZ.Models.UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -40,9 +41,9 @@ namespace ColonyZ.Models.Map
 
         public List<TileObject> Objects { get; private set; }
 
-        private Tile[] Tiles { get; set; }
-
         public WorldGenerator WorldGenerator { get; private set; }
+        
+        public Overlay Overlay { get; private set; }
 
         /// <summary>
         ///     Event called when a new entity is created.
@@ -53,6 +54,8 @@ namespace ColonyZ.Models.Map
         ///     Event called when an Entity is removed from the world.
         /// </summary>
         public event Action<Entity> onEntityRemoved;
+        
+        private Tile[] Tiles { get; set; }
 
         private World()
         {
@@ -84,11 +87,13 @@ namespace ColonyZ.Models.Map
             Instance.WorldActionProcessor = new ActionProcessor();
             Instance.PopulateTileArray(_tileDefinitionChangeListener, _tileChangedListener);
             Instance.WorldGrid.BuildWorldGrid();
+            Instance.Overlay = new Overlay(Instance);
             NodeGraph.Create();
             AreaManager.Create();
             ZoneManager.Create();
             JobManager.Create();
             RegionManager.Create();
+            Instance.Overlay.Init();
         }
 
         public void Update()

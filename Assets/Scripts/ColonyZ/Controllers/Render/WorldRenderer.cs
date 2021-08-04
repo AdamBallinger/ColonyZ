@@ -61,8 +61,8 @@ namespace ColonyZ.Controllers.Render
             for (var y = 0; y < Height; y++)
             {
                 var index = x * Width + y;
-                var tileIndex = World.Instance.GetTileAt(x, y).TileDefinition.TextureIndex;
-                colors[index] = new Color(tileIndex, tileIndex, tileIndex);
+                var tileIndex = World.Instance.GetTileAt(x, y).TileDefinition.TextureIndex / 255.0f;
+                colors[index] = new Color(tileIndex, 0, 0);
             }
 
             mapTexture.SetPixels(colors);
