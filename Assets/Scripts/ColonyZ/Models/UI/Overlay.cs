@@ -11,7 +11,15 @@ namespace ColonyZ.Models.UI
     {
         public byte[] OverlayArray { get; }
         public float[] OverlayAlpha { get; }
+        
+        /// <summary>
+        /// Event fired when a single overlay icon has been changed.
+        /// </summary>
+        public event Action<Vector2Int> overlaySingleUpdatedEvent;
 
+        /// <summary>
+        /// Event fired when multiple positions of the overlay have been updated at once.
+        /// </summary>
         public event Action overlayUpdatedEvent;
         
         private World world;
@@ -48,7 +56,7 @@ namespace ColonyZ.Models.UI
             var index = world.GetTileIndex(_tile);
             OverlayArray[index] = (byte)_overlayType;
             OverlayAlpha[index] = _alpha;
-            overlayUpdatedEvent?.Invoke();
+            overlaySingleUpdatedEvent?.Invoke(new Vector2Int(_tile.X, _tile.Y));
         }
 
         public void SetOverlayForTiles(List<Tile> _tiles, OverlayType _overlayType, float _alpha = 0.5f)

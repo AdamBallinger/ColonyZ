@@ -33,6 +33,7 @@ namespace ColonyZ.Controllers.UI
             meshRenderer.material.SetInt("_WorldWidth", width);
             meshRenderer.material.SetInt("_WorldHeight", height);
             
+            World.Instance.Overlay.overlaySingleUpdatedEvent += UpdateOverlaySingle;
             World.Instance.Overlay.overlayUpdatedEvent += UpdateOverlay;
             
             ClearOverlay();
@@ -62,6 +63,17 @@ namespace ColonyZ.Controllers.UI
             overlayTexture.Apply();
         }
 
+        public void UpdateOverlaySingle(Vector2Int _pos)
+        {
+            var colorIndex = _pos.x + width * _pos.y;
+            var overlayIndex = _pos.x * width + _pos.y;
+            var overlayType = World.Instance.Overlay.OverlayArray[overlayIndex] / 255.0f;
+            colors[colorIndex] = new Color(overlayType, 0, 0, World.Instance.Overlay.OverlayAlpha[overlayIndex]);
+            
+            overlayTexture.SetPixels(colors);
+            overlayTexture.Apply();
+        }
+        
         private void UpdateOverlay()
         {
             for (var x = 0; x < width; x++)
