@@ -33,7 +33,7 @@ namespace ColonyZ.Controllers.UI
             meshRenderer.material.SetInt("_WorldWidth", width);
             meshRenderer.material.SetInt("_WorldHeight", height);
             
-            World.Instance.Overlay.onOverlayUpdated += UpdateOverlay;
+            World.Instance.Overlay.overlayUpdatedEvent += UpdateOverlay;
             
             ClearOverlay();
         }

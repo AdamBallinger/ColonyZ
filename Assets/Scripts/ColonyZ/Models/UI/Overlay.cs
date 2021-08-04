@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
@@ -10,7 +11,7 @@ namespace ColonyZ.Models.UI
     {
         public byte[] OverlayArray { get; }
 
-        public event Action onOverlayUpdated;
+        public event Action overlayUpdatedEvent;
         
         private World world;
 
@@ -31,8 +32,19 @@ namespace ColonyZ.Models.UI
 
         public void SetOverlayAtTile(Tile _tile, OverlayType _overlayType)
         {
+            if (_tile == null) return;
             OverlayArray[world.GetTileIndex(_tile)] = (byte)_overlayType;
-            onOverlayUpdated?.Invoke();
+            overlayUpdatedEvent?.Invoke();
+        }
+
+        public void SetOverlayForTiles(List<Tile> _tiles, OverlayType _overlayType)
+        {
+            for (var i = 0; i < _tiles.Count; i++)
+            {
+                OverlayArray[world.GetTileIndex(_tiles[i])] = (byte)_overlayType;
+            }
+            
+            overlayUpdatedEvent?.Invoke();
         }
 
         public void SetOverlayAtPosition(Vector2 _position, OverlayType _overlayType)
@@ -43,6 +55,11 @@ namespace ColonyZ.Models.UI
         public void ClearOverlayAtTile(Tile _tile)
         {
             SetOverlayAtTile(_tile, OverlayType.None);
+        }
+
+        public void ClearOverlayAtTiles(List<Tile> _tiles)
+        {
+            SetOverlayForTiles(_tiles, OverlayType.None);
         }
     }
 }
