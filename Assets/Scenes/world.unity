@@ -9050,9 +9050,9 @@ MonoBehaviour:
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   worldSize:
-    <Name>k__BackingField: Large
-    <Width>k__BackingField: 160
-    <Height>k__BackingField: 160
+    <Name>k__BackingField: Mini
+    <Width>k__BackingField: 16
+    <Height>k__BackingField: 16
   overrideSeed: 1
   seed: 42736
   octaves: 4

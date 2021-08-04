@@ -57,8 +57,6 @@ namespace ColonyZ.Controllers.UI
             };
 
             colors = new Color[width * height];
-            overlayTexture.SetPixels(colors);
-            overlayTexture.Apply();
         }
 
         private void UpdateOverlaySingle(Vector2Int _pos)
@@ -67,8 +65,6 @@ namespace ColonyZ.Controllers.UI
             var overlayIndex = _pos.x * width + _pos.y;
             var overlayType = World.Instance.Overlay.OverlayArray[overlayIndex] / 255.0f;
             colors[colorIndex] = new Color(overlayType, 0, 0, World.Instance.Overlay.OverlayAlpha[overlayIndex]);
-            
-            overlayTexture.SetPixels(colors);
             dirty = true;
         }
         
@@ -81,7 +77,6 @@ namespace ColonyZ.Controllers.UI
                 colors[x + width * y] = new Color(index, 0, 0, World.Instance.Overlay.OverlayAlpha[x * width + y]);
             }
             
-            overlayTexture.SetPixels(colors);
             dirty = true;
         }
 
@@ -90,6 +85,7 @@ namespace ColonyZ.Controllers.UI
             if (dirty)
             {
                 dirty = false;
+                overlayTexture.SetPixels(colors);
                 overlayTexture.Apply();
             }
         }
