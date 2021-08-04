@@ -1,5 +1,4 @@
 using ColonyZ.Models.Map;
-using ColonyZ.Models.UI;
 using ColonyZ.Utils;
 using UnityEngine;
 
@@ -12,13 +11,20 @@ namespace ColonyZ.Controllers.UI
         [SerializeField] private MeshRenderer meshRenderer;
 
         /// <summary>
-        /// Texture used by shader to draw the overlay icons.
+        ///     Texture used by shader to draw the overlay icons.
         /// </summary>
         private Texture2D overlayTexture;
 
         private Color[] colors;
 
         private int width, height;
+
+        private bool dirty;
+
+        /// <summary>
+        ///     Number of times each second the overlay texture is uploaded to GPU.
+        /// </summary>
+        private int textureUpdatesPerSecond = 10;
 
         private void Start()
         {
@@ -35,8 +41,10 @@ namespace ColonyZ.Controllers.UI
             
             World.Instance.Overlay.overlaySingleUpdatedEvent += UpdateOverlaySingle;
             World.Instance.Overlay.overlayUpdatedEvent += UpdateOverlay;
-            
-            ClearOverlay();
+
+            dirty = true;
+
+            InvokeRepeating(nameof(ApplyTexture), 0f, 1.0f / textureUpdatesPerSecond);
         }
 
         private void GenerateOverlayTexture()
@@ -49,21 +57,11 @@ namespace ColonyZ.Controllers.UI
             };
 
             colors = new Color[width * height];
-        }
-        
-        private void ClearOverlay()
-        {
-            for (var x = 0; x < width; x++)
-            for (var y = 0; y < height; y++)
-            {
-                World.Instance.Overlay.SetOverlayAtTile(World.Instance.GetTileAt(x * width + y), OverlayType.None);
-            }
-            
             overlayTexture.SetPixels(colors);
             overlayTexture.Apply();
         }
 
-        public void UpdateOverlaySingle(Vector2Int _pos)
+        private void UpdateOverlaySingle(Vector2Int _pos)
         {
             var colorIndex = _pos.x + width * _pos.y;
             var overlayIndex = _pos.x * width + _pos.y;
@@ -71,7 +69,7 @@ namespace ColonyZ.Controllers.UI
             colors[colorIndex] = new Color(overlayType, 0, 0, World.Instance.Overlay.OverlayAlpha[overlayIndex]);
             
             overlayTexture.SetPixels(colors);
-            overlayTexture.Apply();
+            dirty = true;
         }
         
         private void UpdateOverlay()
@@ -84,7 +82,16 @@ namespace ColonyZ.Controllers.UI
             }
             
             overlayTexture.SetPixels(colors);
-            overlayTexture.Apply();
+            dirty = true;
+        }
+
+        private void ApplyTexture()
+        {
+            if (dirty)
+            {
+                dirty = false;
+                overlayTexture.Apply();
+            }
         }
     }
 }
