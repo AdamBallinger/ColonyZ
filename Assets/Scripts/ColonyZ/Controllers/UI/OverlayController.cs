@@ -68,7 +68,7 @@ namespace ColonyZ.Controllers.UI
             for (var y = 0; y < height; y++)
             {
                 var index = World.Instance.Overlay.OverlayArray[x * width + y] / 255.0f;
-                colors[x + width * y] = new Color(index, 0, 0);
+                colors[x + width * y] = new Color(index, 0, 0, World.Instance.Overlay.OverlayAlpha[x * width + y]);
             }
             
             overlayTexture.SetPixels(colors);

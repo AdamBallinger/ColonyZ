@@ -10,6 +10,7 @@ namespace ColonyZ.Models.UI
     public class Overlay
     {
         public byte[] OverlayArray { get; }
+        public float[] OverlayAlpha { get; }
 
         public event Action overlayUpdatedEvent;
         
@@ -19,37 +20,52 @@ namespace ColonyZ.Models.UI
         {
             world = _world;
             OverlayArray = new byte[world.Width * world.Height];
+            OverlayAlpha = new float[world.Width * world.Height];
         }
 
         public void Init()
         {
-            JobManager.Instance.jobStateChangedEvent += job =>
+            JobManager.Instance.jobCreatedEvent += j =>
             {
-                if (job.State == JobState.Error) SetOverlayAtTile(job.TargetTile, OverlayType.Red_Cross);
-                else ClearOverlayAtTile(job.TargetTile);
+                if (j is HarvestJob job) SetOverlayAtTile(j.TargetTile, GetOverlayForHarvestJob(job));
+                else if (j is DemolishJob) SetOverlayAtTile(j.TargetTile, OverlayType.Hammer);
             };
+            
+            JobManager.Instance.jobStateChangedEvent += j =>
+            {
+                if (j.State == JobState.Error) SetOverlayAtTile(j.TargetTile, OverlayType.Red_Cross, 1.0f);
+                else if (j is DemolishJob) SetOverlayAtTile(j.TargetTile, OverlayType.Hammer);
+                else if (j is HarvestJob job) SetOverlayAtTile(j.TargetTile, GetOverlayForHarvestJob(job));
+                else ClearOverlayAtTile(j.TargetTile);
+            };
+
+            JobManager.Instance.jobCompletedEvent += j => ClearOverlayAtTile(j.TargetTile);
         }
 
-        public void SetOverlayAtTile(Tile _tile, OverlayType _overlayType)
+        public void SetOverlayAtTile(Tile _tile, OverlayType _overlayType, float _alpha = 0.5f)
         {
             if (_tile == null) return;
-            OverlayArray[world.GetTileIndex(_tile)] = (byte)_overlayType;
+            var index = world.GetTileIndex(_tile);
+            OverlayArray[index] = (byte)_overlayType;
+            OverlayAlpha[index] = _alpha;
             overlayUpdatedEvent?.Invoke();
         }
 
-        public void SetOverlayForTiles(List<Tile> _tiles, OverlayType _overlayType)
+        public void SetOverlayForTiles(List<Tile> _tiles, OverlayType _overlayType, float _alpha = 0.5f)
         {
             for (var i = 0; i < _tiles.Count; i++)
             {
-                OverlayArray[world.GetTileIndex(_tiles[i])] = (byte)_overlayType;
+                var index = world.GetTileIndex(_tiles[i]);
+                OverlayArray[index] = (byte)_overlayType;
+                OverlayAlpha[index] = _alpha;
             }
             
             overlayUpdatedEvent?.Invoke();
         }
 
-        public void SetOverlayAtPosition(Vector2 _position, OverlayType _overlayType)
+        public void SetOverlayAtPosition(Vector2 _position, OverlayType _overlayType, float _alpha = 0.5f)
         {
-            SetOverlayAtTile(world.GetTileAt(_position), _overlayType);
+            SetOverlayAtTile(world.GetTileAt(_position), _overlayType, _alpha);
         }
 
         public void ClearOverlayAtTile(Tile _tile)
@@ -60,6 +76,19 @@ namespace ColonyZ.Models.UI
         public void ClearOverlayAtTiles(List<Tile> _tiles)
         {
             SetOverlayForTiles(_tiles, OverlayType.None);
+        }
+
+        private OverlayType GetOverlayForHarvestJob(HarvestJob _job)
+        {
+            if (!_job.TargetTile.HasObject) return OverlayType.None;
+            
+            if (_job.TargetTile.HasObject)
+            {
+                if (_job.TargetTile.Object.Mineable) return OverlayType.Pickaxe;
+                if (_job.TargetTile.Object.Fellable) return OverlayType.Axe;
+            }
+
+            return OverlayType.None;
         }
     }
 }
