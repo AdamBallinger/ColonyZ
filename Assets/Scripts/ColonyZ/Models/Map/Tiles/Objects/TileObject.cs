@@ -125,7 +125,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// <returns></returns>
         public Sprite GetIcon(ObjectRotation _rotation = ObjectRotation.Default)
         {
-            return Rotatable ? SpriteCache.GetSprite(SpriteData.SpriteGroup, GetSpriteIndex() + (int)_rotation) :
+            return Rotatable ? SpriteCache.GetSprite(SpriteData.SpriteGroup, (int)_rotation) :
                 SpriteCache.GetSprite(SpriteData.SpriteGroup, SpriteData.IconIndex);
         }
 
