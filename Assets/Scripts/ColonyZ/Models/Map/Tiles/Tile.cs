@@ -12,6 +12,7 @@ using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
+using ColonyZ.Utils;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Tiles
@@ -111,14 +112,8 @@ namespace ColonyZ.Models.Map.Tiles
 
             _object.OriginTile = this;
 
-            var width = _object.ObjectRotation == ObjectRotation.Default 
-                        || _object.ObjectRotation == ObjectRotation.Clock_Wise_180
-                ? _object.Width
-                : _object.Height;
-            var height = _object.ObjectRotation == ObjectRotation.Default 
-                         || _object.ObjectRotation == ObjectRotation.Clock_Wise_180
-                ? _object.Height
-                : _object.Width;
+            var width = ObjectRotationUtil.GetRotatedObjectWidth(_object);
+            var height = ObjectRotationUtil.GetRotatedObjectHeight(_object);
 
             for (var x = 0; x < width; x++)
             for (var y = 0; y < height; y++)
@@ -161,14 +156,8 @@ namespace ColonyZ.Models.Map.Tiles
 
             World.Instance.Objects.Remove(Object);
 
-            var width = Object.ObjectRotation == ObjectRotation.Default 
-                        || Object.ObjectRotation == ObjectRotation.Clock_Wise_180
-                ? Object.Width
-                : Object.Height;
-            var height = Object.ObjectRotation == ObjectRotation.Default 
-                         || Object.ObjectRotation == ObjectRotation.Clock_Wise_180
-                ? Object.Height
-                : Object.Width;
+            var width = ObjectRotationUtil.GetRotatedObjectWidth(Object);
+            var height = ObjectRotationUtil.GetRotatedObjectHeight(Object);
 
             for (var x = 0; x < width; x++)
             for (var y = 0; y < height; y++)

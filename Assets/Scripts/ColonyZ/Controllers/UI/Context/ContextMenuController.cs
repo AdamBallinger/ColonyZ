@@ -102,7 +102,7 @@ namespace ColonyZ.Controllers.UI.Context
             else CloseContextMenu();
 
             if (currentProvider != null && !(currentProvider is LivingEntity))
-                selectionController.SetCursor(_tile.Position);
+                selectionController.SetCursor(_tile);
             else selectionController.HideCursor();
         }
 

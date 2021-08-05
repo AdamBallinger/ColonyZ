@@ -12,6 +12,7 @@ using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
 using ColonyZ.Models.UI;
+using ColonyZ.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -321,12 +322,8 @@ namespace ColonyZ.Models.Map
 
             if (!_object.MultiTile) return _object.CanPlace(_tile);
 
-            var width = _rotation == ObjectRotation.Default || _rotation == ObjectRotation.Clock_Wise_180
-                ? _object.Width
-                : _object.Height;
-            var height = _rotation == ObjectRotation.Default || _rotation == ObjectRotation.Clock_Wise_180
-                ? _object.Height
-                : _object.Width;
+            var width = ObjectRotationUtil.GetRotatedObjectWidth(_object, _rotation);
+            var height = ObjectRotationUtil.GetRotatedObjectHeight(_object, _rotation);
 
             for (var x = 0; x < width; x++)
             for (var y = 0; y < height; y++)
@@ -337,11 +334,11 @@ namespace ColonyZ.Models.Map
                 {
                    yOff = -y;
                 }
-                
+
                 var t = GetTileAt(_tile.X + xOff, _tile.Y + yOff);
 
                 if (t != null && _object.CanPlace(t)) continue;
-
+                
                 return false;
             }
 
