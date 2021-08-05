@@ -114,6 +114,11 @@ namespace ColonyZ.Models.Map.Pathing
             return Nodes[_x, _y];
         }
 
+        public Node GetNodeAt(int _index)
+        {
+            return Nodes[_index / Width, _index % Height];
+        }
+
         public void RegisterGraphUpdateCallback(Action _callback)
         {
             onUpdateGraphCallback += _callback;

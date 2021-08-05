@@ -44,6 +44,7 @@ namespace ColonyZ.Controllers.Dev
             for (var i = 0; i < uvs.Length; i += 4)
             {
                 var tile = World.Instance.GetTileAt(i / 4);
+                var node = NodeGraph.Instance.GetNodeAt(i / 4);
 
                 // Calculate the number of textures inside the texture sheet
                 var texturesX = nodesTexture.width / 32;
@@ -52,7 +53,7 @@ namespace ColonyZ.Controllers.Dev
                 var uSize = 1.0f / texturesX;
                 var vSize = 1.0f / texturesY;
 
-                var nodeTextureIndex = (int) tile.GetEnterability();
+                var nodeTextureIndex = node.Pathable ? (int) tile.GetEnterability() : 1;
 
                 // Calculate nodes X and Y inside the texture
                 var nodeX = nodeTextureIndex % texturesX;

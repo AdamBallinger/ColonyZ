@@ -132,12 +132,12 @@ namespace ColonyZ.Models.Map.Tiles
                 t.Object = _object;
                 t.HasObject = true;
                 t.Object.Tile = t;
+                NodeGraph.Instance.UpdateGraph(t.X, t.Y);
                 t.onTileChanged?.Invoke(t);
             }
 
             HasObject = true;
             World.Instance.Objects.Add(_object);
-            NodeGraph.Instance.UpdateGraph(_object.Tile.X, _object.Tile.Y);
 
             if (_markDirty && _object.EnclosesRoom)
             {
