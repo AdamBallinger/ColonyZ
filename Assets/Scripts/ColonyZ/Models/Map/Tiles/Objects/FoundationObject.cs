@@ -2,7 +2,7 @@
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    [CreateAssetMenu(fileName = "TileObject_Foundation", menuName = "ColonyZ/Foundation Object", order = 52)]
+    [CreateAssetMenu(fileName = "Foundation", menuName = "ColonyZ/Foundation Object", order = 52)]
     public class FoundationObject : TileObject
     {
         public override bool CanPlace(Tile _tile)

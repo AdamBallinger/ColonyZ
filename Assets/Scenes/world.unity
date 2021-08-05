@@ -7083,12 +7083,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ce3c8807adfaab3438ae35e2e0ebe3d4, type: 2}
   objectData:
   - {fileID: 11400000, guid: e399c29c4324be54f87f93cf3b8c3d89, type: 2}
+  - {fileID: 11400000, guid: 8587d73d7568d7d4d8a5803774610377, type: 2}
   - {fileID: 11400000, guid: 1a9b65df795311546a4d190a8c006de1, type: 2}
   - {fileID: 11400000, guid: 1d6a3513faa64bd49a26aa3ca2783ab5, type: 2}
   - {fileID: 11400000, guid: 8b137ff655fdd664dba9981a9d73144a, type: 2}
   - {fileID: 11400000, guid: a63b92cceec1d774ead2263e123a483c, type: 2}
   - {fileID: 11400000, guid: bd316b4cadb0df0409defdb5ed20cef7, type: 2}
   spriteData:
+  - {fileID: 11400000, guid: 3549e8c1def32c5409b851eeff18f9d3, type: 2}
   - {fileID: 11400000, guid: dd0b244d09aa09648aff41e72399ab14, type: 2}
   - {fileID: 11400000, guid: c4402c530296e7d4298ca16fa4c68315, type: 2}
   - {fileID: 11400000, guid: 5fcd96af566056742aa9f4f909899b92, type: 2}

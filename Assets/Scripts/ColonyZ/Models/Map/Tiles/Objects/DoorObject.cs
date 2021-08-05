@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    [CreateAssetMenu(fileName = "TileObject_Door_", menuName = "ColonyZ/Door Object", order = 51)]
+    [CreateAssetMenu(fileName = "Door_", menuName = "ColonyZ/Door Object", order = 51)]
     public class DoorObject : TileObject
     {
         public bool IsOpen { get; private set; }

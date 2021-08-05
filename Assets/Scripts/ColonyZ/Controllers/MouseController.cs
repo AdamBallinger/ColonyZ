@@ -208,9 +208,8 @@ namespace ColonyZ.Controllers
                         previewRenderer.sprite = World.Instance.WorldActionProcessor.ObjectToBuild.GetIcon();
 
                         // Tint the preview color based on if the structure position is valid.
-                        previewRenderer.color =
-                            !World.Instance.IsObjectPositionValid(World.Instance.WorldActionProcessor.ObjectToBuild,
-                                tile)
+                        previewRenderer.color = !World.Instance.IsObjectPositionValid(
+                            World.Instance.WorldActionProcessor.ObjectToBuild, tile) 
                                 ? previewInvalidColor
                                 : previewValidColor;
                     }
@@ -292,7 +291,16 @@ namespace ColonyZ.Controllers
                 var previewPos = currentMousePosition;
                 previewPos.x = Mathf.FloorToInt(currentMousePosition.x + 0.5f);
                 previewPos.y = Mathf.FloorToInt(currentMousePosition.y + 0.5f);
-                previewObject.transform.position = previewPos;
+                var offset = Vector2.zero;
+                
+                var objectBeingBuilt = World.Instance.WorldActionProcessor.ObjectToBuild;
+                if (objectBeingBuilt != null && objectBeingBuilt.MultiTile)
+                {
+                    offset.x = 0.5f * (objectBeingBuilt.Width - 1);
+                    offset.y = 0.5f * (objectBeingBuilt.Height - 1);
+                }
+                
+                previewObject.transform.position = previewPos + offset;
                 var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                 previewRenderer.sprite = null;
 
