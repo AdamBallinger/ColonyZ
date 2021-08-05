@@ -110,7 +110,7 @@ namespace ColonyZ.Models.Map.Tiles
             }
 
             _object.OriginTile = this;
-            
+
             var width = _object.ObjectRotation == ObjectRotation.Default 
                         || _object.ObjectRotation == ObjectRotation.Clock_Wise_180
                 ? _object.Width
@@ -160,9 +160,36 @@ namespace ColonyZ.Models.Map.Tiles
             var shouldMarkDirty = _markDirty && Object.EnclosesRoom;
 
             World.Instance.Objects.Remove(Object);
+
+            var width = Object.ObjectRotation == ObjectRotation.Default 
+                        || Object.ObjectRotation == ObjectRotation.Clock_Wise_180
+                ? Object.Width
+                : Object.Height;
+            var height = Object.ObjectRotation == ObjectRotation.Default 
+                         || Object.ObjectRotation == ObjectRotation.Clock_Wise_180
+                ? Object.Height
+                : Object.Width;
+
+            for (var x = 0; x < width; x++)
+            for (var y = 0; y < height; y++)
+            {
+                var xOff = x;
+                var yOff = y;
+                
+                if (Object.ObjectRotation == ObjectRotation.Clock_Wise_90 
+                    || Object.ObjectRotation == ObjectRotation.Clock_Wise_270)
+                {
+                    yOff = -y;
+                }
+                
+                var t = World.Instance.GetTileAt(X + xOff, Y + yOff);
+                
+                t.HasObject = false;
+                t.onTileChanged?.Invoke(t);
+                NodeGraph.Instance.UpdateGraph(t.X, t.Y);
+            }
+
             Object = null;
-            HasObject = false;
-            NodeGraph.Instance.UpdateGraph(X, Y);
 
             if (shouldMarkDirty)
             {

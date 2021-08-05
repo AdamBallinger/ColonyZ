@@ -182,7 +182,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         public Vector2 GetPosition()
         {
-            return Tile.Position;
+            return OriginTile.Position;
         }
 
         #endregion
@@ -216,7 +216,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             {
                 new ContextAction("Remove", () =>
                 {
-                    if (World.Instance.WorldActionProcessor.GodMode) Tile.RemoveObject();
+                    if (World.Instance.WorldActionProcessor.GodMode) OriginTile.RemoveObject();
                     else JobManager.Instance.AddJob(new DemolishJob(Tile));
                 })
             };

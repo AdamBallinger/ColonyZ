@@ -196,7 +196,7 @@ namespace ColonyZ.Controllers
         {
             foreach (var tile in _tile.Neighbours)
             {
-                if (tile.HasObject && tile == _tile.Object.OriginTile)
+                if (tile.HasObject && tile == tile.Object.OriginTile)
                 {
                     tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
                 }
