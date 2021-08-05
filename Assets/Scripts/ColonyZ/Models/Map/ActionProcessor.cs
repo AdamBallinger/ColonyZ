@@ -130,7 +130,7 @@ namespace ColonyZ.Models.Map
             var jobs = new List<Job>();
 
             foreach (var tile in _tiles)
-                if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile))
+                if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile, _rotation))
                 {
                     var obj = TileObjectCache.GetObject(ObjectToBuild);
                     obj.ObjectRotation = _rotation;
