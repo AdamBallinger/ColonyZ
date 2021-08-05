@@ -16,6 +16,7 @@ using ColonyZ.Models.Map.Zones;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.TimeSystem;
+using ColonyZ.Utils;
 using UnityEngine;
 
 namespace ColonyZ.Controllers
@@ -195,11 +196,9 @@ namespace ColonyZ.Controllers
         {
             foreach (var tile in _tile.Neighbours)
             {
-                if (tile.HasObject)
+                if (tile.HasObject && tile == _tile.Object.OriginTile)
                 {
                     tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
-                    tileObjectGameObjects[tile].transform.rotation =
-                        Quaternion.Euler(0.0f, 0.0f, tile.Object.GetObjectRotation());
                 }
             }
         }
@@ -235,13 +234,19 @@ namespace ColonyZ.Controllers
                 CreateTileObject(_tile);
 
             var spriteRenderer = tileObjectRenderers[_tile];
-            spriteRenderer.sprite = _tile.HasObject ? SpriteCache.GetSprite(_tile.Object) : null;
-
-            if (_tile.HasObject)
+            if (_tile.HasObject && _tile == _tile.Object.OriginTile)
             {
+                spriteRenderer.sprite = SpriteCache.GetSprite(_tile.Object);
                 spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
-                tileObjectGameObjects[_tile].transform.rotation =
-                    Quaternion.Euler(0.0f, 0.0f, _tile.Object.GetObjectRotation());
+                tileObjectGameObjects[_tile].transform.rotation = 
+                    ObjectRotationUtil.GetQuaternion(_tile.Object.ObjectRotation);
+                tileObjectGameObjects[_tile].transform.position = 
+                    _tile.Position + ObjectRotationUtil.GetObjectRotationPositionOffset(_tile.Object,
+                        _tile.Object.ObjectRotation);
+            }
+            else
+            {
+                spriteRenderer.sprite = null;
             }
 
             UpdateTileNeighbourSprites(_tile);

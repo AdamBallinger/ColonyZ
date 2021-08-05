@@ -1,3 +1,4 @@
+using System;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Saving;
@@ -9,6 +10,8 @@ namespace ColonyZ.Models.AI.Jobs
     {
         private TileObject tileObject;
 
+        private ObjectRotation objectRotation;
+        
         public BuildJob(Tile _targetTile, TileObject _object) : base(_targetTile)
         {
             JobName = "Build: " + _object.ObjectName;
@@ -45,6 +48,9 @@ namespace ColonyZ.Models.AI.Jobs
         public override void OnLoad(JToken _dataToken)
         {
             tileObject = TileObjectCache.GetObject(_dataToken["object_name"].Value<string>());
+            objectRotation =
+                (ObjectRotation)Enum.Parse(typeof(ObjectRotation), _dataToken["object_rotation"].Value<string>());
+            tileObject.ObjectRotation = objectRotation;
             JobName = "Build: " + tileObject.ObjectName;
         }
     }

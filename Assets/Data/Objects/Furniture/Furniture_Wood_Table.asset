@@ -16,6 +16,7 @@ MonoBehaviour:
   dynamicSprite: 0
   objectName: Wood Table
   draggable: 0
+  rotatable: 1
   buildable: 1
   fellable: 0
   mineable: 0

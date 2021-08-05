@@ -1,3 +1,4 @@
+using System;
 using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
@@ -36,6 +37,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         public bool Draggable => draggable;
 
         /// <summary>
+        ///     Determines if the object can be rotated.
+        /// </summary>
+        public bool Rotatable => rotatable;
+
+        /// <summary>
         ///     Determines if the object appears in the structure menu.
         /// </summary>
         public bool Buildable => buildable;
@@ -58,6 +64,8 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// </summary>
         public bool MultiTile => Width > 1 || Height > 1;
 
+        public ObjectRotation ObjectRotation { get; set; }
+
         /// <summary>
         ///     Flag used to only save the origin tile for multi tile objects.
         /// </summary>
@@ -78,13 +86,13 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         }
 
         /// <summary>
-        ///     Returns the sprite index to use for single tile structures. This does nothing for multi tile or dynamic tile
-        ///     objects.
+        ///     Returns the sprite index to use for single tile structures. This does nothing for dynamic tile objects.
+        ///     This will consider object rotation, if the object is rotatable.
         /// </summary>
         /// <returns></returns>
         public virtual int GetSpriteIndex()
         {
-            return 0;
+            return Rotatable ? GetObjectRotation() : 0;
         }
 
         public virtual int GetSortingOrder()
@@ -93,12 +101,12 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         }
 
         /// <summary>
-        ///     Rotation (in degrees) of the object.
+        ///     Rotation index of the object.
         /// </summary>
         /// <returns></returns>
-        public virtual int GetObjectRotation()
+        public int GetObjectRotation()
         {
-            return 0;
+            return (int)ObjectRotation;
         }
 
         /// <summary>
@@ -115,9 +123,10 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         ///     Return an icon sprite for this tile structure. This is used to display the structure in UI.
         /// </summary>
         /// <returns></returns>
-        public Sprite GetIcon()
+        public Sprite GetIcon(ObjectRotation _rotation = ObjectRotation.Default)
         {
-            return SpriteCache.GetSprite(SpriteData.SpriteGroup, SpriteData.IconIndex);
+            return Rotatable ? SpriteCache.GetSprite(SpriteData.SpriteGroup, GetSpriteIndex() + (int)_rotation) :
+                SpriteCache.GetSprite(SpriteData.SpriteGroup, SpriteData.IconIndex);
         }
 
         #region Serialized fields
@@ -132,6 +141,8 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         [SerializeField] [Tooltip("If enabled, then a preview for the object will be shown over dragged area.")]
         private bool draggable = true;
+
+        [SerializeField] private bool rotatable = false;
 
         [SerializeField] private bool buildable = true;
 
@@ -185,13 +196,16 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         {
             _writer.WriteProperty("id", ObjectName);
             _writer.WriteProperty("t_index", World.Instance.GetTileIndex(Tile));
+            _writer.WriteProperty("rot", (int)ObjectRotation);
 
-            if (MultiTile) shouldSave = false;
+            // if (MultiTile) shouldSave = false;
         }
 
         public void OnLoad(JToken _dataToken)
         {
             var tileIndex = _dataToken["t_index"].Value<int>();
+            Enum.TryParse<ObjectRotation>(_dataToken["rot"].Value<int>().ToString(), true, out var rot);
+            ObjectRotation = rot;
 
             World.Instance.GetTileAt(tileIndex).SetObject(this, false);
         }

@@ -109,13 +109,33 @@ namespace ColonyZ.Models.Map.Tiles
                 RemoveObject(false);
             }
 
-            for (var xOffset = 0; xOffset < _object.Width; xOffset++)
-            for (var yOffset = 0; yOffset < _object.Height; yOffset++)
+            _object.OriginTile = this;
+            
+            var width = _object.ObjectRotation == ObjectRotation.Default 
+                        || _object.ObjectRotation == ObjectRotation.Clock_Wise_180
+                ? _object.Width
+                : _object.Height;
+            var height = _object.ObjectRotation == ObjectRotation.Default 
+                         || _object.ObjectRotation == ObjectRotation.Clock_Wise_180
+                ? _object.Height
+                : _object.Width;
+
+            for (var x = 0; x < width; x++)
+            for (var y = 0; y < height; y++)
             {
-                var t = World.Instance.GetTileAt(X + xOffset, Y + yOffset);
+                var xOff = x;
+                var yOff = y;
+                
+                if (_object.ObjectRotation == ObjectRotation.Clock_Wise_90 
+                    || _object.ObjectRotation == ObjectRotation.Clock_Wise_270)
+                {
+                    yOff = -y;
+                }
+                
+                var t = World.Instance.GetTileAt(X + xOff, Y + yOff);
 
                 t.Object = _object;
-                t.Object.OriginTile = this;
+                t.HasObject = true;
                 t.Object.Tile = t;
                 t.onTileChanged?.Invoke(t);
             }

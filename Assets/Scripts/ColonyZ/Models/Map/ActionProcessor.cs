@@ -81,7 +81,9 @@ namespace ColonyZ.Models.Map
         /// <param name="_y"></param>
         /// <param name="_width"></param>
         /// <param name="_height"></param>
-        public void Process(IEnumerable<Tile> _tiles, int _x = 0, int _y = 0, int _width = 0, int _height = 0)
+        /// <param name="_rotation"></param>
+        public void Process(IEnumerable<Tile> _tiles, int _x = 0, int _y = 0, int _width = 0, int _height = 0, 
+            ObjectRotation _rotation = ObjectRotation.Default)
         {
             switch (ProcessMode)
             {
@@ -90,7 +92,7 @@ namespace ColonyZ.Models.Map
                         HandleBuildZone(_tiles, _x, _y, _width, _height);
                     break;
                 case ProcessMode.Object:
-                    HandleBuild(_tiles);
+                    HandleBuild(_tiles, _rotation);
                     break;
                 case ProcessMode.Demolish:
                     HandleDemolish(_tiles);
@@ -123,7 +125,7 @@ namespace ColonyZ.Models.Map
             ZoneToBuild = (Zone) Activator.CreateInstance(ZoneToBuild.GetType());
         }
 
-        private void HandleBuild(IEnumerable<Tile> _tiles)
+        private void HandleBuild(IEnumerable<Tile> _tiles, ObjectRotation _rotation)
         {
             var jobs = new List<Job>();
 
@@ -131,6 +133,7 @@ namespace ColonyZ.Models.Map
                 if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile))
                 {
                     var obj = TileObjectCache.GetObject(ObjectToBuild);
+                    obj.ObjectRotation = _rotation;
                     if (GodMode)
                     {
                         tile.SetObject(obj);

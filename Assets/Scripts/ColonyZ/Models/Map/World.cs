@@ -313,17 +313,32 @@ namespace ColonyZ.Models.Map
         /// </summary>
         /// <param name="_object"></param>
         /// <param name="_tile"></param>
+        /// <param name="_rotation"></param>
         /// <returns></returns>
-        public bool IsObjectPositionValid(TileObject _object, Tile _tile)
+        public bool IsObjectPositionValid(TileObject _object, Tile _tile, ObjectRotation _rotation = ObjectRotation.Default)
         {
             if (_tile == null) return false;
 
-            if (_object.Width <= 1 && _object.Height <= 1) return _object.CanPlace(_tile);
+            if (!_object.MultiTile) return _object.CanPlace(_tile);
 
-            for (var xOffset = 0; xOffset < _object.Width; xOffset++)
-            for (var yOffset = 0; yOffset < _object.Height; yOffset++)
+            var width = _rotation == ObjectRotation.Default || _rotation == ObjectRotation.Clock_Wise_180
+                ? _object.Width
+                : _object.Height;
+            var height = _rotation == ObjectRotation.Default || _rotation == ObjectRotation.Clock_Wise_180
+                ? _object.Height
+                : _object.Width;
+
+            for (var x = 0; x < width; x++)
+            for (var y = 0; y < height; y++)
             {
-                var t = GetTileAt(_tile.X + xOffset, _tile.Y + yOffset);
+                var xOff = x;
+                var yOff = y;
+                if (_rotation == ObjectRotation.Clock_Wise_90 || _rotation == ObjectRotation.Clock_Wise_270)
+                {
+                   yOff = -y;
+                }
+                
+                var t = GetTileAt(_tile.X + xOff, _tile.Y + yOff);
 
                 if (t != null && _object.CanPlace(t)) continue;
 

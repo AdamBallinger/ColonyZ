@@ -5,8 +5,10 @@ using ColonyZ.Controllers.UI;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
+using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
+using ColonyZ.Utils;
 using EzPool;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -66,6 +68,8 @@ namespace ColonyZ.Controllers
         private Vector2 dragStartPosition;
 
         private DragData currentDragData, previousDragData;
+
+        private ObjectRotation currentRotation = ObjectRotation.Default;
 
         private Tile lastFrameTile;
 
@@ -200,6 +204,7 @@ namespace ColonyZ.Controllers
 
                     var previewObject = previewPool.GetAvailable();
                     previewObject.transform.position = new Vector2(x, y);
+                    previewObject.transform.rotation = Quaternion.identity;
                     var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                     previewRenderer.sprite = null;
 
@@ -287,29 +292,33 @@ namespace ColonyZ.Controllers
             }
             else if (Mode == MouseMode.Process_Single)
             {
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    Rotate();
+                }
+                
                 var previewObject = previewPool.GetAvailable();
                 var previewPos = currentMousePosition;
                 previewPos.x = Mathf.FloorToInt(currentMousePosition.x + 0.5f);
                 previewPos.y = Mathf.FloorToInt(currentMousePosition.y + 0.5f);
-                var offset = Vector2.zero;
-                
+
                 var objectBeingBuilt = World.Instance.WorldActionProcessor.ObjectToBuild;
-                if (objectBeingBuilt != null && objectBeingBuilt.MultiTile)
-                {
-                    offset.x = 0.5f * (objectBeingBuilt.Width - 1);
-                    offset.y = 0.5f * (objectBeingBuilt.Height - 1);
-                }
-                
+                var offset = ObjectRotationUtil.GetObjectRotationPositionOffset(objectBeingBuilt, currentRotation);
+
                 previewObject.transform.position = previewPos + offset;
+                if (objectBeingBuilt.Rotatable)
+                {
+                    previewObject.transform.rotation = ObjectRotationUtil.GetQuaternion(currentRotation);
+                }
                 var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                 previewRenderer.sprite = null;
 
                 if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object)
                 {
-                    previewRenderer.sprite = World.Instance.WorldActionProcessor.ObjectToBuild.GetIcon();
+                    previewRenderer.sprite = World.Instance.WorldActionProcessor.ObjectToBuild.GetIcon(currentRotation);
                     previewRenderer.color =
                         !World.Instance.IsObjectPositionValid(World.Instance.WorldActionProcessor.ObjectToBuild,
-                            GetTileUnderMouse())
+                            GetTileUnderMouse(), currentRotation)
                             ? previewInvalidColor
                             : previewValidColor;
                 }
@@ -319,6 +328,25 @@ namespace ColonyZ.Controllers
 
             draggableCursor.transform.position = selectionPosition;
             draggableCursorRenderer.size = selectionSize;
+        }
+
+        private void Rotate()
+        {
+            switch (currentRotation)
+            {
+                case ObjectRotation.Default:
+                    currentRotation = ObjectRotation.Clock_Wise_90;
+                    return;
+                case ObjectRotation.Clock_Wise_90:
+                    currentRotation = ObjectRotation.Clock_Wise_180;
+                    return;
+                case ObjectRotation.Clock_Wise_180:
+                    currentRotation = ObjectRotation.Clock_Wise_270;
+                    return;
+                case ObjectRotation.Clock_Wise_270:
+                    currentRotation = ObjectRotation.Default;
+                    return;
+            }
         }
 
         private void ClearPreviewObjects()
@@ -375,7 +403,8 @@ namespace ColonyZ.Controllers
                     currentDragData.StartX,
                     currentDragData.StartY,
                     currentDragData.SizeX,
-                    currentDragData.SizeY);
+                    currentDragData.SizeY,
+                    currentRotation);
             }
             else
             {
@@ -396,6 +425,9 @@ namespace ColonyZ.Controllers
 
             NodeGraph.Instance?.UpdateGraph(currentDragData.StartX, currentDragData.StartY,
                 currentDragData.EndX, currentDragData.EndY);
+
+            // Reset rotation after tiles are processed.
+            currentRotation = ObjectRotation.Default;
         }
 
         private Tile GetTileUnderMouse()
