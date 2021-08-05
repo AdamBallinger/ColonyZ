@@ -195,10 +195,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         public void OnSave(SaveGameWriter _writer)
         {
             _writer.WriteProperty("id", ObjectName);
-            _writer.WriteProperty("t_index", World.Instance.GetTileIndex(Tile));
+            _writer.WriteProperty("t_index", World.Instance.GetTileIndex(OriginTile));
             _writer.WriteProperty("rot", (int)ObjectRotation);
 
-            // if (MultiTile) shouldSave = false;
+            // Only save the origin tile for multi tile objects.
+            if (MultiTile) shouldSave = false;
         }
 
         public void OnLoad(JToken _dataToken)
