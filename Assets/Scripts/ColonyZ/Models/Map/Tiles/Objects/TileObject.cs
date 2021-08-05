@@ -216,7 +216,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             {
                 new ContextAction("Remove", () =>
                 {
-                    if (World.Instance.WorldActionProcessor.GodMode) OriginTile.RemoveObject();
+                    if (World.Instance.WorldActionProcessor.GodMode) Tile.RemoveObject();
                     else JobManager.Instance.AddJob(new DemolishJob(Tile));
                 })
             };

@@ -182,7 +182,7 @@ namespace ColonyZ.Models.Map.Tiles
                     yOff = -y;
                 }
                 
-                var t = World.Instance.GetTileAt(X + xOff, Y + yOff);
+                var t = World.Instance.GetTileAt(Object.OriginTile.X + xOff, Object.OriginTile.Y + yOff);
                 
                 t.HasObject = false;
                 t.onTileChanged?.Invoke(t);
