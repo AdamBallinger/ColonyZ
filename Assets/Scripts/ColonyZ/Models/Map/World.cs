@@ -325,17 +325,10 @@ namespace ColonyZ.Models.Map
             var width = ObjectRotationUtil.GetRotatedObjectWidth(_object, _rotation);
             var height = ObjectRotationUtil.GetRotatedObjectHeight(_object, _rotation);
 
-            for (var x = 0; x < width; x++)
-            for (var y = 0; y < height; y++)
+            for (var xOff = 0; xOff < width; xOff++)
+            for (var yOff = 0; yOff < height; yOff++)
             {
-                var xOff = x;
-                var yOff = y;
-                if (_rotation == ObjectRotation.Clock_Wise_90 || _rotation == ObjectRotation.Clock_Wise_270)
-                {
-                   yOff = -y;
-                }
-
-                var t = GetTileAt(_tile.X + xOff, _tile.Y + yOff);
+                var t = GetTileAt(_tile.X + xOff, _tile.Y - yOff);
 
                 if (t != null && _object.CanPlace(t)) continue;
                 

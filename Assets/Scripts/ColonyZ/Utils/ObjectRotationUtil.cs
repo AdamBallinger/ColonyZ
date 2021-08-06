@@ -23,7 +23,7 @@ namespace ColonyZ.Utils
 
         public static Vector2 GetObjectRotationPositionOffset(TileObject _object, ObjectRotation _rotation)
         {
-            if (!_object.Rotatable) return Vector2.zero;
+            if (!_object.Rotatable) _rotation = ObjectRotation.Default;
             
             var offset = Vector2.zero;
             // Switch offsets when rotating between 90 and 270 degrees.

@@ -292,7 +292,9 @@ namespace ColonyZ.Controllers
             }
             else if (Mode == MouseMode.Process_Single)
             {
-                if (Input.GetKeyDown(KeyCode.R))
+                var objectBeingBuilt = World.Instance.WorldActionProcessor.ObjectToBuild;
+                
+                if (objectBeingBuilt.Rotatable && Input.GetKeyDown(KeyCode.R))
                 {
                     Rotate();
                 }
@@ -301,8 +303,7 @@ namespace ColonyZ.Controllers
                 var previewPos = currentMousePosition;
                 previewPos.x = Mathf.FloorToInt(currentMousePosition.x + 0.5f);
                 previewPos.y = Mathf.FloorToInt(currentMousePosition.y + 0.5f);
-
-                var objectBeingBuilt = World.Instance.WorldActionProcessor.ObjectToBuild;
+                
                 var offset = ObjectRotationUtil.GetObjectRotationPositionOffset(objectBeingBuilt, currentRotation);
 
                 previewObject.transform.position = previewPos + offset;

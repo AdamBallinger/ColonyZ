@@ -115,19 +115,10 @@ namespace ColonyZ.Models.Map.Tiles
             var width = ObjectRotationUtil.GetRotatedObjectWidth(_object);
             var height = ObjectRotationUtil.GetRotatedObjectHeight(_object);
 
-            for (var x = 0; x < width; x++)
-            for (var y = 0; y < height; y++)
+            for (var xOff = 0; xOff < width; xOff++)
+            for (var yOff = 0; yOff < height; yOff++)
             {
-                var xOff = x;
-                var yOff = y;
-                
-                if (_object.ObjectRotation == ObjectRotation.Clock_Wise_90 
-                    || _object.ObjectRotation == ObjectRotation.Clock_Wise_270)
-                {
-                    yOff = -y;
-                }
-                
-                var t = World.Instance.GetTileAt(X + xOff, Y + yOff);
+                var t = World.Instance.GetTileAt(X + xOff, Y - yOff);
 
                 t.Object = _object;
                 t.HasObject = true;
@@ -159,19 +150,10 @@ namespace ColonyZ.Models.Map.Tiles
             var width = ObjectRotationUtil.GetRotatedObjectWidth(Object);
             var height = ObjectRotationUtil.GetRotatedObjectHeight(Object);
 
-            for (var x = 0; x < width; x++)
-            for (var y = 0; y < height; y++)
+            for (var xOff = 0; xOff < width; xOff++)
+            for (var yOff = 0; yOff < height; yOff++)
             {
-                var xOff = x;
-                var yOff = y;
-                
-                if (Object.ObjectRotation == ObjectRotation.Clock_Wise_90 
-                    || Object.ObjectRotation == ObjectRotation.Clock_Wise_270)
-                {
-                    yOff = -y;
-                }
-                
-                var t = World.Instance.GetTileAt(Object.OriginTile.X + xOff, Object.OriginTile.Y + yOff);
+                var t = World.Instance.GetTileAt(Object.OriginTile.X + xOff, Object.OriginTile.Y - yOff);
                 
                 t.HasObject = false;
                 t.onTileChanged?.Invoke(t);
