@@ -15,7 +15,7 @@ namespace Editor
             DrawDefaultInspector();
 
             if (Target.Sprites != null && Target.SpriteCount > 1)
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("uiIconIndex"));
+                EditorGUILayout.LabelField("Ui Icon Index: " + serializedObject.FindProperty("uiIconIndex").intValue);
 
             serializedObject.ApplyModifiedProperties();
         }
