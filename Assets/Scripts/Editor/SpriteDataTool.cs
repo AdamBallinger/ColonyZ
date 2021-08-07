@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ColonyZ.Models.Sprites;
 using UnityEditor;
 using UnityEngine;
@@ -30,6 +31,8 @@ namespace Editor
         private string assetName;
         
         private Color defaultGUIColor;
+
+        private string texturePath => AssetDatabase.GetAssetPath(texture);
         
         [MenuItem("ColonyZ/Sprite Data Tool")]
         private static void Init()
@@ -166,6 +169,19 @@ namespace Editor
 
         private void SaveAsset(SpriteData _data, string _path, string _assetName)
         {
+            var sprites = AssetDatabase.LoadAllAssetsAtPath(texturePath).OfType<Sprite>().ToArray();
+            var serializedObject = new SerializedObject(_data);
+            var spritesArray = serializedObject.FindProperty("sprites");
+            var spriteGroup = serializedObject.FindProperty("spriteGroupName");
+            spritesArray.arraySize = sprites.Length;
+            for (var i = 0; i < sprites.Length; i++)
+            {
+                spritesArray.GetArrayElementAtIndex(i).objectReferenceValue = sprites[i];
+            }
+
+            
+            
+            serializedObject.ApplyModifiedProperties();
             AssetDatabase.CreateAsset(_data, _path + _assetName + ".asset");
             AssetDatabase.SaveAssets();
         }
@@ -177,20 +193,28 @@ namespace Editor
 
         private void Slice()
         {
-            var textureImporter = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(texture)) as TextureImporter;
+            var textureImporter = AssetImporter.GetAtPath(texturePath) as TextureImporter;
 
             if (textureImporter == null)
             {
                 Debug.LogError("Texture importer is null.");
                 return;
             }
-            
+
             textureImporter.textureType = TextureImporterType.Sprite;
             textureImporter.spriteImportMode = SpriteImportMode.Multiple;
+            textureImporter.textureShape = TextureImporterShape.Texture2D;
             textureImporter.spritePixelsPerUnit = 32;
+            textureImporter.filterMode = FilterMode.Point;
+            textureImporter.textureCompression = TextureImporterCompression.Uncompressed;
+
+            var textureImportSettings = new TextureImporterSettings();
+            textureImporter.ReadTextureSettings(textureImportSettings);
+            textureImportSettings.spriteMeshType = SpriteMeshType.FullRect;
+            textureImporter.SetTextureSettings(textureImportSettings);
 
             textureImporter.spritesheet = spriteMetaDatas.ToArray();
-            AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(texture), ImportAssetOptions.ForceUpdate);
+            AssetDatabase.ImportAsset(texturePath, ImportAssetOptions.ForceUpdate);
         }
     }
 }
