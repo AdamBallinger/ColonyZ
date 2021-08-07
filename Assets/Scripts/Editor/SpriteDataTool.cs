@@ -114,13 +114,12 @@ namespace Editor
             if (GUILayout.Button("Slice Texture"))
             {
                 spriteMetaDatas.Clear();
-                // TODO: Slice texture into separate sprites.
+                for (var y = texture.height; y > 0; y -= cellHeight)
                 for (var x = 0; x < texture.width; x += cellWidth)
-                for (var y = 0; y < texture.height; y+= cellHeight)
                 {
                     var metaData = new SpriteMetaData();
                     metaData.name = texture.name + "_" + spriteMetaDatas.Count;
-                    metaData.rect = new Rect(x, y, cellWidth, cellHeight);
+                    metaData.rect = new Rect(x, y - cellHeight, cellWidth, cellHeight);
                     metaData.alignment = 0;
                     metaData.pivot = Vector2.zero;
                     spriteMetaDatas.Add(metaData);
@@ -172,18 +171,17 @@ namespace Editor
             var sprites = AssetDatabase.LoadAllAssetsAtPath(texturePath).OfType<Sprite>().ToArray();
             var serializedObject = new SerializedObject(_data);
             var spritesArray = serializedObject.FindProperty("sprites");
-            var spriteGroup = serializedObject.FindProperty("spriteGroupName");
             spritesArray.arraySize = sprites.Length;
             for (var i = 0; i < sprites.Length; i++)
             {
                 spritesArray.GetArrayElementAtIndex(i).objectReferenceValue = sprites[i];
             }
 
-            
-            
+            serializedObject.FindProperty("spriteGroupName").stringValue = assetName;
             serializedObject.ApplyModifiedProperties();
             AssetDatabase.CreateAsset(_data, _path + _assetName + ".asset");
             AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 
         private void DeleteAsset(SpriteData _data)
