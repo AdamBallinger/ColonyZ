@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ColonyZ.Models.Sprites;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Editor
@@ -20,11 +21,11 @@ namespace Editor
 
         private ToolMode mode = ToolMode.Menu;
 
-        private SpriteData currentAsset;
+        private SpriteData currentAsset, previousAsset;
 
         private Texture2D texture;
 
-        private List<SpriteMetaData> spriteMetaDatas;
+        private List<SpriteMetaData> spriteMetaDatas = new List<SpriteMetaData>();
 
         private int cellWidth, cellHeight;
 
@@ -69,9 +70,10 @@ namespace Editor
             if (GUILayout.Button("Create"))
             {
                 mode = ToolMode.Create;
-                spriteMetaDatas = new List<SpriteMetaData>();
+                spriteMetaDatas.Clear();
                 currentAsset = CreateSpriteData();
                 assetName = string.Empty;
+                texture = null;
                 cellWidth = 32;
                 cellHeight = 32;
             }
@@ -79,6 +81,7 @@ namespace Editor
             {
                 mode = ToolMode.Edit;
                 currentAsset = null;
+                texture = null;
             }
         }
 
@@ -89,7 +92,6 @@ namespace Editor
             {
                 GUI.FocusControl(null);
                 mode = ToolMode.Menu;
-                texture = null;
             }
 
             assetName = EditorGUILayout.TextField("Sprite Data Name: ", assetName);
@@ -157,17 +159,21 @@ namespace Editor
                 EditorGUILayout.HelpBox("Select a sprite data asset to edit.", MessageType.Info);
                 return;
             }
-
-            assetName ??= currentAsset.name;
-
+            
             var serializedObject = new SerializedObject(currentAsset);
-            var spriteGroup = serializedObject.FindProperty("spriteGroupName");
-            var sprite = (Sprite)serializedObject.FindProperty("sprites").GetArrayElementAtIndex(0)
-                .objectReferenceValue;
-            texture = sprite.texture;
-            cellWidth = (int)sprite.rect.width;
-            cellHeight = (int)sprite.rect.height;
 
+            if (currentAsset.name != previousAsset?.name)
+            {
+                assetName = currentAsset.name;
+                var sprite = (Sprite)serializedObject.FindProperty("sprites").GetArrayElementAtIndex(0)
+                    .objectReferenceValue;
+                texture = sprite.texture;
+                cellWidth = (int)sprite.rect.width;
+                cellHeight = (int)sprite.rect.height;
+            }
+
+            var spriteGroup = serializedObject.FindProperty("spriteGroupName");
+            
             EditorGUILayout.LabelField("Src: " + AssetDatabase.GetAssetPath(currentAsset));
             
             assetName = EditorGUILayout.TextField("Asset name: ", assetName);
@@ -184,13 +190,17 @@ namespace Editor
                 cellHeight = EditorGUILayout.IntField("Cell Height:", cellHeight);
             }
             EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.LabelField("Sprites: " + serializedObject.FindProperty("sprites").arraySize);
 
             EditorGUILayout.BeginHorizontal();
             {
                 if (GUILayout.Button("Save"))
                 {
-                    if (currentAsset.name != assetName)
-                        AssetDatabase.RenameAsset(assetPath, assetName);
+                    AssetDatabase.RenameAsset(assetPath, assetName);
+                    Slice();
+                    SaveSpritesToAsset(serializedObject);
+                    AssetDatabase.SaveAssets();
                 }
 
                 GUI.color = Color.red;
@@ -204,6 +214,7 @@ namespace Editor
             EditorGUILayout.EndHorizontal();
             
             serializedObject.ApplyModifiedProperties();
+            previousAsset = currentAsset;
         }
 
         private SpriteData CreateSpriteData()
@@ -213,14 +224,8 @@ namespace Editor
 
         private void SaveAsset(SpriteData _data, string _path, string _assetName)
         {
-            var sprites = AssetDatabase.LoadAllAssetsAtPath(texturePath).OfType<Sprite>().ToArray();
             var serializedObject = new SerializedObject(_data);
-            var spritesArray = serializedObject.FindProperty("sprites");
-            spritesArray.arraySize = sprites.Length;
-            for (var i = 0; i < sprites.Length; i++)
-            {
-                spritesArray.GetArrayElementAtIndex(i).objectReferenceValue = sprites[i];
-            }
+            SaveSpritesToAsset(serializedObject);
 
             serializedObject.FindProperty("spriteGroupName").stringValue = assetName;
             serializedObject.ApplyModifiedProperties();
@@ -236,17 +241,20 @@ namespace Editor
         private void Slice()
         {
             spriteMetaDatas.Clear();
-            for (var y = texture.height; y > 0; y -= cellHeight)
-            for (var x = 0; x < texture.width; x += cellWidth)
+            var rects = InternalSpriteUtility.GenerateGridSpriteRectangles(texture, Vector2.zero,
+                new Vector2(cellWidth, cellHeight), Vector2.zero);
+            foreach (var rect in rects)
             {
-                var metaData = new SpriteMetaData();
-                metaData.name = texture.name + "_" + spriteMetaDatas.Count;
-                metaData.rect = new Rect(x, y - cellHeight, cellWidth, cellHeight);
-                metaData.alignment = 0;
-                metaData.pivot = Vector2.zero;
+                var metaData = new SpriteMetaData()
+                {
+                    name = texture.name + "_" + Array.IndexOf(rects, rect),
+                    rect = rect,
+                    alignment = 0,
+                    pivot = Vector2.zero
+                };
                 spriteMetaDatas.Add(metaData);
             }
-            
+
             var textureImporter = AssetImporter.GetAtPath(texturePath) as TextureImporter;
 
             if (textureImporter == null)
@@ -269,6 +277,17 @@ namespace Editor
 
             textureImporter.spritesheet = spriteMetaDatas.ToArray();
             AssetDatabase.ImportAsset(texturePath, ImportAssetOptions.ForceUpdate);
+        }
+
+        private void SaveSpritesToAsset(SerializedObject _object)
+        {
+            var sprites = AssetDatabase.LoadAllAssetsAtPath(texturePath).OfType<Sprite>().ToArray();
+            var spritesArray = _object.FindProperty("sprites");
+            spritesArray.arraySize = sprites.Length;
+            for (var i = 0; i < sprites.Length; i++)
+            {
+                spritesArray.GetArrayElementAtIndex(i).objectReferenceValue = sprites[i];
+            }
         }
     }
 }

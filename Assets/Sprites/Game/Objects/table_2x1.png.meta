@@ -26,6 +26,18 @@ TextureImporter:
   - first:
       213: 7175061246418210457
     second: table_2x1_3
+  - first:
+      213: 2194996810704237484
+    second: table_2x1_4
+  - first:
+      213: -7284737297074488345
+    second: table_2x1_5
+  - first:
+      213: 984805355465396870
+    second: table_2x1_6
+  - first:
+      213: 8512120216811027644
+    second: table_2x1_7
   externalObjects: {}
   serializedVersion: 11
   mipmaps:

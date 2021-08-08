@@ -133,7 +133,7 @@ TextureImporter:
       name: overlay_icons_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 32
         y: 0
         width: 32
         height: 32
@@ -142,7 +142,7 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 4087de04b61cff6e0800000000000000
       internalID: -1801508659529943036
@@ -154,7 +154,7 @@ TextureImporter:
       name: overlay_icons_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 64
         y: 0
         width: 32
         height: 32
@@ -163,7 +163,7 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5cc184337da28e5d0800000000000000
       internalID: -3033127245267329851
@@ -175,7 +175,7 @@ TextureImporter:
       name: overlay_icons_2
       rect:
         serializedVersion: 2
-        x: 64
+        x: 96
         y: 0
         width: 32
         height: 32
@@ -184,7 +184,7 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3192d347205a12090800000000000000
       internalID: -8060980428057794285
@@ -196,7 +196,7 @@ TextureImporter:
       name: overlay_icons_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 128
         y: 0
         width: 32
         height: 32
@@ -205,7 +205,7 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c0ee55bed5c696810800000000000000
       internalID: 1759056280100924940
@@ -217,27 +217,6 @@ TextureImporter:
       name: overlay_icons_4
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3104c7819a7467b80800000000000000
-      internalID: -8397445663599869933
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: overlay_icons_5
-      rect:
-        serializedVersion: 2
         x: 160
         y: 0
         width: 32
@@ -247,52 +226,10 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a6e6b08c600002ec0800000000000000
-      internalID: -3593872473515659670
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: overlay_icons_6
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2a65c3387973776d0800000000000000
-      internalID: -2992862303483046238
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: overlay_icons_7
-      rect:
-        serializedVersion: 2
-        x: 224
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 019bf06c470715120800000000000000
-      internalID: 2400823723206621456
+      spriteID: 3104c7819a7467b80800000000000000
+      internalID: -8397445663599869933
       vertices: []
       indices: 
       edges: []

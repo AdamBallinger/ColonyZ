@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c16fbffbe14b49cc8aa4ff930e7f20ba, type: 3}
-  m_Name: Sprite_Data_Table_2x2
+  m_Name: SD_Wood_Door
   m_EditorClassIdentifier: 
-  spriteGroupName: Table 2x2
+  spriteGroupName: Wood_Door
   sprites:
-  - {fileID: 21300000, guid: a955da22542383c4b97a1c7214ce6806, type: 3}
-  uiIconIndex: 0
+  - {fileID: -4637654797221521098, guid: e04b0f93d2957cd45ae003ef6b9cccbe, type: 3}
+  - {fileID: -4631306169216655099, guid: e04b0f93d2957cd45ae003ef6b9cccbe, type: 3}
+  - {fileID: 1580203099919349045, guid: e04b0f93d2957cd45ae003ef6b9cccbe, type: 3}
+  - {fileID: 8829081538893285068, guid: e04b0f93d2957cd45ae003ef6b9cccbe, type: 3}

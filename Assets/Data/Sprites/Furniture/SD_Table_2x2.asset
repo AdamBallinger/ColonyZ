@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c16fbffbe14b49cc8aa4ff930e7f20ba, type: 3}
-  m_Name: Sprite_Data_Item_Resource
+  m_Name: SD_Table_2x2
   m_EditorClassIdentifier: 
-  spriteGroupName: Item_Resource
+  spriteGroupName: Table 2x2
   sprites:
-  - {fileID: -6302176436445171612, guid: c761f0befff74234b8d2b7234a2acd35, type: 3}
+  - {fileID: -6197017998247367619, guid: a955da22542383c4b97a1c7214ce6806, type: 3}
   uiIconIndex: 0
