@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ae70d0a1d3e4d3abb342156a0700856, type: 3}
-  m_Name: Object Data
+  m_Name: OD_Table2x1
   m_EditorClassIdentifier: 
-  objectName: Foundation
-  spriteData: {fileID: 11400000, guid: dd0b244d09aa09648aff41e72399ab14, type: 2}
-  smartObject: 1
-  buildable: 0
-  rotatable: 0
+  factoryType: 2
+  objectName: Table 2x1
+  spriteData: {fileID: 11400000, guid: 3549e8c1def32c5409b851eeff18f9d3, type: 2}
+  smartObject: 0
+  buildable: 1
+  rotatable: 1
   enlosesRoom: 0
-  objectWidth: 1
+  objectWidth: 2
   objectHeight: 1
-  enterability: 0
+  enterability: 1
