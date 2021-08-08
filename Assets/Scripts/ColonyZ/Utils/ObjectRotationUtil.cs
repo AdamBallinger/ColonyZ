@@ -1,4 +1,5 @@
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
 using UnityEngine;
 
 namespace ColonyZ.Utils
@@ -21,7 +22,7 @@ namespace ColonyZ.Utils
             return Quaternion.identity;
         }
 
-        public static Vector2 GetObjectRotationPositionOffset(TileObject _object, ObjectRotation _rotation)
+        public static Vector2 GetObjectRotationPositionOffset(TileObjectData _object, ObjectRotation _rotation)
         {
             if (!_object.Rotatable) _rotation = ObjectRotation.Default;
             
@@ -40,7 +41,7 @@ namespace ColonyZ.Utils
         /// <returns></returns>
         public static int GetRotatedObjectWidth(TileObject _object)
         {
-            return GetRotatedObjectWidth(_object, _object.ObjectRotation);
+            return GetRotatedObjectWidth(_object.ObjectData, _object.ObjectRotation);
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace ColonyZ.Utils
         /// <returns></returns>
         public static int GetRotatedObjectHeight(TileObject _object)
         {
-            return GetRotatedObjectHeight(_object, _object.ObjectRotation);
+            return GetRotatedObjectHeight(_object.ObjectData, _object.ObjectRotation);
         }
 
         /// <summary>
@@ -59,14 +60,14 @@ namespace ColonyZ.Utils
         /// <param name="_object"></param>
         /// <param name="_rot"></param>
         /// <returns></returns>
-        public static int GetRotatedObjectWidth(TileObject _object, ObjectRotation _rot)
+        public static int GetRotatedObjectWidth(TileObjectData _object, ObjectRotation _rot)
         {
             if (_rot == ObjectRotation.Default || _rot == ObjectRotation.Clock_Wise_180)
             {
-                return _object.Width;
+                return _object.ObjectWidth;
             }
 
-            return _object.Height;
+            return _object.ObjectHeight;
         }
         
         /// <summary>
@@ -75,14 +76,14 @@ namespace ColonyZ.Utils
         /// <param name="_object"></param>
         /// <param name="_rot"></param>
         /// <returns></returns>
-        public static int GetRotatedObjectHeight(TileObject _object, ObjectRotation _rot)
+        public static int GetRotatedObjectHeight(TileObjectData _object, ObjectRotation _rot)
         {
             if (_rot == ObjectRotation.Default || _rot == ObjectRotation.Clock_Wise_180)
             {
-                return _object.Height;
+                return _object.ObjectHeight;
             }
 
-            return _object.Width;
+            return _object.ObjectWidth;
         }
     }
 }

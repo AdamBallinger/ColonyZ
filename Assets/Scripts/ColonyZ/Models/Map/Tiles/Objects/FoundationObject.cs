@@ -1,13 +1,11 @@
-﻿using UnityEngine;
+﻿using ColonyZ.Models.Map.Tiles.Objects.Data;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    [CreateAssetMenu(fileName = "Foundation", menuName = "ColonyZ/Foundation Object", order = 52)]
     public class FoundationObject : TileObject
     {
-        public override bool CanPlace(Tile _tile)
+        public FoundationObject(TileObjectData _data) : base(_data)
         {
-            return !_tile.HasObject;
         }
         
         public override int GetSortingOrder()

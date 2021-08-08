@@ -4,7 +4,6 @@ using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
-using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -185,8 +184,9 @@ namespace ColonyZ.Models.Saving
 
             for (var i = 0; i < objectsJson.Count; i++)
             {
-                var obj = TileObjectCache.GetObject(objectsJson[i]["id"].ToString());
-                obj.OnLoad(objectsJson[i]);
+                //var obj = TileObjectDataCache.GetObject(objectsJson[i]["id"].ToString());
+                //obj.OnLoad(objectsJson[i]);
+                // TODO: Work out how to load objects with new system.
             }
         }
 

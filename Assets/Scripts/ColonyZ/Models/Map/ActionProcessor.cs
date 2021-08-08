@@ -5,6 +5,7 @@ using ColonyZ.Controllers;
 using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
 using ColonyZ.Models.Map.Zones;
 
 namespace ColonyZ.Models.Map
@@ -40,7 +41,7 @@ namespace ColonyZ.Models.Map
         /// <summary>
         ///     Reference to the object that will be built on a tile when in Object work mode.
         /// </summary>
-        public TileObject ObjectToBuild { get; private set; }
+        public TileObjectData ObjectToBuild { get; private set; }
 
         public Zone ZoneToBuild { get; private set; }
 
@@ -132,17 +133,17 @@ namespace ColonyZ.Models.Map
             foreach (var tile in _tiles)
                 if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile, _rotation))
                 {
-                    var obj = TileObjectCache.GetObject(ObjectToBuild);
-                    obj.ObjectRotation = _rotation;
+                    //var obj = TileObjectDataCache.GetObject(ObjectToBuild);
+                    //obj.ObjectRotation = _rotation;
                     if (GodMode)
                     {
-                        tile.SetObject(obj);
+                        //tile.SetObject(obj);
                     }
                     else
                     {
-                        var foundation = TileObjectCache.GetFoundation();
-                        tile.SetObject(foundation);
-                        jobs.Add(new BuildJob(tile, obj));
+                        //var foundation = TileObjectDataCache.GetFoundation();
+                        //tile.SetObject(foundation);
+                        //jobs.Add(new BuildJob(tile, obj));
                     }
                 }
 
@@ -155,7 +156,7 @@ namespace ColonyZ.Models.Map
             {
                 foreach (var tile in _tiles)
                 {
-                    if (tile.HasObject && ObjectCompatWithMode(tile.Object))
+                    if (tile.HasObject && ObjectCompatWithMode(tile.Object.ObjectData))
                     {
                         tile.RemoveObject();
 
@@ -170,7 +171,7 @@ namespace ColonyZ.Models.Map
             }
 
             var jobs = (from tile in _tiles
-                where tile.HasObject && ObjectCompatWithMode(tile.Object)
+                where tile.HasObject && ObjectCompatWithMode(tile.Object.ObjectData)
                 select new DemolishJob(tile));
 
             JobManager.Instance.AddJobs(jobs);
@@ -182,7 +183,7 @@ namespace ColonyZ.Models.Map
             {
                 foreach (var tile in _tiles)
                 {
-                    if (tile.HasObject && ObjectCompatWithMode(tile.Object))
+                    if (tile.HasObject && ObjectCompatWithMode(tile.Object.ObjectData))
                     {
                         tile.RemoveObject();
 
@@ -197,7 +198,7 @@ namespace ColonyZ.Models.Map
             }
 
             var jobs = (from tile in _tiles
-                where tile.HasObject && ObjectCompatWithMode(tile.Object)
+                where tile.HasObject && ObjectCompatWithMode(tile.Object.ObjectData)
                 select new HarvestJob(tile, ProcessMode.ToString()));
 
             JobManager.Instance.AddJobs(jobs);
@@ -214,7 +215,7 @@ namespace ColonyZ.Models.Map
             }
         }
 
-        private bool ObjectCompatWithMode(TileObject _object)
+        private bool ObjectCompatWithMode(TileObjectData _object)
         {
             switch (ProcessMode)
             {
@@ -224,9 +225,9 @@ namespace ColonyZ.Models.Map
                     switch (GatherMode)
                     {
                         case GatherMode.Fell:
-                            return _object.Fellable;
+                            return ((GatherableObjectData)_object).GatherType == GatherMode.Fell;
                         case GatherMode.Mine:
-                            return _object.Mineable;
+                            return ((GatherableObjectData)_object).GatherType == GatherMode.Mine;
                     }
 
                     return false;
@@ -245,12 +246,12 @@ namespace ColonyZ.Models.Map
         /// <summary>
         ///     Sets the controller to build the provided tile object.
         /// </summary>
-        /// <param name="_object"></param>
-        public void SetBuildMode(TileObject _object)
+        /// <param name="_data"></param>
+        public void SetBuildMode(TileObjectData _data)
         {
-            MouseController.Instance.Mode = _object.Draggable ? MouseMode.Process : MouseMode.Process_Single;
+            MouseController.Instance.Mode = _data.Draggable ? MouseMode.Process : MouseMode.Process_Single;
             ProcessMode = ProcessMode.Object;
-            ObjectToBuild = _object;
+            ObjectToBuild = _data;
         }
 
         /// <summary>

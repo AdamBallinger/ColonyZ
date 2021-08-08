@@ -1,6 +1,5 @@
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
-using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Saving;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -9,7 +8,7 @@ namespace ColonyZ.Models.AI.Jobs
 {
     public class HarvestJob : Job
     {
-        private ResourceObject resourceObject;
+        // private ResourceObject resourceObject;
 
         private string harvestType;
 
@@ -22,8 +21,8 @@ namespace ColonyZ.Models.AI.Jobs
         {
             if (_targetTile.HasObject)
             {
-                JobName = $"{_harvestType}: {_targetTile.Object.ObjectName}";
-                resourceObject = _targetTile.Object as ResourceObject;
+                JobName = $"{_harvestType}: {_targetTile.Object.ObjectData.ObjectName}";
+                //resourceObject = _targetTile.Object as ResourceObject;
                 harvestType = _harvestType;
             }
             else
@@ -60,7 +59,7 @@ namespace ColonyZ.Models.AI.Jobs
             base.OnLoad(_dataToken);
 
             harvestType = _dataToken["harvest_type"].Value<string>();
-            JobName = $"{harvestType}: {TargetTile.Object.ObjectName}";
+            JobName = $"{harvestType}: {TargetTile.Object.ObjectData.ObjectName}";
         }
     }
 }

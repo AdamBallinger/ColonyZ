@@ -59,7 +59,7 @@ namespace ColonyZ.Models.Map.Areas
 
             Predicate<Tile> floodfill_ConditionCheck = t => t != null
                                                             && t.Area == oldArea
-                                                            && !(t.HasObject && t.Object.EnclosesRoom);
+                                                            && !(t.HasObject && t.Object.ObjectData.EnclosesRoom);
 
             Predicate<Tile> floodfill_PassCheck = t => t.Area == oldArea;
 
@@ -69,7 +69,7 @@ namespace ColonyZ.Models.Map.Areas
                 var enclosingCount = 0;
                 foreach (var tile in _tile.Neighbours)
                 {
-                    if (tile != null && tile.HasObject && tile.Object.EnclosesRoom) enclosingCount++;
+                    if (tile != null && tile.HasObject && tile.Object.ObjectData.EnclosesRoom) enclosingCount++;
                     if (enclosingCount >= 2) break;
                 }
 

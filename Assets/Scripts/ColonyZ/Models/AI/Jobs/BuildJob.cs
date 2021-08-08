@@ -14,7 +14,7 @@ namespace ColonyZ.Models.AI.Jobs
         
         public BuildJob(Tile _targetTile, TileObject _object) : base(_targetTile)
         {
-            JobName = "Build: " + _object.ObjectName;
+            JobName = "Build: " + _object.ObjectData.ObjectName;
             tileObject = _object;
         }
 
@@ -42,16 +42,17 @@ namespace ColonyZ.Models.AI.Jobs
         {
             base.OnSave(_writer);
 
-            _writer.WriteProperty("object_name", tileObject.ObjectName);
+            _writer.WriteProperty("object_name", tileObject.ObjectData.ObjectName);
         }
 
         public override void OnLoad(JToken _dataToken)
         {
-            tileObject = TileObjectCache.GetObject(_dataToken["object_name"].Value<string>());
+            // TODO: Create tile object with factory.
+            //tileObject = TileObjectDataCache.GetObject(_dataToken["object_name"].Value<string>());
             objectRotation =
                 (ObjectRotation)Enum.Parse(typeof(ObjectRotation), _dataToken["object_rotation"].Value<string>());
             tileObject.ObjectRotation = objectRotation;
-            JobName = "Build: " + tileObject.ObjectName;
+            JobName = "Build: " + tileObject.ObjectData.ObjectName;
         }
     }
 }

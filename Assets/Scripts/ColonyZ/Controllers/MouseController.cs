@@ -6,6 +6,7 @@ using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
 using ColonyZ.Utils;
@@ -238,7 +239,7 @@ namespace ColonyZ.Controllers
                     else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Demolish)
                     {
                         // Only allow buildable objects to be demolished.
-                        if (tile.HasObject && tile.Object.Buildable)
+                        if (tile.HasObject && tile.Object.ObjectData.Buildable)
                         {
                             previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Hammer);
                             previewRenderer.color = previewOverlayColor;
@@ -251,7 +252,8 @@ namespace ColonyZ.Controllers
                     else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Gather &&
                              World.Instance.WorldActionProcessor.GatherMode == GatherMode.Mine)
                     {
-                        if (tile.HasObject && tile.Object.Mineable)
+                        if (tile.HasObject && tile.Object.ObjectData is GatherableObjectData gatherable &&
+                            gatherable.GatherType == GatherMode.Mine)
                         {
                             previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Pickaxe);
                             previewRenderer.color = previewOverlayColor;
@@ -264,7 +266,8 @@ namespace ColonyZ.Controllers
                     else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Gather &&
                              World.Instance.WorldActionProcessor.GatherMode == GatherMode.Fell)
                     {
-                        if (tile.HasObject && tile.Object.Fellable)
+                        if (tile.HasObject && tile.Object.ObjectData is GatherableObjectData gatherable &&
+                            gatherable.GatherType == GatherMode.Fell)
                         {
                             previewRenderer.sprite = SpriteCache.GetSprite("Overlay", (byte)OverlayType.Axe);
                             previewRenderer.color = previewOverlayColor;

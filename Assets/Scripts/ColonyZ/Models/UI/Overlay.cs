@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
 using UnityEngine;
 
 namespace ColonyZ.Models.UI
@@ -92,8 +93,16 @@ namespace ColonyZ.Models.UI
             
             if (_job.TargetTile.HasObject)
             {
-                if (_job.TargetTile.Object.Mineable) return OverlayType.Pickaxe;
-                if (_job.TargetTile.Object.Fellable) return OverlayType.Axe;
+                if (_job.TargetTile.Object.ObjectData is GatherableObjectData gatherable)
+                {
+                    switch (gatherable.GatherType)
+                    {
+                        case GatherMode.Fell:
+                            return OverlayType.Axe;
+                        case GatherMode.Mine:
+                            return OverlayType.Pickaxe;
+                    }
+                }
             }
 
             return OverlayType.None;

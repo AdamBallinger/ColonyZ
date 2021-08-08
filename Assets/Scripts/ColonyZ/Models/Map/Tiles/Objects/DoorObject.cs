@@ -1,9 +1,8 @@
-﻿using ColonyZ.Models.TimeSystem;
-using UnityEngine;
+﻿using ColonyZ.Models.Map.Tiles.Objects.Data;
+using ColonyZ.Models.TimeSystem;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    [CreateAssetMenu(fileName = "Door_", menuName = "ColonyZ/Door Object", order = 51)]
     public class DoorObject : TileObject
     {
         public bool IsOpen { get; private set; }
@@ -30,47 +29,51 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// </summary>
         private float maxOpenTime = 1.25f;
         
+        public DoorObject(TileObjectData _data) : base(_data)
+        {
+        }
+        
         public override int GetSpriteIndex()
         {
             var east = World.Instance.GetTileAt(Tile.X + 1, Tile.Y);
             var west = World.Instance.GetTileAt(Tile.X - 1, Tile.Y);
 
-            if (east != null && west != null)
-                if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
-                    west.HasObject && west.Object.GetType() == typeof(WallObject))
-                    return IsOpen ? 1 : 0;
-
-            var north = World.Instance.GetTileAt(Tile.X, Tile.Y + 1);
-            var south = World.Instance.GetTileAt(Tile.X, Tile.Y - 1);
-
-            if (north != null && south != null)
-                if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
-                    south.HasObject && south.Object.GetType() == typeof(WallObject))
-                    return IsOpen ? 3 : 2;
+            // if (east != null && west != null)
+            //     if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
+            //         west.HasObject && west.Object.GetType() == typeof(WallObject))
+            //         return IsOpen ? 1 : 0;
+            //
+            // var north = World.Instance.GetTileAt(Tile.X, Tile.Y + 1);
+            // var south = World.Instance.GetTileAt(Tile.X, Tile.Y - 1);
+            //
+            // if (north != null && south != null)
+            //     if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
+            //         south.HasObject && south.Object.GetType() == typeof(WallObject))
+            //         return IsOpen ? 3 : 2;
 
             return 0;
         }
 
         public override bool CanPlace(Tile _tile)
         {
-            if (!base.CanPlace(_tile)) return false;
+            if (_tile.HasObject) return false;
 
             var east = World.Instance.GetTileAt(_tile.X + 1, _tile.Y);
             var west = World.Instance.GetTileAt(_tile.X - 1, _tile.Y);
             var north = World.Instance.GetTileAt(_tile.X, _tile.Y + 1);
             var south = World.Instance.GetTileAt(_tile.X, _tile.Y - 1);
 
-            if (east != null && west != null)
-                if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
-                    west.HasObject && west.Object.GetType() == typeof(WallObject))
-                    if (north?.Object == null && south?.Object == null)
-                        return true;
-
-            if (north != null && south != null)
-                if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
-                    south.HasObject && south.Object.GetType() == typeof(WallObject))
-                    if (east?.Object == null && west?.Object == null)
-                        return true;
+            // if (east != null && west != null)
+            //     if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
+            //         west.HasObject && west.Object.GetType() == typeof(WallObject))
+            //         if (north?.Object == null && south?.Object == null)
+            //             return true;
+            //
+            // if (north != null && south != null)
+            //     if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
+            //         south.HasObject && south.Object.GetType() == typeof(WallObject))
+            //         if (east?.Object == null && west?.Object == null)
+            //             return true;
 
             return false;
         }

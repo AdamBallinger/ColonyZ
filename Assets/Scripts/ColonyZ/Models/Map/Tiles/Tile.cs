@@ -130,7 +130,7 @@ namespace ColonyZ.Models.Map.Tiles
             HasObject = true;
             World.Instance.Objects.Add(_object);
 
-            if (_markDirty && _object.EnclosesRoom)
+            if (_markDirty && _object.ObjectData.EnclosesRoom)
             {
                 AreaManager.Instance.CheckForArea(this);
                 World.Instance.WorldGrid.SetDirty(this, true);
@@ -143,7 +143,7 @@ namespace ColonyZ.Models.Map.Tiles
         {
             if (!HasObject) return;
 
-            var shouldMarkDirty = _markDirty && Object.EnclosesRoom;
+            var shouldMarkDirty = _markDirty && Object.ObjectData.EnclosesRoom;
 
             World.Instance.Objects.Remove(Object);
 
@@ -191,12 +191,12 @@ namespace ColonyZ.Models.Map.Tiles
 
         public TileEnterability GetEnterability()
         {
-            return HasObject ? Object.Enterability : TileEnterability.Immediate;
+            return HasObject ? Object.ObjectData.Enterability : TileEnterability.Immediate;
         }
 
         public override string ToString()
         {
-            return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectName : "None")}";
+            return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectData.ObjectName : "None")}";
         }
 
         public bool Equals(Tile other)
