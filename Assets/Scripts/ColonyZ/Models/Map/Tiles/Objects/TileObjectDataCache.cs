@@ -40,6 +40,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             return (T)ObjectDatas.FirstOrDefault(obj => obj.ObjectName.Equals(_objectName));
         }
 
+        public static TileObjectData GetData(string _objectName)
+        {
+            return GetData<TileObjectData>(_objectName);
+        }
+
         /// <summary>
         ///     Returns data for the foundation object.
         /// </summary>

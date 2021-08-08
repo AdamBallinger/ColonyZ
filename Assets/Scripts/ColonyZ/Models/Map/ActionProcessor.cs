@@ -6,8 +6,8 @@ using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Tiles.Objects.Data;
-using ColonyZ.Models.Map.Tiles.Objects.Factory;
 using ColonyZ.Models.Map.Zones;
+using ColonyZ.Utils;
 
 namespace ColonyZ.Models.Map
 {
@@ -130,7 +130,7 @@ namespace ColonyZ.Models.Map
         private void HandleBuild(IEnumerable<Tile> _tiles, ObjectRotation _rotation)
         {
             var jobs = new List<Job>();
-            var factory = GetFactory();
+            var factory = ObjectFactoryUtil.GetFactory(ObjectToBuild.FactoryType);
 
             foreach (var tile in _tiles)
                 if (World.Instance.IsObjectPositionValid(ObjectToBuild, tile, _rotation))
@@ -215,23 +215,6 @@ namespace ColonyZ.Models.Map
                     JobManager.Instance.CancelJob(tile.CurrentJob);
                 }
             }
-        }
-
-        private TileObjectFactory GetFactory()
-        {
-            switch (ObjectToBuild.FactoryType)
-            {
-                case ObjectFactoryType.Wall:
-                    return ObjectFactories.WallFactory;
-                case ObjectFactoryType.Door:
-                    return ObjectFactories.DoorFactory;
-                case ObjectFactoryType.Furniture:
-                    return ObjectFactories.FurnitureFactory;
-                case ObjectFactoryType.Resource:
-                    return ObjectFactories.ResourceFactory;
-            }
-
-            return null;
         }
 
         private bool ObjectCompatWithMode(TileObjectData _object)

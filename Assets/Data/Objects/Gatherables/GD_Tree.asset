@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47f65292799e4174be92c8c4fc6037c1, type: 3}
   m_Name: GD_Tree
   m_EditorClassIdentifier: 
-  factoryType: 2
+  factoryType: 3
   objectName: Tree
   spriteData: {fileID: 11400000, guid: 73f54200bbe129d4a81129890d0df55a, type: 2}
   smartObject: 0

@@ -105,7 +105,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         public void OnSave(SaveGameWriter _writer)
         {
-            _writer.WriteProperty("id", ObjectData.ObjectName);
+            _writer.WriteProperty("data_name", ObjectData.ObjectName);
             _writer.WriteProperty("t_index", World.Instance.GetTileIndex(OriginTile));
             _writer.WriteProperty("rot", (int)ObjectRotation);
 
