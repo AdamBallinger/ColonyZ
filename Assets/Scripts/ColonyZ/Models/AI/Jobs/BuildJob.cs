@@ -11,8 +11,6 @@ namespace ColonyZ.Models.AI.Jobs
     {
         private TileObject tileObject;
 
-        private ObjectRotation objectRotation;
-        
         public BuildJob(Tile _targetTile, TileObject _object) : base(_targetTile)
         {
             JobName = "Build: " + _object.ObjectData.ObjectName;
@@ -44,16 +42,15 @@ namespace ColonyZ.Models.AI.Jobs
             base.OnSave(_writer);
 
             _writer.WriteProperty("object_name", tileObject.ObjectData.ObjectName);
-            _writer.WriteProperty("object_rotation", objectRotation);
+            _writer.WriteProperty("object_rotation", tileObject.ObjectRotation);
         }
 
         public override void OnLoad(JToken _dataToken)
         {
             var objectData = TileObjectDataCache.GetData(_dataToken["object_name"].Value<string>());
             tileObject = ObjectFactoryUtil.GetFactory(objectData.FactoryType).GetObject(objectData);
-            objectRotation =
-                (ObjectRotation)Enum.Parse(typeof(ObjectRotation), _dataToken["object_rotation"].Value<string>());
-            tileObject.ObjectRotation = objectRotation;
+            Enum.TryParse<ObjectRotation>(_dataToken["object_rotation"].Value<string>(), out var rotation);
+            tileObject.ObjectRotation = rotation;
             JobName = "Build: " + tileObject.ObjectData.ObjectName;
         }
     }
