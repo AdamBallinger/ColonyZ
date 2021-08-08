@@ -33,6 +33,7 @@ namespace Editor
         private Color defaultGUIColor;
 
         private string texturePath => AssetDatabase.GetAssetPath(texture);
+        private string assetPath => AssetDatabase.GetAssetPath(currentAsset);
         
         [MenuItem("ColonyZ/Sprite Data Tool")]
         private static void Init()
@@ -77,6 +78,7 @@ namespace Editor
             if (GUILayout.Button("Edit"))
             {
                 mode = ToolMode.Edit;
+                currentAsset = null;
             }
         }
 
@@ -113,18 +115,6 @@ namespace Editor
             
             if (GUILayout.Button("Slice Texture"))
             {
-                spriteMetaDatas.Clear();
-                for (var y = texture.height; y > 0; y -= cellHeight)
-                for (var x = 0; x < texture.width; x += cellWidth)
-                {
-                    var metaData = new SpriteMetaData();
-                    metaData.name = texture.name + "_" + spriteMetaDatas.Count;
-                    metaData.rect = new Rect(x, y - cellHeight, cellWidth, cellHeight);
-                    metaData.alignment = 0;
-                    metaData.pivot = Vector2.zero;
-                    spriteMetaDatas.Add(metaData);
-                }
-
                 Slice();
             }
 
@@ -159,6 +149,61 @@ namespace Editor
                 GUI.FocusControl(null);
                 mode = ToolMode.Menu;
             }
+
+            currentAsset = (SpriteData)EditorGUILayout.ObjectField("Asset: ", currentAsset, typeof(SpriteData), false);
+
+            if (currentAsset == null)
+            {
+                EditorGUILayout.HelpBox("Select a sprite data asset to edit.", MessageType.Info);
+                return;
+            }
+
+            assetName ??= currentAsset.name;
+
+            var serializedObject = new SerializedObject(currentAsset);
+            var spriteGroup = serializedObject.FindProperty("spriteGroupName");
+            var sprite = (Sprite)serializedObject.FindProperty("sprites").GetArrayElementAtIndex(0)
+                .objectReferenceValue;
+            texture = sprite.texture;
+            cellWidth = (int)sprite.rect.width;
+            cellHeight = (int)sprite.rect.height;
+
+            EditorGUILayout.LabelField("Src: " + AssetDatabase.GetAssetPath(currentAsset));
+            
+            assetName = EditorGUILayout.TextField("Asset name: ", assetName);
+
+            spriteGroup.stringValue = EditorGUILayout.TextField("Sprite group: ", spriteGroup.stringValue);
+
+            texture = (Texture2D)EditorGUILayout.ObjectField("Texture: ", texture, typeof(Texture2D), false);
+
+            EditorGUILayout.Space(4);
+            
+            EditorGUILayout.BeginHorizontal();
+            {
+                cellWidth = EditorGUILayout.IntField("Cell Width:", cellWidth);
+                cellHeight = EditorGUILayout.IntField("Cell Height:", cellHeight);
+            }
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            {
+                if (GUILayout.Button("Save"))
+                {
+                    if (currentAsset.name != assetName)
+                        AssetDatabase.RenameAsset(assetPath, assetName);
+                }
+
+                GUI.color = Color.red;
+                EditorGUILayout.Space(4);
+                if (GUILayout.Button("Delete"))
+                {
+                    DeleteAsset(currentAsset);
+                    return;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            
+            serializedObject.ApplyModifiedProperties();
         }
 
         private SpriteData CreateSpriteData()
@@ -181,7 +226,6 @@ namespace Editor
             serializedObject.ApplyModifiedProperties();
             AssetDatabase.CreateAsset(_data, _path + _assetName + ".asset");
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         private void DeleteAsset(SpriteData _data)
@@ -191,6 +235,18 @@ namespace Editor
 
         private void Slice()
         {
+            spriteMetaDatas.Clear();
+            for (var y = texture.height; y > 0; y -= cellHeight)
+            for (var x = 0; x < texture.width; x += cellWidth)
+            {
+                var metaData = new SpriteMetaData();
+                metaData.name = texture.name + "_" + spriteMetaDatas.Count;
+                metaData.rect = new Rect(x, y - cellHeight, cellWidth, cellHeight);
+                metaData.alignment = 0;
+                metaData.pivot = Vector2.zero;
+                spriteMetaDatas.Add(metaData);
+            }
+            
             var textureImporter = AssetImporter.GetAtPath(texturePath) as TextureImporter;
 
             if (textureImporter == null)
