@@ -29,6 +29,8 @@ namespace Editor
 
         private int cellWidth, cellHeight;
 
+        private Vector2 spritePivot;
+
         private string assetName;
         
         private Color defaultGUIColor;
@@ -76,6 +78,7 @@ namespace Editor
                 texture = null;
                 cellWidth = 32;
                 cellHeight = 32;
+                spritePivot = new Vector2(16, 16);
             }
             if (GUILayout.Button("Edit"))
             {
@@ -100,6 +103,12 @@ namespace Editor
             EditorGUILayout.Space(4);
             texture = (Texture2D)EditorGUILayout.ObjectField("Sprite Texture", texture, typeof(Texture2D), false);
             EditorGUILayout.Space(4);
+            
+            if (texture == null)
+            {
+                EditorGUILayout.HelpBox("No texture selected.", MessageType.Warning);
+                return;
+            }
 
             EditorGUILayout.BeginHorizontal();
             {
@@ -108,13 +117,10 @@ namespace Editor
             }
             EditorGUILayout.EndHorizontal();
 
-            if (texture == null)
-            {
-                EditorGUILayout.Space(4);
-                EditorGUILayout.HelpBox("No texture selected.", MessageType.Warning);
-                return;
-            }
-            
+            spritePivot = EditorGUILayout.Vector2Field("Sprite pivot: ", spritePivot);
+            spritePivot.x = Mathf.Min(spritePivot.x, cellWidth);
+            spritePivot.y = Mathf.Min(spritePivot.y, cellHeight);
+
             if (GUILayout.Button("Slice Texture"))
             {
                 Slice();
@@ -170,6 +176,7 @@ namespace Editor
                 texture = sprite.texture;
                 cellWidth = (int)sprite.rect.width;
                 cellHeight = (int)sprite.rect.height;
+                spritePivot = sprite.pivot;
             }
 
             var spriteGroup = serializedObject.FindProperty("spriteGroupName");
@@ -190,6 +197,10 @@ namespace Editor
                 cellHeight = EditorGUILayout.IntField("Cell Height:", cellHeight);
             }
             EditorGUILayout.EndHorizontal();
+            
+            spritePivot = EditorGUILayout.Vector2Field("Sprite pivot: ", spritePivot);
+            spritePivot.x = Mathf.Min(spritePivot.x, cellWidth);
+            spritePivot.y = Mathf.Min(spritePivot.y, cellHeight);
             
             EditorGUILayout.LabelField("Sprites: " + serializedObject.FindProperty("sprites").arraySize);
 
@@ -236,6 +247,7 @@ namespace Editor
         private void DeleteAsset(SpriteData _data)
         {
             AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(_data));
+            currentAsset = null;
         }
 
         private void Slice()
@@ -264,11 +276,12 @@ namespace Editor
             }
 
             textureImporter.textureType = TextureImporterType.Sprite;
-            textureImporter.spriteImportMode = SpriteImportMode.Multiple;
+            textureImporter.spriteImportMode = spriteMetaDatas.Count > 1 ? SpriteImportMode.Multiple : SpriteImportMode.Single;
             textureImporter.textureShape = TextureImporterShape.Texture2D;
             textureImporter.spritePixelsPerUnit = 32;
             textureImporter.filterMode = FilterMode.Point;
             textureImporter.textureCompression = TextureImporterCompression.Uncompressed;
+            textureImporter.spritePivot = new Vector2(spritePivot.x / cellWidth, spritePivot.y / cellHeight);
 
             var textureImportSettings = new TextureImporterSettings();
             textureImporter.ReadTextureSettings(textureImportSettings);
