@@ -2,11 +2,9 @@ using UnityEngine;
 
 namespace ColonyZ.Models.Sprites
 {
-    [CreateAssetMenu(fileName = "Sprite_Data_", menuName = "ColonyZ/Sprite Data")]
     public class SpriteData : ScriptableObject
     {
-        [SerializeField] [Tooltip("The group the sprites will be stored in for the sprite cache.")]
-        private string spriteGroupName = "default";
+        [SerializeField] private string spriteGroupName = "default";
 
         [SerializeField] private Sprite[] sprites;
 

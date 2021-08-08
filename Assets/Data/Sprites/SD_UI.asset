@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c16fbffbe14b49cc8aa4ff930e7f20ba, type: 3}
-  m_Name: Sprite_Data_UI
+  m_Name: SD_UI
   m_EditorClassIdentifier: 
   spriteGroupName: UI
   sprites:
@@ -21,6 +21,4 @@ MonoBehaviour:
   - {fileID: -3727887130177446384, guid: 658321f76007b174ba99b477e3bcf85a, type: 3}
   - {fileID: -4380278413240271071, guid: 658321f76007b174ba99b477e3bcf85a, type: 3}
   - {fileID: 3718472063753370142, guid: 658321f76007b174ba99b477e3bcf85a, type: 3}
-  - {fileID: 1544850953348435063, guid: 658321f76007b174ba99b477e3bcf85a, type: 3}
-  - {fileID: -852920116970684301, guid: 658321f76007b174ba99b477e3bcf85a, type: 3}
   uiIconIndex: 0

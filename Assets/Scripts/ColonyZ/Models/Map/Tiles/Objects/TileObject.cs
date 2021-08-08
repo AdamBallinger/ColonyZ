@@ -92,21 +92,12 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// <returns></returns>
         public virtual int GetSpriteIndex()
         {
-            return Rotatable ? GetObjectRotation() : 0;
+            return Rotatable ? (int)ObjectRotation : 0;
         }
 
         public virtual int GetSortingOrder()
         {
             return World.Instance.Height - Tile.Y;
-        }
-
-        /// <summary>
-        ///     Rotation index of the object.
-        /// </summary>
-        /// <returns></returns>
-        public int GetObjectRotation()
-        {
-            return (int)ObjectRotation;
         }
 
         /// <summary>
@@ -120,13 +111,22 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         }
 
         /// <summary>
+        ///     Returns sprite for this object using the provided rotation.
+        /// </summary>
+        /// <param name="_rotation"></param>
+        /// <returns></returns>
+        public Sprite GetSprite(ObjectRotation _rotation)
+        {
+            return SpriteCache.GetSprite(SpriteData.SpriteGroup, Rotatable ? (int)_rotation : 0);
+        }
+
+        /// <summary>
         ///     Return an icon sprite for this tile structure. This is used to display the structure in UI.
         /// </summary>
         /// <returns></returns>
-        public Sprite GetIcon(ObjectRotation _rotation = ObjectRotation.Default)
+        public Sprite GetIcon()
         {
-            return Rotatable ? SpriteCache.GetSprite(SpriteData.SpriteGroup, (int)_rotation) :
-                SpriteCache.GetSprite(SpriteData.SpriteGroup, SpriteData.IconIndex);
+            return SpriteCache.GetSprite(SpriteData.SpriteGroup, SpriteData.IconIndex);
         }
 
         #region Serialized fields

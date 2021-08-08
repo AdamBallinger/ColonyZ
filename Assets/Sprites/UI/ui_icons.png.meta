@@ -41,6 +41,27 @@ TextureImporter:
   - first:
       213: -852920116970684301
     second: ui_icons_8
+  - first:
+      213: 2474671277189287118
+    second: ui_icons_9
+  - first:
+      213: -2130243717397963355
+    second: ui_icons_10
+  - first:
+      213: -7091437055505287711
+    second: ui_icons_11
+  - first:
+      213: -7095352121435929964
+    second: ui_icons_12
+  - first:
+      213: 8094447600232260842
+    second: ui_icons_13
+  - first:
+      213: -4718130264091166121
+    second: ui_icons_14
+  - first:
+      213: -2808390868205838639
+    second: ui_icons_15
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -62,6 +83,7 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -71,8 +93,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -93,9 +115,12 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
   applyGammaDecoding: 0
   platformSettings:
   - serializedVersion: 3
@@ -138,10 +163,10 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: cf9ded59967f36480800000000000000
-      internalID: -8907003605150672388
+      spriteID: 27c4d51d4d14b6250800000000000000
+      internalID: 5938912915919555698
       vertices: []
       indices: 
       edges: []
@@ -159,10 +184,10 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: e9ff292687a7c7c80800000000000000
-      internalID: -8323643353819054178
+      spriteID: 30ea0d5361cbf6c50800000000000000
+      internalID: 6660749177482423811
       vertices: []
       indices: 
       edges: []
@@ -180,10 +205,10 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 2b1d849d141c91cd0800000000000000
-      internalID: -2586824022385176142
+      spriteID: 527447d055fe4a390800000000000000
+      internalID: -7807852705376614619
       vertices: []
       indices: 
       edges: []
@@ -201,10 +226,10 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 94389aa87626e14c0800000000000000
-      internalID: -4314903196126837943
+      spriteID: 942200d2c470bc0b0800000000000000
+      internalID: -5707460079008079287
       vertices: []
       indices: 
       edges: []
@@ -222,7 +247,7 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 01ed5030862e34cc0800000000000000
       internalID: -3727887130177446384
@@ -243,7 +268,7 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 12f7089adff1633c0800000000000000
       internalID: -4380278413240271071
@@ -255,27 +280,6 @@ TextureImporter:
       name: ui_icons_6
       rect:
         serializedVersion: 2
-        x: 192
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e1abb3304aaaa9330800000000000000
-      internalID: 3718472063753370142
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ui_icons_7
-      rect:
-        serializedVersion: 2
         x: 224
         y: 32
         width: 32
@@ -285,31 +289,10 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 77cc141d1c9607510800000000000000
-      internalID: 1544850953348435063
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ui_icons_8
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3708d2e2ca1d924f0800000000000000
-      internalID: -852920116970684301
+      spriteID: e1abb3304aaaa9330800000000000000
+      internalID: 3718472063753370142
       vertices: []
       indices: 
       edges: []
