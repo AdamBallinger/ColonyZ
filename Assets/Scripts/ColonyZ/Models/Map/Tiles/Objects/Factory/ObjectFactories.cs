@@ -4,6 +4,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Factory
     {
         public static readonly TileObjectFactory WallFactory = new WallObjectFactory();
         public static readonly TileObjectFactory DoorFactory = new DoorObjectFactory();
-        public static readonly TileObjectFactory ResourceFactory = new ResourceObjectFactory();
+        public static readonly TileObjectFactory FurnitureFactory = new FurnitureObjectFactory();
+        public static readonly TileObjectFactory ResourceFactory = new GatherableObjectFactory();
     }
 }

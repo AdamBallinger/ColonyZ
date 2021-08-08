@@ -225,6 +225,8 @@ namespace ColonyZ.Models.Map
                     return ObjectFactories.WallFactory;
                 case ObjectFactoryType.Door:
                     return ObjectFactories.DoorFactory;
+                case ObjectFactoryType.Furniture:
+                    return ObjectFactories.FurnitureFactory;
                 case ObjectFactoryType.Resource:
                     return ObjectFactories.ResourceFactory;
             }

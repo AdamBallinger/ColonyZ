@@ -2,9 +2,9 @@ using ColonyZ.Models.Map.Tiles.Objects.Data;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    public class ResourceObject : TileObject
+    public class GatherableObject : TileObject
     {
-        public ResourceObject(TileObjectData _data) : base(_data)
+        public GatherableObject(TileObjectData _data) : base(_data)
         {
         }
 

@@ -4,6 +4,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Factory
     {
         Wall,
         Door,
+        Furniture,
         Resource
     }
 }
