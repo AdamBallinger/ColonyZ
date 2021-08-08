@@ -31,6 +31,8 @@ namespace Editor
 
         private Vector2 spritePivot;
 
+        private int uiIconIndex;
+
         private string assetName;
         
         private Color defaultGUIColor;
@@ -85,6 +87,7 @@ namespace Editor
                 mode = ToolMode.Edit;
                 currentAsset = null;
                 texture = null;
+                previousAsset = null;
             }
         }
 
@@ -125,9 +128,15 @@ namespace Editor
             {
                 Slice();
             }
-
-            EditorGUILayout.LabelField("Sprite count: " + spriteMetaDatas.Count);
             
+            EditorGUILayout.LabelField("Sprite count: " + spriteMetaDatas.Count);
+
+            if (spriteMetaDatas.Count > 0)
+            {
+                uiIconIndex = EditorGUILayout.IntSlider("UI Icon Index: ", uiIconIndex, 0, spriteMetaDatas.Count - 1);
+                DrawUIIconSprite(uiIconIndex);
+            }
+
             EditorGUILayout.Space(6);
 
             if (spriteMetaDatas.Count > 0)
@@ -167,20 +176,20 @@ namespace Editor
             }
             
             var serializedObject = new SerializedObject(currentAsset);
+            var spriteGroup = serializedObject.FindProperty("spriteGroupName");
+            var spriteUIIconIndex = serializedObject.FindProperty("uiIconIndex");
+            var sprites = serializedObject.FindProperty("sprites");
 
             if (currentAsset.name != previousAsset?.name)
             {
                 assetName = currentAsset.name;
-                var sprite = (Sprite)serializedObject.FindProperty("sprites").GetArrayElementAtIndex(0)
-                    .objectReferenceValue;
+                var sprite = (Sprite)sprites.GetArrayElementAtIndex(0).objectReferenceValue;
                 texture = sprite.texture;
                 cellWidth = (int)sprite.rect.width;
                 cellHeight = (int)sprite.rect.height;
                 spritePivot = sprite.pivot;
             }
 
-            var spriteGroup = serializedObject.FindProperty("spriteGroupName");
-            
             EditorGUILayout.LabelField("Src: " + AssetDatabase.GetAssetPath(currentAsset));
             
             assetName = EditorGUILayout.TextField("Asset name: ", assetName);
@@ -188,6 +197,13 @@ namespace Editor
             spriteGroup.stringValue = EditorGUILayout.TextField("Sprite group: ", spriteGroup.stringValue);
 
             texture = (Texture2D)EditorGUILayout.ObjectField("Texture: ", texture, typeof(Texture2D), false);
+
+            if (texture != null)
+            {
+                spriteUIIconIndex.intValue = EditorGUILayout.IntSlider("UI Icon Index: ", 
+                    spriteUIIconIndex.intValue, 0, sprites.arraySize - 1);
+                DrawUIIconSprite(spriteUIIconIndex.intValue);
+            }
 
             EditorGUILayout.Space(4);
             
@@ -228,6 +244,12 @@ namespace Editor
             previousAsset = currentAsset;
         }
 
+        private void DrawUIIconSprite(int _index)
+        {
+            GUILayout.Label(AssetPreview.GetAssetPreview(AssetDatabase.LoadAllAssetsAtPath(texturePath)
+                .OfType<Sprite>().ToArray()[_index]));
+        }
+
         private SpriteData CreateSpriteData()
         {
             return CreateInstance<SpriteData>();
@@ -239,6 +261,7 @@ namespace Editor
             SaveSpritesToAsset(serializedObject);
 
             serializedObject.FindProperty("spriteGroupName").stringValue = assetName;
+            serializedObject.FindProperty("uiIconIndex").intValue = uiIconIndex;
             serializedObject.ApplyModifiedProperties();
             AssetDatabase.CreateAsset(_data, _path + _assetName + ".asset");
             AssetDatabase.SaveAssets();
