@@ -245,7 +245,7 @@ namespace Editor
                 new Vector2(cellWidth, cellHeight), Vector2.zero);
             foreach (var rect in rects)
             {
-                var metaData = new SpriteMetaData()
+                var metaData = new SpriteMetaData
                 {
                     name = texture.name + "_" + Array.IndexOf(rects, rect),
                     rect = rect,
