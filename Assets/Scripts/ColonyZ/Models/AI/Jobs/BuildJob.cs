@@ -2,6 +2,7 @@ using System;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Saving;
+using ColonyZ.Utils;
 using Newtonsoft.Json.Linq;
 
 namespace ColonyZ.Models.AI.Jobs
@@ -43,12 +44,13 @@ namespace ColonyZ.Models.AI.Jobs
             base.OnSave(_writer);
 
             _writer.WriteProperty("object_name", tileObject.ObjectData.ObjectName);
+            _writer.WriteProperty("object_rotation", objectRotation);
         }
 
         public override void OnLoad(JToken _dataToken)
         {
-            // TODO: Create tile object with factory.
-            //tileObject = TileObjectDataCache.GetObject(_dataToken["object_name"].Value<string>());
+            var objectData = TileObjectDataCache.GetData(_dataToken["object_name"].Value<string>());
+            tileObject = ObjectFactoryUtil.GetFactory(objectData.FactoryType).GetObject(objectData);
             objectRotation =
                 (ObjectRotation)Enum.Parse(typeof(ObjectRotation), _dataToken["object_rotation"].Value<string>());
             tileObject.ObjectRotation = objectRotation;
