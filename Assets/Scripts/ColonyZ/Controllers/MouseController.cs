@@ -298,6 +298,9 @@ namespace ColonyZ.Controllers
                 {
                     Rotate();
                 }
+
+                if (!objectBeingBuilt.Rotatable)
+                    currentRotation = ObjectRotation.Default;
                 
                 var previewObject = previewPool.GetAvailable();
                 var previewPos = currentMousePosition;
@@ -307,10 +310,8 @@ namespace ColonyZ.Controllers
                 var offset = ObjectRotationUtil.GetObjectRotationPositionOffset(objectBeingBuilt, currentRotation);
 
                 previewObject.transform.position = previewPos + offset;
-                if (objectBeingBuilt.Rotatable)
-                {
-                    previewObject.transform.rotation = ObjectRotationUtil.GetQuaternion(currentRotation);
-                }
+                previewObject.transform.rotation = ObjectRotationUtil.GetQuaternion(currentRotation);
+
                 var previewRenderer = previewObject.GetComponent<SpriteRenderer>();
                 previewRenderer.sprite = null;
 
