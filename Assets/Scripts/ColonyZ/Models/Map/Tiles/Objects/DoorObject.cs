@@ -35,16 +35,16 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         
         public override int GetSpriteIndex()
         {
-            var east = World.Instance.GetTileAt(Tile.X + 1, Tile.Y);
-            var west = World.Instance.GetTileAt(Tile.X - 1, Tile.Y);
+            var east = World.Instance.GetTileAt(OriginTile.X + 1, OriginTile.Y);
+            var west = World.Instance.GetTileAt(OriginTile.X - 1, OriginTile.Y);
 
             if (east != null && west != null)
                 if (east.Object != null && east.Object.ObjectData.EnclosesRoom &&
                     west.Object != null && west.Object.ObjectData.EnclosesRoom)
                     return IsOpen ? 1 : 0;
             
-            var north = World.Instance.GetTileAt(Tile.X, Tile.Y + 1);
-            var south = World.Instance.GetTileAt(Tile.X, Tile.Y - 1);
+            var north = World.Instance.GetTileAt(OriginTile.X, OriginTile.Y + 1);
+            var south = World.Instance.GetTileAt(OriginTile.X, OriginTile.Y - 1);
             
             if (north != null && south != null)
                 if (north.Object != null && north.Object.ObjectData.EnclosesRoom &&
@@ -103,7 +103,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
                 {
                     IsOpen = true;
                     isOpening = false;
-                    Tile.MarkDirty();
+                    OriginTile.MarkDirty();
                 }
             }
             
@@ -111,11 +111,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             {
                 currentOpenTime += TimeManager.Instance.DeltaTime;
 
-                if (currentOpenTime >= maxOpenTime && Tile.LivingEntities.Count == 0)
+                if (currentOpenTime >= maxOpenTime && OriginTile.LivingEntities.Count == 0)
                 {
                     IsOpen = false;
                     currentOpenTime = 0.0f;
-                    Tile.MarkDirty();
+                    OriginTile.MarkDirty();
                 }
             }
         }

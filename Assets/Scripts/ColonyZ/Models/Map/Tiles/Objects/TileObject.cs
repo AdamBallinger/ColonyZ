@@ -22,11 +22,6 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// </summary>
         public Tile OriginTile { get; set; }
 
-        /// <summary>
-        ///     The Tile this part of a object occupies. If the object is a single type, then this will be the same as OriginTile.
-        /// </summary>
-        public Tile Tile { get; set; }
-
         public ObjectRotation ObjectRotation { get; set; }
 
         /// <summary>
@@ -70,7 +65,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         public virtual int GetSortingOrder()
         {
-            return World.Instance.Height - Tile.Y;
+            return World.Instance.Height - OriginTile.Y;
         }
 
         #region ISelectable Implementation
@@ -87,7 +82,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         public string GetSelectionDescription()
         {
-            return Tile.GetSelectionDescription() +
+            return OriginTile.GetSelectionDescription() +
                    "Durability: 0/0\n";
         }
 
@@ -128,8 +123,8 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             {
                 new ContextAction("Remove", () =>
                 {
-                    if (World.Instance.WorldActionProcessor.GodMode) Tile.RemoveObject();
-                    else JobManager.Instance.AddJob(new DemolishJob(Tile));
+                    if (World.Instance.WorldActionProcessor.GodMode) OriginTile.RemoveObject();
+                    else JobManager.Instance.AddJob(new DemolishJob(OriginTile));
                 })
             };
         }

@@ -28,7 +28,7 @@ namespace ColonyZ.Models.Sprites
 
                 var index = !_object.ObjectData.SmartObject
                     ? _object.GetSpriteIndex()
-                    : SpriteBitMask.GetObjectWorldIndex(_object.Tile);
+                    : SpriteBitMask.GetObjectWorldIndex(_object.OriginTile);
                 return spriteCache[spriteData.SpriteGroup][index];
             }
 

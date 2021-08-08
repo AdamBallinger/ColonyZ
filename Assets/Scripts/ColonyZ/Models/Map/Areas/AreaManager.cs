@@ -190,7 +190,7 @@ namespace ColonyZ.Models.Map.Areas
 
             foreach (var door in doors)
             {
-                var tile = door.Tile;
+                var tile = door.OriginTile;
                 var n = World.Instance.GetTileAt(tile.X, tile.Y + 1);
                 var s = World.Instance.GetTileAt(tile.X, tile.Y - 1);
 

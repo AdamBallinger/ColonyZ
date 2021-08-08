@@ -124,7 +124,7 @@ namespace ColonyZ.Models.Map.Tiles
                 var t = World.Instance.GetTileAt(X + xOff, Y - yOff);
 
                 t.Object = _object;
-                t.Object.Tile = t;
+                //t.Object.Tile = t;
                 NodeGraph.Instance.UpdateGraph(t.X, t.Y);
                 t.onTileChanged?.Invoke(t);
             }
