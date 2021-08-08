@@ -57,5 +57,10 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
         {
             return SpriteCache.GetSprite(SpriteData.SpriteGroup, Rotatable ? (int)_rotation : 0);
         }
+
+        public virtual bool CanPlace(Tile _tile)
+        {
+            return !_tile.HasObject;
+        }
     }
 }

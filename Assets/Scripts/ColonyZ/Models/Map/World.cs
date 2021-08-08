@@ -321,7 +321,7 @@ namespace ColonyZ.Models.Map
         {
             if (_tile == null) return false;
 
-            if (!_object.MultiTile) return !_tile.HasObject;
+            if (!_object.MultiTile) return _object.CanPlace(_tile);
 
             var width = ObjectRotationUtil.GetRotatedObjectWidth(_object, _rotation);
             var height = ObjectRotationUtil.GetRotatedObjectHeight(_object, _rotation);

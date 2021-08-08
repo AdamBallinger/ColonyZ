@@ -38,11 +38,6 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         {
         }
 
-        public virtual bool CanPlace(Tile _tile)
-        {
-            return !_tile.HasObject;
-        }
-
         /// <summary>
         ///     Returns if this object connects to a given object. By default, no objects connect to each other.
         /// </summary>
