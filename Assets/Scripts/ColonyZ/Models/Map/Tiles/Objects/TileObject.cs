@@ -34,7 +34,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// </summary>
         private bool shouldSave = true;
 
-        public TileObject(TileObjectData _data)
+        protected TileObject(TileObjectData _data)
         {
             ObjectData = _data;
         }
