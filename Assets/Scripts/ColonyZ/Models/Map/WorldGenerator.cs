@@ -42,7 +42,7 @@ namespace ColonyZ.Models.Map
                     if (World.Instance.WorldGrid.IsInCenterChunk(tile)) continue;
 
                     tile.RemoveObject(false);
-                    tile.SetObject(ObjectFactories.GatherableFactory.GetObject(stoneData), false);
+                    tile.SetObject(ObjectFactories.ResourceFactory.GetObject(stoneData), false);
                 }
             }
         }

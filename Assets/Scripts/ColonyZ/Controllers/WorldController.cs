@@ -122,7 +122,7 @@ namespace ColonyZ.Controllers
             {
                 if (tile.IsMapEdge)
                 {
-                    tile.SetObject(ObjectFactories.GatherableFactory.GetObject(treeData), false);
+                    tile.SetObject(ObjectFactories.ResourceFactory.GetObject(treeData), false);
                 }
             }
 
@@ -143,7 +143,7 @@ namespace ColonyZ.Controllers
                     var rand = Random.Range(1, 100);
                     if (rand <= treeSpawnChance)
                     {
-                        tile.SetObject(ObjectFactories.GatherableFactory.GetObject(treeData), false);
+                        tile.SetObject(ObjectFactories.ResourceFactory.GetObject(treeData), false);
                     }
                 }
 

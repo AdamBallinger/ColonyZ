@@ -1,3 +1,4 @@
+using ColonyZ.Models.Map.Tiles.Objects.Factory;
 using ColonyZ.Models.Sprites;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
     [CreateAssetMenu(menuName = "ColonyZ/Object Data", fileName = "Object Data")]
     public class TileObjectData : ScriptableObject
     {
+        [SerializeField] private ObjectFactoryType factoryType;
         [SerializeField] private string objectName;
         
         [SerializeField] private SpriteData spriteData;
@@ -18,6 +20,8 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
         [SerializeField] private int objectHeight;
 
         [SerializeField] private TileEnterability enterability;
+
+        public ObjectFactoryType FactoryType => factoryType;
 
         public string ObjectName => objectName;
         
@@ -52,11 +56,6 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
         public Sprite GetSprite(ObjectRotation _rotation)
         {
             return SpriteCache.GetSprite(SpriteData.SpriteGroup, Rotatable ? (int)_rotation : 0);
-        }
-
-        public virtual bool ConnectsWith(TileObjectData _other)
-        {
-            return false;
         }
     }
 }

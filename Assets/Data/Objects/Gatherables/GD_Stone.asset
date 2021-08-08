@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47f65292799e4174be92c8c4fc6037c1, type: 3}
   m_Name: GD_Stone
   m_EditorClassIdentifier: 
+  factoryType: 2
   objectName: Stone
   spriteData: {fileID: 11400000, guid: 9f6d9e8b531d4e5418b03508d0febb0a, type: 2}
   smartObject: 1

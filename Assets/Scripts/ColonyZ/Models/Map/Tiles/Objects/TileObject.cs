@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    public class TileObject : ISelectable, ISaveable, IContextProvider
+    public abstract class TileObject : ISelectable, ISaveable, IContextProvider
     {
         /// <summary>
         ///     Data for this object.
@@ -55,7 +55,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// <returns></returns>
         public virtual bool ConnectsWith(TileObject _other)
         {
-            return ObjectData.ConnectsWith(_other.ObjectData);
+            return false;
         }
 
         /// <summary>

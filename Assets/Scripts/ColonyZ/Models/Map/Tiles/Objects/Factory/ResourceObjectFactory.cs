@@ -2,11 +2,11 @@ using ColonyZ.Models.Map.Tiles.Objects.Data;
 
 namespace ColonyZ.Models.Map.Tiles.Objects.Factory
 {
-    public class GatherableObjectFactory : TileObjectFactory
+    public class ResourceObjectFactory : TileObjectFactory
     {
         public override TileObject GetObject(TileObjectData _data)
         {
-            return new TileObject(_data);
+            return new ResourceObject(_data);
         }
     }
 }

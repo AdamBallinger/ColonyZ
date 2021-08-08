@@ -8,10 +8,5 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
         [SerializeField] private GatherMode gatherType;
 
         public GatherMode GatherType => gatherType;
-
-        public override bool ConnectsWith(TileObjectData _other)
-        {
-            return SmartObject && string.CompareOrdinal(ObjectName, _other.ObjectName) == 0;
-        }
     }
 }

@@ -38,18 +38,18 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             var east = World.Instance.GetTileAt(Tile.X + 1, Tile.Y);
             var west = World.Instance.GetTileAt(Tile.X - 1, Tile.Y);
 
-            // if (east != null && west != null)
-            //     if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
-            //         west.HasObject && west.Object.GetType() == typeof(WallObject))
-            //         return IsOpen ? 1 : 0;
-            //
-            // var north = World.Instance.GetTileAt(Tile.X, Tile.Y + 1);
-            // var south = World.Instance.GetTileAt(Tile.X, Tile.Y - 1);
-            //
-            // if (north != null && south != null)
-            //     if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
-            //         south.HasObject && south.Object.GetType() == typeof(WallObject))
-            //         return IsOpen ? 3 : 2;
+            if (east != null && west != null)
+                if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
+                    west.HasObject && west.Object.GetType() == typeof(WallObject))
+                    return IsOpen ? 1 : 0;
+            
+            var north = World.Instance.GetTileAt(Tile.X, Tile.Y + 1);
+            var south = World.Instance.GetTileAt(Tile.X, Tile.Y - 1);
+            
+            if (north != null && south != null)
+                if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
+                    south.HasObject && south.Object.GetType() == typeof(WallObject))
+                    return IsOpen ? 3 : 2;
 
             return 0;
         }
@@ -63,17 +63,17 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             var north = World.Instance.GetTileAt(_tile.X, _tile.Y + 1);
             var south = World.Instance.GetTileAt(_tile.X, _tile.Y - 1);
 
-            // if (east != null && west != null)
-            //     if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
-            //         west.HasObject && west.Object.GetType() == typeof(WallObject))
-            //         if (north?.Object == null && south?.Object == null)
-            //             return true;
-            //
-            // if (north != null && south != null)
-            //     if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
-            //         south.HasObject && south.Object.GetType() == typeof(WallObject))
-            //         if (east?.Object == null && west?.Object == null)
-            //             return true;
+            if (east != null && west != null)
+                if (east.HasObject && east.Object.GetType() == typeof(WallObject) &&
+                    west.HasObject && west.Object.GetType() == typeof(WallObject))
+                    if (north?.Object == null && south?.Object == null)
+                        return true;
+            
+            if (north != null && south != null)
+                if (north.HasObject && north.Object.GetType() == typeof(WallObject) &&
+                    south.HasObject && south.Object.GetType() == typeof(WallObject))
+                    if (east?.Object == null && west?.Object == null)
+                        return true;
 
             return false;
         }
