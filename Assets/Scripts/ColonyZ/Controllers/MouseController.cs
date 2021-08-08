@@ -316,7 +316,7 @@ namespace ColonyZ.Controllers
 
                 if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object)
                 {
-                    previewRenderer.sprite = World.Instance.WorldActionProcessor.ObjectToBuild.GetIcon(currentRotation);
+                    previewRenderer.sprite = World.Instance.WorldActionProcessor.ObjectToBuild.GetSprite(currentRotation);
                     previewRenderer.color =
                         !World.Instance.IsObjectPositionValid(World.Instance.WorldActionProcessor.ObjectToBuild,
                             GetTileUnderMouse(), currentRotation)
