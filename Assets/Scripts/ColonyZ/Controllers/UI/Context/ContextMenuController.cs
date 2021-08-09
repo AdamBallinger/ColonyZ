@@ -59,13 +59,16 @@ namespace ColonyZ.Controllers.UI.Context
             currentProvider = _contextProvider;
             menuTitleText.text = _contextProvider.GetContextMenuName();
 
-            foreach (var action in _contextProvider.GetContextActions())
+            if (_contextProvider.GetContextActions() != null)
             {
-                var btn = Instantiate(contextMenuButtonPrefab, buttonContainer.transform);
-                var btnC = btn.GetComponent<ContextMenuButton>();
-                action.Action += CloseContextMenu;
-                btnC.Set(action);
-                menuButtons.Add(btn);
+                foreach (var action in _contextProvider.GetContextActions())
+                {
+                    var btn = Instantiate(contextMenuButtonPrefab, buttonContainer.transform);
+                    var btnC = btn.GetComponent<ContextMenuButton>();
+                    action.Action += CloseContextMenu;
+                    btnC.Set(action);
+                    menuButtons.Add(btn);
+                }
             }
         }
 
