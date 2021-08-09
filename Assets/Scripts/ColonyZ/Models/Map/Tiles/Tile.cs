@@ -192,12 +192,12 @@ namespace ColonyZ.Models.Map.Tiles
 
         public TileEnterability GetEnterability()
         {
-            return Object != null ? Object.ObjectData.Enterability : TileEnterability.Immediate;
+            return HasObject ? Object.ObjectData.Enterability : TileEnterability.Immediate;
         }
 
         public override string ToString()
         {
-            return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(Object != null ? Object.ObjectData.ObjectName : "None")}";
+            return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectData.ObjectName : "None")}";
         }
 
         public bool Equals(Tile other)
