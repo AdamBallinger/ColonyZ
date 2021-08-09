@@ -6,6 +6,7 @@ using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
+using ColonyZ.Utils;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -185,7 +186,8 @@ namespace ColonyZ.Models.Saving
 
             for (var i = 0; i < objectsJson.Count; i++)
             {
-                var obj = TileObjectCache.GetObject(objectsJson[i]["id"].ToString());
+                var data = TileObjectDataCache.GetData(objectsJson[i]["data_name"].ToString());
+                var obj = ObjectFactoryUtil.GetFactory(data.FactoryType).GetObject(data);
                 obj.OnLoad(objectsJson[i]);
             }
         }

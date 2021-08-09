@@ -7,7 +7,7 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
     {
         protected override void OnEnabled()
         {
-            foreach (var obj in TileObjectCache.TileObjects)
+            foreach (var obj in TileObjectDataCache.ObjectDatas)
             {
                 if (!obj.Buildable) continue;
 

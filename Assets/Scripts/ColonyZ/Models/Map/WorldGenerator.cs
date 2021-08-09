@@ -1,4 +1,6 @@
 ﻿using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
+using ColonyZ.Models.Map.Tiles.Objects.Factory;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map
@@ -28,6 +30,7 @@ namespace ColonyZ.Models.Map
         public void Generate()
         {
             var noiseMap = GenerateNoiseMap();
+            var stoneData = TileObjectDataCache.GetData<GatherableObjectData>("Stone");
 
             for (var i = 0; i < noiseMap.Length; i++)
             {
@@ -39,7 +42,7 @@ namespace ColonyZ.Models.Map
                     if (World.Instance.WorldGrid.IsInCenterChunk(tile)) continue;
 
                     tile.RemoveObject(false);
-                    tile.SetObject(TileObjectCache.GetObject("Stone"), false);
+                    tile.SetObject(ObjectFactories.ResourceFactory.GetObject(stoneData), false);
                 }
             }
         }

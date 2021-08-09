@@ -1,7 +1,7 @@
 using System;
 using ColonyZ.Models.AI.Jobs;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
 using ColonyZ.Models.Saving;
-using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
 using ColonyZ.Models.UI.Context;
 using Newtonsoft.Json.Linq;
@@ -9,60 +9,18 @@ using UnityEngine;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    public abstract class TileObject : ScriptableObject, ISelectable, ISaveable, IContextProvider
+    public abstract class TileObject : ISelectable, ISaveable, IContextProvider
     {
+        /// <summary>
+        ///     Data for this object.
+        /// </summary>
+        public TileObjectData ObjectData { get; }
+        
         /// <summary>
         ///     The Tile this object originates from. If the object is a multi tile object, then this is the "base" tile
         ///     for that object.
         /// </summary>
         public Tile OriginTile { get; set; }
-
-        /// <summary>
-        ///     The Tile this part of a object occupies. If the object is a single type, then this will be the same as OriginTile.
-        /// </summary>
-        public Tile Tile { get; set; }
-
-        public SpriteData SpriteData => objectSpriteData;
-
-        public bool DynamicSprite => dynamicSprite;
-
-        /// <summary>
-        ///     Name of the object.
-        /// </summary>
-        public string ObjectName => objectName;
-
-        /// <summary>
-        ///     Determines if the object can be placed over a dragged area, or one at a time.
-        /// </summary>
-        public bool Draggable => draggable;
-
-        /// <summary>
-        ///     Determines if the object can be rotated.
-        /// </summary>
-        public bool Rotatable => rotatable;
-
-        /// <summary>
-        ///     Determines if the object appears in the structure menu.
-        /// </summary>
-        public bool Buildable => buildable;
-
-        public bool Fellable => fellable;
-
-        public bool Mineable => mineable;
-
-        public bool Harvestable => harvestable;
-
-        public bool EnclosesRoom => enclosesRoom;
-
-        public int Width => objectWidth;
-        public int Height => objectHeight;
-
-        public TileEnterability Enterability => objectEnterability;
-
-        /// <summary>
-        ///     Returns whether this object occupies more than 1 tile.
-        /// </summary>
-        public bool MultiTile => Width > 1 || Height > 1;
 
         public ObjectRotation ObjectRotation { get; set; }
 
@@ -70,6 +28,11 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         ///     Flag used to only save the origin tile for multi tile objects.
         /// </summary>
         private bool shouldSave = true;
+
+        protected TileObject(TileObjectData _data)
+        {
+            ObjectData = _data;
+        }
 
         public virtual void Update()
         {
@@ -92,91 +55,29 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// <returns></returns>
         public virtual int GetSpriteIndex()
         {
-            return Rotatable ? (int)ObjectRotation : 0;
+            return ObjectData.Rotatable ? (int)ObjectRotation : 0;
         }
 
         public virtual int GetSortingOrder()
         {
-            return World.Instance.Height - Tile.Y;
+            return World.Instance.Height - OriginTile.Y;
         }
-
-        /// <summary>
-        ///     Checks if the structure can be placed on the given tile.
-        /// </summary>
-        /// <param name="_tile"></param>
-        /// <returns></returns>
-        public virtual bool CanPlace(Tile _tile)
-        {
-            return !_tile.HasObject;
-        }
-
-        /// <summary>
-        ///     Returns sprite for this object using the provided rotation.
-        /// </summary>
-        /// <param name="_rotation"></param>
-        /// <returns></returns>
-        public Sprite GetSprite(ObjectRotation _rotation)
-        {
-            return SpriteCache.GetSprite(SpriteData.SpriteGroup, Rotatable ? (int)_rotation : 0);
-        }
-
-        /// <summary>
-        ///     Return an icon sprite for this tile structure. This is used to display the structure in UI.
-        /// </summary>
-        /// <returns></returns>
-        public Sprite GetIcon()
-        {
-            return SpriteCache.GetSprite(SpriteData.SpriteGroup, SpriteData.IconIndex);
-        }
-
-        #region Serialized fields
-
-        [SerializeField] private SpriteData objectSpriteData;
-
-        [SerializeField]
-        [Tooltip("Used for tiles that are 1,1 in size, but have dynamically changing sprites based on surroundings.")]
-        private bool dynamicSprite;
-
-        [SerializeField] private string objectName;
-
-        [SerializeField] [Tooltip("If enabled, then a preview for the object will be shown over dragged area.")]
-        private bool draggable = true;
-
-        [SerializeField] private bool rotatable = false;
-
-        [SerializeField] private bool buildable = true;
-
-        [SerializeField] private bool fellable;
-
-        [SerializeField] private bool mineable;
-
-        [SerializeField] private bool harvestable;
-
-        [SerializeField] private bool enclosesRoom;
-
-        [SerializeField] private int objectWidth = 1;
-        [SerializeField] private int objectHeight = 1;
-
-        [SerializeField] [Tooltip("Controls how this object affects AI pathing of the tile it occupies.")]
-        private TileEnterability objectEnterability;
-
-        #endregion
 
         #region ISelectable Implementation
 
         public Sprite GetSelectionIcon()
         {
-            return GetIcon();
+            return ObjectData.GetIcon();
         }
 
         public string GetSelectionName()
         {
-            return objectName;
+            return ObjectData.ObjectName;
         }
 
         public string GetSelectionDescription()
         {
-            return Tile.GetSelectionDescription() +
+            return OriginTile.GetSelectionDescription() +
                    "Durability: 0/0\n";
         }
 
@@ -194,12 +95,12 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         public void OnSave(SaveGameWriter _writer)
         {
-            _writer.WriteProperty("id", ObjectName);
+            _writer.WriteProperty("data_name", ObjectData.ObjectName);
             _writer.WriteProperty("t_index", World.Instance.GetTileIndex(OriginTile));
             _writer.WriteProperty("rot", (int)ObjectRotation);
 
             // Only save the origin tile for multi tile objects.
-            if (MultiTile) shouldSave = false;
+            if (ObjectData.MultiTile) shouldSave = false;
         }
 
         public void OnLoad(JToken _dataToken)
@@ -217,15 +118,15 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             {
                 new ContextAction("Remove", () =>
                 {
-                    if (World.Instance.WorldActionProcessor.GodMode) Tile.RemoveObject();
-                    else JobManager.Instance.AddJob(new DemolishJob(Tile));
+                    if (World.Instance.WorldActionProcessor.GodMode) OriginTile.RemoveObject();
+                    else JobManager.Instance.AddJob(new DemolishJob(OriginTile));
                 })
             };
         }
 
         public string GetContextMenuName()
         {
-            return ObjectName;
+            return ObjectData.ObjectName;
         }
     }
 }

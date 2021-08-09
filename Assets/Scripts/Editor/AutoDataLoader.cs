@@ -1,6 +1,6 @@
 ﻿using ColonyZ.Controllers.Loaders;
 using ColonyZ.Models.Items;
-using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
 using ColonyZ.Models.Sprites;
 using UnityEditor;
 using UnityEngine;
@@ -17,7 +17,7 @@ namespace Editor
             base.OnInspectorGUI();
 
             LoadData<SpriteData>("spriteData");
-            LoadData<TileObject>("objectData");
+            LoadData<TileObjectData>("objectData");
             LoadData<Item>("itemData");
         }
 

@@ -1,10 +1,11 @@
-using UnityEngine;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    [CreateAssetMenu(fileName = "Furniture_", menuName = "ColonyZ/Furniture Object", order = 50)]
     public class FurnitureObject : TileObject
     {
-        
+        public FurnitureObject(TileObjectData _data) : base(_data)
+        {
+        }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Saving;
+using ColonyZ.Utils;
 using Newtonsoft.Json.Linq;
 
 namespace ColonyZ.Models.AI.Jobs
@@ -10,11 +11,9 @@ namespace ColonyZ.Models.AI.Jobs
     {
         private TileObject tileObject;
 
-        private ObjectRotation objectRotation;
-        
         public BuildJob(Tile _targetTile, TileObject _object) : base(_targetTile)
         {
-            JobName = "Build: " + _object.ObjectName;
+            JobName = "Build: " + _object.ObjectData.ObjectName;
             tileObject = _object;
         }
 
@@ -42,16 +41,17 @@ namespace ColonyZ.Models.AI.Jobs
         {
             base.OnSave(_writer);
 
-            _writer.WriteProperty("object_name", tileObject.ObjectName);
+            _writer.WriteProperty("object_name", tileObject.ObjectData.ObjectName);
+            _writer.WriteProperty("object_rotation", tileObject.ObjectRotation);
         }
 
         public override void OnLoad(JToken _dataToken)
         {
-            tileObject = TileObjectCache.GetObject(_dataToken["object_name"].Value<string>());
-            objectRotation =
-                (ObjectRotation)Enum.Parse(typeof(ObjectRotation), _dataToken["object_rotation"].Value<string>());
-            tileObject.ObjectRotation = objectRotation;
-            JobName = "Build: " + tileObject.ObjectName;
+            var objectData = TileObjectDataCache.GetData(_dataToken["object_name"].Value<string>());
+            tileObject = ObjectFactoryUtil.GetFactory(objectData.FactoryType).GetObject(objectData);
+            Enum.TryParse<ObjectRotation>(_dataToken["object_rotation"].Value<string>(), out var rotation);
+            tileObject.ObjectRotation = rotation;
+            JobName = "Build: " + tileObject.ObjectData.ObjectName;
         }
     }
 }

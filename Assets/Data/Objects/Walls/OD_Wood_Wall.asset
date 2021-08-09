@@ -9,17 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43da2fb6a88b4ff4eb5d67661fc47a24, type: 3}
-  m_Name: TileObject_Wall_Wood
+  m_Script: {fileID: 11500000, guid: 0ae70d0a1d3e4d3abb342156a0700856, type: 3}
+  m_Name: OD_Wood_Wall
   m_EditorClassIdentifier: 
-  objectSpriteData: {fileID: 11400000, guid: ecfda6801bf6a4f43a48ceed825cdb1f, type: 2}
-  dynamicSprite: 1
   objectName: Wood Wall
+  spriteData: {fileID: 11400000, guid: ecfda6801bf6a4f43a48ceed825cdb1f, type: 2}
+  smartObject: 1
   buildable: 1
-  fellable: 0
-  mineable: 0
-  harvestable: 0
-  enclosesRoom: 1
+  rotatable: 0
+  enlosesRoom: 1
   objectWidth: 1
   objectHeight: 1
-  objectEnterability: 1
+  enterability: 1

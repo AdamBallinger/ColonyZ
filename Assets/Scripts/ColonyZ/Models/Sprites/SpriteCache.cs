@@ -20,15 +20,15 @@ namespace ColonyZ.Models.Sprites
 
         public static Sprite GetSprite(TileObject _object)
         {
-            if (spriteCache.ContainsKey(_object.SpriteData.SpriteGroup))
+            if (spriteCache.ContainsKey(_object.ObjectData.SpriteData.SpriteGroup))
             {
-                var spriteData = _object.SpriteData;
+                var spriteData = _object.ObjectData.SpriteData;
 
                 if (spriteData.SpriteCount == 1) return spriteCache[spriteData.SpriteGroup][0];
 
-                var index = !_object.DynamicSprite
+                var index = !_object.ObjectData.SmartObject
                     ? _object.GetSpriteIndex()
-                    : SpriteBitMask.GetObjectWorldIndex(_object.Tile);
+                    : SpriteBitMask.GetObjectWorldIndex(_object.OriginTile);
                 return spriteCache[spriteData.SpriteGroup][index];
             }
 

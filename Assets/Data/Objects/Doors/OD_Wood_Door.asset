@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5066e2b7d0042f2b4fad7c14869d42f, type: 3}
-  m_Name: TileObject_Foundation
+  m_Script: {fileID: 11500000, guid: 72ca4b6ffb1e444c9f1cbbae2b3efb8b, type: 3}
+  m_Name: OD_Wood_Door
   m_EditorClassIdentifier: 
-  objectSpriteData: {fileID: 11400000, guid: dd0b244d09aa09648aff41e72399ab14, type: 2}
-  dynamicSprite: 1
-  objectName: Foundation
-  buildable: 0
-  fellable: 0
-  mineable: 0
-  harvestable: 0
+  factoryType: 1
+  objectName: Wood Door
+  spriteData: {fileID: 11400000, guid: b6ef022f09ea6fb45a763b84c085c167, type: 2}
+  smartObject: 0
+  buildable: 1
+  rotatable: 0
+  enlosesRoom: 1
   objectWidth: 1
   objectHeight: 1
-  objectEnterability: 0
+  enterability: 2

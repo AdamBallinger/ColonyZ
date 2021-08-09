@@ -37,6 +37,11 @@ namespace ColonyZ.Models.Map.Tiles
         public Vector2 Position => new Vector2(X, Y);
 
         /// <summary>
+        ///     Returns if this tile has an object on it.
+        /// </summary>
+        public bool HasObject => Object != null;
+
+        /// <summary>
         ///     List of living entities currently occupying this tile.
         /// </summary>
         public List<LivingEntity> LivingEntities { get; }
@@ -72,8 +77,6 @@ namespace ColonyZ.Models.Map.Tiles
         ///     Contains all directly connected neighbours for this tile. (N, E, S, W)
         /// </summary>
         public List<Tile> DirectNeighbours { get; }
-
-        public bool HasObject { get; private set; }
 
         public bool IsMapEdge => X == 0 || X == World.Instance.Width - 1 || Y == 0 || Y == World.Instance.Height - 1;
 
@@ -121,16 +124,13 @@ namespace ColonyZ.Models.Map.Tiles
                 var t = World.Instance.GetTileAt(X + xOff, Y - yOff);
 
                 t.Object = _object;
-                t.HasObject = true;
-                t.Object.Tile = t;
                 NodeGraph.Instance.UpdateGraph(t.X, t.Y);
                 t.onTileChanged?.Invoke(t);
             }
-
-            HasObject = true;
+            
             World.Instance.Objects.Add(_object);
 
-            if (_markDirty && _object.EnclosesRoom)
+            if (_markDirty && _object.ObjectData.EnclosesRoom)
             {
                 AreaManager.Instance.CheckForArea(this);
                 World.Instance.WorldGrid.SetDirty(this, true);
@@ -143,19 +143,20 @@ namespace ColonyZ.Models.Map.Tiles
         {
             if (!HasObject) return;
 
-            var shouldMarkDirty = _markDirty && Object.EnclosesRoom;
+            var shouldMarkDirty = _markDirty && Object.ObjectData.EnclosesRoom;
 
             World.Instance.Objects.Remove(Object);
 
             var width = ObjectRotationUtil.GetRotatedObjectWidth(Object);
             var height = ObjectRotationUtil.GetRotatedObjectHeight(Object);
 
+            var origin = Object.OriginTile;
+
             for (var xOff = 0; xOff < width; xOff++)
             for (var yOff = 0; yOff < height; yOff++)
             {
-                var t = World.Instance.GetTileAt(Object.OriginTile.X + xOff, Object.OriginTile.Y - yOff);
-                
-                t.HasObject = false;
+                var t = World.Instance.GetTileAt(origin.X + xOff, origin.Y - yOff);
+                t.Object = null;
                 t.onTileChanged?.Invoke(t);
                 NodeGraph.Instance.UpdateGraph(t.X, t.Y);
             }
@@ -191,12 +192,12 @@ namespace ColonyZ.Models.Map.Tiles
 
         public TileEnterability GetEnterability()
         {
-            return HasObject ? Object.Enterability : TileEnterability.Immediate;
+            return Object != null ? Object.ObjectData.Enterability : TileEnterability.Immediate;
         }
 
         public override string ToString()
         {
-            return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectName : "None")}";
+            return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(Object != null ? Object.ObjectData.ObjectName : "None")}";
         }
 
         public bool Equals(Tile other)

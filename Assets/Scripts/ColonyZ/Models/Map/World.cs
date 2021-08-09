@@ -10,6 +10,7 @@ using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
 using ColonyZ.Models.Map.Zones;
 using ColonyZ.Models.UI;
 using ColonyZ.Utils;
@@ -316,7 +317,7 @@ namespace ColonyZ.Models.Map
         /// <param name="_tile"></param>
         /// <param name="_rotation"></param>
         /// <returns></returns>
-        public bool IsObjectPositionValid(TileObject _object, Tile _tile, ObjectRotation _rotation = ObjectRotation.Default)
+        public bool IsObjectPositionValid(TileObjectData _object, Tile _tile, ObjectRotation _rotation = ObjectRotation.Default)
         {
             if (_tile == null) return false;
 
@@ -330,7 +331,7 @@ namespace ColonyZ.Models.Map
             {
                 var t = GetTileAt(_tile.X + xOff, _tile.Y - yOff);
 
-                if (t != null && _object.CanPlace(t)) continue;
+                if (t != null && !t.HasObject) continue;
                 
                 return false;
             }

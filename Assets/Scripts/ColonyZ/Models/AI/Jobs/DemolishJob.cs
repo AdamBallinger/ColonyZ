@@ -6,7 +6,7 @@ namespace ColonyZ.Models.AI.Jobs
     {
         public DemolishJob(Tile _targetTile) : base(_targetTile)
         {
-            JobName = "Demolish: " + _targetTile.Object.ObjectName;
+            JobName = "Demolish: " + _targetTile.Object.ObjectData.ObjectName;
         }
 
         public override void OnComplete()

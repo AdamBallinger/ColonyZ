@@ -12,6 +12,8 @@ using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Tiles.Objects.Data;
+using ColonyZ.Models.Map.Tiles.Objects.Factory;
 using ColonyZ.Models.Map.Zones;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
@@ -114,11 +116,13 @@ namespace ColonyZ.Controllers
 
             worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
 
+            var treeData = TileObjectDataCache.GetData<GatherableObjectData>("Tree");
+            
             foreach (var tile in World.Instance)
             {
                 if (tile.IsMapEdge)
                 {
-                    tile.SetObject(TileObjectCache.GetObject("Tree"), false);
+                    tile.SetObject(ObjectFactories.ResourceFactory.GetObject(treeData), false);
                 }
             }
 
@@ -138,7 +142,9 @@ namespace ColonyZ.Controllers
                     if (tile.HasObject) continue;
                     var rand = Random.Range(1, 100);
                     if (rand <= treeSpawnChance)
-                        tile.SetObject(TileObjectCache.GetObject("Tree"), false);
+                    {
+                        tile.SetObject(ObjectFactories.ResourceFactory.GetObject(treeData), false);
+                    }
                 }
 
                 for (var i = 0; i < initialCharacterCount; i++)
@@ -152,7 +158,7 @@ namespace ColonyZ.Controllers
 
             foreach (var tile in World.Instance)
             {
-                if (tile.Area == null && !(tile.HasObject && tile.Object.EnclosesRoom))
+                if (tile.Area == null && !(tile.HasObject && tile.Object.ObjectData.EnclosesRoom))
                     AreaManager.Instance.CheckForArea(tile);
             }
 
@@ -241,7 +247,7 @@ namespace ColonyZ.Controllers
                 tileObjectGameObjects[_tile].transform.rotation = 
                     ObjectRotationUtil.GetQuaternion(_tile.Object.ObjectRotation);
                 tileObjectGameObjects[_tile].transform.position = 
-                    _tile.Position + ObjectRotationUtil.GetObjectRotationPositionOffset(_tile.Object,
+                    _tile.Position + ObjectRotationUtil.GetObjectRotationPositionOffset(_tile.Object.ObjectData,
                         _tile.Object.ObjectRotation);
             }
             else

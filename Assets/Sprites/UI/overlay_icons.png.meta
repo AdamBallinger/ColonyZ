@@ -133,7 +133,7 @@ TextureImporter:
       name: overlay_icons_0
       rect:
         serializedVersion: 2
-        x: 32
+        x: 0
         y: 0
         width: 32
         height: 32
@@ -154,7 +154,7 @@ TextureImporter:
       name: overlay_icons_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 32
         y: 0
         width: 32
         height: 32
@@ -175,7 +175,7 @@ TextureImporter:
       name: overlay_icons_2
       rect:
         serializedVersion: 2
-        x: 96
+        x: 64
         y: 0
         width: 32
         height: 32
@@ -196,7 +196,7 @@ TextureImporter:
       name: overlay_icons_3
       rect:
         serializedVersion: 2
-        x: 128
+        x: 96
         y: 0
         width: 32
         height: 32
@@ -217,7 +217,7 @@ TextureImporter:
       name: overlay_icons_4
       rect:
         serializedVersion: 2
-        x: 160
+        x: 128
         y: 0
         width: 32
         height: 32
