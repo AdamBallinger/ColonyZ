@@ -45,14 +45,13 @@ namespace ColonyZ.Controllers.UI.Context
 
         private void OpenContextMenu(IContextProvider _contextProvider)
         {
-            if (_contextProvider == null)
+            if (_contextProvider == null || currentProvider == _contextProvider)
             {
                 CloseContextMenu();
                 return;
             }
 
             if (currentProvider == _contextProvider) return;
-            if (currentProvider != _contextProvider) CloseContextMenu();
 
             contextWindowRoot.SetActive(true);
 
