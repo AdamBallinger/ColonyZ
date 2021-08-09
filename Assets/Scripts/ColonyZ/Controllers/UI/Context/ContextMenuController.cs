@@ -50,6 +50,9 @@ namespace ColonyZ.Controllers.UI.Context
                 CloseContextMenu();
                 return;
             }
+            
+            // Clear the menu to prevent multi tile objects duplicating menu.
+            CloseContextMenu();
 
             if (currentProvider == _contextProvider) return;
 

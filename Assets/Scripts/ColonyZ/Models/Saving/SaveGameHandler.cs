@@ -187,7 +187,10 @@ namespace ColonyZ.Models.Saving
             for (var i = 0; i < objectsJson.Count; i++)
             {
                 var data = TileObjectDataCache.GetData(objectsJson[i]["data_name"].ToString());
-                var obj = ObjectFactoryUtil.GetFactory(data.FactoryType).GetObject(data);
+                // Foundations don't have a factory.
+                var obj = data.ObjectName == "Foundation"
+                    ? new FoundationObject(data)
+                    : ObjectFactoryUtil.GetFactory(data.FactoryType).GetObject(data);
                 obj.OnLoad(objectsJson[i]);
             }
         }

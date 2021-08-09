@@ -27,7 +27,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
         /// <summary>
         ///     Flag used to only save the origin tile for multi tile objects.
         /// </summary>
-        private bool shouldSave = true;
+        protected bool shouldSave = true;
 
         protected TileObject(TileObjectData _data)
         {
@@ -65,35 +65,35 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         #region ISelectable Implementation
 
-        public Sprite GetSelectionIcon()
+        public virtual Sprite GetSelectionIcon()
         {
             return ObjectData.GetIcon();
         }
 
-        public string GetSelectionName()
+        public virtual string GetSelectionName()
         {
             return ObjectData.ObjectName;
         }
 
-        public string GetSelectionDescription()
+        public virtual string GetSelectionDescription()
         {
             return OriginTile.GetSelectionDescription() +
                    "Durability: 0/0\n";
         }
 
-        public Vector2 GetPosition()
+        public virtual Vector2 GetPosition()
         {
             return OriginTile.Position;
         }
 
         #endregion
 
-        public bool CanSave()
+        public virtual bool CanSave()
         {
             return shouldSave;
         }
 
-        public void OnSave(SaveGameWriter _writer)
+        public virtual void OnSave(SaveGameWriter _writer)
         {
             _writer.WriteProperty("data_name", ObjectData.ObjectName);
             _writer.WriteProperty("t_index", World.Instance.GetTileIndex(OriginTile));
@@ -103,7 +103,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             if (ObjectData.MultiTile) shouldSave = false;
         }
 
-        public void OnLoad(JToken _dataToken)
+        public virtual void OnLoad(JToken _dataToken)
         {
             var tileIndex = _dataToken["t_index"].Value<int>();
             Enum.TryParse<ObjectRotation>(_dataToken["rot"].Value<int>().ToString(), true, out var rot);
@@ -112,7 +112,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             World.Instance.GetTileAt(tileIndex).SetObject(this, false);
         }
 
-        public ContextAction[] GetContextActions()
+        public virtual ContextAction[] GetContextActions()
         {
             return new[]
             {
@@ -124,7 +124,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             };
         }
 
-        public string GetContextMenuName()
+        public virtual string GetContextMenuName()
         {
             return ObjectData.ObjectName;
         }

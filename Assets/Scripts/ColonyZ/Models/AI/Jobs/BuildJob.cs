@@ -1,4 +1,5 @@
 using System;
+using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Saving;
@@ -34,7 +35,15 @@ namespace ColonyZ.Models.AI.Jobs
 
         public override void OnCancelled()
         {
-            TargetTile.RemoveObject();
+            var w = ObjectRotationUtil.GetRotatedObjectWidth(tileObject.ObjectData, tileObject.ObjectRotation);
+            var h = ObjectRotationUtil.GetRotatedObjectHeight(tileObject.ObjectData, tileObject.ObjectRotation);
+            
+            for (var xOff = 0; xOff < w; xOff++)
+            for (var yOff = 0; yOff < h; yOff++)
+            {
+                var t = World.Instance.GetTileAt(TargetTile.X + xOff, TargetTile.Y - yOff);
+                t.RemoveObject();
+            }
         }
 
         public override void OnSave(SaveGameWriter _writer)
@@ -47,6 +56,8 @@ namespace ColonyZ.Models.AI.Jobs
 
         public override void OnLoad(JToken _dataToken)
         {
+            base.OnLoad(_dataToken);
+            
             var objectData = TileObjectDataCache.GetData(_dataToken["object_name"].Value<string>());
             tileObject = ObjectFactoryUtil.GetFactory(objectData.FactoryType).GetObject(objectData);
             Enum.TryParse<ObjectRotation>(_dataToken["object_rotation"].Value<string>(), out var rotation);

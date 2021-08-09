@@ -144,7 +144,9 @@ namespace ColonyZ.Models.Map
                     else
                     {
                         var foundation = TileObjectDataCache.GetFoundation();
-                        tile.SetObject(new FoundationObject(foundation));
+                        var foundationObj = new FoundationObject(foundation, ObjectToBuild, _rotation, tile);
+                        tile.SetObject(foundationObj);
+                        foundationObj.PlaceFullFoundation();
                         jobs.Add(new BuildJob(tile, obj));
                     }
                 }
