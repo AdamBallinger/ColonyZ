@@ -8,6 +8,8 @@ namespace ColonyZ.Models.Map.Regions
     public class RegionManager
     {
         public static RegionManager Instance { get; private set; }
+        
+        public List<Region> Regions { get; private set; }
 
         /// <summary>
         ///     Event called when regions get updated.
@@ -15,8 +17,7 @@ namespace ColonyZ.Models.Map.Regions
         public event Action regionsUpdateEvent;
 
         private List<Region> newRegions = new List<Region>();
-
-        private List<Region> Regions { get; set; }
+        
 
         private RegionManager()
         {

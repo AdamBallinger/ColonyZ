@@ -156,13 +156,14 @@ namespace ColonyZ.Controllers
             if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.Load)
                 saveGameHandler.LoadAll();
 
-            foreach (var tile in World.Instance)
-            {
-                if (tile.Area == null && !(tile.HasObject && tile.Object.ObjectData.EnclosesRoom))
-                    AreaManager.Instance.CheckForArea(tile);
-            }
+            // foreach (var tile in World.Instance)
+            // {
+            //     if (tile.Area == null && !(tile.HasObject && tile.Object.ObjectData.EnclosesRoom))
+            //         AreaManager.Instance.CheckForArea(tile);
+            // }
 
             RegionManager.Instance.BuildRegions();
+            AreaManager.Instance.Rebuild();
         }
 
         private void Update()

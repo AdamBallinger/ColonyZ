@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ColonyZ.Models.Map.Areas;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 
@@ -22,6 +23,11 @@ namespace ColonyZ.Models.Map.Regions
         ///     1 - Tiles granting access upwards.
         /// </summary>
         public Dictionary<int, List<Tile>> AccessMap { get; private set; }
+
+        /// <summary>
+        ///     Area this region is in.
+        /// </summary>
+        public Area Area { get; set; }
 
         private bool IsDoor { get; set; }
 
