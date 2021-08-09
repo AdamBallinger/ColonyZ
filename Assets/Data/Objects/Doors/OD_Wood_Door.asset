@@ -18,7 +18,7 @@ MonoBehaviour:
   smartObject: 0
   buildable: 1
   rotatable: 0
-  enlosesRoom: 1
+  enclosesRoom: 1
   objectWidth: 1
   objectHeight: 1
   enterability: 2

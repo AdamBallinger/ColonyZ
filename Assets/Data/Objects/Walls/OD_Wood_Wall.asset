@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae70d0a1d3e4d3abb342156a0700856, type: 3}
   m_Name: OD_Wood_Wall
   m_EditorClassIdentifier: 
+  factoryType: 0
   objectName: Wood Wall
   spriteData: {fileID: 11400000, guid: ecfda6801bf6a4f43a48ceed825cdb1f, type: 2}
   smartObject: 1
   buildable: 1
   rotatable: 0
-  enlosesRoom: 1
+  enclosesRoom: 1
   objectWidth: 1
   objectHeight: 1
   enterability: 1
