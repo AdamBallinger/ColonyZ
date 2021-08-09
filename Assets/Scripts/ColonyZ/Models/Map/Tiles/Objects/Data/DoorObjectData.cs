@@ -15,14 +15,14 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
             var south = World.Instance.GetTileAt(_tile.X, _tile.Y - 1);
 
             if (east != null && west != null)
-                if (east.Object != null && east.Object.ObjectData.EnclosesRoom && 
-                    west.Object != null && west.Object.ObjectData.EnclosesRoom)
+                if (east.HasObject && east.Object.ObjectData.EnclosesRoom && 
+                    west.HasObject && west.Object.ObjectData.EnclosesRoom)
                     if (north?.Object == null && south?.Object == null)
                         return true;
             
             if (north != null && south != null)
-                if (north.Object != null && north.Object.ObjectData.EnclosesRoom && 
-                    south.Object != null && south.Object.ObjectData.EnclosesRoom)
+                if (north.HasObject && north.Object.ObjectData.EnclosesRoom && 
+                    south.HasObject && south.Object.ObjectData.EnclosesRoom)
                     if (east?.Object == null && west?.Object == null)
                         return true;
 
