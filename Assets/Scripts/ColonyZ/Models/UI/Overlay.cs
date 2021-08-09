@@ -55,8 +55,7 @@ namespace ColonyZ.Models.UI
         {
             if (_tile == null) return;
             var index = world.GetTileIndex(_tile);
-            OverlayArray[index] = (byte)_overlayType;
-            OverlayAlpha[index] = _alpha;
+            SetOverlay(index, _overlayType, _alpha);
             overlaySingleUpdatedEvent?.Invoke(new Vector2Int(_tile.X, _tile.Y));
         }
 
@@ -65,8 +64,7 @@ namespace ColonyZ.Models.UI
             for (var i = 0; i < _tiles.Count; i++)
             {
                 var index = world.GetTileIndex(_tiles[i]);
-                OverlayArray[index] = (byte)_overlayType;
-                OverlayAlpha[index] = _alpha;
+                SetOverlay(index, _overlayType, _alpha);
             }
             
             overlayUpdatedEvent?.Invoke();
@@ -85,6 +83,13 @@ namespace ColonyZ.Models.UI
         public void ClearOverlayAtTiles(List<Tile> _tiles)
         {
             SetOverlayForTiles(_tiles, OverlayType.None);
+        }
+
+        private void SetOverlay(int _index, OverlayType _type, float _alpha)
+        {
+            OverlayArray[_index] = (byte)_type;
+            // If overlay type is None, set the alpha to 0 to prevent ghosting.
+            OverlayAlpha[_index] = _type != OverlayType.None ? _alpha : 0.0f;
         }
 
         private OverlayType GetOverlayForHarvestJob(HarvestJob _job)
