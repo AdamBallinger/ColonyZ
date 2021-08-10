@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ColonyZ.Models.Map.Tiles;
-using UnityEngine;
 
 namespace ColonyZ.Models.Map.Areas
 {
@@ -46,7 +45,6 @@ namespace ColonyZ.Models.Map.Areas
             _tile.Region.Area = null;
             if (Tiles.Count == 0)
             {
-                Debug.Log("Area has 0 tiles left. Removing from list.");
                 AreaManager.Instance.Areas.Remove(this);
             }
         }
