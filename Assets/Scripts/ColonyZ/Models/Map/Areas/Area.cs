@@ -50,20 +50,6 @@ namespace ColonyZ.Models.Map.Areas
             }
         }
 
-        /// <summary>
-        ///     Unassign all tiles in the area.
-        /// </summary>
-        public void ReleaseTiles()
-        {
-            foreach (var tile in Tiles)
-            {
-                tile.Area = null;
-                tile.Region.Area = null;
-            }
-
-            Tiles.Clear();
-        }
-
         public void ReleaseTo(Area _area)
         {
             var list = Tiles.ToList();
