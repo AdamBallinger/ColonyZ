@@ -142,8 +142,6 @@ namespace ColonyZ.Models.Map.Tiles
         {
             if (!HasObject) return;
 
-            var shouldMarkDirty = _markDirty && Object.ObjectData.EnclosesRoom;
-
             World.Instance.Objects.Remove(Object);
 
             var width = ObjectRotationUtil.GetRotatedObjectWidth(Object);
@@ -162,7 +160,7 @@ namespace ColonyZ.Models.Map.Tiles
 
             Object = null;
 
-            if (shouldMarkDirty)
+            if (_markDirty)
             {
                 World.Instance.WorldGrid.SetDirty(this, true);
             }

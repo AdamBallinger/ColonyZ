@@ -14,7 +14,6 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
         [SerializeField] private bool smartObject;
         [SerializeField] private bool buildable;
         [SerializeField] private bool rotatable;
-        [SerializeField] private bool enclosesRoom;
 
         [SerializeField] private int objectWidth;
         [SerializeField] private int objectHeight;
@@ -29,7 +28,6 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
         public bool SmartObject => smartObject;
         public bool Buildable => buildable;
         public bool Rotatable => rotatable;
-        public bool EnclosesRoom => enclosesRoom;
 
         public int ObjectWidth => objectWidth;
         public int ObjectHeight => objectHeight;

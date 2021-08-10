@@ -39,16 +39,14 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             var west = World.Instance.GetTileAt(OriginTile.X - 1, OriginTile.Y);
 
             if (east != null && west != null)
-                if (east.Object != null && east.Object.ObjectData.EnclosesRoom &&
-                    west.Object != null && west.Object.ObjectData.EnclosesRoom)
+                if (east.HasObject && west.HasObject)
                     return IsOpen ? 1 : 0;
             
             var north = World.Instance.GetTileAt(OriginTile.X, OriginTile.Y + 1);
             var south = World.Instance.GetTileAt(OriginTile.X, OriginTile.Y - 1);
             
             if (north != null && south != null)
-                if (north.Object != null && north.Object.ObjectData.EnclosesRoom &&
-                    south.Object != null && south.Object.ObjectData.EnclosesRoom)
+                if (north.HasObject && south.HasObject)
                     return IsOpen ? 3 : 2;
 
             return 0;
