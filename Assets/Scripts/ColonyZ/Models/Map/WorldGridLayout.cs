@@ -82,14 +82,19 @@ namespace ColonyZ.Models.Map
 
         public void RebuildDirty()
         {
+            var shouldNotify = false;
             foreach (var chunk in Chunks)
             {
                 if (chunk.IsDirty)
                 {
+                    shouldNotify = true;
                     RegionManager.Instance.UpdateChunk(chunk);
                     chunk.SetDirty(false);
                 }
             }
+            
+            if (shouldNotify)
+                RegionManager.Instance.NotifyRegionsUpdated();
         }
 
         public void BuildWorldGrid()

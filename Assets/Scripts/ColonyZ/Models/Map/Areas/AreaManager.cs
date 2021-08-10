@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 
@@ -39,7 +40,7 @@ namespace ColonyZ.Models.Map.Areas
         }
 
         /// <summary>
-        ///     Rebuilds the entire room data structure for the entire world.
+        ///     Rebuilds the entire area data structure for the entire world.
         /// </summary>
         public void Rebuild()
         {
@@ -83,18 +84,22 @@ namespace ColonyZ.Models.Map.Areas
                 
                 CreateArea(areaTiles);
             }
+            
+            areasUpdatedEvent?.Invoke();
         }
 
-        public void OnRegionsCreated(List<Region> _newRegions)
+        public void OnRegionsUpdated(List<Region> _newRegions)
         {
-            // This just doesn't work and I want to die.
             foreach (var region in _newRegions)
             {
                 if (region.Area != null || region.IsDoor) continue;
-                
+
                 var visitied = new List<Region>();
-                var potential = new List<Area>();
+                // List of regions connected to this new region that already have an area assigned.
+                var regionsWithArea = new List<Region>();
+                // List of regions to check.
                 var regions = new List<Region>();
+                // List of tiles that are part of a new region without an area.
                 var areaTiles = new List<Tile>();
                 
                 visitied.Add(region);
@@ -104,62 +109,58 @@ namespace ColonyZ.Models.Map.Areas
                 for (var i = 0; i < regions.Count; i++)
                 {
                     var r = regions[i];
-
                     foreach (var link in r.Links)
                     {
                         var other = link.GetOther(r);
                         if (other == null || visitied.Contains(other)) continue;
                         visitied.Add(other);
-
+                        if (other.IsDoor) continue;
+                        regions.Add(other);
+                        
                         if (other.Area == null)
                         {
                             // Areas stop at doors.
                             if (other.IsDoor) continue;
                             
                             areaTiles.AddRange(other.Tiles);
-                            regions.Add(other);
                         }
                         else
                         {
-                            potential.Add(other.Area);
+                            if (!regionsWithArea.Contains(other) && !other.IsDoor)
+                                regionsWithArea.Add(other);
                         }
                     }
                 }
+                
+                foreach (var r in regionsWithArea) areaTiles.AddRange(r.Tiles);
+                var newArea = CreateArea(areaTiles);
 
-                if (potential.Count > 0)
+                if (regionsWithArea.Count > 0)
                 {
-                    Area bestArea = null;
-                    foreach (var area in potential)
+                    var sumOfRegionsWithArea = regionsWithArea.Sum(r => r.Tiles.Count);
+
+                    if (sumOfRegionsWithArea < regionsWithArea[0].Area.Size)
                     {
-                        if (bestArea == null || area.Size > bestArea.Size)
-                            bestArea = area;
+                        MergeAreas(newArea, regionsWithArea[0].Area);
                     }
-                    
-                    foreach (var tile in areaTiles) bestArea?.AssignTile(tile);
-                    foreach (var area in potential)
-                    {
-                        if (area == bestArea) continue;
-                        MergeAreas(area, bestArea);
-                    }
-                }
-                else
-                {
-                    CreateArea(areaTiles);
                 }
             }
             
             areasUpdatedEvent?.Invoke();
         }
 
-        private void CreateArea(List<Tile> _tiles)
+        private Area CreateArea(List<Tile> _tiles)
         {
             if (_tiles != null && _tiles.Count > 0)
             {
                 var area = new Area();
                 _tiles.ForEach(t => area.AssignTile(t));
                 Areas.Add(area);
-                areasUpdatedEvent?.Invoke();
+
+                return area;
             }
+
+            return null;
         }
 
         /// <summary>
@@ -170,7 +171,6 @@ namespace ColonyZ.Models.Map.Areas
         private void MergeAreas(Area _target, Area _source)
         {
             _target.ReleaseTo(_source);
-            areasUpdatedEvent?.Invoke();
         }
     }
 }

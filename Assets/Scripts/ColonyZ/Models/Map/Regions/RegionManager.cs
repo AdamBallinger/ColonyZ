@@ -51,15 +51,21 @@ namespace ColonyZ.Models.Map.Regions
             }
 
             FloodChunk(_chunk);
+        }
 
+        /// <summary>
+        ///     Notifies the manager that all new regions have been built.
+        /// </summary>
+        public void NotifyRegionsUpdated()
+        {
             foreach (var region in newRegions)
             {
                 region.BuildLinks();
             }
             
-            AreaManager.Instance.OnRegionsCreated(newRegions);
-
+            AreaManager.Instance.OnRegionsUpdated(newRegions);
             newRegions.Clear();
+            
             regionsUpdateEvent?.Invoke();
         }
 
@@ -96,7 +102,6 @@ namespace ColonyZ.Models.Map.Regions
                 FloodFiller.Flood(tile,
                     t => t != null
                          && _chunk.Contains(t)
-                         && t.Region == null
                          && t.GetEnterability() == TileEnterability.Immediate,
                     t => t != null,
                     CreateRegion);
