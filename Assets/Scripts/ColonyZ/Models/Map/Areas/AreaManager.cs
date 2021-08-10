@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
-using ColonyZ.Models.Map.Tiles.Objects;
-using ColonyZ.Utils;
 
 namespace ColonyZ.Models.Map.Areas
 {
@@ -17,8 +16,6 @@ namespace ColonyZ.Models.Map.Areas
         ///     Event called after new area have been created, or old areas deleted.
         /// </summary>
         public event Action areasUpdatedEvent;
-
-        private bool shouldTriggerUpdate;
 
         private AreaManager()
         {
@@ -42,127 +39,128 @@ namespace ColonyZ.Models.Map.Areas
             return Areas.IndexOf(_area) + 1;
         }
 
-        private void RemoveArea(Area _area)
+        /// <summary>
+        ///     Rebuilds the entire area data structure for the entire world.
+        /// </summary>
+        public void Rebuild()
         {
-            if (_area == null) return;
-
-            _area.ReleaseTiles();
-            Areas.Remove(_area);
-            shouldTriggerUpdate = true;
-        }
-
-        public void CheckForArea(Tile _tile)
-        {
-            if (_tile.IsMapEdge) return;
-
-            var oldArea = _tile.Area;
-
-            Predicate<Tile> floodfill_ConditionCheck = t => t != null
-                                                            && t.Area == oldArea
-                                                            && !(t.HasObject && t.Object.ObjectData.EnclosesRoom);
-
-            Predicate<Tile> floodfill_PassCheck = t => t.Area == oldArea;
-
-            // An enclosing object was built on this tile.
-            if (oldArea != null)
+            var visited = new List<Region>();
+            foreach (var region in RegionManager.Instance.Regions)
             {
-                var enclosingCount = 0;
-                foreach (var tile in _tile.Neighbours)
+                if (visited.Contains(region)) continue;
+                
+                visited.Add(region);
+
+                // List of regions to iterate over that are connected to the current region.
+                var regions = new List<Region>();
+                var areaTiles = new List<Tile>();
+
+                if (region.Area == null)
                 {
-                    if (tile != null && tile.HasObject && tile.Object.ObjectData.EnclosesRoom) enclosingCount++;
-                    if (enclosingCount >= 2) break;
-                }
-
-                // When an object is placed, we can assume unless it has at least 2 other enclosing objects around it,
-                // then it is not enclosing a new area, and can simply remove the tile from its area.
-                if (enclosingCount >= 2)
-                {
-                    // Flood each neighbour to see if any are now enclosed.
-                    foreach (var tile in _tile.DirectNeighbours)
-                        FloodFiller.Flood(tile,
-                            floodfill_ConditionCheck,
-                            floodfill_PassCheck,
-                            CreateArea);
-
-                    // Remove the source tile from its current area, as enclosing tiles do not belong
-                    // to any areas.
-                    oldArea.UnassignTile(_tile);
-
-                    // Delete the old source tile area as it is no longer needed.
-                    RemoveArea(oldArea);
-                }
-                else
-                {
-                    // Tile doesn't have at least 2 enclosing tiles around it, so just remove it from the area as
-                    // it can't be enclosing an area.
-                    oldArea.UnassignTile(_tile);
-
-                    // Make sure the area is removed if it no longer has any tiles.
-                    if (oldArea.Size == 0) RemoveArea(oldArea);
-                }
-            }
-            else
-            {
-                // Getting here means the tile previously had an enclosing object (Wall, door etc.) on it
-                // So go through each of the neighbour tiles and remove their area, as it means we could
-                // potentially be merging up to 4 areas together.
-                //foreach (var tile in _tile.DirectNeighbours) RemoveArea(tile.Area);
-
-                var largestAreaSize = 0;
-                Area largestArea = null;
-                foreach (var tile in _tile.DirectNeighbours)
-                {
-                    if (tile.Area != null)
+                    if (!region.IsDoor)
+                        areaTiles.AddRange(region.Tiles);
+                    
+                    regions.Add(region);
+                    for (var i = 0; i < regions.Count; i++)
                     {
-                        if (tile.Area.Size > largestAreaSize)
+                        var r = regions[i];
+                        foreach (var link in r.Links)
                         {
-                            largestAreaSize = tile.Area.Size;
-                            largestArea = tile.Area;
+                            var other = link.GetOther(r);
+                            if (other == null || visited.Contains(other)) continue;
+                            visited.Add(other);
+
+                            if (other.Area == null)
+                            {
+                                // If region is a door then stop since areas are separated by doors.
+                                if (other.IsDoor) continue;
+                                
+                                areaTiles.AddRange(other.Tiles);
+                                regions.Add(other);
+                            }
                         }
                     }
                 }
-
-                // If a larger area exists around the tile removed, then merge all surrounding areas into it.
-                if (largestArea != null)
-                {
-                    largestArea.AssignTile(_tile);
-                    foreach (var tile in _tile.DirectNeighbours)
-                    {
-                        if (tile.Area != null && tile.Area != largestArea)
-                        {
-                            MergeAreas(tile.Area, largestArea);
-                        }
-                    }
-
-                    shouldTriggerUpdate = true;
-                }
-                else // No area was detected around the removed tile, so create a new one.
-                {
-                    FloodFiller.Flood(_tile,
-                        floodfill_ConditionCheck,
-                        floodfill_PassCheck,
-                        CreateArea);
-                }
+                
+                CreateArea(areaTiles);
             }
-
-            if (shouldTriggerUpdate)
-            {
-                areasUpdatedEvent?.Invoke();
-                shouldTriggerUpdate = false;
-            }
-
-            ComputeAreaLinks();
+            
+            areasUpdatedEvent?.Invoke();
         }
 
-        private void CreateArea(List<Tile> _tiles)
+        public void OnRegionsUpdated(List<Region> _newRegions)
+        {
+            foreach (var region in _newRegions)
+            {
+                if (region.Area != null || region.IsDoor) continue;
+
+                var visitied = new List<Region>();
+                // List of regions connected to this new region that already have an area assigned.
+                var regionsWithArea = new List<Region>();
+                // List of regions to check.
+                var regions = new List<Region>();
+                // List of tiles that are part of a new region without an area.
+                var areaTiles = new List<Tile>();
+                
+                visitied.Add(region);
+                regions.Add(region);
+                areaTiles.AddRange(region.Tiles);
+
+                for (var i = 0; i < regions.Count; i++)
+                {
+                    var r = regions[i];
+                    foreach (var link in r.Links)
+                    {
+                        var other = link.GetOther(r);
+                        if (other == null || visitied.Contains(other)) continue;
+                        visitied.Add(other);
+                        if (other.IsDoor) continue;
+                        regions.Add(other);
+                        
+                        if (other.Area == null)
+                        {
+                            // Areas stop at doors.
+                            if (other.IsDoor) continue;
+                            
+                            areaTiles.AddRange(other.Tiles);
+                        }
+                        else
+                        {
+                            if (!regionsWithArea.Contains(other) && !other.IsDoor)
+                                regionsWithArea.Add(other);
+                        }
+                    }
+                }
+                
+                foreach (var r in regionsWithArea) areaTiles.AddRange(r.Tiles);
+                var newArea = CreateArea(areaTiles);
+
+                if (regionsWithArea.Count > 0)
+                {
+                    var sumOfRegionsWithArea = regionsWithArea.Sum(r => r.Tiles.Count);
+
+                    if (sumOfRegionsWithArea < regionsWithArea[0].Area.Size)
+                    {
+                        MergeAreas(newArea, regionsWithArea[0].Area);
+                    }
+                }
+            }
+            
+            areasUpdatedEvent?.Invoke();
+        }
+
+        private Area CreateArea(List<Tile> _tiles)
         {
             if (_tiles != null && _tiles.Count > 0)
             {
                 var area = new Area();
                 _tiles.ForEach(t => area.AssignTile(t));
                 Areas.Add(area);
-                shouldTriggerUpdate = true;
+
+                return area;
             }
+
+            return null;
         }
 
         /// <summary>
@@ -173,66 +171,6 @@ namespace ColonyZ.Models.Map.Areas
         private void MergeAreas(Area _target, Area _source)
         {
             _target.ReleaseTo(_source);
-            RemoveArea(_target);
-            shouldTriggerUpdate = true;
-        }
-
-        private void ComputeAreaLinks()
-        {
-            var doors = World.Instance.Objects.OfType<DoorObject>().ToList();
-
-            // Clear existing connections, then re-add self connections.
-            foreach (var area in Areas)
-            {
-                area.LinkedAreas.Clear();
-                area.AddConnection(area);
-            }
-
-            foreach (var door in doors)
-            {
-                var tile = door.OriginTile;
-                var n = World.Instance.GetTileAt(tile.X, tile.Y + 1);
-                var s = World.Instance.GetTileAt(tile.X, tile.Y - 1);
-
-                // if the tiles to the north and south of the door have different area ids,
-                // then they are connected.
-                if (n != null && s != null && n.Area?.AreaID != s.Area?.AreaID)
-                {
-                    n.Area?.AddConnection(s.Area);
-                    s.Area?.AddConnection(n.Area);
-                    continue;
-                }
-
-                var e = World.Instance.GetTileAt(tile.X + 1, tile.Y);
-                var w = World.Instance.GetTileAt(tile.X - 1, tile.Y);
-
-                if (e != null && w != null && e.Area?.AreaID != w.Area?.AreaID)
-                {
-                    e.Area?.AddConnection(w.Area);
-                    w.Area?.AddConnection(e.Area);
-                }
-            }
-
-            foreach (var area in Areas)
-            {
-                var checkedAreas = new List<Area>();
-                var areas = LinkArea(area, checkedAreas);
-
-                foreach (var r in areas) area.AddConnection(r);
-            }
-        }
-
-        private List<Area> LinkArea(Area _area, List<Area> _checkedAreas)
-        {
-            foreach (var area in _area.LinkedAreas)
-            {
-                if (_checkedAreas.Contains(area)) continue;
-
-                _checkedAreas.Add(area);
-                LinkArea(area, _checkedAreas);
-            }
-
-            return _checkedAreas;
         }
     }
 }

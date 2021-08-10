@@ -1,6 +1,7 @@
 using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Pathing;
+using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.TimeSystem;
@@ -73,11 +74,11 @@ namespace ColonyZ.Models.AI
 
             if (_tile.GetEnterability() == TileEnterability.None) return;
             if (Entity.Position == _tile.Position) return;
-
-            // Don't make a path request if the current area the entity is in has no link to the target area.
+            
             // Checks that the entities current area isn't null to ensure that entities that get stuck inside of
-            // objects can get out.
-            if (Entity.CurrentTile.Area != null && !Entity.CurrentTile.Area.HasConnection(_tile.Area))
+            // objects can get out, and then checks if the entity can reach the target region.
+            if (Entity.CurrentTile.Area != null 
+                && !RegionReachabilityChecker.CanReachRegion(Entity.CurrentTile.Region, _tile.Region))
                 return;
 
             Working = true;

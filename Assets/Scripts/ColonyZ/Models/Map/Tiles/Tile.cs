@@ -130,9 +130,8 @@ namespace ColonyZ.Models.Map.Tiles
             
             World.Instance.Objects.Add(_object);
 
-            if (_markDirty && _object.ObjectData.EnclosesRoom)
+            if (_markDirty)
             {
-                AreaManager.Instance.CheckForArea(this);
                 World.Instance.WorldGrid.SetDirty(this, true);
             }
 
@@ -142,8 +141,6 @@ namespace ColonyZ.Models.Map.Tiles
         public void RemoveObject(bool _markDirty = true)
         {
             if (!HasObject) return;
-
-            var shouldMarkDirty = _markDirty && Object.ObjectData.EnclosesRoom;
 
             World.Instance.Objects.Remove(Object);
 
@@ -161,11 +158,8 @@ namespace ColonyZ.Models.Map.Tiles
                 NodeGraph.Instance.UpdateGraph(t.X, t.Y);
             }
 
-            Object = null;
-
-            if (shouldMarkDirty)
+            if (_markDirty)
             {
-                AreaManager.Instance.CheckForArea(this);
                 World.Instance.WorldGrid.SetDirty(this, true);
             }
 

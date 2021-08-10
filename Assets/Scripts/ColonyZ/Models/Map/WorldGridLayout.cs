@@ -28,6 +28,8 @@ namespace ColonyZ.Models.Map
         {
             var source = GetChunkAt(_tile);
             source.SetDirty(_dirty);
+            
+            // TODO: This needs to be improved so that only neighbours that need marking dirty are done so.
             foreach (var chunk in GetChunkNeighbours(source))
             {
                 chunk.SetDirty(_dirty);
@@ -80,14 +82,19 @@ namespace ColonyZ.Models.Map
 
         public void RebuildDirty()
         {
+            var shouldNotify = false;
             foreach (var chunk in Chunks)
             {
                 if (chunk.IsDirty)
                 {
+                    shouldNotify = true;
                     RegionManager.Instance.UpdateChunk(chunk);
                     chunk.SetDirty(false);
                 }
             }
+            
+            if (shouldNotify)
+                RegionManager.Instance.NotifyRegionsUpdated();
         }
 
         public void BuildWorldGrid()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ColonyZ.Models.Map.Areas;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 
@@ -23,7 +24,12 @@ namespace ColonyZ.Models.Map.Regions
         /// </summary>
         public Dictionary<int, List<Tile>> AccessMap { get; private set; }
 
-        private bool IsDoor { get; set; }
+        /// <summary>
+        ///     Area this region is in.
+        /// </summary>
+        public Area Area { get; set; }
+
+        public bool IsDoor { get; private set; }
 
         private List<Tile> edgeSpan = new List<Tile>(12);
 

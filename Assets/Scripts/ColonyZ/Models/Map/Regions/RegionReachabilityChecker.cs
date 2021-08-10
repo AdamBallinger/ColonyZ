@@ -18,6 +18,7 @@ namespace ColonyZ.Models.Map.Regions
         {
             if (_source == null || _target == null) return false;
             if (_source == _target) return true;
+            if (_source.Area == _target.Area) return true;
 
             queue.Clear();
             visited.Clear();

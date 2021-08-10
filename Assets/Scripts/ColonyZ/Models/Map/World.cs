@@ -91,10 +91,10 @@ namespace ColonyZ.Models.Map
             Instance.WorldGrid.BuildWorldGrid();
             Instance.Overlay = new Overlay(Instance);
             NodeGraph.Create();
-            AreaManager.Create();
             ZoneManager.Create();
             JobManager.Create();
             RegionManager.Create();
+            AreaManager.Create();
             Instance.Overlay.Init();
         }
 

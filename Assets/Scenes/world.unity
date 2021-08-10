@@ -7992,7 +7992,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660482574}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 450b194d5ad74098a99ac861f0de4cce, type: 3}
   m_Name: 
@@ -9054,9 +9054,10 @@ MonoBehaviour:
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   worldSize:
-    <Name>k__BackingField: Mini
-    <Width>k__BackingField: 16
-    <Height>k__BackingField: 16
+    <Name>k__BackingField: Tiny
+    <Width>k__BackingField: 48
+    <Height>k__BackingField: 48
+  enableWorldGen: 1
   overrideSeed: 1
   seed: 42736
   octaves: 4

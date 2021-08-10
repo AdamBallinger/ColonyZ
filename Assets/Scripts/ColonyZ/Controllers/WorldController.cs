@@ -40,8 +40,10 @@ namespace ColonyZ.Controllers
 
         [SerializeField] private WorldSizeTypes.WorldSize worldSize = WorldSizeTypes.MEDIUM;
 
-        [Header("World Gen Noise Settings")] [SerializeField]
-        private bool overrideSeed = true;
+        [Header("World Gen Noise Settings")] 
+        
+        [SerializeField] private bool enableWorldGen = true;
+        [SerializeField] private bool overrideSeed = true;
 
         [SerializeField] [Range(1, 1000000)] private int seed;
         [SerializeField] [Range(1, 8)] private int octaves;
@@ -135,15 +137,19 @@ namespace ColonyZ.Controllers
                 WorldGenerator.lacunarity = lacunarity;
                 WorldGenerator.noiseScale = noiseScale;
                 WorldGenerator.stoneThreshold = stoneThreshold;
-                World.Instance.WorldGenerator.Generate();
 
-                foreach (var tile in World.Instance)
+                if (enableWorldGen)
                 {
-                    if (tile.HasObject) continue;
-                    var rand = Random.Range(1, 100);
-                    if (rand <= treeSpawnChance)
+                    World.Instance.WorldGenerator.Generate();
+                    
+                    foreach (var tile in World.Instance)
                     {
-                        tile.SetObject(ObjectFactories.ResourceFactory.GetObject(treeData), false);
+                        if (tile.HasObject) continue;
+                        var rand = Random.Range(1, 100);
+                        if (rand <= treeSpawnChance)
+                        {
+                            tile.SetObject(ObjectFactories.ResourceFactory.GetObject(treeData), false);
+                        }
                     }
                 }
 
@@ -156,13 +162,8 @@ namespace ColonyZ.Controllers
             if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.Load)
                 saveGameHandler.LoadAll();
 
-            foreach (var tile in World.Instance)
-            {
-                if (tile.Area == null && !(tile.HasObject && tile.Object.ObjectData.EnclosesRoom))
-                    AreaManager.Instance.CheckForArea(tile);
-            }
-
             RegionManager.Instance.BuildRegions();
+            AreaManager.Instance.Rebuild();
         }
 
         private void Update()
