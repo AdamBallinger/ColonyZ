@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ColonyZ.Models.Map.Areas;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Utils;
 
@@ -18,7 +19,6 @@ namespace ColonyZ.Models.Map.Regions
 
         private List<Region> newRegions = new List<Region>();
         
-
         private RegionManager()
         {
         }
@@ -56,6 +56,8 @@ namespace ColonyZ.Models.Map.Regions
             {
                 region.BuildLinks();
             }
+            
+            AreaManager.Instance.OnRegionsCreated(newRegions);
 
             newRegions.Clear();
             regionsUpdateEvent?.Invoke();
@@ -116,7 +118,13 @@ namespace ColonyZ.Models.Map.Regions
         {
             foreach (var link in _region.Links) link.Unassign(_region);
 
-            foreach (var tile in _region.Tiles) tile.Region = null;
+            foreach (var tile in _region.Tiles)
+            {
+                tile.Area?.UnassignTile(tile);
+                tile.Region = null;
+            }
+            
+            _region.Area = null;
 
             Regions.Remove(_region);
         }

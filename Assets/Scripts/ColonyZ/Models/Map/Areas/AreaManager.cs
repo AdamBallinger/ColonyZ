@@ -50,12 +50,15 @@ namespace ColonyZ.Models.Map.Areas
                 
                 visited.Add(region);
 
+                // List of regions to iterate over that are connected to the current region.
                 var regions = new List<Region>();
                 var areaTiles = new List<Tile>();
-                areaTiles.AddRange(region.Tiles);
 
                 if (region.Area == null)
                 {
+                    if (!region.IsDoor)
+                        areaTiles.AddRange(region.Tiles);
+                    
                     regions.Add(region);
                     for (var i = 0; i < regions.Count; i++)
                     {
@@ -68,6 +71,9 @@ namespace ColonyZ.Models.Map.Areas
 
                             if (other.Area == null)
                             {
+                                // If region is a door then stop since areas are separated by doors.
+                                if (other.IsDoor) continue;
+                                
                                 areaTiles.AddRange(other.Tiles);
                                 regions.Add(other);
                             }
@@ -77,6 +83,72 @@ namespace ColonyZ.Models.Map.Areas
                 
                 CreateArea(areaTiles);
             }
+        }
+
+        public void OnRegionsCreated(List<Region> _newRegions)
+        {
+            // This just doesn't work and I want to die.
+            foreach (var region in _newRegions)
+            {
+                if (region.Area != null || region.IsDoor) continue;
+                
+                var visitied = new List<Region>();
+                var potential = new List<Area>();
+
+                visitied.Add(region);
+                var regions = new List<Region>();
+                var areaTiles = new List<Tile>();
+                regions.Add(region);
+                areaTiles.AddRange(region.Tiles);
+
+                for (var i = 0; i < regions.Count; i++)
+                {
+                    var r = regions[i];
+
+                    foreach (var link in r.Links)
+                    {
+                        var other = link.GetOther(r);
+                        if (other == null || visitied.Contains(other)) continue;
+                        visitied.Add(other);
+
+                        if (other.Area == null)
+                        {
+                            // Areas stop at doors.
+                            if (other.IsDoor) continue;
+                            
+                            areaTiles.AddRange(other.Tiles);
+                            regions.Add(other);
+                        }
+                        else
+                        {
+                            potential.Add(other.Area);
+                        }
+                    }
+                }
+
+                if (potential.Count > 0)
+                {
+                    Area bestArea = null;
+                    foreach (var area in potential)
+                    {
+                        if (bestArea == null || area.Size > bestArea.Size)
+                            bestArea = area;
+                    }
+                    
+                    foreach (var tile in areaTiles) bestArea?.AssignTile(tile);
+                    foreach (var area in potential)
+                    {
+                        if (area == bestArea) continue;
+                        MergeAreas(area, bestArea);
+                    }
+                }
+                else
+                {
+                    CreateArea(areaTiles);
+                }
+            }
+            
+            areasUpdatedEvent?.Invoke();
         }
 
         private void RemoveArea(Area _area)

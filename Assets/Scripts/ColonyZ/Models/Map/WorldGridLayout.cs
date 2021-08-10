@@ -28,6 +28,8 @@ namespace ColonyZ.Models.Map
         {
             var source = GetChunkAt(_tile);
             source.SetDirty(_dirty);
+            
+            // TODO: This needs to be improved so that only neighbours that need marking dirty are done so.
             foreach (var chunk in GetChunkNeighbours(source))
             {
                 chunk.SetDirty(_dirty);

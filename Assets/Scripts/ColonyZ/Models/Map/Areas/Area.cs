@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ColonyZ.Models.Map.Tiles;
+using UnityEngine;
 
 namespace ColonyZ.Models.Map.Areas
 {
@@ -10,8 +11,6 @@ namespace ColonyZ.Models.Map.Areas
         ///     Unique ID for this area.
         /// </summary>
         public int AreaID => AreaManager.Instance.GetAreaID(this);
-
-        public HashSet<Area> LinkedAreas { get; }
 
         /// <summary>
         ///     Number of tiles inside the area.
@@ -26,7 +25,6 @@ namespace ColonyZ.Models.Map.Areas
         public Area()
         {
             Tiles = new HashSet<Tile>();
-            LinkedAreas = new HashSet<Area>();
         }
 
         public void AssignTile(Tile _tile)
@@ -34,6 +32,7 @@ namespace ColonyZ.Models.Map.Areas
             _tile.Area?.UnassignTile(_tile);
             Tiles.Add(_tile);
             _tile.Area = this;
+            _tile.Region.Area = this;
         }
 
         /// <summary>
@@ -44,6 +43,12 @@ namespace ColonyZ.Models.Map.Areas
         {
             Tiles.Remove(_tile);
             _tile.Area = null;
+            _tile.Region.Area = null;
+            if (Tiles.Count == 0)
+            {
+                Debug.Log("Area has 0 tiles left. Removing from list.");
+                AreaManager.Instance.Areas.Remove(this);
+            }
         }
 
         /// <summary>
@@ -54,6 +59,7 @@ namespace ColonyZ.Models.Map.Areas
             foreach (var tile in Tiles)
             {
                 tile.Area = null;
+                tile.Region.Area = null;
             }
 
             Tiles.Clear();
@@ -66,18 +72,6 @@ namespace ColonyZ.Models.Map.Areas
             {
                 _area.AssignTile(list[i]);
             }
-        }
-
-        public void AddConnection(Area _area)
-        {
-            if (_area == null || LinkedAreas.Contains(_area)) return;
-
-            LinkedAreas.Add(_area);
-        }
-
-        public bool HasConnection(Area _area)
-        {
-            return LinkedAreas.Contains(_area);
         }
     }
 }

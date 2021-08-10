@@ -29,7 +29,7 @@ namespace ColonyZ.Models.Map.Regions
         /// </summary>
         public Area Area { get; set; }
 
-        private bool IsDoor { get; set; }
+        public bool IsDoor { get; private set; }
 
         private List<Tile> edgeSpan = new List<Tile>(12);
 

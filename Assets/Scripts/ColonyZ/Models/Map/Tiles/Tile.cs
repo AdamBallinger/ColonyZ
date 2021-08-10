@@ -130,9 +130,8 @@ namespace ColonyZ.Models.Map.Tiles
             
             World.Instance.Objects.Add(_object);
 
-            if (_markDirty && _object.ObjectData.EnclosesRoom)
+            if (_markDirty)
             {
-                //AreaManager.Instance.CheckForArea(this);
                 World.Instance.WorldGrid.SetDirty(this, true);
             }
 
@@ -165,7 +164,6 @@ namespace ColonyZ.Models.Map.Tiles
 
             if (shouldMarkDirty)
             {
-                //AreaManager.Instance.CheckForArea(this);
                 World.Instance.WorldGrid.SetDirty(this, true);
             }
 
