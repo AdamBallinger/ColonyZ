@@ -9057,7 +9057,7 @@ MonoBehaviour:
     <Name>k__BackingField: Tiny
     <Width>k__BackingField: 48
     <Height>k__BackingField: 48
-  enableWorldGen: 0
+  enableWorldGen: 1
   overrideSeed: 1
   seed: 42736
   octaves: 4

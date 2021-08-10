@@ -280,8 +280,6 @@ namespace ColonyZ.Models.AI.Jobs
             {
                 if (tile.GetEnterability() == TileEnterability.None) continue;
                 if (entityTile.Area == null) continue;
-                // Skip the tile if entities current room has no connection to the tiles room.
-                //if (!entityTile.Area.HasConnection(tile.Area)) continue;
                 if (!RegionReachabilityChecker.CanReachRegion(entityTile.Region, tile.Region)) continue;
 
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
