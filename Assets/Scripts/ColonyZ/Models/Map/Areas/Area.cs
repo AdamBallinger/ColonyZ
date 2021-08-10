@@ -43,6 +43,7 @@ namespace ColonyZ.Models.Map.Areas
             Tiles.Remove(_tile);
             _tile.Area = null;
             _tile.Region.Area = null;
+            
             if (Tiles.Count == 0)
             {
                 AreaManager.Instance.Areas.Remove(this);

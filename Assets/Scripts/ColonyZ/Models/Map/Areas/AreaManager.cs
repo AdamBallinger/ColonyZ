@@ -94,10 +94,10 @@ namespace ColonyZ.Models.Map.Areas
                 
                 var visitied = new List<Region>();
                 var potential = new List<Area>();
-
-                visitied.Add(region);
                 var regions = new List<Region>();
                 var areaTiles = new List<Tile>();
+                
+                visitied.Add(region);
                 regions.Add(region);
                 areaTiles.AddRange(region.Tiles);
 
@@ -151,15 +151,6 @@ namespace ColonyZ.Models.Map.Areas
             areasUpdatedEvent?.Invoke();
         }
 
-        private void RemoveArea(Area _area)
-        {
-            if (_area == null) return;
-
-            _area.ReleaseTiles();
-            Areas.Remove(_area);
-            areasUpdatedEvent?.Invoke();
-        }
-
         private void CreateArea(List<Tile> _tiles)
         {
             if (_tiles != null && _tiles.Count > 0)
@@ -179,7 +170,6 @@ namespace ColonyZ.Models.Map.Areas
         private void MergeAreas(Area _target, Area _source)
         {
             _target.ReleaseTo(_source);
-            RemoveArea(_target);
             areasUpdatedEvent?.Invoke();
         }
     }
