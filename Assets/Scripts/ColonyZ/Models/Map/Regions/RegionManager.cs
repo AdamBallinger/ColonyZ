@@ -96,6 +96,7 @@ namespace ColonyZ.Models.Map.Regions
                 FloodFiller.Flood(tile,
                     t => t != null
                          && _chunk.Contains(t)
+                         && t.Region == null
                          && t.GetEnterability() == TileEnterability.Immediate,
                     t => t != null,
                     CreateRegion);
