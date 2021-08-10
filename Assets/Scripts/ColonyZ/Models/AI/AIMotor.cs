@@ -74,10 +74,9 @@ namespace ColonyZ.Models.AI
 
             if (_tile.GetEnterability() == TileEnterability.None) return;
             if (Entity.Position == _tile.Position) return;
-
-            // Don't make a path request if the current area the entity is in has no link to the target area.
+            
             // Checks that the entities current area isn't null to ensure that entities that get stuck inside of
-            // objects can get out.
+            // objects can get out, and then checks if the entity can reach the target region.
             if (Entity.CurrentTile.Area != null 
                 && !RegionReachabilityChecker.CanReachRegion(Entity.CurrentTile.Region, _tile.Region))
                 return;
