@@ -158,8 +158,6 @@ namespace ColonyZ.Models.Map.Tiles
                 NodeGraph.Instance.UpdateGraph(t.X, t.Y);
             }
 
-            Object = null;
-
             if (_markDirty)
             {
                 World.Instance.WorldGrid.SetDirty(this, true);
