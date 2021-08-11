@@ -126,10 +126,10 @@ namespace ColonyZ.Models.Map.Regions
 
             foreach (var tile in _region.Tiles)
             {
-                tile.Area?.UnassignTile(tile);
                 tile.Region = null;
             }
             
+            _region.Area?.UnassignRegion(_region);
             _region.Area = null;
 
             Regions.Remove(_region);

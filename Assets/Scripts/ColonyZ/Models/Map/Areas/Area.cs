@@ -1,49 +1,48 @@
 using System.Collections.Generic;
 using System.Linq;
-using ColonyZ.Models.Map.Tiles;
+using ColonyZ.Models.Map.Regions;
 
 namespace ColonyZ.Models.Map.Areas
 {
     public class Area
     {
-        /// <summary>
-        ///     Unique ID for this area.
-        /// </summary>
-        public int AreaID => AreaManager.Instance.GetAreaID(this);
+        public List<Region> Regions { get; }
 
         /// <summary>
-        ///     Number of tiles inside the area.
+        ///     Returns number of tiles in this Area.
         /// </summary>
-        public int Size => Tiles.Count;
+        public int SizeInTiles => Regions.Sum(r => r.Tiles.Count);
 
-        /// <summary>
-        ///     List of tiles that are assigned to this area.
-        /// </summary>
-        private HashSet<Tile> Tiles { get; }
+        public int SizeInRegions => Regions.Count;
+
+        public int AreaID => AreaManager.Instance.Areas.IndexOf(this) + 1;
 
         public Area()
         {
-            Tiles = new HashSet<Tile>();
-        }
-
-        public void AssignTile(Tile _tile)
-        {
-            _tile.Area?.UnassignTile(_tile);
-            Tiles.Add(_tile);
-            _tile.Area = this;
-            _tile.Region.Area = this;
+            Regions = new List<Region>();
         }
 
         /// <summary>
-        ///     Removes the tile from the area.
+        ///     Adds a region to this area.
         /// </summary>
-        /// <param name="_tile"></param>
-        public void UnassignTile(Tile _tile)
+        /// <param name="_region"></param>
+        public void AssignRegion(Region _region)
         {
-            Tiles.Remove(_tile);
-            _tile.Area = null;
+            _region.Area?.UnassignRegion(_region);
+            Regions.Add(_region);
+            _region.Area = this;
+        }
 
-            if (Tiles.Count == 0)
+        /// <summary>
+        ///     Removes the region from the area.
+        /// </summary>
+        /// <param name="_region"></param>
+        public void UnassignRegion(Region _region)
+        {
+            Regions.Remove(_region);
+            _region.Area = null;
+        
+            if (Regions.Count == 0)
             {
                 AreaManager.Instance.Areas.Remove(this);
             }
@@ -51,10 +50,9 @@ namespace ColonyZ.Models.Map.Areas
 
         public void ReleaseTo(Area _area)
         {
-            var list = Tiles.ToList();
-            for (var i = list.Count - 1; i >= 0; i--)
+            for (var i = Regions.Count - 1; i >= 0; i--)
             {
-                _area.AssignTile(list[i]);
+                _area.AssignRegion(Regions[i]);
             }
         }
     }

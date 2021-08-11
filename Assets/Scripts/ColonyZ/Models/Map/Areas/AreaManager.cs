@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ColonyZ.Models.Map.Regions;
-using ColonyZ.Models.Map.Tiles;
 
 namespace ColonyZ.Models.Map.Areas
 {
@@ -34,11 +33,6 @@ namespace ColonyZ.Models.Map.Areas
             Instance = null;
         }
 
-        public int GetAreaID(Area _area)
-        {
-            return Areas.IndexOf(_area) + 1;
-        }
-
         /// <summary>
         ///     Rebuilds the entire area data structure for the entire world.
         /// </summary>
@@ -53,12 +47,14 @@ namespace ColonyZ.Models.Map.Areas
 
                 // List of regions to iterate over that are connected to the current region.
                 var regions = new List<Region>();
-                var areaTiles = new List<Tile>();
+                
+                // List of regions potentially creating a new area.
+                var areaRegions = new List<Region>();
 
                 if (region.Area == null)
                 {
                     if (!region.IsDoor)
-                        areaTiles.AddRange(region.Tiles);
+                        areaRegions.Add(region);
                     
                     regions.Add(region);
                     for (var i = 0; i < regions.Count; i++)
@@ -75,14 +71,14 @@ namespace ColonyZ.Models.Map.Areas
                                 // If region is a door then stop since areas are separated by doors.
                                 if (other.IsDoor) continue;
                                 
-                                areaTiles.AddRange(other.Tiles);
+                                areaRegions.Add(other);
                                 regions.Add(other);
                             }
                         }
                     }
                 }
                 
-                CreateArea(areaTiles);
+                CreateArea(areaRegions);
             }
             
             areasUpdatedEvent?.Invoke();
@@ -94,17 +90,18 @@ namespace ColonyZ.Models.Map.Areas
             {
                 if (region.Area != null || region.IsDoor) continue;
 
+                // List of regions already checked.
                 var visitied = new List<Region>();
                 // List of regions connected to this new region that already have an area assigned.
                 var regionsWithArea = new List<Region>();
                 // List of regions to check.
                 var regions = new List<Region>();
-                // List of tiles that are part of a new region without an area.
-                var areaTiles = new List<Tile>();
+                // List of regions that make up the potential new area.
+                var areaRegions = new List<Region>();
                 
                 visitied.Add(region);
                 regions.Add(region);
-                areaTiles.AddRange(region.Tiles);
+                areaRegions.Add(region);
 
                 for (var i = 0; i < regions.Count; i++)
                 {
@@ -116,13 +113,10 @@ namespace ColonyZ.Models.Map.Areas
                         visitied.Add(other);
                         if (other.IsDoor) continue;
                         regions.Add(other);
-                        
+
                         if (other.Area == null)
                         {
-                            // Areas stop at doors.
-                            if (other.IsDoor) continue;
-                            
-                            areaTiles.AddRange(other.Tiles);
+                            areaRegions.Add(other);
                         }
                         else
                         {
@@ -131,15 +125,15 @@ namespace ColonyZ.Models.Map.Areas
                         }
                     }
                 }
-                
-                foreach (var r in regionsWithArea) areaTiles.AddRange(r.Tiles);
-                var newArea = CreateArea(areaTiles);
 
+                areaRegions.AddRange(regionsWithArea);
+                var newArea = CreateArea(areaRegions);
+                
                 if (regionsWithArea.Count > 0)
                 {
                     var sumOfRegionsWithArea = regionsWithArea.Sum(r => r.Tiles.Count);
-
-                    if (sumOfRegionsWithArea < regionsWithArea[0].Area.Size)
+                
+                    if (sumOfRegionsWithArea < regionsWithArea[0].Area.SizeInTiles)
                     {
                         MergeAreas(newArea, regionsWithArea[0].Area);
                     }
@@ -149,12 +143,12 @@ namespace ColonyZ.Models.Map.Areas
             areasUpdatedEvent?.Invoke();
         }
 
-        private Area CreateArea(List<Tile> _tiles)
+        private Area CreateArea(List<Region> _regions)
         {
-            if (_tiles != null && _tiles.Count > 0)
+            if (_regions != null && _regions.Count > 0)
             {
                 var area = new Area();
-                _tiles.ForEach(t => area.AssignTile(t));
+                _regions.ForEach(r => area.AssignRegion(r));
                 Areas.Add(area);
 
                 return area;

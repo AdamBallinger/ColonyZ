@@ -48,7 +48,7 @@ namespace ColonyZ.Models.Map.Tiles
 
         public Job CurrentJob { get; set; }
 
-        public Area Area { get; set; }
+        public Area Area => Region?.Area;
         public Region Region { get; set; }
         public Zone Zone { get; set; }
 

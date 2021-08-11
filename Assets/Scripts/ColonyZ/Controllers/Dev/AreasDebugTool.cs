@@ -18,14 +18,16 @@ namespace ColonyZ.Controllers.Dev
 
         private Mesh tileMesh;
 
+        private List<Color> colors = new List<Color>();
+
         private void Start()
         {
             AreaManager.Instance.areasUpdatedEvent += UpdateOverlay;
-
+            
             GenerateTileMesh();
             UpdateOverlay();
         }
-
+        
         private void UpdateOverlay()
         {
             if (!enabled)
@@ -35,12 +37,13 @@ namespace ColonyZ.Controllers.Dev
                 return;
             }
 
+            colors.Clear();
             meshFilter.mesh = tileMesh;
 
             foreach (var area in AreaManager.Instance.Areas)
             {
                 if (areaColorMap.ContainsKey(area.AreaID)) continue;
-
+                
                 var randColor = new Color(
                     Random.Range(0.0f, 1.0f),
                     Random.Range(0.0f, 1.0f),
@@ -50,12 +53,14 @@ namespace ColonyZ.Controllers.Dev
             }
 
             areasText.text = "Areas: " + AreaManager.Instance.Areas.Count;
-
-            var colors = meshFilter.mesh.colors;
+            
+            tileMesh.GetColors(colors);
             var vertIndex = 0;
 
-            foreach (var tile in World.Instance)
+            for (var x = 0; x < World.Instance.Width; x++)
+            for (var y = 0; y < World.Instance.Height; y++)
             {
+                var tile = World.Instance.GetTileAt(x, y);
                 var col = tile.Area != null ? areaColorMap[tile.Area.AreaID] : new Color(0, 0, 0, 0);
                 colors[vertIndex] = col;
                 colors[vertIndex + 1] = col;
@@ -64,7 +69,7 @@ namespace ColonyZ.Controllers.Dev
                 vertIndex += 4;
             }
 
-            meshFilter.mesh.colors = colors;
+            tileMesh.SetColors(colors);
         }
 
         public void Toggle()
