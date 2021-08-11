@@ -34,9 +34,9 @@ namespace ColonyZ.Models.Map
 
         public static readonly WorldSize MINI = new WorldSize("Mini", 16, 16, false);
         public static readonly WorldSize TINY = new WorldSize("Tiny", 48, 48, false);
-        public static readonly WorldSize SMALL = new WorldSize("Small", 96, 96);
-        public static readonly WorldSize MEDIUM = new WorldSize("Medium", 128, 128);
-        public static readonly WorldSize LARGE = new WorldSize("Large", 192, 192);
-        public static readonly WorldSize HUGE = new WorldSize("Huge", 256, 256);
+        public static readonly WorldSize SMALL = new WorldSize("Small", 128, 128);
+        public static readonly WorldSize MEDIUM = new WorldSize("Medium", 192, 192);
+        public static readonly WorldSize LARGE = new WorldSize("Large", 256, 256);
+        public static readonly WorldSize HUGE = new WorldSize("Huge", 320, 320);
     }
 }
