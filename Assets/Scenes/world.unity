@@ -9054,17 +9054,17 @@ MonoBehaviour:
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   worldSize:
-    <Name>k__BackingField: Medium
-    <Width>k__BackingField: 128
-    <Height>k__BackingField: 128
+    <Name>k__BackingField: Tiny
+    <Width>k__BackingField: 48
+    <Height>k__BackingField: 48
   enableWorldGen: 1
   overrideSeed: 1
   seed: 42736
   octaves: 4
-  persistance: 0.5
-  lacunarity: 2
-  noiseScale: 44
-  stoneThreshold: 0.69
+  persistance: 0.55
+  lacunarity: 3
+  noiseScale: 54
+  stoneThreshold: 0.55
 --- !u!114 &1920970006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9928,7 +9928,7 @@ MonoBehaviour:
   cameraMoveSpeed: 2.5
   cameraPivot: {fileID: 740356067}
   maxZoom: 5
-  minZoom: 45
+  minZoom: 75
   zoomSpeed: 65
 --- !u!114 &1999893020
 MonoBehaviour:
