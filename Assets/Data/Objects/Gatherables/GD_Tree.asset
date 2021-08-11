@@ -16,9 +16,8 @@ MonoBehaviour:
   objectName: Tree
   spriteData: {fileID: 11400000, guid: 73f54200bbe129d4a81129890d0df55a, type: 2}
   smartObject: 0
-  buildable: 1
+  buildable: 0
   rotatable: 0
-  enclosesRoom: 0
   objectWidth: 1
   objectHeight: 1
   enterability: 1
