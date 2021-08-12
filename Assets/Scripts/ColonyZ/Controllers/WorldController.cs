@@ -20,6 +20,7 @@ using ColonyZ.Models.Sprites;
 using ColonyZ.Models.TimeSystem;
 using ColonyZ.Utils;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 namespace ColonyZ.Controllers
 {
@@ -35,6 +36,11 @@ namespace ColonyZ.Controllers
         [SerializeField] [Range(0, 10)] private int initialCharacterCount = 1;
         [SerializeField] [Range(0, 100)] private int treeSpawnChance;
 
+        [Header("Global Lighting Settings")]
+        
+        [SerializeField] private Light2D globalLight;
+        [SerializeField] private AnimationCurve globalLightCurve;
+        
         [SerializeField] private GameObject itemEntityPrefab;
         [SerializeField] private GameObject livingEntityPrefab;
 
@@ -170,6 +176,9 @@ namespace ColonyZ.Controllers
             TimeManager.Instance.Update();
             JobManager.Instance.Update();
             World.Instance.Update();
+
+            var intesity = globalLightCurve.Evaluate(TimeManager.Instance.Ticks / TimeManager.Instance.TicksPerDay);
+            globalLight.intensity = intesity;
 
             foreach (var pair in livingEntityObjects)
             {

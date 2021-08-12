@@ -33,6 +33,13 @@ namespace ColonyZ.Models.TimeSystem
         /// </summary>
         public float UnscaledDeltaTime => Time.deltaTime;
 
+        public float TicksPerDay => 24 * 60;
+
+        /// <summary>
+        ///     Returns the number of times the clock has ticked for the current day. Resets at 00:00
+        /// </summary>
+        public float Ticks => Hour * 60 + Minute;
+
         public int Hour { get; private set; }
 
         public int Minute { get; private set; }
