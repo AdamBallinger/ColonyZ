@@ -176,9 +176,8 @@ namespace ColonyZ.Controllers
             TimeManager.Instance.Update();
             JobManager.Instance.Update();
             World.Instance.Update();
-
-            var intesity = globalLightCurve.Evaluate(TimeManager.Instance.Ticks / TimeManager.Instance.TicksPerDay);
-            globalLight.intensity = intesity;
+            
+            globalLight.intensity = TimeManager.Instance.DayProgress;
 
             foreach (var pair in livingEntityObjects)
             {
