@@ -45,8 +45,8 @@ namespace ColonyZ.Controllers.Render
 
             meshFilter.mesh = MeshUtils.CreateQuad("World Mesh", Width, Height, meshPivot);
             meshRenderer.material.mainTexture = GenerateMapTexture();
-            meshRenderer.material.SetInt("_WorldWidth", Width);
-            meshRenderer.material.SetInt("_WorldHeight", Height);
+            meshRenderer.material.SetInt("WorldWidth", Width);
+            meshRenderer.material.SetInt("WorldHeight", Height);
         }
 
         private Texture2D GenerateMapTexture()
