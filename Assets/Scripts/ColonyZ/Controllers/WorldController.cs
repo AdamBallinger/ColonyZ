@@ -78,7 +78,6 @@ namespace ColonyZ.Controllers
             if (WorldLoadSettings.LOAD_TYPE != WorldLoadType.Load &&
                 WorldLoadSettings.WORLD_SIZE.Name == null)
             {
-                Debug.Log("Defaulting to WorldController defined size: " + worldSize.Name);
                 WorldLoadSettings.WORLD_SIZE = worldSize;
             }
 
