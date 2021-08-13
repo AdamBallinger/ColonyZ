@@ -36,8 +36,8 @@ namespace ColonyZ.Controllers.UI
             GenerateOverlayTexture();
             
             meshRenderer.material.mainTexture = overlayTexture;
-            meshRenderer.material.SetInt("_WorldWidth", width);
-            meshRenderer.material.SetInt("_WorldHeight", height);
+            meshRenderer.material.SetInt("WorldWidth", width);
+            meshRenderer.material.SetInt("WorldHeight", height);
             
             World.Instance.Overlay.overlaySingleUpdatedEvent += UpdateOverlaySingle;
             World.Instance.Overlay.overlayUpdatedEvent += UpdateOverlay;
