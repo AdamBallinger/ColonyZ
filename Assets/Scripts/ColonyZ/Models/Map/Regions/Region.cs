@@ -45,26 +45,24 @@ namespace ColonyZ.Models.Map.Regions
 
         public void Add(Tile _tile)
         {
-            if (Tiles.Contains(_tile) || Furniture.Contains(_tile)) return;
+            if (Tiles.Contains(_tile)) return;
 
             if (_tile.HasObject)
             {
                 if (_tile.Object is DoorObject)
                 {
                     IsDoor = true;
-                    Tiles.Add(_tile);
                 }
                 else if (_tile.Object is FurnitureObject)
                 {
-                    Furniture.Add(_tile);
+                    if (!Furniture.Contains(_tile)) 
+                        Furniture.Add(_tile);
+                    return;
                 }
             }
-            // Furniture objects are not actually included as a part of the region.
-            else
-            {
-                Tiles.Add(_tile);
-                _tile.Region = this;
-            }
+
+            Tiles.Add(_tile);
+            _tile.Region = this;
         }
 
         public void BuildLinks()

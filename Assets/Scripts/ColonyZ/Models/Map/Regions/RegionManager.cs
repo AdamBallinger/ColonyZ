@@ -103,8 +103,8 @@ namespace ColonyZ.Models.Map.Regions
                 FloodFiller.Flood(tile,
                     t => t != null
                          && _chunk.Contains(t)
-                         && (t.HasObject && t.Object is FurnitureObject ||
-                             t.GetEnterability() == TileEnterability.Immediate),
+                         && (t.GetEnterability() == TileEnterability.Immediate ||
+                             t.HasObject && t.Object is FurnitureObject),
                     t => t != null,
                     CreateRegion);
             }
