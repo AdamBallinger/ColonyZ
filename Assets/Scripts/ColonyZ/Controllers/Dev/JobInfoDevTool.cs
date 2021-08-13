@@ -25,6 +25,8 @@ namespace ColonyZ.Controllers.Dev
 
         private void UpdateInfo()
         {
+            if (!enabled) return;
+            
             var availabelCharacters = World.Instance.Characters.Cast<HumanEntity>()
                 .Count(h => h.CurrentJob == null);
             text.text = $"Job count: {JobManager.Instance.JobCount}\n" +
