@@ -17,7 +17,7 @@ namespace ColonyZ.Models.Map
         public WorldDataProvider(WorldSizeTypes.WorldSize _worldSize)
         {
             Size = _worldSize;
-            TimeManager.Create(6, 0, 1);
+            TimeManager.Create(8, 0, 1);
         }
 
         public bool CanSave()
