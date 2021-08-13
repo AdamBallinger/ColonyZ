@@ -44,6 +44,8 @@ namespace ColonyZ.Controllers
         [SerializeField] private GameObject itemEntityPrefab;
         [SerializeField] private GameObject livingEntityPrefab;
 
+        [SerializeField] private Material objectsMaterial;
+
         [SerializeField] private WorldSizeTypes.WorldSize worldSize = WorldSizeTypes.MEDIUM;
 
         [Header("World Gen Noise Settings")] 
@@ -227,7 +229,7 @@ namespace ColonyZ.Controllers
             tileObjectGameObjects.Add(_tile, object_GO);
 
             var object_SR = object_GO.AddComponent<SpriteRenderer>();
-            object_SR.sharedMaterial.enableInstancing = true;
+            object_SR.sharedMaterial = objectsMaterial;
 
             object_GO.transform.position = new Vector2(_tile.X, _tile.Y);
             object_GO.transform.SetParent(_transform);

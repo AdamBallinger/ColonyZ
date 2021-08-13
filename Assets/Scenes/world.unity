@@ -9257,6 +9257,7 @@ MonoBehaviour:
     type: 3}
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
+  objectsMaterial: {fileID: 2100000, guid: 9a011744bf69b7a41ab3e5a3b3f57b03, type: 2}
   worldSize:
     <Name>k__BackingField: Tiny
     <Width>k__BackingField: 48
