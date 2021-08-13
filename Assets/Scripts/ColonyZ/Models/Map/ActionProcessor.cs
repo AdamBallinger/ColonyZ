@@ -201,9 +201,9 @@ namespace ColonyZ.Models.Map
                 return;
             }
 
-            var jobs = (from tile in _tiles
+            var jobs = from tile in _tiles
                 where tile.HasObject && ObjectCompatWithMode(tile.Object.ObjectData)
-                select new HarvestJob(tile, ProcessMode.ToString()));
+                select new HarvestJob(tile);
 
             JobManager.Instance.AddJobs(jobs);
         }
