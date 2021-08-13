@@ -119,7 +119,14 @@ namespace ColonyZ.Models.Map.Tiles.Objects
                 new ContextAction("Remove", () =>
                 {
                     if (World.Instance.WorldActionProcessor.GodMode) OriginTile.RemoveObject();
-                    else JobManager.Instance.AddJob(new DemolishJob(OriginTile));
+                    else
+                    {
+                        if (ObjectData.Buildable) JobManager.Instance.AddJob(new DemolishJob(OriginTile));
+                        else if (this is GatherableObject)
+                        {
+                            JobManager.Instance.AddJob(new HarvestJob(OriginTile));
+                        }
+                    };
                 })
             };
         }
