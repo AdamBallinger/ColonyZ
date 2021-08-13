@@ -13,7 +13,15 @@ namespace ColonyZ.Models.Map.Regions
     /// </summary>
     public class Region
     {
+        /// <summary>
+        ///     Set of pathable tiles within this region.
+        /// </summary>
         public HashSet<Tile> Tiles { get; } = new HashSet<Tile>();
+
+        /// <summary>
+        ///     List of tiles within this region that contain an object that is furniture.
+        /// </summary>
+        public List<Tile> Furniture { get; } = new List<Tile>();
 
         public List<RegionLink> Links { get; } = new List<RegionLink>();
 
@@ -37,12 +45,26 @@ namespace ColonyZ.Models.Map.Regions
 
         public void Add(Tile _tile)
         {
-            if (Tiles.Contains(_tile)) return;
+            if (Tiles.Contains(_tile) || Furniture.Contains(_tile)) return;
 
-            if (_tile.HasObject && _tile.Object is DoorObject) IsDoor = true;
-
-            Tiles.Add(_tile);
-            _tile.Region = this;
+            if (_tile.HasObject)
+            {
+                if (_tile.Object is DoorObject)
+                {
+                    IsDoor = true;
+                    Tiles.Add(_tile);
+                }
+                else if (_tile.Object is FurnitureObject)
+                {
+                    Furniture.Add(_tile);
+                }
+            }
+            // Furniture objects are not actually included as a part of the region.
+            else
+            {
+                Tiles.Add(_tile);
+                _tile.Region = this;
+            }
         }
 
         public void BuildLinks()

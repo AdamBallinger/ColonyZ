@@ -26,6 +26,7 @@ namespace ColonyZ.Controllers.Dev
         [SerializeField] private Color regionBridgeColor;
         [SerializeField] private Color regionNeighbourColor;
         [SerializeField] private Color regionOverlayColor;
+        [SerializeField] private Color regionFurnitureColor;
 
         private Tile selectedTile;
 
@@ -86,6 +87,15 @@ namespace ColonyZ.Controllers.Dev
                 meshColors[vertIndex + 3] = regionOverlayColor;
             }
 
+            foreach (var tile in _region.Furniture)
+            {
+                var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
+                meshColors[vertIndex] = regionFurnitureColor;
+                meshColors[vertIndex + 1] = regionFurnitureColor;
+                meshColors[vertIndex + 2] = regionFurnitureColor;
+                meshColors[vertIndex + 3] = regionFurnitureColor;
+            }
+
             if (drawNeighbours)
             {
                 foreach (var link in _region.Links)
@@ -100,6 +110,15 @@ namespace ColonyZ.Controllers.Dev
                         meshColors[vertIndex + 1] = regionNeighbourColor;
                         meshColors[vertIndex + 2] = regionNeighbourColor;
                         meshColors[vertIndex + 3] = regionNeighbourColor;
+                    }
+                    
+                    foreach (var tile in neighbour.Furniture)
+                    {
+                        var vertIndex = (tile.X * World.Instance.Width + tile.Y) * 4;
+                        meshColors[vertIndex] = regionFurnitureColor;
+                        meshColors[vertIndex + 1] = regionFurnitureColor;
+                        meshColors[vertIndex + 2] = regionFurnitureColor;
+                        meshColors[vertIndex + 3] = regionFurnitureColor;
                     }
                 }
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ColonyZ.Models.Map.Areas;
 using ColonyZ.Models.Map.Tiles;
+using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Utils;
 
 namespace ColonyZ.Models.Map.Regions
@@ -98,11 +99,12 @@ namespace ColonyZ.Models.Map.Regions
                     CreateRegion(new List<Tile> {tile});
                     continue;
                 }
-
+                
                 FloodFiller.Flood(tile,
                     t => t != null
                          && _chunk.Contains(t)
-                         && t.GetEnterability() == TileEnterability.Immediate,
+                         && (t.HasObject && t.Object is FurnitureObject ||
+                             t.GetEnterability() == TileEnterability.Immediate),
                     t => t != null,
                     CreateRegion);
             }

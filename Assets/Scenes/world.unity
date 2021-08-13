@@ -7240,6 +7240,7 @@ MonoBehaviour:
   regionBridgeColor: {r: 0.03756237, g: 0, b: 1, a: 0.3529412}
   regionNeighbourColor: {r: 1, g: 1, b: 1, a: 0.09803922}
   regionOverlayColor: {r: 0, g: 1, b: 0.12042332, a: 0.09803922}
+  regionFurnitureColor: {r: 0.5660378, g: 0, b: 1, a: 0.3529412}
 --- !u!1 &1563564460
 GameObject:
   m_ObjectHideFlags: 0
@@ -9257,9 +9258,9 @@ MonoBehaviour:
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   worldSize:
-    <Name>k__BackingField: Medium
-    <Width>k__BackingField: 192
-    <Height>k__BackingField: 192
+    <Name>k__BackingField: Tiny
+    <Width>k__BackingField: 48
+    <Height>k__BackingField: 48
   enableWorldGen: 1
   overrideSeed: 0
   seed: 42736
