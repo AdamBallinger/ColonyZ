@@ -6,22 +6,13 @@ using ColonyZ.Models.Entities.Living;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
+using ColonyZ.Models.TimeSystem;
 
 namespace ColonyZ.Models.AI.Jobs
 {
     public class JobManager
     {
         public static JobManager Instance { get; private set; }
-
-        /// <summary>
-        ///     Flag to determine if the manager is allowed to evaluate jobs in error state.
-        /// </summary>
-        private bool canEvaluateErrored = true;
-
-        /// <summary>
-        ///     List of chunks required to be able to evaluate error state jobs again.
-        /// </summary>
-        private List<WorldChunk> requiredChunks;
 
         /// <summary>
         ///     Total number of current jobs.
@@ -59,6 +50,11 @@ namespace ColonyZ.Models.AI.Jobs
         /// </summary>
         public event Action<Job> jobCompletedEvent;
 
+        /// <summary>
+        ///     Current time in seconds since last checked error jobs. This only gets used when there are 0 idle jobs.
+        /// </summary>
+        private float currentErrorCheckTime;
+
         private JobManager()
         {
         }
@@ -74,7 +70,6 @@ namespace ColonyZ.Models.AI.Jobs
 
         public static void Destroy()
         {
-            World.Instance.WorldGrid.chunkModifiedEvent -= Instance.OnChunkModified;
             World.Instance.onEntityRemoved -= Instance.OnEntityRemoved;
             Instance = null;
         }
@@ -83,26 +78,14 @@ namespace ColonyZ.Models.AI.Jobs
         {
             Jobs = new List<Job>();
             jobNoAccessMap = new Dictionary<Job, List<HumanEntity>>();
-            requiredChunks = new List<WorldChunk>();
 
-            World.Instance.WorldGrid.chunkModifiedEvent += OnChunkModified;
             World.Instance.onEntityRemoved += OnEntityRemoved;
-        }
-
-        private void OnChunkModified(WorldChunk _chunk)
-        {
-            // TODO: Broke, as it means it only checks again if the chunk the jobs are in changed..
-            //if (requiredChunks.Contains(_chunk))
-            {
-                canEvaluateErrored = true;
-            }
         }
 
         private void OnEntityRemoved(Entity _entity)
         {
-            if (!(_entity is HumanEntity)) return;
-
-            var human = (HumanEntity) _entity;
+            if (!(_entity is HumanEntity human)) return;
+            
             if (human.HasJob)
             {
                 var job = human.CurrentJob;
@@ -117,6 +100,7 @@ namespace ColonyZ.Models.AI.Jobs
         /// <param name="_completedJob"></param>
         private void OnJobFinished(Job _completedJob)
         {
+            jobNoAccessMap.Remove(_completedJob);
             Jobs.Remove(_completedJob);
             _completedJob.TargetTile.CurrentJob = null;
             _completedJob.OnComplete();
@@ -129,13 +113,7 @@ namespace ColonyZ.Models.AI.Jobs
         /// </summary>
         private void EvaluateErrorJobs()
         {
-            if (!canEvaluateErrored) return;
-
-            requiredChunks.Clear();
-
             var entities = World.Instance.Characters;
-
-            var anyChanged = false;
 
             foreach (var job in Jobs)
             {
@@ -162,27 +140,12 @@ namespace ColonyZ.Models.AI.Jobs
                             }
                         }
                     }
-
-                    // Add all chunks around the target tile to the required list if it
-                    // can't be reached.
-                    foreach (var tile in job.TargetTile.DirectNeighbours)
-                    {
-                        var chunk = World.Instance.WorldGrid.GetChunkAt(tile);
-                        if (requiredChunks.Contains(chunk)) continue;
-                        requiredChunks.Add(chunk);
-                    }
                 }
 
                 if (isJobReachable && job.State != JobState.Active)
                 {
-                    anyChanged = true;
                     SetJobState(job, JobState.Idle);
                 }
-            }
-
-            if (!anyChanged)
-            {
-                canEvaluateErrored = false;
             }
         }
 
@@ -213,6 +176,20 @@ namespace ColonyZ.Models.AI.Jobs
                     OnJobFinished(job);
                 }
             }
+            
+            // Auto check jobs in error state every second if there are no idle jobs available. Hacky but works..
+            if (IdleCount == 0)
+            {
+                currentErrorCheckTime += TimeManager.Instance.UnscaledDeltaTime;
+                
+                if (currentErrorCheckTime >= 1.0f)
+                {
+                    EvaluateErrorJobs();
+                    currentErrorCheckTime = 0.0f;
+                }
+                
+                return;
+            }
 
             // TODO: Only get players entities in future.
             var entities = World.Instance.Characters;
@@ -221,9 +198,9 @@ namespace ColonyZ.Models.AI.Jobs
             {
                 if (job.State != JobState.Idle) continue;
 
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var t in entities)
                 {
-                    var entity = entities[i] as HumanEntity;
+                    var entity = t as HumanEntity;
                     if (entity == null) continue;
                     if (entity.HasJob) continue;
 
@@ -279,7 +256,7 @@ namespace ColonyZ.Models.AI.Jobs
             foreach (var tile in _tiles)
             {
                 if (tile.GetEnterability() == TileEnterability.None) continue;
-                if (entityTile.Area == null) continue;
+                //if (entityTile.Area == null) continue;
                 if (!RegionReachabilityChecker.CanReachRegion(entityTile.Region, tile.Region)) continue;
 
                 var dist = (entityTile.Position - tile.Position).sqrMagnitude;
@@ -301,8 +278,7 @@ namespace ColonyZ.Models.AI.Jobs
         {
             if (jobNoAccessMap[_job].Contains(_entity)) return;
             jobNoAccessMap[_job].Add(_entity);
-
-            // Experimental
+            
             SetJobState(_job, jobNoAccessMap[_job].Count >= World.Instance.Characters.Count
                 ? JobState.Error
                 : JobState.Idle);
@@ -349,7 +325,6 @@ namespace ColonyZ.Models.AI.Jobs
         {
             Jobs.Remove(_job);
             jobNoAccessMap.Remove(_job);
-            // Don't use job.OnComplete here as it actually performs the jobs action.
             _job.AssignedEntity?.SetJob(null, true);
             _job.TargetTile.CurrentJob = null;
             _job.OnCancelled();

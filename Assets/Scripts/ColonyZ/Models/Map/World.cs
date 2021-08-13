@@ -92,9 +92,9 @@ namespace ColonyZ.Models.Map
             Instance.Overlay = new Overlay(Instance);
             NodeGraph.Create();
             ZoneManager.Create();
-            JobManager.Create();
             RegionManager.Create();
             AreaManager.Create();
+            JobManager.Create();
             Instance.Overlay.Init();
         }
 
