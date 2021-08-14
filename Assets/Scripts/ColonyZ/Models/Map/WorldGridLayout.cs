@@ -24,79 +24,158 @@ namespace ColonyZ.Models.Map
             Chunks = new List<WorldChunk>();
         }
 
+        /// <summary>
+        ///     Sets dirty status of the chunk at given tiles position to the given state.
+        /// </summary>
+        /// <param name="_tile"></param>
+        /// <param name="_dirty"></param>
         public void SetDirty(Tile _tile, bool _dirty)
         {
             var source = GetChunkAt(_tile);
             source.SetDirty(_dirty);
-            
-            // TODO: This needs to be improved so that only neighbours that need marking dirty are done so.
-            foreach (var chunk in GetChunkNeighbours(source))
+
+            // The bottom left world coordinate of the source chunk.
+            var sourceNearX = source.X * CHUNK_SIZE;
+            var sourceNearY = source.Y * CHUNK_SIZE;
+            // The top right world coordinate of the source chunk.
+            var sourceFarX = sourceNearX + CHUNK_SIZE - 1;
+            var sourceFarY = sourceNearY + CHUNK_SIZE - 1;
+
+            if (_tile.X == sourceNearX && _tile.Y > sourceNearY && _tile.Y < sourceFarY)
             {
-                chunk.SetDirty(_dirty);
+                // West chunk
+                GetChunkAt(source.X - 1, source.Y)?.SetDirty(_dirty);
+            }
+            else if (_tile.X == sourceNearX && _tile.Y == sourceFarY)
+            {
+                // West and North chunks
+                GetChunkAt(source.X - 1, source.Y)?.SetDirty(_dirty);
+                GetChunkAt(source.X, source.Y + 1)?.SetDirty(_dirty);
+            }
+            else if (_tile.X > sourceNearX && _tile.X < sourceFarX && _tile.Y == sourceFarY)
+            {
+                // North chunk
+                GetChunkAt(source.X, source.Y + 1)?.SetDirty(_dirty);
+            }
+            else if (_tile.X == sourceFarX && _tile.Y == sourceFarY)
+            {
+                // East and North chunks
+                GetChunkAt(source.X + 1, source.Y)?.SetDirty(_dirty);
+                GetChunkAt(source.X, source.Y + 1)?.SetDirty(_dirty);
+            }
+            else if (_tile.X == sourceFarX && _tile.Y < sourceFarY && _tile.Y > sourceNearY)
+            {
+                // East chunk
+                GetChunkAt(source.X + 1, source.Y)?.SetDirty(_dirty);
+            }
+            else if (_tile.X == sourceFarX && _tile.Y == sourceNearY)
+            {
+                // East and South chunks
+                GetChunkAt(source.X + 1, source.Y)?.SetDirty(_dirty);
+                GetChunkAt(source.X, source.Y - 1)?.SetDirty(_dirty);
+            }
+            else if (_tile.X > sourceNearX && _tile.X < sourceFarX && _tile.Y == sourceNearY)
+            {
+                // South chunk
+                GetChunkAt(source.X, source.Y - 1)?.SetDirty(_dirty);
+            }
+            else if (_tile.X == sourceNearX && _tile.Y == sourceNearY)
+            {
+                // West and South chunk
+                GetChunkAt(source.X - 1, source.Y)?.SetDirty(_dirty);
+                GetChunkAt(source.X, source.Y - 1)?.SetDirty(_dirty);
             }
         }
 
-        private WorldChunk GetChunkAt(int _x, int _y)
+        /// <summary>
+        ///     Returns chunk at given world space position.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <returns></returns>
+        private WorldChunk GetChunkAtWorldPos(int _x, int _y)
         {
             var cX = _x / CHUNK_SIZE;
             var cY = _y / CHUNK_SIZE;
             return Chunks.Find(c => c.X == cX && c.Y == cY);
         }
 
+        /// <summary>
+        ///     Returns chunk at given chunk space position.
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <returns></returns>
+        private WorldChunk GetChunkAt(int _x, int _y)
+        {
+            return Chunks.Find(c => c.X == _x && c.Y == _y);
+        }
+
+        /// <summary>
+        ///     Returns chunk found at center of the world.
+        /// </summary>
+        /// <returns></returns>
         public WorldChunk GetCenterChunk()
         {
-            return GetChunkAt(world.Width / 2, world.Height / 2);
+            return GetChunkAtWorldPos(world.Width / 2, world.Height / 2);
         }
 
+        /// <summary>
+        ///     Returns chunk at given tiles position.
+        /// </summary>
+        /// <param name="_tile"></param>
+        /// <returns></returns>
         public WorldChunk GetChunkAt(Tile _tile)
         {
-            return GetChunkAt(_tile.X, _tile.Y);
+            return GetChunkAtWorldPos(_tile.X, _tile.Y);
         }
 
+        /// <summary>
+        ///     Returns if the given tile is inside the central world chunk.
+        /// </summary>
+        /// <param name="_tile"></param>
+        /// <returns></returns>
         public bool IsInCenterChunk(Tile _tile)
         {
             return GetCenterChunk().Contains(_tile);
         }
 
-        public List<WorldChunk> GetChunkNeighbours(WorldChunk _chunk)
-        {
-            var chunks = new List<WorldChunk>();
-
-            foreach (var chunk in Chunks)
-            {
-                var cdx = Math.Abs(_chunk.X - chunk.X);
-                var cdy = Math.Abs(_chunk.Y - chunk.Y);
-                if (cdx == 1 && cdy == 0 || cdx == 0 && cdy == 1)
-                {
-                    chunks.Add(chunk);
-                }
-            }
-
-            return chunks;
-        }
-
+        /// <summary>
+        ///     Notify the world grid that the given tile has changed, raising the chunk modified event.
+        /// </summary>
+        /// <param name="_tile"></param>
         public void NotifyChunkUpdate(Tile _tile)
         {
             chunkModifiedEvent?.Invoke(GetChunkAt(_tile));
         }
 
+        /// <summary>
+        ///     Rebuilds all chunks marked as dirty.
+        /// </summary>
         public void RebuildDirty()
         {
             var shouldNotify = false;
+            var count = 0;
             foreach (var chunk in Chunks)
             {
                 if (chunk.IsDirty)
                 {
+                    count++;
                     shouldNotify = true;
                     RegionManager.Instance.UpdateChunk(chunk);
                     chunk.SetDirty(false);
                 }
             }
-            
+
             if (shouldNotify)
+            {
                 RegionManager.Instance.NotifyRegionsUpdated();
+            }
         }
 
+        /// <summary>
+        ///     Builds initial world grid.
+        /// </summary>
         public void BuildWorldGrid()
         {
             if (Chunks.Count > 0) return;
