@@ -15,10 +15,9 @@ namespace ColonyZ.Controllers.Dev
         [SerializeField] private GameObject pathDebugRoot;
 
         [SerializeField] private TMP_Text pathQueueText;
-
-        private Tile pathStart, pathEnd;
         [SerializeField] private TMP_Text pathTestText;
-        [SerializeField] private TMP_Text regionalStatusText;
+        
+        private Tile pathStart, pathEnd;
 
         private void Start()
         {
@@ -33,11 +32,6 @@ namespace ColonyZ.Controllers.Dev
             lineRenderer.startColor = Color.green;
             lineRenderer.endColor = Color.red;
 
-            var state = PathFinder.Instance.UseRegionalPathfinding;
-            regionalStatusText.text = state
-                ? "Regional Pathing: <color=green>ON</color>"
-                : "Regional Pathing: <color=red>OFF</color>";
-            
             pathDebugRoot.SetActive(enabled);
         }
 
@@ -53,16 +47,6 @@ namespace ColonyZ.Controllers.Dev
         {
             pathQueueText.text = $"Queued Paths: {PathFinder.Instance.TaskCount.ToString()}\n" +
                                  $"Characters: {World.Instance.Characters.Count}";
-        }
-
-        public void ToggleRegionalPathing()
-        {
-            var state = PathFinder.Instance.UseRegionalPathfinding =
-                !PathFinder.Instance.UseRegionalPathfinding;
-            regionalStatusText.text = state
-                ? "Regional Pathing: <color=green>ON</color>"
-                : "Regional Pathing: <color=red>OFF</color>";
-            RequestPath();
         }
 
         public void Toggle()

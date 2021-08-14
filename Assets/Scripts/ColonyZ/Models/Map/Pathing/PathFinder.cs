@@ -13,8 +13,6 @@ namespace ColonyZ.Models.Map.Pathing
     {
         public static PathFinder Instance { get; private set; }
 
-        public bool UseRegionalPathfinding { get; set; }
-
         public int TaskCount => taskList.Count;
 
         private List<Task<PathResult>> taskList;
@@ -81,14 +79,6 @@ namespace ColonyZ.Models.Map.Pathing
 
             PathResult result;
 
-            var regionPath = UseRegionalPathfinding ? GetRegionPath(_request) : null;
-            if (UseRegionalPathfinding && regionPath == null)
-            {
-                sw.Stop();
-                result = new PathResult(_request, new Path(null, false, sw.ElapsedMilliseconds));
-                return Task.FromResult(result);
-            }
-
             var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
             var nodeClosedSet = new HashSet<Node>();
 
@@ -117,12 +107,6 @@ namespace ColonyZ.Models.Map.Pathing
 
                 foreach (var node in currentNode.Neighbours)
                 {
-                    if (UseRegionalPathfinding)
-                    {
-                        var tile = World.Instance.GetTileAt(node.X, node.Y);
-                        if (!regionPath.Contains(tile.Region)) continue;
-                    }
-
                     if (!node.Pathable || nodeClosedSet.Contains(node)) continue;
 
                     var movementCostToNeighbour =
