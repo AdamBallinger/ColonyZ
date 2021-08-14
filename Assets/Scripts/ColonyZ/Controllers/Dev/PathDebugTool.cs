@@ -26,9 +26,12 @@ namespace ColonyZ.Controllers.Dev
             {
                 if (_btn == MouseButton.RightMouse) MouseClick(_tile, _ui);
             };
-            lineRenderer.startWidth = 1.0f;
-            lineRenderer.endWidth = 1.0f;
-            lineRenderer.widthMultiplier = 0.2f;
+
+            lineRenderer.positionCount = 0;
+            lineRenderer.startWidth = 0.2f;
+            lineRenderer.endWidth = 0.2f;
+            lineRenderer.startColor = Color.green;
+            lineRenderer.endColor = Color.red;
 
             var state = PathFinder.Instance.UseRegionalPathfinding;
             regionalStatusText.text = state
@@ -119,10 +122,6 @@ namespace ColonyZ.Controllers.Dev
             }
 
             lineRenderer.SetPositions(vectors);
-            lineRenderer.startWidth = 0.2f;
-            lineRenderer.endWidth = 0.2f;
-            lineRenderer.startColor = Color.green;
-            lineRenderer.endColor = Color.red;
         }
 
         private void OnDrawGizmos()
