@@ -142,6 +142,24 @@ namespace ColonyZ.Models.AI
             CalculateMotorDirection(Vector2.Dot(Vector2.up, direction));
         }
 
+        public void FaceTile(Tile _tile)
+        {
+            if (_tile == null) return;
+
+            var entityX = Entity.CurrentTile.X;
+            var entityY = Entity.CurrentTile.Y;
+
+            if (entityX == _tile.X)
+            {
+                MotorDirection = entityY < _tile.Y ? AIMotorDirection.Up : AIMotorDirection.Down;
+            }
+
+            if (entityY == _tile.Y)
+            {
+                MotorDirection = entityX < _tile.X ? AIMotorDirection.Right : AIMotorDirection.Left;
+            }
+        }
+
         private void CalculateMotorDirection(float _angle)
         {
             if (_angle > 0.75f)

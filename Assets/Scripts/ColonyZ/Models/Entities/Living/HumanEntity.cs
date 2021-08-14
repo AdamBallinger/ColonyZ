@@ -71,9 +71,20 @@ namespace ColonyZ.Models.Entities.Living
                 RecalculateWorkingTile();
             }
 
-            currentCardinalCheckTime += TimeManager.Instance.UnscaledDeltaTime;
-            CurrentJob?.Update();
-            previousJobCardinal = currentJobCardinal;
+            if (CurrentJob != null)
+            {
+                if (Position == CurrentJob.WorkingTile.Position)
+                {
+                    Motor.FaceTile(CurrentJob.TargetTile);
+                }
+                else
+                {
+                    currentCardinalCheckTime += TimeManager.Instance.UnscaledDeltaTime;
+                    previousJobCardinal = currentJobCardinal;
+                }
+                
+                CurrentJob.Update();
+            }
         }
 
         public override void OnPathFailed()
