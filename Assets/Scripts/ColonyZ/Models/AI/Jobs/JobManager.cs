@@ -125,19 +125,19 @@ namespace ColonyZ.Models.AI.Jobs
                 {
                     var humanEntity = livingEntity as HumanEntity;
                     if (humanEntity == null) continue;
-
+                
                     if (CanEntityReachJob(humanEntity, job))
                     {
                         isJobReachable = true;
-
+                
                         if (jobNoAccessMap[job].Contains(humanEntity))
                         {
                             jobNoAccessMap[job].Remove(humanEntity);
-                            if (!humanEntity.HasJob)
-                            {
-                                AssignEntityJob(humanEntity, job);
-                                break;
-                            }
+                            // if (!humanEntity.HasJob)
+                            // {
+                            //     AssignEntityJob(humanEntity, job);
+                            //     break;
+                            // }
                         }
                     }
                 }
@@ -191,38 +191,14 @@ namespace ColonyZ.Models.AI.Jobs
                 return;
             }
 
-            // TODO: Only get players entities in future.
-            var entities = World.Instance.Characters;
-
             foreach (var job in Jobs)
             {
                 if (job.State != JobState.Idle) continue;
 
-                foreach (var t in entities)
+                var entity = GetClosestEntity(job);
+                if (entity != null)
                 {
-                    var entity = t as HumanEntity;
-                    if (entity == null) continue;
-                    if (entity.HasJob) continue;
-
-                    if (jobNoAccessMap[job].Contains(entity))
-                    {
-                        if (CanEntityReachJob(entity, job))
-                        {
-                            jobNoAccessMap[job].Remove(entity);
-                            AssignEntityJob(entity, job);
-                            break;
-                        }
-
-                        continue;
-                    }
-
-                    if (CanEntityReachJob(entity, job))
-                    {
-                        AssignEntityJob(entity, job);
-                        break;
-                    }
-
-                    NotifyWorkerCantReachJob(entity, job);
+                    AssignEntityJob(entity, job);
                 }
             }
         }
@@ -255,14 +231,13 @@ namespace ColonyZ.Models.AI.Jobs
 
             foreach (var tile in _tiles)
             {
-                if (tile.GetEnterability() == TileEnterability.None) continue;
-                //if (entityTile.Area == null) continue;
+                if (tile.GetEnterability() != TileEnterability.Immediate) continue;
                 if (!RegionReachabilityChecker.CanReachRegion(entityTile.Region, tile.Region)) continue;
 
-                var dist = (entityTile.Position - tile.Position).sqrMagnitude;
-
-                // Make tiles that have a job assigned appear more expensive.
-                if (tile.CurrentJob != null) dist += 10000.0f;
+                // Avoid using tiles that have jobs assigned.
+                var dist = tile.CurrentJob == null
+                    ? (entityTile.Position - tile.Position).sqrMagnitude
+                    : float.MaxValue;
 
                 if (dist < closestDist)
                 {
@@ -282,6 +257,44 @@ namespace ColonyZ.Models.AI.Jobs
             SetJobState(_job, jobNoAccessMap[_job].Count >= World.Instance.Characters.Count
                 ? JobState.Error
                 : JobState.Idle);
+        }
+
+        /// <summary>
+        ///     Returns the closest entity that can reach the given job.
+        /// </summary>
+        /// <param name="_job"></param>
+        /// <returns></returns>
+        private HumanEntity GetClosestEntity(Job _job)
+        {
+            // TODO: Only get players entities in future.
+            var entities = World.Instance.Characters;
+            
+            HumanEntity closestEntity = null;
+            var closestDist = float.MaxValue;
+            foreach (var t in entities)
+            {
+                var entity = t as HumanEntity;
+                if (entity == null) continue;
+                if (entity.HasJob) continue;
+
+                if (CanEntityReachJob(entity, _job))
+                {
+                    if (jobNoAccessMap[_job].Contains(entity)) jobNoAccessMap[_job].Remove(entity);
+                        
+                    var dist = (entity.Position - _job.TargetTile.Position).sqrMagnitude;
+                    if (dist < closestDist)
+                    {
+                        closestEntity = entity;
+                        closestDist = dist;
+                    }
+                }
+                else
+                {
+                    NotifyWorkerCantReachJob(entity, _job);
+                }
+            }
+
+            return closestEntity;
         }
 
         private bool CanEntityReachJob(Entity _entity, Job _job)
