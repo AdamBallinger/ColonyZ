@@ -34,6 +34,8 @@ namespace ColonyZ.Controllers.Dev
             regionalStatusText.text = state
                 ? "Regional Pathing: <color=green>ON</color>"
                 : "Regional Pathing: <color=red>OFF</color>";
+            
+            pathDebugRoot.SetActive(enabled);
         }
 
         private void OnDisable()
@@ -41,7 +43,7 @@ namespace ColonyZ.Controllers.Dev
             pathQueueText.text = string.Empty;
             pathTestText.text = string.Empty;
 
-            lineRenderer.SetPositions(null);
+            lineRenderer.positionCount = 0;
         }
 
         private void Update()
@@ -62,8 +64,9 @@ namespace ColonyZ.Controllers.Dev
 
         public void Toggle()
         {
-            pathDebugRoot.SetActive(!pathDebugRoot.activeSelf);
-            if (!pathDebugRoot.activeSelf) OnDisable();
+            enabled = !enabled;
+            pathDebugRoot.SetActive(enabled);
+            if (enabled) OnDisable();
         }
 
         private void MouseClick(Tile _tile, bool _ui)
@@ -100,7 +103,7 @@ namespace ColonyZ.Controllers.Dev
                 lineRenderer.positionCount = 0;
                 return;
             }
-
+            
             pathTestText.text = $"Compute time: {_p.ComputeTime}ms\n" +
                                 $"Path length: {_p.SmoothSize}";
 
@@ -116,6 +119,10 @@ namespace ColonyZ.Controllers.Dev
             }
 
             lineRenderer.SetPositions(vectors);
+            lineRenderer.startWidth = 0.1f;
+            lineRenderer.endWidth = 0.1f;
+            lineRenderer.startColor = Color.green;
+            lineRenderer.endColor = Color.red;
         }
 
         private void OnDrawGizmos()
