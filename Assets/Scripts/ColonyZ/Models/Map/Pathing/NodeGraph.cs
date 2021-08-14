@@ -12,7 +12,7 @@ namespace ColonyZ.Models.Map.Pathing
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        private Node[,] Nodes { get; set; }
+        private Node[] Nodes { get; set; }
 
         private NodeGraph()
         {
@@ -29,7 +29,7 @@ namespace ColonyZ.Models.Map.Pathing
                 Height = World.Instance.Height
             };
 
-            Instance.Nodes = new Node[Instance.Width, Instance.Height];
+            Instance.Nodes = new Node[Instance.Width * Instance.Height];
 
             Instance.BuildFullGraph();
 
@@ -51,7 +51,7 @@ namespace ColonyZ.Models.Map.Pathing
 
             for (var x = 0; x < Width; x++)
             for (var y = 0; y < Height; y++)
-                Nodes[x, y] = new Node(nodeID++,
+                Nodes[x * Width + y] = new Node(nodeID++,
                     x,
                     y,
                     1.0f,
@@ -79,7 +79,7 @@ namespace ColonyZ.Models.Map.Pathing
                     if (y < 0 || y >= Height) continue;
 
                     var tile = World.Instance.GetTileAt(x, y);
-                    Nodes[x, y].Pathable = tile.GetEnterability() != TileEnterability.None;
+                    Nodes[x * Width + y].Pathable = tile.GetEnterability() != TileEnterability.None;
                 }
             }
 
@@ -111,12 +111,12 @@ namespace ColonyZ.Models.Map.Pathing
         {
             if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
 
-            return Nodes[_x, _y];
+            return Nodes[_x * Width + _y];
         }
 
         public Node GetNodeAt(int _index)
         {
-            return Nodes[_index / Width, _index % Height];
+            return Nodes[_index];
         }
 
         public void RegisterGraphUpdateCallback(Action _callback)
