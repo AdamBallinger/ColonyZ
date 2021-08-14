@@ -1316,10 +1316,10 @@ LineRenderer:
       m_Mode: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 2
+    numCapVertices: 2
     alignment: 1
-    textureMode: 1
+    textureMode: 2
     shadowBias: 0
     generateLightingData: 0
   m_UseWorldSpace: 1
@@ -9268,9 +9268,9 @@ MonoBehaviour:
     type: 3}
   objectsMaterial: {fileID: 2100000, guid: 9a011744bf69b7a41ab3e5a3b3f57b03, type: 2}
   worldSize:
-    <Name>k__BackingField: Tiny
-    <Width>k__BackingField: 48
-    <Height>k__BackingField: 48
+    <Name>k__BackingField: Mini
+    <Width>k__BackingField: 16
+    <Height>k__BackingField: 16
   enableWorldGen: 1
   overrideSeed: 0
   seed: 42736

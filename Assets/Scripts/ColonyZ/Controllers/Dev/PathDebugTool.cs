@@ -119,8 +119,8 @@ namespace ColonyZ.Controllers.Dev
             }
 
             lineRenderer.SetPositions(vectors);
-            lineRenderer.startWidth = 0.1f;
-            lineRenderer.endWidth = 0.1f;
+            lineRenderer.startWidth = 0.2f;
+            lineRenderer.endWidth = 0.2f;
             lineRenderer.startColor = Color.green;
             lineRenderer.endColor = Color.red;
         }
