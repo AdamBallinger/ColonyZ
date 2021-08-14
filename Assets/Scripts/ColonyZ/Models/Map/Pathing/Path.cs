@@ -8,7 +8,7 @@ namespace ColonyZ.Models.Map.Pathing
         /// <summary>
         ///     The number of additional points to add in-between each tile in the path.
         /// </summary>
-        private const int NUMBER_OF_SMOOTHING_POINTS = 4;
+        private const int NUMBER_OF_SMOOTHING_POINTS = 2;
 
         public bool IsValid { get; private set; }
 
