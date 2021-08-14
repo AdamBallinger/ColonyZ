@@ -18,8 +18,8 @@ MonoBehaviour:
   smartObject: 1
   buildable: 0
   rotatable: 0
-  enclosesRoom: 1
   objectWidth: 1
   objectHeight: 1
   enterability: 1
   gatherType: 1
+  gatherTime: 5

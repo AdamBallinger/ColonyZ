@@ -7,6 +7,13 @@ namespace ColonyZ.Models.Map.Tiles.Objects.Data
     {
         [SerializeField] private GatherMode gatherType;
 
+        [SerializeField] private float gatherTime = 1.0f;
+
         public GatherMode GatherType => gatherType;
+
+        /// <summary>
+        ///     Time in seconds it takes to gather the object.
+        /// </summary>
+        public float GatherTime => gatherTime;
     }
 }

@@ -17,6 +17,7 @@ namespace ColonyZ.Models.AI.Jobs
             {
                 gatherableData = data;
                 JobName = $"{gatherableData.GatherType}: {gatherableData.ObjectName}";
+                WorkTime = gatherableData.GatherTime;
             }
         }
 
