@@ -49,9 +49,10 @@ namespace ColonyZ.Models.Map.Pathing
         /// <param name="_start"></param>
         /// <param name="_end"></param>
         /// <param name="_onCompleteCallback"></param>
-        public static void NewRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback)
+        /// <param name="_removeStart"></param>
+        public static void NewRequest(Tile _start, Tile _end, Action<Path> _onCompleteCallback, bool _removeStart = true)
         {
-            Instance?.Queue(new PathRequest(_start, _end, _onCompleteCallback));
+            Instance?.Queue(new PathRequest(_start, _end, _onCompleteCallback, _removeStart));
         }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace ColonyZ.Models.Map.Pathing
                         {
                             list.Add(NodeGraph.Instance.GetNodeAt(result[j]));
                         }
-                        request.onPathCompleteCallback?.Invoke(new Path(list, true, 0.0f));
+                        request.onPathCompleteCallback?.Invoke(new Path(list, true, 0.0f, request.RemoveStart));
                     }
 
                     job.graph.Dispose();

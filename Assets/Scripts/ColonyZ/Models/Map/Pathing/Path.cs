@@ -39,7 +39,7 @@ namespace ColonyZ.Models.Map.Pathing
 
         private List<Vector2> VectorPath { get; }
 
-        public Path(List<Node> _nodePath, bool _isValid, float _computeTime)
+        public Path(List<Node> _nodePath, bool _isValid, float _computeTime, bool _removeStart)
         {
             SmoothPath = new List<Vector2>();
             VectorPath = new List<Vector2>();
@@ -50,8 +50,10 @@ namespace ColonyZ.Models.Map.Pathing
             if (IsValid)
             {
                 Nodes = _nodePath;
+                
+                if (_removeStart) Nodes.RemoveAt(0);
 
-                foreach (var node in _nodePath)
+                foreach (var node in Nodes)
                 {
                     node.Paths.Add(this);
                     VectorPath.Add(new Vector2(node.Data.X, node.Data.Y));

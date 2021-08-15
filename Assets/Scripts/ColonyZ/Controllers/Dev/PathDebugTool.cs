@@ -80,7 +80,7 @@ namespace ColonyZ.Controllers.Dev
         private void RequestPath()
         {
             if (pathStart == null || pathEnd == null) return;
-            PathFinder.NewRequest(pathStart, pathEnd, OnPath);
+            PathFinder.NewRequest(pathStart, pathEnd, OnPath, false);
         }
 
         private void OnPath(Path _p)
