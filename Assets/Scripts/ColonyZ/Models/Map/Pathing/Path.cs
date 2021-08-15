@@ -54,7 +54,7 @@ namespace ColonyZ.Models.Map.Pathing
                 foreach (var node in _nodePath)
                 {
                     node.Paths.Add(this);
-                    VectorPath.Add(new Vector2(node.X, node.Y));
+                    VectorPath.Add(new Vector2(node.Data.X, node.Data.Y));
                 }
 
                 const float resolution = 1.0f / NUMBER_OF_SMOOTHING_POINTS;

@@ -12,7 +12,8 @@ namespace ColonyZ.Models.Map.Pathing
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        private Node[] Nodes { get; set; }
+        public Node[] Nodes { get; private set; }
+        public NodeData[] NodeData { get; private set; }
 
         private NodeGraph()
         {
@@ -26,10 +27,11 @@ namespace ColonyZ.Models.Map.Pathing
             Instance = new NodeGraph
             {
                 Width = World.Instance.Width,
-                Height = World.Instance.Height
+                Height = World.Instance.Height,
             };
 
             Instance.Nodes = new Node[Instance.Width * Instance.Height];
+            Instance.NodeData = new NodeData[Instance.Nodes.Length];
 
             Instance.BuildFullGraph();
 
@@ -51,13 +53,14 @@ namespace ColonyZ.Models.Map.Pathing
 
             for (var x = 0; x < Width; x++)
             for (var y = 0; y < Height; y++)
+            {
                 Nodes[x * Width + y] = new Node(nodeID++,
                     x,
                     y,
                     1.0f,
                     World.Instance.GetTileAt(x, y).GetEnterability() != TileEnterability.None);
-
-            BuildNodeNeighbours();
+                NodeData[x * Width + y] = Nodes[x * Width + y].Data;
+            }
         }
 
         /// <summary>
@@ -79,7 +82,9 @@ namespace ColonyZ.Models.Map.Pathing
                     if (y < 0 || y >= Height) continue;
 
                     var tile = World.Instance.GetTileAt(x, y);
-                    Nodes[x * Width + y].Pathable = tile.GetEnterability() != TileEnterability.None;
+                    var data = new NodeData(x * Width + y, x, y, tile.GetEnterability() != TileEnterability.None);
+                    Nodes[x * Width + y].SetData(data);
+                    NodeData[x * Width + y] = data;
                 }
             }
 
@@ -96,11 +101,6 @@ namespace ColonyZ.Models.Map.Pathing
             UpdateGraph(_x, _y, _x, _y);
         }
 
-        private void BuildNodeNeighbours()
-        {
-            foreach (var node in Nodes) node.ComputeNeighbours();
-        }
-
         /// <summary>
         ///     Safely get a node at a given X and Y.
         /// </summary>
@@ -109,7 +109,7 @@ namespace ColonyZ.Models.Map.Pathing
         /// <returns></returns>
         public Node GetNodeAt(int _x, int _y)
         {
-            if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
+            if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return new Node(-1, 0, 0, 0, false);
 
             return Nodes[_x * Width + _y];
         }

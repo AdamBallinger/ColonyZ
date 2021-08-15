@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles;
-using Priority_Queue;
-using UnityEngine;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
 
 namespace ColonyZ.Models.Map.Pathing
 {
@@ -13,9 +11,12 @@ namespace ColonyZ.Models.Map.Pathing
     {
         public static PathFinder Instance { get; private set; }
 
-        public int TaskCount => taskList.Count;
-
-        private List<Task<PathResult>> taskList;
+        /// <summary>
+        ///     Number of path requests waiting to be processed.
+        /// </summary>
+        public int RequestCount => requestQueue.Count;
+        
+        private Queue<PathRequest> requestQueue;
 
         private PathFinder()
         {
@@ -28,12 +29,13 @@ namespace ColonyZ.Models.Map.Pathing
         {
             Instance = new PathFinder
             {
-                taskList = new List<Task<PathResult>>()
+                requestQueue = new Queue<PathRequest>()
             };
         }
 
         public static void Destroy()
         {
+            Instance?.Dispose();
             Instance = null;
         }
 
@@ -54,192 +56,58 @@ namespace ColonyZ.Models.Map.Pathing
         /// <param name="_request"></param>
         private void Queue(PathRequest _request)
         {
-            taskList.Add(Search(_request));
+            requestQueue.Enqueue(_request);
         }
-
-        /// <summary>
-        ///     Process the next path request in the queue.
-        /// </summary>
-        public async void ProcessNext()
+        
+        public void Update()
         {
-            if (taskList.Count == 0) return;
-
-            var task = await Task.WhenAny(taskList.ToArray());
-            taskList.Remove(task);
-            task.Result.InvokeCallback();
-        }
-
-        /// <summary>
-        ///     Performs A* search for a given path request.
-        /// </summary>
-        private Task<PathResult> Search(PathRequest _request)
-        {
-            var sw = new Stopwatch();
-            sw.Start();
-
-            PathResult result;
-
-            var nodeOpenSet = new FastPriorityQueue<Node>(NodeGraph.Instance.Width * NodeGraph.Instance.Height);
-            var nodeClosedSet = new HashSet<Node>();
-
-            var gCosts = new float[World.Instance.Size];
-            var hCosts = new float[World.Instance.Size];
-
-            var parents = new Node[World.Instance.Size];
-
-            hCosts[_request.Start.ID] = Heuristic(_request.Start, _request.End);
-
-            nodeOpenSet.Enqueue(_request.Start, hCosts[_request.Start.ID] + gCosts[_request.Start.ID]);
-
-            while (nodeOpenSet.Count != 0)
+            var tempGraph = new NativeArray<NodeData>(NodeGraph.Instance.NodeData, Allocator.TempJob);
+            
+            if (requestQueue.Count > 0)
             {
-                var currentNode = nodeOpenSet.Dequeue();
+                var request = requestQueue.Dequeue();
 
-                nodeClosedSet.Add(currentNode);
-
-                if (currentNode == _request.End)
+                var jobData = new PathFinderJob
                 {
-                    sw.Stop();
-                    result = new PathResult(_request,
-                        new Path(Retrace(currentNode, parents), true, sw.ElapsedMilliseconds));
-                    return Task.FromResult(result);
+                    startID = request.Start.Data.ID,
+                    endID = request.End.Data.ID,
+                    gridSize = new int2(NodeGraph.Instance.Width, NodeGraph.Instance.Height),
+                    graph = tempGraph,
+                    openSet = new NativeList<int>(Allocator.TempJob),
+                    closedSet = new NativeList<int>(Allocator.TempJob),
+                    path = new NativeList<int>(Allocator.TempJob),
+                    valid = new NativeArray<bool>(1, Allocator.TempJob)
+                };
+                
+                jobData.Schedule().Complete();
+
+                if (!jobData.valid[0])
+                {
+                    request.onPathCompleteCallback?.Invoke(null);
                 }
-
-                foreach (var node in currentNode.Neighbours)
+                else
                 {
-                    if (!node.Pathable || nodeClosedSet.Contains(node)) continue;
-
-                    var movementCostToNeighbour =
-                        gCosts[currentNode.ID] + Heuristic(currentNode, node) + node.MovementCost;
-
-                    if (movementCostToNeighbour < gCosts[node.ID] || !nodeOpenSet.Contains(node))
+                    var result = jobData.path;
+                    var list = new List<Node>();
+                    for (var i = result.Length - 1; i >= 0; i--)
                     {
-                        gCosts[node.ID] = movementCostToNeighbour;
-                        hCosts[node.ID] = Heuristic(node, _request.End);
-                        parents[node.ID] = currentNode;
-
-                        if (!nodeOpenSet.Contains(node))
-                            nodeOpenSet.Enqueue(node, gCosts[node.ID] + hCosts[node.ID]);
-                        else
-                            nodeOpenSet.UpdatePriority(node, gCosts[node.ID] + hCosts[node.ID]);
+                        list.Add(NodeGraph.Instance.GetNodeAt(result[i]));
                     }
-                }
-            }
-
-            sw.Stop();
-            // If every node was evaluated and the end node wasn't found, then invoke the callback with an invalid empty path.
-            result = new PathResult(_request, new Path(null, false, sw.ElapsedMilliseconds));
-            return Task.FromResult(result);
-        }
-
-        private HashSet<Region> GetRegionPath(PathRequest _request)
-        {
-            var path = new HashSet<Region>();
-
-            var origin = World.Instance.GetTileAt(_request.Start.X, _request.Start.Y).Region;
-            var target = World.Instance.GetTileAt(_request.End.X, _request.End.Y).Region;
-
-            if (origin == null || target == null) return null;
-
-            if (origin == target)
-            {
-                path.Add(origin);
-                return path;
-            }
-
-            var queue = new Queue<Region>();
-            var visited = new HashSet<Region>();
-            var parents = new Dictionary<Region, Region>();
-            queue.Enqueue(origin);
-            visited.Add(origin);
-            parents.Add(origin, null);
-
-            while (queue.Count > 0)
-            {
-                var region = queue.Dequeue();
-
-                if (region == target)
-                {
-                    path.Add(region);
-                    // retrace regions from region using the parent map.
-                    while (region != null)
-                    {
-                        path.Add(parents[region]);
-                        region = parents[region];
-                    }
-
-                    return path;
+                    request.onPathCompleteCallback?.Invoke(new Path(list, true, 0.0f));
                 }
 
-                foreach (var link in region.Links)
-                {
-                    var other = link.GetOther(region);
-                    if (other == null) continue;
-                    if (visited.Contains(other)) continue;
-
-                    queue.Enqueue(other);
-                    visited.Add(other);
-                    parents.Add(other, region);
-                }
+                jobData.openSet.Dispose();
+                jobData.closedSet.Dispose();
+                jobData.path.Dispose();
+                jobData.valid.Dispose();
             }
 
-            return path;
+            tempGraph.Dispose();
         }
 
-        /// <summary>
-        ///     Returns a list of nodes from path Start to End.
-        /// </summary>
-        /// <param name="_lastNode"></param>
-        /// <param name="_parents"></param>
-        /// <returns></returns>
-        private List<Node> Retrace(Node _lastNode, IReadOnlyList<Node> _parents)
+        private void Dispose()
         {
-            var list = new List<Node>
-            {
-                _lastNode
-            };
 
-            while (_parents[_lastNode.ID] != null)
-            {
-                list.Add(_parents[_lastNode.ID]);
-                _lastNode = _parents[_lastNode.ID];
-            }
-
-            list.Reverse();
-
-            return list;
-        }
-
-        /// <summary>
-        ///     Calculates nodes H cost using Manhattan distance.
-        /// </summary>
-        /// <param name="_node"></param>
-        /// <param name="_end"></param>
-        /// <returns></returns>
-        private float Heuristic(Node _node, Node _end)
-        {
-            float dx = Mathf.Abs(_node.X - _end.X);
-            float dy = Mathf.Abs(_node.Y - _end.Y);
-
-            //return 1.0f * (dx + dy) + (1.4f - 2.0f * 1.0f) * Mathf.Min(dx, dy);
-            return dx + dy;
-        }
-
-        private struct PathResult
-        {
-            private PathRequest request;
-            private Path path;
-
-            public PathResult(PathRequest _request, Path _path)
-            {
-                request = _request;
-                path = _path;
-            }
-
-            public void InvokeCallback()
-            {
-                request?.onPathCompleteCallback?.Invoke(path);
-            }
         }
     }
 }

@@ -1257,32 +1257,7 @@ LineRenderer:
   m_SortingLayerID: 1027192665
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Positions:
-  - {x: 8, y: 9, z: 0}
-  - {x: 8.0625, y: 8.5625, z: 0}
-  - {x: 8, y: 8, z: 0}
-  - {x: 7.5, y: 7.5, z: 0}
-  - {x: 7, y: 7, z: 0}
-  - {x: 7, y: 6.5, z: 0}
-  - {x: 7, y: 6, z: 0}
-  - {x: 6.5, y: 5.5, z: 0}
-  - {x: 6, y: 5, z: 0}
-  - {x: 5.9375, y: 4.5, z: 0}
-  - {x: 6, y: 4, z: 0}
-  - {x: 6, y: 3.5, z: 0}
-  - {x: 6, y: 3, z: 0}
-  - {x: 6, y: 2.5, z: 0}
-  - {x: 6, y: 2, z: 0}
-  - {x: 6.0625, y: 1.4375, z: 0}
-  - {x: 6, y: 1, z: 0}
-  - {x: 5.5625, y: 0.9375, z: 0}
-  - {x: 5, y: 1, z: 0}
-  - {x: 4.5, y: 1, z: 0}
-  - {x: 4, y: 1, z: 0}
-  - {x: 3.5, y: 1, z: 0}
-  - {x: 3, y: 1, z: 0}
-  - {x: 2.4375, y: 1, z: 0}
-  - {x: 2, y: 1, z: 0}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1.0352988
@@ -8821,7 +8796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataLoader: {fileID: 1523355955}
   shouldSaveLoad: 1
-  initialCharacterCount: 4
+  initialCharacterCount: 0
   treeSpawnChance: 6
   globalLight: {fileID: 1665810043}
   globalLightCurve:
