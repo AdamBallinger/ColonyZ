@@ -118,6 +118,7 @@ namespace ColonyZ.Models.AI.Jobs
             foreach (var job in Jobs)
             {
                 if (job.State != JobState.Error) continue;
+                if (!job.TargetTile.Accessible()) continue;
 
                 var isJobReachable = false;
 
@@ -322,7 +323,7 @@ namespace ColonyZ.Models.AI.Jobs
 
             Jobs.Add(_job);
             _job.TargetTile.CurrentJob = _job;
-            _job.State = JobState.Idle;
+            SetJobState(_job, _job.TargetTile.Accessible() ? JobState.Idle : JobState.Error);
             jobCreatedEvent?.Invoke(_job);
         }
 
