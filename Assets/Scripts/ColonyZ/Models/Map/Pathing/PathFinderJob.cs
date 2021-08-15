@@ -28,11 +28,13 @@ namespace ColonyZ.Models.Map.Pathing
         /// <summary>
         ///     Native array containing the IDs for the nodes that makeup the resulting path.
         /// </summary>
+        [WriteOnly]
         public NativeList<int> path;
 
         /// <summary>
         ///     Flag determining if a valid path was created.
         /// </summary>
+        [WriteOnly]
         public NativeArray<bool> valid;
 
         public void Execute()
@@ -70,8 +72,10 @@ namespace ColonyZ.Models.Map.Pathing
 
                 foreach (var offset in neighbourOffsets)
                 {
+                    var neighbourID = GetNode(currentNode.X + offset.x, currentNode.Y + offset.y);
+                    if (neighbourID == -1) continue;
                     if (!CanMoveInto(currentNode, offset)) continue;
-                    var neighbour = GetNode(currentNode.X + offset.x, currentNode.Y + offset.y);
+                    var neighbour = graph[neighbourID];
                     if (!neighbour.Pathable || closedSet.Contains(neighbour.ID)) continue;
                     var costToNeighbour = currentNode.GCost + Heuristic(currentNode, neighbour); // TODO: Add movement cost of current node here
                     if (costToNeighbour < neighbour.GCost || !openSet.Contains(neighbour.ID))
@@ -97,32 +101,36 @@ namespace ColonyZ.Models.Map.Pathing
         {
             if (_offset.x == -1 && _offset.y == 1) // Move to North West
             {
-                return GetNode(_start.X - 1, _start.Y).Pathable && GetNode(_start.X, _start.Y + 1).Pathable;
+                return graph[GetNode(_start.X - 1, _start.Y)].Pathable && 
+                       graph[GetNode(_start.X, _start.Y + 1)].Pathable;
             }
             
             if (_offset.x == 1 && _offset.y == 1) // Move to North East
             {
-                return GetNode(_start.X, _start.Y + 1).Pathable && GetNode(_start.X + 1, _start.Y).Pathable;
+                return graph[GetNode(_start.X, _start.Y + 1)].Pathable && 
+                       graph[GetNode(_start.X + 1, _start.Y)].Pathable;
             }
             
             if (_offset.x == 1 && _offset.y == -1) // Move to South East
             {
-                return GetNode(_start.X, _start.Y - 1).Pathable && GetNode(_start.X + 1, _start.Y).Pathable;
+                return graph[GetNode(_start.X, _start.Y - 1)].Pathable && 
+                       graph[GetNode(_start.X + 1, _start.Y)].Pathable;
             }
             
             if (_offset.x == -1 && _offset.y == -1) // Move to South West
             {
-                return GetNode(_start.X, _start.Y - 1).Pathable && GetNode(_start.X - 1, _start.Y).Pathable;
+                return graph[GetNode(_start.X, _start.Y - 1)].Pathable && 
+                       graph[GetNode(_start.X - 1, _start.Y)].Pathable;
             }
             
-            return GetNode(_start.X + _offset.x, _start.Y + _offset.y).Pathable;
+            return graph[GetNode(_start.X + _offset.x, _start.Y + _offset.y)].Pathable;
         }
 
-        private NodeData GetNode(int _x, int _y)
+        private int GetNode(int _x, int _y)
         {
-            if (_x < 0 || _x > gridSize.x) return new NodeData(-1, 0, 0, false);
-            if (_y < 0 || _y > gridSize.y) return new NodeData(-1, 0, 0, false);
-            return graph[_x * gridSize.x + _y];
+            if (_x < 0 || _x > gridSize.x) return -1;
+            if (_y < 0 || _y > gridSize.y) return -1;
+            return graph[_x * gridSize.x + _y].ID;
         }
 
         private int GetIndex(NodeData _data)
