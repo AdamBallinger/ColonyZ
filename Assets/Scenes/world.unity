@@ -8865,9 +8865,9 @@ MonoBehaviour:
     type: 3}
   objectsMaterial: {fileID: 2100000, guid: 9a011744bf69b7a41ab3e5a3b3f57b03, type: 2}
   worldSize:
-    <Name>k__BackingField: Huge
-    <Width>k__BackingField: 320
-    <Height>k__BackingField: 320
+    <Name>k__BackingField: Mini
+    <Width>k__BackingField: 16
+    <Height>k__BackingField: 16
   enableWorldGen: 1
   overrideSeed: 0
   seed: 42736
@@ -9429,7 +9429,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988782199}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52b9a39db5377664c914178d3f42db0c, type: 3}
   m_Name: 
@@ -9445,7 +9445,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988782199}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f7dba8e67b8499d8f6782d233b7a10d, type: 3}
   m_Name: 
@@ -9459,7 +9459,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988782199}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48a25d359f714722b0d94f36c26781c1, type: 3}
   m_Name: 

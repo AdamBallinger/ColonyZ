@@ -45,6 +45,7 @@ namespace ColonyZ.Controllers.Dev
 
         private void Update()
         {
+            if (!enabled) return;
             pathQueueText.text = $"Queued Paths: {PathFinder.Instance.RequestCount.ToString()}\n" +
                                  $"Characters: {World.Instance.Characters.Count}";
         }
