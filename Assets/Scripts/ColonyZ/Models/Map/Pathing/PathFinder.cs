@@ -76,11 +76,11 @@ namespace ColonyZ.Models.Map.Pathing
                     startID = request.Start.Data.ID,
                     endID = request.End.Data.ID,
                     gridSize = new int2(NodeGraph.Instance.Width, NodeGraph.Instance.Height),
-                    graph = new NativeArray<NodeData>(NodeGraph.Instance.NodeData, Allocator.TempJob),
-                    openSet = new NativeList<int>(Allocator.TempJob),
-                    closedSet = new NativeList<int>(Allocator.TempJob),
-                    path = new NativeList<int>(Allocator.TempJob),
-                    valid = new NativeArray<bool>(1, Allocator.TempJob)
+                    graph = new NativeArray<NodeData>(NodeGraph.Instance.NodeData, Allocator.Persistent),
+                    openSet = new NativeList<int>(Allocator.Persistent),
+                    closedSet = new NativeList<int>(Allocator.Persistent),
+                    path = new NativeList<int>(Allocator.Persistent),
+                    valid = new NativeArray<bool>(1, Allocator.Persistent)
                 };
                 
                 handles.Add(jobData.Schedule());
