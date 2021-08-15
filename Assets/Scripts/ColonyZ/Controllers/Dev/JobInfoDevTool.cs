@@ -9,6 +9,7 @@ namespace ColonyZ.Controllers.Dev
 {
     public class JobInfoDevTool : MonoBehaviour
     {
+        [SerializeField] private GameObject jobsInfoRoot;
         [SerializeField] private TMP_Text text;
 
         private void Start()
@@ -34,6 +35,12 @@ namespace ColonyZ.Controllers.Dev
                         $"Jobs Idle: {JobManager.Instance.IdleCount}\n" +
                         $"Jobs Errored: {JobManager.Instance.ErrorCount}\n" +
                         $"Available characters: {availabelCharacters}";
+        }
+
+        public void Toggle()
+        {
+            enabled = !enabled;
+            jobsInfoRoot.SetActive(enabled);
         }
     }
 }
