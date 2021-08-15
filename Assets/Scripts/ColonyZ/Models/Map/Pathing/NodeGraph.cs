@@ -44,6 +44,11 @@ namespace ColonyZ.Models.Map.Pathing
             Instance = null;
         }
 
+        public bool IsAccessible(int _index)
+        {
+            return Nodes[_index].Accessible;
+        }
+
         /// <summary>
         ///     Runs first time build for the graph.
         /// </summary>
@@ -61,6 +66,8 @@ namespace ColonyZ.Models.Map.Pathing
                     World.Instance.GetTileAt(x, y).GetEnterability() != TileEnterability.None);
                 NodeData[x * Width + y] = Nodes[x * Width + y].Data;
             }
+
+            BuildNodeNeighbours();
         }
 
         /// <summary>
@@ -122,6 +129,17 @@ namespace ColonyZ.Models.Map.Pathing
         public void RegisterGraphUpdateCallback(Action _callback)
         {
             onUpdateGraphCallback += _callback;
+        }
+
+        private void BuildNodeNeighbours()
+        {
+            foreach (var node in Nodes)
+            {
+                foreach (var tile in World.Instance.GetTileAt(node.Data.X, node.Data.Y).DirectNeighbours)
+                {
+                    node.AddNeighbour(Nodes[World.Instance.GetTileIndex(tile)]);
+                }
+            }
         }
     }
 }

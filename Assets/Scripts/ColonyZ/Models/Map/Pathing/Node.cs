@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ColonyZ.Models.Map.Pathing
 {
-    public struct Node
+    public class Node
     {
         /// <summary>
         ///     Data containing ID, position and pathable state for this node.
@@ -18,11 +18,20 @@ namespace ColonyZ.Models.Map.Pathing
         ///     Is this node a pathable node?
         /// </summary>
         public bool Pathable => Data.Pathable;
+        
+        public bool Accessible { get; set; }
+        
+        /// <summary>
+        ///     List of direct neighbours to this node. (N,E,S,W)
+        /// </summary>
+        private List<Node> Neighbours { get; }
 
         public Node(int _id, int _x, int _y, float _movementCost, bool _pathable)
         {
             Data = new NodeData(_id, _x, _y, _pathable);
             Paths = new List<Path>();
+            Neighbours = new List<Node>(4);
+            Accessible = true;
         }
 
         public void SetData(NodeData _data)
@@ -34,6 +43,11 @@ namespace ColonyZ.Models.Map.Pathing
             }
         }
 
+        public void AddNeighbour(Node _node)
+        {
+            Neighbours.Add(_node);
+        }
+
         /// <summary>
         ///     Called when the Pathable property for this node has changed.
         /// </summary>
@@ -42,6 +56,27 @@ namespace ColonyZ.Models.Map.Pathing
             if (!Pathable)
             {
                 InvalidatePaths();
+            }
+            else
+            {
+                Accessible = true;
+            }
+
+            foreach (var node in Neighbours)
+            {
+                if (node.Pathable) continue;
+                var pathableNeighbour = false;
+                
+                foreach (var n in node.Neighbours)
+                {
+                    if (n.Pathable)
+                    {
+                        pathableNeighbour = true;
+                        break;
+                    }
+                }
+
+                node.Accessible = pathableNeighbour;
             }
         }
 

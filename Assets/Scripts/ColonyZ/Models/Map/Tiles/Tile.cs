@@ -189,6 +189,11 @@ namespace ColonyZ.Models.Map.Tiles
             return HasObject ? Object.ObjectData.Enterability : TileEnterability.Immediate;
         }
 
+        public bool Accessible()
+        {
+            return NodeGraph.Instance.IsAccessible(World.Instance.GetTileIndex(this));
+        }
+
         public override string ToString()
         {
             return $"Tile: {TileDefinition.TileName}   X: {X} Y: {Y}  Obj: {(HasObject ? Object.ObjectData.ObjectName : "None")}";
@@ -249,7 +254,8 @@ namespace ColonyZ.Models.Map.Tiles
         {
             return $"Position: ({X}, {Y})\n" +
                    $"Area ID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
-                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n";
+                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n" +
+                   $"Accessible: {Accessible()}\n";
         }
 
         public Vector2 GetPosition()
