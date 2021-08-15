@@ -18,6 +18,10 @@ namespace ColonyZ.Models.Map.Pathing
         
         private Queue<PathRequest> requestQueue;
 
+        private NativeList<JobHandle> handles = new NativeList<JobHandle>(Allocator.Persistent);
+        private List<PathFinderJob> jobs = new List<PathFinderJob>();
+        private List<PathRequest> requests = new List<PathRequest>();
+
         private PathFinder()
         {
         }
@@ -61,53 +65,67 @@ namespace ColonyZ.Models.Map.Pathing
         
         public void Update()
         {
-            var tempGraph = new NativeArray<NodeData>(NodeGraph.Instance.NodeData, Allocator.TempJob);
-            
             if (requestQueue.Count > 0)
             {
                 var request = requestQueue.Dequeue();
+                requests.Add(request);
 
                 var jobData = new PathFinderJob
                 {
                     startID = request.Start.Data.ID,
                     endID = request.End.Data.ID,
                     gridSize = new int2(NodeGraph.Instance.Width, NodeGraph.Instance.Height),
-                    graph = tempGraph,
+                    graph = new NativeArray<NodeData>(NodeGraph.Instance.NodeData, Allocator.TempJob),
                     openSet = new NativeList<int>(Allocator.TempJob),
                     closedSet = new NativeList<int>(Allocator.TempJob),
                     path = new NativeList<int>(Allocator.TempJob),
                     valid = new NativeArray<bool>(1, Allocator.TempJob)
                 };
                 
-                jobData.Schedule().Complete();
-
-                if (!jobData.valid[0])
-                {
-                    request.onPathCompleteCallback?.Invoke(null);
-                }
-                else
-                {
-                    var result = jobData.path;
-                    var list = new List<Node>();
-                    for (var i = result.Length - 1; i >= 0; i--)
-                    {
-                        list.Add(NodeGraph.Instance.GetNodeAt(result[i]));
-                    }
-                    request.onPathCompleteCallback?.Invoke(new Path(list, true, 0.0f));
-                }
-
-                jobData.openSet.Dispose();
-                jobData.closedSet.Dispose();
-                jobData.path.Dispose();
-                jobData.valid.Dispose();
+                handles.Add(jobData.Schedule());
+                jobs.Add(jobData);
             }
 
-            tempGraph.Dispose();
+            for (var i = handles.Length - 1; i >= 0; i--)
+            {
+                var handle = handles[i];
+                if (handle.IsCompleted)
+                {
+                    handle.Complete();
+                    var job = jobs[i];
+                    var request = requests[i];
+
+                    if (!job.valid[0])
+                    {
+                        request.onPathCompleteCallback?.Invoke(null);
+                    }
+                    else
+                    {
+                        var result = job.path;
+                        var list = new List<Node>();
+                        for (var j = result.Length - 1; j >= 0; j--)
+                        {
+                            list.Add(NodeGraph.Instance.GetNodeAt(result[j]));
+                        }
+                        request.onPathCompleteCallback?.Invoke(new Path(list, true, 0.0f));
+                    }
+
+                    job.graph.Dispose();
+                    job.openSet.Dispose();
+                    job.closedSet.Dispose();
+                    job.path.Dispose();
+                    job.valid.Dispose();
+                    
+                    jobs.RemoveAt(i);
+                    handles.RemoveAt(i);
+                    requests.RemoveAt(i);
+                }
+            }
         }
 
         private void Dispose()
         {
-
+            handles.Dispose();
         }
     }
 }
