@@ -3,7 +3,7 @@ using ColonyZ.Models.Map.Tiles;
 
 namespace ColonyZ.Models.Map.Pathing
 {
-    public class PathRequest
+    public struct PathRequest
     {
         /// <summary>
         ///     Callback function invoked when the path has been computed.
@@ -31,15 +31,13 @@ namespace ColonyZ.Models.Map.Pathing
         {
             Start = NodeGraph.Instance.GetNodeAt(_start.X, _start.Y);
             End = NodeGraph.Instance.GetNodeAt(_end.X, _end.Y);
+            onPathCompleteCallback = _onCompleteCallback;
 
             // If the end node is not a pathable node, then just ignore this request and return an empty callback.
             if (End.Data.ID == -1 || !End.Pathable)
             {
-                _onCompleteCallback?.Invoke(new Path(null, false, -1.0f));
-                return;
+                onPathCompleteCallback?.Invoke(new Path(null, false, -1.0f));
             }
-
-            onPathCompleteCallback += _onCompleteCallback;
         }
     }
 }
