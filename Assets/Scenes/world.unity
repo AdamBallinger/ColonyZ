@@ -1257,32 +1257,7 @@ LineRenderer:
   m_SortingLayerID: 1027192665
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Positions:
-  - {x: 8, y: 9, z: 0}
-  - {x: 8.0625, y: 8.5625, z: 0}
-  - {x: 8, y: 8, z: 0}
-  - {x: 7.5, y: 7.5, z: 0}
-  - {x: 7, y: 7, z: 0}
-  - {x: 7, y: 6.5, z: 0}
-  - {x: 7, y: 6, z: 0}
-  - {x: 6.5, y: 5.5, z: 0}
-  - {x: 6, y: 5, z: 0}
-  - {x: 5.9375, y: 4.5, z: 0}
-  - {x: 6, y: 4, z: 0}
-  - {x: 6, y: 3.5, z: 0}
-  - {x: 6, y: 3, z: 0}
-  - {x: 6, y: 2.5, z: 0}
-  - {x: 6, y: 2, z: 0}
-  - {x: 6.0625, y: 1.4375, z: 0}
-  - {x: 6, y: 1, z: 0}
-  - {x: 5.5625, y: 0.9375, z: 0}
-  - {x: 5, y: 1, z: 0}
-  - {x: 4.5, y: 1, z: 0}
-  - {x: 4, y: 1, z: 0}
-  - {x: 3.5, y: 1, z: 0}
-  - {x: 3, y: 1, z: 0}
-  - {x: 2.4375, y: 1, z: 0}
-  - {x: 2, y: 1, z: 0}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1.0352988
@@ -8821,7 +8796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataLoader: {fileID: 1523355955}
   shouldSaveLoad: 1
-  initialCharacterCount: 4
+  initialCharacterCount: 0
   treeSpawnChance: 6
   globalLight: {fileID: 1665810043}
   globalLightCurve:
@@ -9429,7 +9404,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df64d31db5e24c94875eceb4b638112b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jobsInfoRoot: {fileID: 325630631}
 --- !u!4 &1988782201
 Transform:
   m_ObjectHideFlags: 0
@@ -9455,7 +9429,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988782199}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52b9a39db5377664c914178d3f42db0c, type: 3}
   m_Name: 
@@ -9471,11 +9445,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988782199}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f7dba8e67b8499d8f6782d233b7a10d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jobsInfoRoot: {fileID: 325630631}
   text: {fileID: 1326876451}
 --- !u!114 &1988782207
 MonoBehaviour:
@@ -9484,7 +9459,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988782199}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48a25d359f714722b0d94f36c26781c1, type: 3}
   m_Name: 

@@ -6,10 +6,10 @@ namespace ColonyZ.Controllers.Dev
     {
         private AreasDebugTool areasDebugTool;
         private ItemsDevTool itemDevTool;
-
-        [SerializeField] private GameObject jobsInfoRoot;
         private PathDebugTool pathDebugTool;
         private RegionsDebugTool regionsDebugTool;
+
+        private JobInfoDevTool jobInfoTool;
 
         private TileNodesTool tileNodesTool;
         public static DevToolManager Instance { get; private set; }
@@ -22,6 +22,7 @@ namespace ColonyZ.Controllers.Dev
             areasDebugTool = FindObjectOfType<AreasDebugTool>();
             itemDevTool = FindObjectOfType<ItemsDevTool>();
             regionsDebugTool = FindObjectOfType<RegionsDebugTool>();
+            jobInfoTool = FindObjectOfType<JobInfoDevTool>();
             pathDebugTool = FindObjectOfType<PathDebugTool>();
         }
 
@@ -52,7 +53,7 @@ namespace ColonyZ.Controllers.Dev
 
         public void ToggleJobsInfo()
         {
-            jobsInfoRoot.SetActive(!jobsInfoRoot.activeSelf);
+            jobInfoTool.Toggle();
         }
     }
 }

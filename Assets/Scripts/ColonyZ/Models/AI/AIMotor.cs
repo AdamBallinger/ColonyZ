@@ -186,7 +186,7 @@ namespace ColonyZ.Models.AI
 
         private void OnPathReceived(Path _path)
         {
-            if (_path.IsValid && _path.SmoothSize > 0)
+            if (_path != null && _path.IsValid && _path.SmoothSize > 0)
             {
                 Working = true;
                 path = _path;

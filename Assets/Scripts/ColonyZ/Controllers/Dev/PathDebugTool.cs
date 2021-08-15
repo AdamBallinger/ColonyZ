@@ -45,7 +45,8 @@ namespace ColonyZ.Controllers.Dev
 
         private void Update()
         {
-            pathQueueText.text = $"Queued Paths: {PathFinder.Instance.TaskCount.ToString()}\n" +
+            if (!enabled) return;
+            pathQueueText.text = $"Queued Paths: {PathFinder.Instance.RequestCount.ToString()}\n" +
                                  $"Characters: {World.Instance.Characters.Count}";
         }
 
@@ -79,7 +80,7 @@ namespace ColonyZ.Controllers.Dev
         private void RequestPath()
         {
             if (pathStart == null || pathEnd == null) return;
-            PathFinder.NewRequest(pathStart, pathEnd, OnPath);
+            PathFinder.NewRequest(pathStart, pathEnd, OnPath, false);
         }
 
         private void OnPath(Path _p)
