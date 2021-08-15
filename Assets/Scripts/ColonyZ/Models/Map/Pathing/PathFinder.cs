@@ -126,6 +126,18 @@ namespace ColonyZ.Models.Map.Pathing
 
         private void Dispose()
         {
+            for (var i = handles.Length - 1; i >= 0; i--)
+            {
+                var handle = handles[i];
+                var job = jobs[i];
+                handle.Complete();
+                job.graph.Dispose();
+                job.openSet.Dispose();
+                job.closedSet.Dispose();
+                job.path.Dispose();
+                job.valid.Dispose();
+            }
+            
             handles.Dispose();
         }
     }
