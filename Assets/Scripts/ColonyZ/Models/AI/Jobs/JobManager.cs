@@ -133,11 +133,11 @@ namespace ColonyZ.Models.AI.Jobs
                         if (jobNoAccessMap[job].Contains(humanEntity))
                         {
                             jobNoAccessMap[job].Remove(humanEntity);
-                            // if (!humanEntity.HasJob)
-                            // {
-                            //     AssignEntityJob(humanEntity, job);
-                            //     break;
-                            // }
+                            if (!humanEntity.HasJob)
+                            {
+                                AssignEntityJob(humanEntity, job);
+                                break;
+                            }
                         }
                     }
                 }
