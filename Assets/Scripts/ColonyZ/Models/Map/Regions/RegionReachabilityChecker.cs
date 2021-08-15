@@ -17,6 +17,7 @@ namespace ColonyZ.Models.Map.Regions
         public static bool CanReachRegion(Region _source, Region _target)
         {
             if (_source == null || _target == null) return false;
+            if (_source.Area == null || _target.Area == null) return false;
             if (_source == _target) return true;
             if (_source.Area == _target.Area) return true;
 
