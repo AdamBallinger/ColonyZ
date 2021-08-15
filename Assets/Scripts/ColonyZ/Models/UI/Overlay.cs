@@ -36,7 +36,8 @@ namespace ColonyZ.Models.UI
         {
             JobManager.Instance.jobCreatedEvent += j =>
             {
-                if (j is HarvestJob job) SetOverlayAtTile(j.TargetTile, GetOverlayForHarvestJob(job));
+                if (j.State == JobState.Error) SetOverlayAtTile(j.TargetTile, OverlayType.Red_Cross, 1.0f);
+                else if (j is HarvestJob job) SetOverlayAtTile(j.TargetTile, GetOverlayForHarvestJob(job));
                 else if (j is DemolishJob) SetOverlayAtTile(j.TargetTile, OverlayType.Hammer);
             };
             
