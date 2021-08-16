@@ -191,12 +191,25 @@ namespace ColonyZ.Models.AI.Jobs
                 
                 return;
             }
+            
+            // TODO: Only get players entities in future.
+            var entities = World.Instance.Characters;
+            var availableEntities = 0;
+
+            for (var i = entities.Count - 1; i >= 0; i--)
+            {
+                var human = entities[i] as HumanEntity;
+                if (!human.HasJob) availableEntities++;
+                else entities.RemoveAt(i);
+            }
+
+            if (availableEntities == 0) return;
 
             foreach (var job in Jobs)
             {
                 if (job.State != JobState.Idle) continue;
 
-                var entity = GetClosestEntity(job);
+                var entity = GetClosestEntity(job, entities);
                 if (entity != null)
                 {
                     AssignEntityJob(entity, job);
@@ -265,14 +278,11 @@ namespace ColonyZ.Models.AI.Jobs
         /// </summary>
         /// <param name="_job"></param>
         /// <returns></returns>
-        private HumanEntity GetClosestEntity(Job _job)
+        private HumanEntity GetClosestEntity(Job _job, IReadOnlyCollection<LivingEntity> _entities)
         {
-            // TODO: Only get players entities in future.
-            var entities = World.Instance.Characters;
-            
             HumanEntity closestEntity = null;
             var closestDist = float.MaxValue;
-            foreach (var t in entities)
+            foreach (var t in _entities)
             {
                 var entity = t as HumanEntity;
                 if (entity == null) continue;
