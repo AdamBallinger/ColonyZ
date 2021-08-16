@@ -51,7 +51,7 @@ namespace ColonyZ.Models.Map.Pathing
             {
                 Nodes = _nodePath;
                 
-                if (_removeStart) Nodes.RemoveAt(0);
+                if (_removeStart && _nodePath.Count > 1) Nodes.RemoveAt(0);
 
                 foreach (var node in Nodes)
                 {
