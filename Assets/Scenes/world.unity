@@ -875,7 +875,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Compute time: 0ms
 
-    Path length: 25'
+    Path length: 161'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5b143fc62cd7ccb40a6c9977088bb083, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 11e0183ab8efa2046bc397c67a952d35, type: 2}
@@ -8865,9 +8865,9 @@ MonoBehaviour:
     type: 3}
   objectsMaterial: {fileID: 2100000, guid: 9a011744bf69b7a41ab3e5a3b3f57b03, type: 2}
   worldSize:
-    <Name>k__BackingField: Mini
-    <Width>k__BackingField: 16
-    <Height>k__BackingField: 16
+    <Name>k__BackingField: Huge
+    <Width>k__BackingField: 320
+    <Height>k__BackingField: 320
   enableWorldGen: 1
   overrideSeed: 0
   seed: 42736

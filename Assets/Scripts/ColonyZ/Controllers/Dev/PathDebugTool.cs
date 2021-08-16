@@ -35,6 +35,11 @@ namespace ColonyZ.Controllers.Dev
             pathDebugRoot.SetActive(enabled);
         }
 
+        private void OnDestroy()
+        {
+            lineRenderer.positionCount = 0;
+        }
+
         private void OnDisable()
         {
             pathQueueText.text = string.Empty;
