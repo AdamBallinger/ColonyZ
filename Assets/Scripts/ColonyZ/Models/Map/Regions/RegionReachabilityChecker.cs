@@ -18,8 +18,7 @@ namespace ColonyZ.Models.Map.Regions
         {
             if (_source == null || _target == null) return false;
             if (_source.Area == null || _target.Area == null) return false;
-            if (_source == _target) return true;
-            if (_source.Area == _target.Area) return true;
+            if (_source.Area.AreaID == _target.Area.AreaID) return true;
 
             queue.Clear();
             visited.Clear();
@@ -30,12 +29,11 @@ namespace ColonyZ.Models.Map.Regions
             {
                 var region = queue.Dequeue();
 
-                if (region == _target) return true;
-
                 foreach (var link in region.Links)
                 {
                     var other = link.GetOther(region);
                     if (other == null) continue;
+                    if (other.Area.AreaID == _target.Area.AreaID) return true;
                     if (visited.Contains(other)) continue;
 
                     queue.Enqueue(other);
