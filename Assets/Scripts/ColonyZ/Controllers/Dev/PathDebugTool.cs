@@ -53,6 +53,13 @@ namespace ColonyZ.Controllers.Dev
             if (!enabled) return;
             pathQueueText.text = $"Queued Paths: {PathFinder.Instance.RequestCount.ToString()}\n" +
                                  $"Characters: {World.Instance.Characters.Count}";
+
+            if (SelectionController.currentSelection is LivingEntity le)
+            {
+                if (le.Motor.path == null || le.Motor.path.IsValid == false) return;
+
+                OnPath(le.Motor.path);
+            }
         }
 
         public void Toggle()
@@ -100,43 +107,18 @@ namespace ColonyZ.Controllers.Dev
             pathTestText.text = $"Compute time: {_p.ComputeTime}ms\n" +
                                 $"Path length: {_p.SmoothSize}";
 
-            lineRenderer.positionCount = _p.SmoothSize;
+            lineRenderer.positionCount = _p.SmoothSize - _p.CurrentIndex;
 
-            var vectors = new Vector3[_p.SmoothSize];
+            var vectors = new Vector3[lineRenderer.positionCount];
 
-            for (var i = 0; i < _p.SmoothSize; i++)
+            for (var i = 0; i < lineRenderer.positionCount; i++)
             {
-                Vector3 pos = _p.SmoothPath[i];
+                Vector3 pos = _p.SmoothPath[i +_p.CurrentIndex];
                 pos.z = 0.0f;
                 vectors[i] = pos;
             }
 
             lineRenderer.SetPositions(vectors);
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (SelectionController.currentSelection is LivingEntity)
-            {
-                var le = SelectionController.currentSelection as LivingEntity;
-                if (le?.Motor.path == null || le.Motor.path.IsValid == false) return;
-
-                OnPath(le.Motor.path);
-
-                var current = le.Motor.path.Current;
-
-                // Display where the path started.
-                Gizmos.color = Color.green;
-                Gizmos.DrawCube(le.Motor.path.SmoothPath[0], Vector2.one * 0.5f);
-
-                // Display where the motor is heading.
-                Gizmos.color = Color.blue;
-                Gizmos.DrawCube(current, Vector2.one * 0.35f);
-
-                // Display the tile the entity is currently considered on.
-                Gizmos.color = Color.red;
-                Gizmos.DrawCube(le.CurrentTile.Position, Vector2.one * 0.15f);
-            }
         }
     }
 }
