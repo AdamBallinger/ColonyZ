@@ -12,6 +12,8 @@ namespace ColonyZ.Models.Map.Regions
         public static RegionManager Instance { get; private set; }
         
         public List<Region> Regions { get; private set; }
+        
+        public List<Region> DoorRegions { get; private set; }
 
         /// <summary>
         ///     Event called when regions get updated.
@@ -78,6 +80,7 @@ namespace ColonyZ.Models.Map.Regions
             if (Regions != null) return;
 
             Regions = new List<Region>();
+            DoorRegions = new List<Region>();
 
             foreach (var chunk in World.Instance.WorldGrid.Chunks) FloodChunk(chunk);
 
@@ -117,6 +120,8 @@ namespace ColonyZ.Models.Map.Regions
             var region = new Region();
 
             foreach (var tile in _tiles) region.Add(tile);
+            
+            if (region.IsDoor) DoorRegions.Add(region);
 
             Regions.Add(region);
             newRegions.Add(region);
@@ -134,6 +139,7 @@ namespace ColonyZ.Models.Map.Regions
             _region.Area?.UnassignRegion(_region);
             _region.Area = null;
 
+            if (_region.IsDoor) DoorRegions.Remove(_region);
             Regions.Remove(_region);
         }
     }

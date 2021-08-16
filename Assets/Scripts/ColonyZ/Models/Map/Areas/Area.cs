@@ -6,20 +6,24 @@ namespace ColonyZ.Models.Map.Areas
 {
     public class Area
     {
-        public List<Region> Regions { get; }
-
         /// <summary>
         ///     Returns number of tiles in this Area.
         /// </summary>
         public int SizeInTiles => Regions.Sum(r => r.Tiles.Count);
 
-        public int SizeInRegions => Regions.Count;
-
         public int AreaID => AreaManager.Instance.Areas.IndexOf(this) + 1;
+        
+        /// <summary>
+        ///     List of areas that can be accessed from this area.
+        /// </summary>
+        public List<Area> LinkedAreas { get; }
+        
+        private List<Region> Regions { get; }
 
         public Area()
         {
             Regions = new List<Region>();
+            LinkedAreas = new List<Area>();
         }
 
         /// <summary>
@@ -54,6 +58,12 @@ namespace ColonyZ.Models.Map.Areas
             {
                 _area.AssignRegion(Regions[i]);
             }
+        }
+
+        public void AddConnection(Area _area)
+        {
+            if (LinkedAreas.Contains(_area)) return;
+            LinkedAreas.Add(_area);
         }
     }
 }

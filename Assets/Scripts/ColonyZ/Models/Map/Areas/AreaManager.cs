@@ -82,6 +82,8 @@ namespace ColonyZ.Models.Map.Areas
             }
             
             areasUpdatedEvent?.Invoke();
+            
+            GenerateAreaLinks();
         }
 
         public void OnRegionsUpdated(List<Region> _newRegions)
@@ -141,6 +143,8 @@ namespace ColonyZ.Models.Map.Areas
             }
             
             areasUpdatedEvent?.Invoke();
+            
+            GenerateAreaLinks();
         }
 
         private Area CreateArea(List<Region> _regions)
@@ -165,6 +169,60 @@ namespace ColonyZ.Models.Map.Areas
         private void MergeAreas(Area _target, Area _source)
         {
             _target.ReleaseTo(_source);
+        }
+
+        private void GenerateAreaLinks()
+        {
+            foreach (var area in Areas)
+            {
+                area.LinkedAreas.Clear();
+                area.AddConnection(area);
+            }
+
+            foreach (var door in RegionManager.Instance.DoorRegions)
+            {
+                var tile = door.Tiles[0];
+                var n = World.Instance.GetTileAt(tile.X, tile.Y + 1);
+                var s = World.Instance.GetTileAt(tile.X, tile.Y - 1);
+
+                // If the tiles north and south of door have different area ids then they can be connected.
+                if (n != null && s != null && n.Area?.AreaID != s.Area?.AreaID)
+                {
+                    n.Area?.AddConnection(s.Area);
+                    s.Area?.AddConnection(n.Area);
+                    continue;
+                }
+
+                var e = World.Instance.GetTileAt(tile.X + 1, tile.Y);
+                var w = World.Instance.GetTileAt(tile.X - 1, tile.Y);
+
+                if (e != null && w != null && e.Area?.AreaID != w.Area?.AreaID)
+                {
+                    e.Area?.AddConnection(w.Area);
+                    w.Area?.AddConnection(e.Area);
+                }
+            }
+
+            foreach (var area in Areas)
+            {
+                var checkedAreas = new List<Area>();
+                var areas = LinkArea(area, checkedAreas);
+                
+                foreach (var a in areas) area.AddConnection(a);
+            }
+        }
+
+        private List<Area> LinkArea(Area _area, List<Area> _checkedAreas)
+        {
+            foreach (var area in _area.LinkedAreas)
+            {
+                if (_checkedAreas.Contains(area)) continue;
+                
+                _checkedAreas.Add(area);
+                LinkArea(area, _checkedAreas);
+            }
+
+            return _checkedAreas;
         }
     }
 }

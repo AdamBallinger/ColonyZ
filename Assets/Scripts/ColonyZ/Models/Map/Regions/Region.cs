@@ -16,7 +16,7 @@ namespace ColonyZ.Models.Map.Regions
         /// <summary>
         ///     Set of pathable tiles within this region.
         /// </summary>
-        public HashSet<Tile> Tiles { get; } = new HashSet<Tile>();
+        public List<Tile> Tiles { get; } = new List<Tile>();
 
         /// <summary>
         ///     List of tiles within this region that contain an object that is furniture.
