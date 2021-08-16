@@ -277,6 +277,7 @@ namespace ColonyZ.Models.AI.Jobs
         ///     Returns the closest entity that can reach the given job.
         /// </summary>
         /// <param name="_job"></param>
+        /// <param name="_entities"></param>
         /// <returns></returns>
         private HumanEntity GetClosestEntity(Job _job, IReadOnlyCollection<LivingEntity> _entities)
         {
@@ -286,7 +287,6 @@ namespace ColonyZ.Models.AI.Jobs
             {
                 var entity = t as HumanEntity;
                 if (entity == null) continue;
-                if (entity.HasJob) continue;
 
                 if (CanEntityReachJob(entity, _job))
                 {
