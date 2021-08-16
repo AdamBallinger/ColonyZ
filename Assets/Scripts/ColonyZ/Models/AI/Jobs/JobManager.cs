@@ -200,7 +200,6 @@ namespace ColonyZ.Models.AI.Jobs
             {
                 var human = entities[i] as HumanEntity;
                 if (!human.HasJob) availableEntities++;
-                else entities.RemoveAt(i);
             }
 
             if (availableEntities == 0) return;
@@ -279,14 +278,14 @@ namespace ColonyZ.Models.AI.Jobs
         /// <param name="_job"></param>
         /// <param name="_entities"></param>
         /// <returns></returns>
-        private HumanEntity GetClosestEntity(Job _job, IReadOnlyCollection<LivingEntity> _entities)
+        private HumanEntity GetClosestEntity(Job _job, IEnumerable<LivingEntity> _entities)
         {
             HumanEntity closestEntity = null;
             var closestDist = float.MaxValue;
             foreach (var t in _entities)
             {
                 var entity = t as HumanEntity;
-                if (entity == null) continue;
+                if (entity == null || entity.HasJob) continue;
 
                 if (CanEntityReachJob(entity, _job))
                 {

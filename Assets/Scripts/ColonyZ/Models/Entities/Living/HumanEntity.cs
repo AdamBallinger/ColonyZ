@@ -27,7 +27,7 @@ namespace ColonyZ.Models.Entities.Living
 
         public bool SetJob(Job _job, bool _forceStop = false)
         {
-            if (!_forceStop && HasJob && CurrentJob.Complete) return false;
+            if (!_forceStop && HasJob && !CurrentJob.Complete) return false;
 
             previousJobCardinal = GetCurrentJobCardinal();
             currentCardinalCheckTime = 0.0f;
