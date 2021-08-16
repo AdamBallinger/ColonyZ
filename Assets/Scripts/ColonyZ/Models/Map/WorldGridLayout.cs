@@ -14,7 +14,7 @@ namespace ColonyZ.Models.Map
         /// </summary>
         public event Action<WorldChunk> chunkModifiedEvent;
 
-        private const int CHUNK_SIZE = 12;
+        private const int CHUNK_SIZE = 16;
 
         private World world;
 
