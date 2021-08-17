@@ -4,6 +4,7 @@ using ColonyZ.Models.Map.Tiles;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace ColonyZ.Models.Map.Pathing
 {
@@ -76,6 +77,7 @@ namespace ColonyZ.Models.Map.Pathing
                     startID = request.Start.Data.ID,
                     endID = request.End.Data.ID,
                     gridSize = new int2(NodeGraph.Instance.Width, NodeGraph.Instance.Height),
+                    startTime = Time.unscaledTime,
                     graph = new NativeArray<NodeData>(NodeGraph.Instance.NodeData, Allocator.Persistent),
                     openSet = new NativeList<int>(Allocator.Persistent),
                     closedSet = new NativeList<int>(Allocator.Persistent),
@@ -103,12 +105,13 @@ namespace ColonyZ.Models.Map.Pathing
                     else
                     {
                         var result = job.path;
+                        var time = (float)Math.Round(Time.unscaledTime - job.startTime, 2);
                         var list = new List<Node>();
                         for (var j = result.Length - 1; j >= 0; j--)
                         {
                             list.Add(NodeGraph.Instance.GetNodeAt(result[j]));
                         }
-                        request.onPathCompleteCallback?.Invoke(new Path(list, true, 0.0f, request.RemoveStart));
+                        request.onPathCompleteCallback?.Invoke(new Path(list, true, time, request.RemoveStart));
                     }
 
                     job.graph.Dispose();

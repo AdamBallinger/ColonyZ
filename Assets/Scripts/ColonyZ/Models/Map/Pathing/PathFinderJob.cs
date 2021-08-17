@@ -16,6 +16,9 @@ namespace ColonyZ.Models.Map.Pathing
 
         [ReadOnly]
         public int2 gridSize;
+
+        [ReadOnly]
+        public float startTime;
         
         /// <summary>
         ///     Native array containing the data for each node.
