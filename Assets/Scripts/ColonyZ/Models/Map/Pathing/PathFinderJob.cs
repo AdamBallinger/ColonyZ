@@ -80,10 +80,10 @@ namespace ColonyZ.Models.Map.Pathing
                     if (!CanMoveInto(currentNode, offset)) continue;
                     var neighbour = graph[neighbourID];
                     if (!neighbour.Pathable || closedSet.Contains(neighbour.ID)) continue;
-                    var costToNeighbour = currentNode.GCost + Heuristic(currentNode, neighbour); // TODO: Add movement cost of current node here
-                    if (costToNeighbour < neighbour.GCost || !openSet.Contains(neighbour.ID))
+                    var neighbourCost = currentNode.GCost + Heuristic(currentNode, neighbour) + neighbour.MovementCost;
+                    if (neighbourCost < neighbour.GCost || !openSet.Contains(neighbour.ID))
                     {
-                        neighbour.GCost = costToNeighbour;
+                        neighbour.GCost = neighbourCost;
                         neighbour.HCost = Heuristic(neighbour, endNode);
                         neighbour.Parent = currentNode.ID;
                         graph[GetIndex(neighbour)] = neighbour;

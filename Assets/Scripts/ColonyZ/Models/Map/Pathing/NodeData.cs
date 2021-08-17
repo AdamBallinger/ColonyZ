@@ -6,7 +6,12 @@ namespace ColonyZ.Models.Map.Pathing
         public int X { get; }
         public int Y { get; }
 
-        public bool Pathable { get; set; }
+        /// <summary>
+        ///     Movement penalty when travelling through this node.
+        /// </summary>
+        public int MovementCost { get; }
+        
+        public bool Pathable { get; }
         
         public int HCost { get; set; }
         public int GCost { get; set; }
@@ -14,11 +19,12 @@ namespace ColonyZ.Models.Map.Pathing
         
         public int Parent { get; set; }
 
-        public NodeData(int _id, int _x, int _y, bool _pathable)
+        public NodeData(int _id, int _x, int _y, bool _pathable, int _movementCost = 1)
         {
             ID = _id;
             X = _x;
             Y = _y;
+            MovementCost = _movementCost;
             Pathable = _pathable;
             HCost = int.MaxValue;
             GCost = 0;
