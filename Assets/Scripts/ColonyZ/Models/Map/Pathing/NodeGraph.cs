@@ -116,7 +116,7 @@ namespace ColonyZ.Models.Map.Pathing
         /// <returns></returns>
         public Node GetNodeAt(int _x, int _y)
         {
-            if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return new Node(-1, 0, 0, 0, false);
+            if (_x < 0 || _x >= Width || _y < 0 || _y >= Height) return null;
 
             return Nodes[_x * Width + _y];
         }

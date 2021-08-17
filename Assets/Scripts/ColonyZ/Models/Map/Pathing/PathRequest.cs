@@ -42,7 +42,7 @@ namespace ColonyZ.Models.Map.Pathing
             onPathCompleteCallback = _onCompleteCallback;
 
             // If the end node is not a pathable node, then just ignore this request and return an empty callback.
-            if (End.Data.ID == -1 || !End.Pathable)
+            if (End == null || !End.Pathable)
             {
                 onPathCompleteCallback?.Invoke(new Path(null, false, -1.0f, RemoveStart));
             }
