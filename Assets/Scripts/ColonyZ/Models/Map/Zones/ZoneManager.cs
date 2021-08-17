@@ -36,11 +36,9 @@ namespace ColonyZ.Models.Map.Zones
             {
                 Zones.Add(_zone);
                 for (var x = _zone.Origin.x; x < _zone.Origin.x + _zone.Size.x; x++)
+                for (var y = _zone.Origin.y; y < _zone.Origin.y + _zone.Size.y; y++)
                 {
-                    for (var y = _zone.Origin.y; y < _zone.Origin.y + _zone.Size.y; y++)
-                    {
-                        World.Instance.GetTileAt(x, y).Zone = _zone;
-                    }
+                    World.Instance.GetTileAt(x, y).Zone = _zone;
                 }
 
                 zoneCreatedEvent?.Invoke(_zone);
@@ -52,6 +50,12 @@ namespace ColonyZ.Models.Map.Zones
             if (Zones.Contains(_zone))
             {
                 Zones.Remove(_zone);
+                for (var x = _zone.Origin.x; x < _zone.Origin.x + _zone.Size.x; x++)
+                for (var y = _zone.Origin.y; y < _zone.Origin.y + _zone.Size.y; y++)
+                {
+                    World.Instance.GetTileAt(x, y).Zone = null;
+                }
+                
                 zoneDeletedEvent?.Invoke(_zone);
             }
         }

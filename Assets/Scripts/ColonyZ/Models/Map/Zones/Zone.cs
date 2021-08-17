@@ -18,7 +18,7 @@ namespace ColonyZ.Models.Map.Zones
         public Vector2Int MinimumSize { get; protected set; }
 
         /// <summary>
-        /// Bottom left corner of the zone.
+        ///     Bottom left corner of the zone.
         /// </summary>
         public Vector2Int Origin { get; protected set; }
 
