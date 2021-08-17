@@ -8865,9 +8865,9 @@ MonoBehaviour:
     type: 3}
   objectsMaterial: {fileID: 2100000, guid: 9a011744bf69b7a41ab3e5a3b3f57b03, type: 2}
   worldSize:
-    <Name>k__BackingField: Huge
-    <Width>k__BackingField: 320
-    <Height>k__BackingField: 320
+    <Name>k__BackingField: Mini
+    <Width>k__BackingField: 16
+    <Height>k__BackingField: 16
   enableWorldGen: 1
   overrideSeed: 0
   seed: 42736
