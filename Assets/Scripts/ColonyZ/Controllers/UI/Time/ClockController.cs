@@ -24,6 +24,7 @@ namespace ColonyZ.Controllers.UI.Time
             TimeManager.Instance.newDayEvent += day => dayText.text = "Day: " + day;
             World.Instance.WorldActionProcessor.godModeChangeEvent += OnGodModeChange;
 
+            clockText.text = $"{TimeManager.Instance.Hour:00}:{TimeManager.Instance.Minute:00}";
             modeText.text = $"{(int) TimeManager.Instance.TimeMode}x";
             dayText.text = "Day: " + TimeManager.Instance.Day;
             OnGodModeChange(World.Instance.WorldActionProcessor.GodMode);
