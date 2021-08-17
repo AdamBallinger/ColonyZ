@@ -65,14 +65,14 @@ namespace ColonyZ.Models.TimeSystem
         public event Action<int> newDayEvent;
 
         /// <summary>
-        ///     How many game time seconds pass per real life second.
+        ///     How many game time milliseconds pass per real life second.
         /// </summary>
-        private const int millisPerSecond = 1000;
+        private const int millisPerSecond = 750;
 
         /// <summary>
-        ///     Number of in game seconds per minute.
+        ///     Number of in game milliseconds per game time minute.
         /// </summary>
-        private const int millisPerMinute = 1 * 1000;
+        private const int millisPerMinute = 1000;
 
         /// <summary>
         ///     Current milliseconds passed.
