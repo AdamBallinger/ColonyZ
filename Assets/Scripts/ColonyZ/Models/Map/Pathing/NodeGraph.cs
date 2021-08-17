@@ -62,7 +62,6 @@ namespace ColonyZ.Models.Map.Pathing
                 Nodes[x * Width + y] = new Node(nodeID++,
                     x,
                     y,
-                    1.0f,
                     World.Instance.GetTileAt(x, y).GetEnterability() != TileEnterability.None);
                 NodeData[x * Width + y] = Nodes[x * Width + y].Data;
             }

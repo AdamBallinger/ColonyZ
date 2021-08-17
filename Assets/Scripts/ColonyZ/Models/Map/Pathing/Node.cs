@@ -26,9 +26,9 @@ namespace ColonyZ.Models.Map.Pathing
         /// </summary>
         private List<Node> Neighbours { get; }
 
-        public Node(int _id, int _x, int _y, float _movementCost, bool _pathable)
+        public Node(int _id, int _x, int _y, bool _pathable, int _movementCost = 1)
         {
-            Data = new NodeData(_id, _x, _y, _pathable);
+            Data = new NodeData(_id, _x, _y, _pathable, _movementCost);
             Paths = new List<Path>();
             Neighbours = new List<Node>(4);
             Accessible = true;
