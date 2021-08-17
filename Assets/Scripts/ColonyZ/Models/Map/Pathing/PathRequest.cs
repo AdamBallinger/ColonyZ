@@ -44,7 +44,7 @@ namespace ColonyZ.Models.Map.Pathing
             // If the end node is not a pathable node, then just ignore this request and return an empty callback.
             if (End == null || !End.Pathable)
             {
-                onPathCompleteCallback?.Invoke(new Path(null, false, -1.0f, RemoveStart));
+                onPathCompleteCallback?.Invoke(null);
             }
         }
     }
