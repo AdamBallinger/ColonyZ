@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using ColonyZ.Models.Map.Tiles;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -22,7 +24,7 @@ namespace ColonyZ.Utils
 
         /// <summary>
         ///     Creates a mesh made up of width * height quads. Each quad has its own 4 vertices.
-        ///     Vertex colors are default to 0,0,0,0.
+        ///     Vertex colors are default to (0, 0, 0, 0).
         /// </summary>
         /// <param name="_meshName"></param>
         /// <param name="_width"></param>
@@ -52,7 +54,42 @@ namespace ColonyZ.Utils
             return mesh;
         }
 
-        public static Mesh CreateQuad(int _w, int _h, Vector2 _pivot)
+        /// <summary>
+        ///     Creates a mesh from a given list of tiles. Each tile will have 4 separate vertices.
+        /// </summary>
+        /// <param name="_meshName"></param>
+        /// <param name="_tiles"></param>
+        /// <param name="_color"></param>
+        /// <returns></returns>
+        public static Mesh CreateMesh(string _meshName, List<Tile> _tiles, Color _color)
+        {
+            var mesh = new Mesh
+            {
+                name = _meshName,
+                indexFormat = IndexFormat.UInt32
+            };
+
+            var combiner = new CombineInstance[_tiles.Count];
+
+            for (var i = 0; i < _tiles.Count; i++)
+            {
+                var tile = _tiles[i];
+                var tileQuad = CreateQuad(1, 1, tile.Position);
+                var colors = new Color[4];
+                colors[0] = _color;
+                colors[1] = _color;
+                colors[2] = _color;
+                colors[3] = _color;
+                tileQuad.colors = colors;
+                combiner[i].mesh = tileQuad;
+            }
+
+            mesh.CombineMeshes(combiner, true, false);
+            
+            return mesh;
+        }
+
+        private static Mesh CreateQuad(int _w, int _h, Vector2 _pivot)
         {
             var mesh = new Mesh
             {
