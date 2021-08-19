@@ -134,17 +134,31 @@ namespace ColonyZ.Models.Map
         {
             var enumerable = _tiles.ToArray();
             
+            var valid = false;
+            var zoneBeingModified = ZoneManager.Instance.CurrentZoneBeingModified;
+            
             foreach (var tile in enumerable)
             {
+                if (tile.HasObject && !zoneBeingModified.CanContainObjects)
+                {
+                    return;
+                }
+                
                 foreach (var n in tile.DirectNeighbours)
                 {
-                    if (n.Zone != null && n.Zone == ZoneManager.Instance.CurrentZoneBeingModified)
+                    if (n.Zone != null && n.Zone == zoneBeingModified)
                     {
-                        n.Zone.AddTiles(enumerable);
-                        return;
+                        if (n.HasObject && !zoneBeingModified.CanContainObjects)
+                        {
+                            return;
+                        }
+
+                        valid = true;
                     }
                 }
             }
+            
+            if (valid) zoneBeingModified.AddTiles(enumerable);
         }
 
         private void HandleShrinkZone(IEnumerable<Tile> _tiles)
