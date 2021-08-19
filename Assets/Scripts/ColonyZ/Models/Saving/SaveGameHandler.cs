@@ -216,7 +216,7 @@ namespace ColonyZ.Models.Saving
             var zonesJson = JObject.Parse(File.ReadAllText(ZonesFile));
             foreach (var zoneData in zonesJson["Zones"])
             {
-                var zoneType = Type.GetType(zoneData["zone_type"].Value<string>());
+                var zoneType = Type.GetType(zoneData["type"].Value<string>());
                 if (zoneType == null)
                 {
                     Debug.LogError("Attempted to load a null zone type. Skipping...");

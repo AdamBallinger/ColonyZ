@@ -1,11 +1,13 @@
+using System.Collections.Generic;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Saving;
+using ColonyZ.Models.UI;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Zones
 {
-    public abstract class Zone : ISaveable
+    public abstract class Zone : ISaveable, ISelectable
     {
         public string ZoneName { get; protected set; }
 
@@ -15,33 +17,56 @@ namespace ColonyZ.Models.Map.Zones
         /// </summary>
         public bool CanContainObjects { get; protected set; }
 
-        public Vector2Int MinimumSize { get; protected set; }
-
         /// <summary>
-        ///     Bottom left corner of the zone.
+        ///     Number of tiles assigned to this zone.
         /// </summary>
-        public Vector2Int Origin { get; protected set; }
+        public int Size => Tiles.Count;
 
-        public Vector2Int Size { get; protected set; }
+        public List<Tile> Tiles { get; }
+        
+        public Color Color { get; protected set; }
 
         protected Zone()
         {
-            MinimumSize = Vector2Int.one;
+            Tiles = new List<Tile>();
         }
 
-        public virtual void SetOrigin(int _x, int _y)
+        public void AddTile(Tile _tile)
         {
-            Origin = new Vector2Int(_x, _y);
+            if (Tiles.Contains(_tile)) return;
+            
+            Tiles.Add(_tile);
+            _tile.Zone = this;
+            
+            //ZoneManager.Instance.OnZonePlaced(this);
         }
 
-        protected void SetOrigin(Tile _tile)
+        public void AddTiles(IEnumerable<Tile> _tiles, bool _updateManager = true)
         {
-            SetOrigin(_tile.X, _tile.Y);
+            foreach (var tile in _tiles) AddTile(tile);
+            
+            if (_updateManager)
+                ZoneManager.Instance.OnZonePlaced(this);
         }
 
-        public virtual void SetSize(int _width, int _height)
+        public void RemoveTile(Tile _tile)
         {
-            Size = new Vector2Int(_width, _height);
+            if (!Tiles.Contains(_tile)) return;
+
+            Tiles.Remove(_tile);
+            _tile.Zone = null;
+            
+            ZoneManager.Instance.OnZoneRemoved(this);
+        }
+
+        public void RemoveAllTiles()
+        {
+            foreach (var tile in Tiles)
+            {
+                tile.Zone = null;
+            }
+
+            Tiles.Clear();
         }
 
         public virtual bool CanPlace(Tile _tile)
@@ -57,15 +82,47 @@ namespace ColonyZ.Models.Map.Zones
             return true;
         }
 
-        public void OnSave(SaveGameWriter _writer)
+        public virtual void OnSave(SaveGameWriter _writer)
         {
-            var originTile = World.Instance.GetTileAt(Origin);
-            _writer.WriteProperty("t_index", World.Instance.GetTileIndex(originTile));
-            _writer.WriteProperty("zone_type", GetType().FullName);
-            _writer.WriteProperty("size_x", Size.x);
-            _writer.WriteProperty("size_y", Size.y);
+            _writer.WriteProperty("type", GetType().FullName);
+            _writer.WriteSet("tiles", GetTileIndexes());
         }
 
-        public abstract void OnLoad(JToken _dataToken);
+        public virtual void OnLoad(JToken _dataToken)
+        {
+            var indexes = _dataToken["tiles"].ToObject<int[]>();
+
+            foreach (var tileIndex in indexes)
+            {
+                AddTile(World.Instance.GetTileAt(tileIndex));
+            }
+            
+            ZoneManager.Instance.OnZonePlaced(this);
+        }
+
+        private int[] GetTileIndexes()
+        {
+            var result = new int[Tiles.Count];
+            for (var i = 0; i < Tiles.Count; i++)
+            {
+                result[i] = World.Instance.GetTileIndex(Tiles[i]);
+            }
+
+            return result;
+        }
+        
+        public Sprite GetSelectionIcon()
+        {
+            return null;
+        }
+
+        public abstract string GetSelectionName();
+
+        public abstract string GetSelectionDescription();
+
+        public Vector2 GetPosition()
+        {
+            return Vector2.zero;
+        }
     }
 }

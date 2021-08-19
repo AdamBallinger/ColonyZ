@@ -13,7 +13,10 @@ namespace ColonyZ.Models.Map
 {
     public enum ProcessMode
     {
-        Zone,
+        Zone_Create,
+        Zone_Expand,
+        Zone_Shrink,
+        Zone_Delete,
         Object,
         Demolish,
         Gather,
@@ -79,19 +82,22 @@ namespace ColonyZ.Models.Map
         ///     Processes the given tiles based on the current mode.
         /// </summary>
         /// <param name="_tiles"></param>
-        /// <param name="_x"></param>
-        /// <param name="_y"></param>
-        /// <param name="_width"></param>
-        /// <param name="_height"></param>
         /// <param name="_rotation"></param>
-        public void Process(IEnumerable<Tile> _tiles, int _x = 0, int _y = 0, int _width = 0, int _height = 0, 
-            ObjectRotation _rotation = ObjectRotation.Default)
+        public void Process(IEnumerable<Tile> _tiles, ObjectRotation _rotation = ObjectRotation.Default)
         {
             switch (ProcessMode)
             {
-                case ProcessMode.Zone:
-                    if (ZoneToBuild.MinimumSize.x <= _width && ZoneToBuild.MinimumSize.y <= _height)
-                        HandleBuildZone(_tiles, _x, _y, _width, _height);
+                case ProcessMode.Zone_Create:
+                    HandleBuildZone(_tiles);
+                    break;
+                case ProcessMode.Zone_Expand:
+                    HandleExpandZone(_tiles);
+                    break;
+                case ProcessMode.Zone_Shrink:
+                    HandleShrinkZone(_tiles);
+                    break;
+                case ProcessMode.Zone_Delete:
+                    HandleDeleteZone(_tiles);
                     break;
                 case ProcessMode.Object:
                     HandleBuild(_tiles, _rotation);
@@ -108,7 +114,7 @@ namespace ColonyZ.Models.Map
             }
         }
 
-        private void HandleBuildZone(IEnumerable<Tile> _tiles, int _x, int _y, int _width, int _height)
+        private void HandleBuildZone(IEnumerable<Tile> _tiles)
         {
             var enumerable = _tiles.ToArray();
 
@@ -117,16 +123,46 @@ namespace ColonyZ.Models.Map
                 if (!ZoneToBuild.CanPlace(tile))
                     return;
             }
-
-            ZoneToBuild.SetOrigin(_x, _y);
-            ZoneToBuild.SetSize(_width, _height);
-
-            ZoneManager.Instance.AddZone(ZoneToBuild);
+            
+            ZoneToBuild.AddTiles(enumerable);
 
             // Create new template instance for the zone being built.
             ZoneToBuild = (Zone) Activator.CreateInstance(ZoneToBuild.GetType());
         }
 
+        private void HandleExpandZone(IEnumerable<Tile> _tiles)
+        {
+            var enumerable = _tiles.ToArray();
+            
+            foreach (var tile in enumerable)
+            {
+                foreach (var n in tile.DirectNeighbours)
+                {
+                    if (n.Zone != null && n.Zone == ZoneManager.Instance.CurrentZoneBeingModified)
+                    {
+                        n.Zone.AddTiles(enumerable);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void HandleShrinkZone(IEnumerable<Tile> _tiles)
+        {
+            foreach (var tile in _tiles)
+            {
+                tile?.Zone?.RemoveTile(tile);
+            }
+        }
+
+        private void HandleDeleteZone(IEnumerable<Tile> _tiles)
+        {
+            foreach (var tile in _tiles)
+            {
+                ZoneManager.Instance.RemoveZone(tile.Zone);
+            }
+        }
+        
         private void HandleBuild(IEnumerable<Tile> _tiles, ObjectRotation _rotation)
         {
             var jobs = new List<Job>();
@@ -240,11 +276,29 @@ namespace ColonyZ.Models.Map
             return false;
         }
 
-        public void SetZone(Zone _zoneToBuild)
+        public void SetZoneCreateMode(Zone _zoneToBuild)
         {
             MouseController.Instance.Mode = MouseMode.Process;
-            ProcessMode = ProcessMode.Zone;
+            ProcessMode = ProcessMode.Zone_Create;
             ZoneToBuild = _zoneToBuild;
+        }
+
+        public void SetZoneExpandMode()
+        {
+            MouseController.Instance.Mode = MouseMode.Process;
+            ProcessMode = ProcessMode.Zone_Expand;
+        }
+
+        public void SetZoneShrinkMode()
+        {
+            MouseController.Instance.Mode = MouseMode.Process;
+            ProcessMode = ProcessMode.Zone_Shrink;
+        }
+
+        public void SetZoneDeleteMode()
+        {
+            MouseController.Instance.Mode = MouseMode.Process_Single;
+            ProcessMode = ProcessMode.Zone_Delete;
         }
 
         /// <summary>

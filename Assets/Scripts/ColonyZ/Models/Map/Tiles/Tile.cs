@@ -50,7 +50,20 @@ namespace ColonyZ.Models.Map.Tiles
 
         public Area Area => Region?.Area;
         public Region Region { get; set; }
-        public Zone Zone { get; set; }
+
+        private Zone m_Zone;
+        public Zone Zone
+        {
+            get => m_Zone;
+            set
+            {
+                if (m_Zone != value)
+                {
+                    m_Zone = value;
+                    onTileChanged?.Invoke(this);
+                }
+            }
+        }
 
         /// <summary>
         ///     The definition of this tile.
@@ -254,7 +267,6 @@ namespace ColonyZ.Models.Map.Tiles
         {
             return $"Position: ({X}, {Y})\n" +
                    $"Area ID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
-                   $"Zone: {(Zone != null ? Zone.ZoneName : "None")}\n" +
                    $"Accessible: {Accessible()}\n";
         }
 

@@ -1,25 +1,20 @@
 using ColonyZ.Models.Items;
 using ColonyZ.Models.Map.Tiles;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Zones
 {
     public class StorageZone : Zone
     {
-        private Tile[] tiles;
-
         public StorageZone()
         {
-            ZoneName = "Storage";
+            ZoneName = "Storage " + (ZoneManager.Instance.GetZoneTypeQuantity<StorageZone>() + 1);
             CanContainObjects = false;
-            MinimumSize = new Vector2Int(3, 2);
-        }
-
-        public override void SetSize(int _width, int _height)
-        {
-            base.SetSize(_width, _height);
-            tiles = new Tile[_width * _height];
+            Color = new Color(
+                Random.Range(0.0f, 1.0f),
+                Random.Range(0.0f, 1.0f),
+                Random.Range(0.0f, 1.0f),
+                0.1f);
         }
 
         /// <summary>
@@ -31,7 +26,7 @@ namespace ColonyZ.Models.Map.Zones
         public Tile GetTileWithItem(Item _item, int _quantity)
         {
             // TODO: Prioritize tiles with lowest stack quantity first. Maybe use priority list with dictionary?
-            foreach (var tile in tiles)
+            foreach (var tile in Tiles)
                 if (tile.GetItemStack() != null && tile.GetItemStack().Item.ItemName.Equals(_item.ItemName) &&
                     tile.GetItemStack().Quantity >= _quantity)
                     return tile;
@@ -39,16 +34,14 @@ namespace ColonyZ.Models.Map.Zones
             return null;
         }
 
-        public override void OnLoad(JToken _dataToken)
+        public override string GetSelectionName()
         {
-            var tIndex = _dataToken["t_index"].Value<int>();
-            var sizeX = _dataToken["size_x"].Value<int>();
-            var sizeY = _dataToken["size_y"].Value<int>();
+            return ZoneName;
+        }
 
-            SetOrigin(World.Instance.GetTileAt(tIndex));
-            SetSize(sizeX, sizeY);
-
-            ZoneManager.Instance.AddZone(this);
+        public override string GetSelectionDescription()
+        {
+            return $"Size: {Size}";
         }
     }
 }

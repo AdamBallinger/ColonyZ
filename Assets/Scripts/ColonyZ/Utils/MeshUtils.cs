@@ -61,7 +61,7 @@ namespace ColonyZ.Utils
         /// <param name="_tiles"></param>
         /// <param name="_color"></param>
         /// <returns></returns>
-        public static Mesh CreateMesh(string _meshName, List<Tile> _tiles, Color _color)
+        public static Mesh CreateMesh(string _meshName, IReadOnlyList<Tile> _tiles, Color _color)
         {
             var mesh = new Mesh
             {

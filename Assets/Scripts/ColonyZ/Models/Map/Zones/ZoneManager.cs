@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using ColonyZ.Controllers.UI;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Zones
@@ -11,7 +13,10 @@ namespace ColonyZ.Models.Map.Zones
         public List<Zone> Zones { get; } = new List<Zone>();
 
         public event Action<Zone> zoneCreatedEvent;
+        public event Action<Zone> zoneUpdatedEvent;
         public event Action<Zone> zoneDeletedEvent;
+
+        public Zone CurrentZoneBeingModified { get; set; }
 
         private ZoneManager()
         {
@@ -30,17 +35,56 @@ namespace ColonyZ.Models.Map.Zones
             Instance = null;
         }
 
-        public void AddZone(Zone _zone)
+        public int GetZoneTypeQuantity<T>() where T : Zone
+        {
+            return Zones.OfType<T>().Count();
+        }
+
+        public void OnZonePlaced(Zone _zone)
+        {
+            if (CurrentZoneBeingModified != null)
+            {
+                foreach (var tile in _zone.Tiles)
+                {
+                    foreach (var n in tile.DirectNeighbours)
+                    {
+                        if (n.Zone == CurrentZoneBeingModified)
+                        {
+                            CurrentZoneBeingModified.AddTiles(_zone.Tiles, false);
+                            zoneUpdatedEvent?.Invoke(CurrentZoneBeingModified);
+                            return;
+                        }
+                    }
+                }
+                
+                CurrentZoneBeingModified = _zone;
+            }
+
+            AddZone(_zone);
+            if (CurrentZoneBeingModified == null)
+            {
+                CurrentZoneBeingModified = _zone;
+            }
+        }
+
+        public void OnZoneRemoved(Zone _zone)
+        {
+            if (_zone.Size == 0)
+            {
+                RemoveZone(_zone);
+                return;
+            }
+            
+            // TODO: When a zone is split up from a removal, delete the section with the least number of tiles.
+            
+            zoneUpdatedEvent?.Invoke(_zone);
+        }
+        
+        private void AddZone(Zone _zone)
         {
             if (!Zones.Contains(_zone))
             {
                 Zones.Add(_zone);
-                for (var x = _zone.Origin.x; x < _zone.Origin.x + _zone.Size.x; x++)
-                for (var y = _zone.Origin.y; y < _zone.Origin.y + _zone.Size.y; y++)
-                {
-                    World.Instance.GetTileAt(x, y).Zone = _zone;
-                }
-
                 zoneCreatedEvent?.Invoke(_zone);
             }
         }
@@ -50,11 +94,9 @@ namespace ColonyZ.Models.Map.Zones
             if (Zones.Contains(_zone))
             {
                 Zones.Remove(_zone);
-                for (var x = _zone.Origin.x; x < _zone.Origin.x + _zone.Size.x; x++)
-                for (var y = _zone.Origin.y; y < _zone.Origin.y + _zone.Size.y; y++)
-                {
-                    World.Instance.GetTileAt(x, y).Zone = null;
-                }
+                _zone.RemoveAllTiles();
+
+                if (SelectionController.currentSelection == _zone) SelectionController.currentSelection = null;
                 
                 zoneDeletedEvent?.Invoke(_zone);
             }

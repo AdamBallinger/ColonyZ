@@ -58,7 +58,6 @@ namespace ColonyZ.Models.Saving
             {
                 writer.WriteValue(val);
             }
-
             writer.WriteEnd();
         }
 

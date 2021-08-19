@@ -7,6 +7,7 @@ using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Tiles.Objects.Data;
+using ColonyZ.Models.Map.Zones;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
 using ColonyZ.Utils;
@@ -184,7 +185,7 @@ namespace ColonyZ.Controllers
 
                 draggableCursor.SetActive(false);
 
-                var areaValid = true;
+                var zonePositionValid = true;
 
                 for (var x = currentDragData.StartX; x <= currentDragData.EndX; x++)
                 for (var y = currentDragData.StartY; y <= currentDragData.EndY; y++)
@@ -219,22 +220,27 @@ namespace ColonyZ.Controllers
                                 ? previewInvalidColor
                                 : previewValidColor;
                     }
-                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone)
+                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone_Create)
                     {
                         draggableCursor.SetActive(true);
-                        var area = World.Instance.WorldActionProcessor.ZoneToBuild;
+                        var zone = World.Instance.WorldActionProcessor.ZoneToBuild;
 
-                        if (!area.CanPlace(tile) || currentDragData.SizeX < area.MinimumSize.x ||
-                            currentDragData.SizeY < area.MinimumSize.y)
+                        if (!zone.CanPlace(tile))
                         {
                             draggableCursorRenderer.color = previewInvalidColor;
-                            areaValid = false;
+                            zonePositionValid = false;
                         }
                         else
                         {
-                            if (!areaValid) break;
+                            if (!zonePositionValid) break;
                             draggableCursorRenderer.color = previewValidColor;
                         }
+                    }
+                    else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone_Expand ||
+                             World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone_Shrink)
+                    {
+                        draggableCursor.SetActive(true);
+                        draggableCursorRenderer.color = previewOverlayColor;
                     }
                     else if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Demolish)
                     {
@@ -295,6 +301,20 @@ namespace ColonyZ.Controllers
             }
             else if (Mode == MouseMode.Process_Single)
             {
+                if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone_Delete)
+                {
+                    if (GetTileUnderMouse()?.Zone != null)
+                    {
+                        ZoneManager.Instance.CurrentZoneBeingModified = GetTileUnderMouse().Zone;
+                    }
+                    else
+                    {
+                        ZoneManager.Instance.CurrentZoneBeingModified = null;
+                    }
+                    
+                    return;
+                }
+                
                 var objectBeingBuilt = World.Instance.WorldActionProcessor.ObjectToBuild;
                 
                 if (objectBeingBuilt.Rotatable && Input.GetKeyDown(KeyCode.R))
@@ -401,15 +421,11 @@ namespace ColonyZ.Controllers
             }
 
             if (World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Object
-                || World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone)
+                || World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone_Create
+                || World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone_Expand
+                || World.Instance.WorldActionProcessor.ProcessMode == ProcessMode.Zone_Shrink)
             {
-                World.Instance.WorldActionProcessor.Process(
-                    tiles.Cast<Tile>(),
-                    currentDragData.StartX,
-                    currentDragData.StartY,
-                    currentDragData.SizeX,
-                    currentDragData.SizeY,
-                    currentRotation);
+                World.Instance.WorldActionProcessor.Process(tiles.Cast<Tile>(), currentRotation);
             }
             else
             {

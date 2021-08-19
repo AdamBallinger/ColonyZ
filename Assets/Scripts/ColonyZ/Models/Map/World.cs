@@ -48,6 +48,11 @@ namespace ColonyZ.Models.Map
         public Overlay Overlay { get; private set; }
 
         /// <summary>
+        ///     Event called when a tile in the world has changed in some way.
+        /// </summary>
+        public event Action<Tile> tileChangedEvent;
+
+        /// <summary>
         ///     Event called when a new entity is created.
         /// </summary>
         public event Action<Entity> onEntitySpawn;
@@ -119,6 +124,7 @@ namespace ColonyZ.Models.Map
                 tile.onTileDefinitionChanged += _tileDefinitionChangeListener;
                 tile.onTileChanged += _tileChangedListener;
                 tile.onTileChanged += WorldGrid.NotifyChunkUpdate;
+                tile.onTileChanged += TileChanged;
                 Tiles[x * Width + y] = tile;
             }
 
@@ -131,7 +137,21 @@ namespace ColonyZ.Models.Map
             }
         }
 
+        private void TileChanged(Tile _tile)
+        {
+            tileChangedEvent?.Invoke(_tile);
+        }
+
         #region GetTile Region
+
+        /// <summary>
+        ///     Returns the list of tiles for the world.
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<Tile> GetTiles()
+        {
+            return Tiles;
+        }
 
         /// <summary>
         ///     Returns a tile at the given world coordinates.

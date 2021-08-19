@@ -1,5 +1,6 @@
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Map.Tiles.Objects;
+using ColonyZ.Models.Map.Zones;
 using ColonyZ.Models.UI;
 using ColonyZ.Utils;
 using TMPro;
@@ -46,7 +47,12 @@ namespace ColonyZ.Controllers.UI
                 return;
             }
 
-            if (_tile.GetItemStack() != null)
+            if (_tile.Zone != null)
+            {
+                Set(_tile.Zone);
+                ZoneManager.Instance.CurrentZoneBeingModified = _tile.Zone;
+            }
+            else if (_tile.GetItemStack() != null)
                 Set(_tile.Item);
             else if (_tile.LivingEntities.Count > 0)
                 Set(_tile.LivingEntities[0]);
@@ -58,7 +64,7 @@ namespace ColonyZ.Controllers.UI
 
         public void SetCursor(ISelectable _selectable)
         {
-            selectionObject.SetActive(true);
+            selectionObject.SetActive(!(_selectable is Zone));
             selectionObject.transform.position = _selectable.GetPosition();
 
             if (_selectable is TileObject obj)
@@ -103,7 +109,13 @@ namespace ColonyZ.Controllers.UI
 
         private void Update()
         {
-            if (IsVisible && Input.GetKeyDown(KeyCode.Escape)) HideSelectionInfo();
+            if (Input.GetKeyDown(KeyCode.Escape)) HideSelectionInfo();
+
+            if (currentSelection == null)
+            {
+                HideSelectionInfo();
+                return;
+            }
 
             if (IsVisible)
             {
