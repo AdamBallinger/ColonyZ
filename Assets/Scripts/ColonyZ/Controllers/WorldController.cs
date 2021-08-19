@@ -109,6 +109,13 @@ namespace ColonyZ.Controllers
             saveGameHandler = new SaveGameHandler();
             worldProvider = new WorldDataProvider(WorldLoadSettings.WORLD_SIZE);
 
+#if UNITY_EDITOR
+            if (shouldSaveLoad && !WorldLoadSettings.FROM_MENU)
+            {
+                WorldLoadSettings.LOAD_TYPE = WorldLoadType.Load;
+            }
+#endif
+
             if (WorldLoadSettings.LOAD_TYPE == WorldLoadType.Load)
             {
                 saveGameHandler.LoadWorldData(worldProvider);

@@ -15,6 +15,7 @@ namespace ColonyZ.Controllers.UI.MainMenu
         private void Start()
         {
             loadGameButton.interactable = SaveGameHandler.SaveGamePresent();
+            WorldLoadSettings.FROM_MENU = true;
         }
 
         public void OnNewGamePressed()
