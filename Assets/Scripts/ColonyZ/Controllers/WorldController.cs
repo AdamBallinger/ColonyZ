@@ -31,7 +31,8 @@ namespace ColonyZ.Controllers
 
         [SerializeField] private DataLoader dataLoader;
 
-        [SerializeField] private bool shouldSaveLoad = true;
+        [SerializeField] private bool shouldSave = true;
+        [SerializeField] private bool shouldLoad = true;
 
         [SerializeField] [Range(0, 10)] private int initialCharacterCount = 1;
         [SerializeField] [Range(0, 100)] private int treeSpawnChance;
@@ -94,7 +95,7 @@ namespace ColonyZ.Controllers
 
         private void OnDestroy()
         {
-            if (shouldSaveLoad)
+            if (shouldSave)
                 saveGameHandler.SaveAll();
             AreaManager.Destroy();
             ZoneManager.Destroy();
@@ -110,7 +111,7 @@ namespace ColonyZ.Controllers
             worldProvider = new WorldDataProvider(WorldLoadSettings.WORLD_SIZE);
 
 #if UNITY_EDITOR
-            if (shouldSaveLoad && !WorldLoadSettings.FROM_MENU)
+            if (shouldLoad && !WorldLoadSettings.FROM_MENU)
             {
                 WorldLoadSettings.LOAD_TYPE = WorldLoadType.Load;
             }
