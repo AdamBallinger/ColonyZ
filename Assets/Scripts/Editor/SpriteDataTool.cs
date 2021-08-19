@@ -217,6 +217,12 @@ namespace Editor
             spritePivot = EditorGUILayout.Vector2Field("Sprite pivot: ", spritePivot);
             spritePivot.x = Mathf.Min(spritePivot.x, cellWidth);
             spritePivot.y = Mathf.Min(spritePivot.y, cellHeight);
+
+            if (GUILayout.Button("Re-Slice"))
+            {
+                Slice();
+                SaveSpritesToAsset(serializedObject);
+            }
             
             EditorGUILayout.LabelField("Sprites: " + serializedObject.FindProperty("sprites").arraySize);
 
