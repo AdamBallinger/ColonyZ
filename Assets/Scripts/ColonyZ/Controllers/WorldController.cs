@@ -95,7 +95,9 @@ namespace ColonyZ.Controllers
 
         private void OnDestroy()
         {
+#if UNITY_EDITOR 
             if (shouldSave)
+#endif
                 saveGameHandler.SaveAll();
             AreaManager.Destroy();
             ZoneManager.Destroy();
