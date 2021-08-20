@@ -61,6 +61,12 @@ namespace ColonyZ.Controllers.UI
             }
 
             overlayMap.Remove(_zone);
+            ZoneManager.Instance.CurrentZoneBeingModified = null;
+
+            if (Equals(SelectionController.currentSelection, _zone))
+            {
+                SelectionController.currentSelection = null;
+            }
         }
 
         private void UpdateGlobalOverlayColors(Tile _tile)
@@ -79,12 +85,11 @@ namespace ColonyZ.Controllers.UI
         private void Update()
         {
             if (!(SelectionController.currentSelection is Zone) &&
-                World.Instance.WorldActionProcessor.ProcessMode != ProcessMode.Zone_Create &&
-                World.Instance.WorldActionProcessor.ProcessMode != ProcessMode.Zone_Delete)
+                MouseController.Instance.Mode == MouseMode.Select)
             {
                 ZoneManager.Instance.CurrentZoneBeingModified = null;
             }
-            
+
             if (ZoneManager.Instance.CurrentZoneBeingModified != null)
             {
                 if (overlayMap.TryGetValue(ZoneManager.Instance.CurrentZoneBeingModified, out var mesh))

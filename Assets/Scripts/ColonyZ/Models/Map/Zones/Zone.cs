@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.UI;
+using ColonyZ.Utils;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -55,7 +57,38 @@ namespace ColonyZ.Models.Map.Zones
 
             Tiles.Remove(_tile);
             _tile.Zone = null;
+
+            var tileLists = new List<List<Tile>>();
+
+            foreach (var tile in _tile.DirectNeighbours)
+            {
+                if (tile.Zone == null) continue;
+
+                FloodFiller.Flood(tile,
+                    t => Tiles.Contains(t),
+                    t => t.Zone == ZoneManager.Instance.CurrentZoneBeingModified,
+                    list =>
+                    {
+                        if (tileLists.Any(l => l.Intersect(list).Any()))
+                        {
+                            return;
+                        }
+                        
+                        tileLists.Add(list);
+                    });
+            }
+
+            if (tileLists.Count == 2)
+            {
+                var listToDelete = tileLists[0].Count > tileLists[1].Count ? tileLists[1] : tileLists[0];
             
+                foreach (var tile in listToDelete)
+                {
+                    tile.Zone = null;
+                    Tiles.Remove(tile);
+                }
+            }
+
             ZoneManager.Instance.OnZoneRemoved(this);
         }
 

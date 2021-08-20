@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ColonyZ.Controllers.UI;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Zones
@@ -75,8 +74,6 @@ namespace ColonyZ.Models.Map.Zones
                 return;
             }
             
-            // TODO: When a zone is split up from a removal, delete the section with the least number of tiles.
-            
             zoneUpdatedEvent?.Invoke(_zone);
         }
         
@@ -96,8 +93,6 @@ namespace ColonyZ.Models.Map.Zones
                 Zones.Remove(_zone);
                 _zone.RemoveAllTiles();
 
-                if (SelectionController.currentSelection == _zone) SelectionController.currentSelection = null;
-                
                 zoneDeletedEvent?.Invoke(_zone);
             }
         }

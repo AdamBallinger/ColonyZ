@@ -165,7 +165,15 @@ namespace ColonyZ.Models.Map
         {
             foreach (var tile in _tiles)
             {
-                tile?.Zone?.RemoveTile(tile);
+                if (tile.Zone != null && ZoneManager.Instance.CurrentZoneBeingModified == null)
+                {
+                    ZoneManager.Instance.CurrentZoneBeingModified = tile.Zone;
+                }
+
+                if (tile.Zone != null && tile.Zone == ZoneManager.Instance.CurrentZoneBeingModified)
+                {
+                    tile.Zone.RemoveTile(tile);
+                }
             }
         }
 
