@@ -78,14 +78,27 @@ namespace ColonyZ.Models.Map.Zones
                     });
             }
 
-            if (tileLists.Count == 2)
+            if (tileLists.Count > 1)
             {
-                var listToDelete = tileLists[0].Count > tileLists[1].Count ? tileLists[1] : tileLists[0];
-            
-                foreach (var tile in listToDelete)
+                var listToKeep = tileLists[0];
+
+                foreach (var list in tileLists)
                 {
-                    tile.Zone = null;
-                    Tiles.Remove(tile);
+                    if (list.Count > listToKeep.Count)
+                    {
+                        listToKeep = list;
+                    }
+                }
+                
+                tileLists.Remove(listToKeep);
+            
+                foreach (var list in tileLists)
+                {
+                    foreach (var tile in list)
+                    {
+                        tile.Zone = null;
+                        Tiles.Remove(tile);
+                    }
                 }
             }
 
