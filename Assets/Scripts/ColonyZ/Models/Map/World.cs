@@ -50,7 +50,7 @@ namespace ColonyZ.Models.Map
         /// <summary>
         ///     Event called when a tile in the world has changed in some way.
         /// </summary>
-        public event Action<Tile> tileChangedEvent;
+        public event Action<Tile> tileZoneChangedEvent;
 
         /// <summary>
         ///     Event called when a new entity is created.
@@ -124,7 +124,7 @@ namespace ColonyZ.Models.Map
                 tile.onTileDefinitionChanged += _tileDefinitionChangeListener;
                 tile.onTileChanged += _tileChangedListener;
                 tile.onTileChanged += WorldGrid.NotifyChunkUpdate;
-                tile.onTileChanged += TileChanged;
+                tile.onTileZoneChangedEvent += TileZoneChanged;
                 Tiles[x * Width + y] = tile;
             }
 
@@ -137,9 +137,9 @@ namespace ColonyZ.Models.Map
             }
         }
 
-        private void TileChanged(Tile _tile)
+        private void TileZoneChanged(Tile _tile)
         {
-            tileChangedEvent?.Invoke(_tile);
+            tileZoneChangedEvent?.Invoke(_tile);
         }
 
         #region GetTile Region

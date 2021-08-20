@@ -8932,7 +8932,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataLoader: {fileID: 1523355955}
   shouldSave: 0
-  shouldLoad: 1
+  shouldLoad: 0
   initialCharacterCount: 1
   treeSpawnChance: 6
   globalLight: {fileID: 1665810043}
@@ -9002,9 +9002,9 @@ MonoBehaviour:
     type: 3}
   objectsMaterial: {fileID: 2100000, guid: 9a011744bf69b7a41ab3e5a3b3f57b03, type: 2}
   worldSize:
-    <Name>k__BackingField: Mini
-    <Width>k__BackingField: 16
-    <Height>k__BackingField: 16
+    <Name>k__BackingField: Huge
+    <Width>k__BackingField: 320
+    <Height>k__BackingField: 320
   enableWorldGen: 1
   overrideSeed: 0
   seed: 42736

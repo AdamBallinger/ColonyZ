@@ -23,10 +23,11 @@ namespace ColonyZ.Controllers.UI
             ZoneManager.Instance.zoneCreatedEvent += ZoneCreated;
             ZoneManager.Instance.zoneUpdatedEvent += ZoneUpdated;
             ZoneManager.Instance.zoneDeletedEvent += ZoneDeleted;
-            World.Instance.tileChangedEvent += UpdateGlobalOverlayColors;
+            World.Instance.tileZoneChangedEvent += UpdateGlobalOverlayColors;
 
             overlayColors = new List<Color>();
             overlayMesh = MeshUtils.CreateMesh("Zone Global Overlay", World.Instance.GetTiles(), new Color(0, 0, 0, 0));
+            overlayMesh.GetColors(overlayColors);
             overlayMeshFilter.mesh = overlayMesh;
         }
 
@@ -71,8 +72,6 @@ namespace ColonyZ.Controllers.UI
 
         private void UpdateGlobalOverlayColors(Tile _tile)
         {
-            overlayMesh.GetColors(overlayColors);
-
             var index = World.Instance.GetTileIndex(_tile) * 4;
             overlayColors[index++] = _tile.Zone?.Color ?? Color.clear;
             overlayColors[index++] = _tile.Zone?.Color ?? Color.clear;

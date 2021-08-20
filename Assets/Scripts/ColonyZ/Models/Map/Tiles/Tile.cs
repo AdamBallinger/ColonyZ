@@ -31,6 +31,11 @@ namespace ColonyZ.Models.Map.Tiles
         /// </summary>
         public event Action<Tile> onTileDefinitionChanged;
 
+        /// <summary>
+        ///     Event called when the zone for this tile changes.
+        /// </summary>
+        public event Action<Tile> onTileZoneChangedEvent;
+
         public int X { get; }
         public int Y { get; }
 
@@ -60,7 +65,7 @@ namespace ColonyZ.Models.Map.Tiles
                 if (m_Zone != value)
                 {
                     m_Zone = value;
-                    onTileChanged?.Invoke(this);
+                    onTileZoneChangedEvent?.Invoke(this);
                 }
             }
         }
