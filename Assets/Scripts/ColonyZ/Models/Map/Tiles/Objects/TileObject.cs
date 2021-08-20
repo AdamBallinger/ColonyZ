@@ -72,8 +72,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         public virtual string GetSelectionDescription()
         {
-            return OriginTile.GetSelectionDescription() +
-                   "Durability: 0/0\n";
+            return "Condition: 100%\n";
         }
 
         public virtual Vector2 GetPosition()

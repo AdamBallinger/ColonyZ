@@ -55,11 +55,9 @@ namespace ColonyZ.Controllers.UI
                 Set(_tile.LivingEntities[0]);
             else if (_tile.HasObject)
                 Set(_tile.Object);
-            else
-                Set(_tile);
         }
 
-        public void SetCursor(ISelectable _selectable)
+        private void SetCursor(ISelectable _selectable)
         {
             selectionObject.SetActive(!(_selectable is Zone));
             selectionObject.transform.position = _selectable.GetPosition();
@@ -77,6 +75,19 @@ namespace ColonyZ.Controllers.UI
                 selectionSpriteRenderer.size = size;
                 selectionObject.transform.position = pos;
             }
+        }
+
+        public void SetCursor(Tile _tile)
+        {
+            if (_tile == null)
+            {
+                selectionObject.SetActive(false);
+                return;
+            }
+
+            selectionObject.SetActive(true);
+            selectionObject.transform.position = _tile.Position;
+            selectionSpriteRenderer.size = Vector2.one;
         }
 
         public void HideCursor()

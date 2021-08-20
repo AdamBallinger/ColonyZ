@@ -135,6 +135,12 @@ namespace ColonyZ.Controllers
 
             UpdateDragPreview();
 
+            // if (Input.GetMouseButtonDown(1) && IsDragging)
+            // {
+            //     IsDragging = false;
+            //     Mode = MouseMode.Select;
+            // }
+
             if (IsDragging)
                 if (Input.GetMouseButtonUp(0))
                 {

@@ -8855,7 +8855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataLoader: {fileID: 1523355955}
-  shouldSave: 1
+  shouldSave: 0
   shouldLoad: 1
   initialCharacterCount: 1
   treeSpawnChance: 6

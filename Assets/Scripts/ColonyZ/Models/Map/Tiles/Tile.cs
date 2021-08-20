@@ -10,13 +10,12 @@ using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
-using ColonyZ.Models.UI;
 using ColonyZ.Utils;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Tiles
 {
-    public class Tile : ISelectable, IInventory, IEquatable<Tile>
+    public class Tile : IInventory, IEquatable<Tile>
     {
         private TileDefinition definition, oldDefinition;
 
@@ -257,27 +256,6 @@ namespace ColonyZ.Models.Map.Tiles
         public Tile Right => World.Instance.GetTileAt(X + 1, Y);
         public Tile Up => World.Instance.GetTileAt(X, Y + 1);
         public Tile Down => World.Instance.GetTileAt(X, Y - 1);
-
-        #endregion
-
-        #region ISelectable Implementation
-
-        public string GetSelectionName()
-        {
-            return TileDefinition.TileName;
-        }
-
-        public string GetSelectionDescription()
-        {
-            return $"Position: ({X}, {Y})\n" +
-                   $"Area ID: {(Area != null ? Area.AreaID.ToString() : "None")}\n" +
-                   $"Accessible: {Accessible()}\n";
-        }
-
-        public Vector2 GetPosition()
-        {
-            return Position;
-        }
 
         #endregion
     }
