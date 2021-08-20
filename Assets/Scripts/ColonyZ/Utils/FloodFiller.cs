@@ -64,7 +64,7 @@ namespace ColonyZ.Utils
                 }
             }
 
-            _processor(processed);
+            _processor(new List<Tile>(processed));
             Profiler.EndSample();
         }
     }
