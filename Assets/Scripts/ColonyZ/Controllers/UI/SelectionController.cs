@@ -5,7 +5,6 @@ using ColonyZ.Models.UI;
 using ColonyZ.Utils;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace ColonyZ.Controllers.UI
 {
@@ -14,8 +13,6 @@ namespace ColonyZ.Controllers.UI
         public static ISelectable currentSelection;
 
         [SerializeField] private TMP_Text description;
-
-        [SerializeField] private Image icon;
 
         [SerializeField] private GameObject selectionContainer;
 
@@ -98,7 +95,6 @@ namespace ColonyZ.Controllers.UI
         private void Set(ISelectable _selectable)
         {
             currentSelection = _selectable;
-            icon.sprite = _selectable.GetSelectionIcon();
             title.text = _selectable.GetSelectionName();
             description.text = _selectable.GetSelectionDescription();
             selectionSpriteRenderer.size = Vector2.one;

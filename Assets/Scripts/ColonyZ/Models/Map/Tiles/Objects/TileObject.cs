@@ -65,11 +65,6 @@ namespace ColonyZ.Models.Map.Tiles.Objects
 
         #region ISelectable Implementation
 
-        public virtual Sprite GetSelectionIcon()
-        {
-            return ObjectData.GetIcon();
-        }
-
         public virtual string GetSelectionName()
         {
             return ObjectData.ObjectName;

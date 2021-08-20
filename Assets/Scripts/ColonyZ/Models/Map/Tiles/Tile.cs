@@ -10,7 +10,6 @@ using ColonyZ.Models.Map.Pathing;
 using ColonyZ.Models.Map.Regions;
 using ColonyZ.Models.Map.Tiles.Objects;
 using ColonyZ.Models.Map.Zones;
-using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI;
 using ColonyZ.Utils;
 using UnityEngine;
@@ -262,11 +261,6 @@ namespace ColonyZ.Models.Map.Tiles
         #endregion
 
         #region ISelectable Implementation
-
-        public Sprite GetSelectionIcon()
-        {
-            return SpriteCache.GetSprite("Tiles", TileDefinition.TextureIndex);
-        }
 
         public string GetSelectionName()
         {
