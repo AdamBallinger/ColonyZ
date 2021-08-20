@@ -103,6 +103,7 @@ namespace ColonyZ.Controllers.UI.Context
             RepositionMenu();
 
             if (_tile.HasObject) OpenContextMenu(_tile.Object);
+            else if (_tile.Zone != null) OpenContextMenu(_tile.Zone);
             else if (_tile.LivingEntities.Count > 0) OpenContextMenu(_tile.LivingEntities[0]);
             else CloseContextMenu();
 

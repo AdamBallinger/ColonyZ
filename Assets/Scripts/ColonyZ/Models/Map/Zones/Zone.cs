@@ -3,13 +3,14 @@ using System.Linq;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.UI;
+using ColonyZ.Models.UI.Context;
 using ColonyZ.Utils;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace ColonyZ.Models.Map.Zones
 {
-    public abstract class Zone : ISaveable, ISelectable
+    public abstract class Zone : ISaveable, ISelectable, IContextProvider
     {
         public string ZoneName { get; protected set; }
 
@@ -156,11 +157,6 @@ namespace ColonyZ.Models.Map.Zones
 
             return result;
         }
-        
-        public Sprite GetSelectionIcon()
-        {
-            return null;
-        }
 
         public abstract string GetSelectionName();
 
@@ -169,6 +165,19 @@ namespace ColonyZ.Models.Map.Zones
         public Vector2 GetPosition()
         {
             return Vector2.zero;
+        }
+
+        public ContextAction[] GetContextActions()
+        {
+            return new[]
+            {
+                new ContextAction("Delete", () => ZoneManager.Instance.RemoveZone(this))
+            };
+        }
+
+        public string GetContextMenuName()
+        {
+            return ZoneName;
         }
     }
 }
