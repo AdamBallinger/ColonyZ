@@ -153,6 +153,11 @@ namespace ColonyZ.Models.Map.Tiles
                 World.Instance.WorldGrid.SetDirty(this, true);
             }
 
+            if (Zone != null)
+            {
+                if (!Zone.CanContainObjects) Zone.RemoveTile(this);
+            }
+            
             onTileChanged?.Invoke(this);
         }
 

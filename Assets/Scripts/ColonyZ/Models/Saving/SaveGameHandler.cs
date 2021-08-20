@@ -68,9 +68,9 @@ namespace ColonyZ.Models.Saving
                 return;
             }
 
+            LoadZones();
             LoadObjects();
             LoadEntities();
-            LoadZones();
             LoadJobs();
         }
 
