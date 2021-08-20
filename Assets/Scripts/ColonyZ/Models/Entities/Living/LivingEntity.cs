@@ -2,7 +2,6 @@ using ColonyZ.Models.AI;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Saving;
-using ColonyZ.Models.Sprites;
 using ColonyZ.Models.UI.Context;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -56,12 +55,6 @@ namespace ColonyZ.Models.Entities.Living
         /// </summary>
         public virtual void OnPathFailed()
         {
-        }
-
-        public override Sprite GetSelectionIcon()
-        {
-            // Each head has 4 sprites so multiply the head id by 4 to get the facing sprite for the entity head id.
-            return SpriteCache.GetSprite("Living_Heads", HeadId * 4);
         }
 
         public override string GetSelectionDescription()

@@ -30,8 +30,6 @@ namespace ColonyZ.Models.Entities
             Position = _tile.Position;
         }
 
-        public abstract Sprite GetSelectionIcon();
-
         public string GetSelectionName()
         {
             return Name;

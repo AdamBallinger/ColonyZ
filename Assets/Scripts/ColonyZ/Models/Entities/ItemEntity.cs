@@ -2,9 +2,7 @@ using ColonyZ.Models.Items;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Tiles;
 using ColonyZ.Models.Saving;
-using ColonyZ.Models.Sprites;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace ColonyZ.Models.Entities
 {
@@ -33,11 +31,6 @@ namespace ColonyZ.Models.Entities
         public override int GetSortingOrder()
         {
             return base.GetSortingOrder() + 1;
-        }
-
-        public override Sprite GetSelectionIcon()
-        {
-            return SpriteCache.GetSprite(ItemStack.Item);
         }
 
         public override string GetSelectionDescription()
