@@ -41,6 +41,7 @@ namespace ColonyZ.Controllers.UI
             if (_tile == null)
             {
                 HideSelectionInfo();
+                HideCursor();
                 return;
             }
 
@@ -55,6 +56,11 @@ namespace ColonyZ.Controllers.UI
                 Set(_tile.LivingEntities[0]);
             else if (_tile.HasObject)
                 Set(_tile.Object);
+            else
+            {
+                HideSelectionInfo();
+                HideCursor();
+            }
         }
 
         private void SetCursor(ISelectable _selectable)
@@ -100,11 +106,17 @@ namespace ColonyZ.Controllers.UI
             IsVisible = false;
             currentSelection = null;
             selectionContainer.SetActive(false);
-            HideCursor();
         }
 
         private void Set(ISelectable _selectable)
         {
+            if (currentSelection == _selectable)
+            {
+                HideSelectionInfo();
+                HideCursor();
+                return;
+            }
+            
             currentSelection = _selectable;
             title.text = _selectable.GetSelectionName();
             description.text = _selectable.GetSelectionDescription();
@@ -116,9 +128,7 @@ namespace ColonyZ.Controllers.UI
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape)) HideSelectionInfo();
-
-            if (currentSelection == null)
+            if (currentSelection == null || Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
             {
                 HideSelectionInfo();
                 return;

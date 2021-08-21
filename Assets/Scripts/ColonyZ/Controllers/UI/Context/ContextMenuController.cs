@@ -102,14 +102,19 @@ namespace ColonyZ.Controllers.UI.Context
             anchorPos = _tile.Position + new Vector2(0.5f, 0.0f);
             RepositionMenu();
 
-            if (_tile.HasObject) OpenContextMenu(_tile.Object);
+            if (_tile.HasObject) {OpenContextMenu(_tile.Object);}
             else if (_tile.Zone != null) OpenContextMenu(_tile.Zone);
             else if (_tile.LivingEntities.Count > 0) OpenContextMenu(_tile.LivingEntities[0]);
             else CloseContextMenu();
 
             if (currentProvider != null && !(currentProvider is LivingEntity))
+            {
                 selectionController.SetCursor(_tile);
-            else selectionController.HideCursor();
+            }
+            else
+            {
+                selectionController.HideCursor();
+            }
         }
 
         private void Update()
@@ -127,7 +132,7 @@ namespace ColonyZ.Controllers.UI.Context
 
         private void RepositionMenu()
         {
-            Vector2 tileScreenPos = cam.WorldToScreenPoint(anchorPos);
+            var tileScreenPos = cam.WorldToScreenPoint(anchorPos);
             contextWindowTransform.position = tileScreenPos;
         }
     }
