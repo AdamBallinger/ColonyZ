@@ -171,7 +171,9 @@ namespace ColonyZ.Models.Map.Zones
         {
             return new[]
             {
-                new ContextAction("Delete", () => ZoneManager.Instance.RemoveZone(this))
+                new ContextAction("Delete", () => ZoneManager.Instance.RemoveZone(this)),
+                new ContextAction("Expand", () => World.Instance.WorldActionProcessor.SetZoneExpandMode()),
+                new ContextAction("Shrink", () => World.Instance.WorldActionProcessor.SetZoneShrinkMode())
             };
         }
 
