@@ -12,14 +12,14 @@ namespace ColonyZ.Controllers.UI.Toolbar.SubMenus
                 () => DevToolManager.Instance.ToggleTileNodes());
             AddItem("Path Debug", SpriteCache.GetSprite("UI", 3),
                 () => DevToolManager.Instance.TogglePathDebug());
-            AddItem("Areas Debug", SpriteCache.GetSprite("UI", 4),
+            AddItem("Areas Overlay", SpriteCache.GetSprite("UI", 4),
                 () => DevToolManager.Instance.ToggleAreasDebug());
-            AddItem("Regions Debug", SpriteCache.GetSprite("UI", 5),
+            AddItem("Regions Overlay", SpriteCache.GetSprite("UI", 5),
                 () => DevToolManager.Instance.ToggleRegionsDebug());
-            AddItem("Jobs Info", SpriteCache.GetSprite("UI", 6),
-                () => DevToolManager.Instance.ToggleJobsInfo());
-            AddItem("Item Spawner", SpriteCache.GetSprite("UI", 7),
+            AddItem("Item Spawner", SpriteCache.GetSprite("UI", 6),
                 () => DevToolManager.Instance.ToggleItemTool());
+            AddItem("Jobs Info", SpriteCache.GetSprite("UI", 7),
+                () => DevToolManager.Instance.ToggleJobsInfo());
             AddItem("God Mode", SpriteCache.GetSprite("UI", 8),
                 () => World.Instance.WorldActionProcessor.ToggleGodMode());
         }
