@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using ColonyZ.Controllers.Loaders;
 using ColonyZ.Controllers.Render;
 using ColonyZ.Controllers.UI;
-using ColonyZ.Controllers.UI.Jobs;
 using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
@@ -131,7 +130,6 @@ namespace ColonyZ.Controllers
             World.Instance.onEntityRemoved += OnEntityRemoved;
 
             FindObjectOfType<ZoneOverlayManager>().Init();
-            FindObjectOfType<JobListController>()?.Init();
 
             worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
 
