@@ -42,6 +42,8 @@ namespace ColonyZ.Models.Map
         public List<ItemEntity> Items { get; private set; }
 
         public List<TileObject> Objects { get; private set; }
+        
+        public List<TileObject> Foliage { get; private set; }
 
         public WorldGenerator WorldGenerator { get; private set; }
         
@@ -85,7 +87,8 @@ namespace ColonyZ.Models.Map
                 Tiles = new Tile[_worldDataProvider.WorldWidth * _worldDataProvider.WorldHeight],
                 Characters = new List<LivingEntity>(),
                 Items = new List<ItemEntity>(),
-                Objects = new List<TileObject>()
+                Objects = new List<TileObject>(),
+                Foliage = new List<TileObject>()
             };
 
             TileManager.LoadDefinitions();

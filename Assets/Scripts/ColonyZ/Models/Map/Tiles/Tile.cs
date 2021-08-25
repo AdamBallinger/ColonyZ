@@ -155,6 +155,11 @@ namespace ColonyZ.Models.Map.Tiles
             {
                 if (!Zone.CanContainObjects) Zone.RemoveTile(this);
             }
+
+            if (_object.ObjectData.Foliage)
+            {
+                World.Instance.Foliage.Add(_object);
+            }
             
             onTileChanged?.Invoke(this);
         }
@@ -169,6 +174,11 @@ namespace ColonyZ.Models.Map.Tiles
             var height = ObjectRotationUtil.GetRotatedObjectHeight(Object);
 
             var origin = Object.OriginTile;
+            
+            if (Object.ObjectData.Foliage)
+            {
+                World.Instance.Foliage.Remove(Object);
+            }
 
             for (var xOff = 0; xOff < width; xOff++)
             for (var yOff = 0; yOff < height; yOff++)

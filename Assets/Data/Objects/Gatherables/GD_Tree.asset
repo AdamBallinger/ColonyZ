@@ -18,6 +18,7 @@ MonoBehaviour:
   smartObject: 0
   buildable: 0
   rotatable: 0
+  foliage: 1
   objectWidth: 1
   objectHeight: 1
   enterability: 1

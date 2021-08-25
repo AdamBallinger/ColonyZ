@@ -220,7 +220,7 @@ namespace ColonyZ.Controllers
         {
             foreach (var tile in _tile.Neighbours)
             {
-                if (tile.HasObject && tile == tile.Object.OriginTile)
+                if (tile.HasObject && !tile.Object.ObjectData.Foliage && tile == tile.Object.OriginTile)
                 {
                     tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
                 }
@@ -258,7 +258,7 @@ namespace ColonyZ.Controllers
                 CreateTileObject(_tile);
 
             var spriteRenderer = tileObjectRenderers[_tile];
-            if (_tile.HasObject && _tile == _tile.Object.OriginTile)
+            if (_tile.HasObject && !_tile.Object.ObjectData.Foliage && _tile == _tile.Object.OriginTile)
             {
                 spriteRenderer.sprite = SpriteCache.GetSprite(_tile.Object);
                 spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
