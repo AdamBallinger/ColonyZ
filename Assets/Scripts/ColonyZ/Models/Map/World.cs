@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ColonyZ.Models.AI.Jobs;
 using ColonyZ.Models.Entities;
 using ColonyZ.Models.Entities.Living;
@@ -41,7 +42,7 @@ namespace ColonyZ.Models.Map
 
         public List<ItemEntity> Items { get; private set; }
 
-        public List<TileObject> Objects { get; private set; }
+        public ReadOnlyCollection<TileObject> Objects => m_objects.AsReadOnly();
 
         public WorldGenerator WorldGenerator { get; private set; }
         
@@ -63,8 +64,8 @@ namespace ColonyZ.Models.Map
         public event Action<Entity> onEntityRemoved;
         
         private Tile[] Tiles { get; set; }
-        
-        private List<IUpdateable> Updateables { get; set; }
+
+        private List<TileObject> m_objects;
 
         private World()
         {
@@ -87,8 +88,7 @@ namespace ColonyZ.Models.Map
                 Tiles = new Tile[_worldDataProvider.WorldWidth * _worldDataProvider.WorldHeight],
                 Characters = new List<LivingEntity>(),
                 Items = new List<ItemEntity>(),
-                Objects = new List<TileObject>(),
-                Updateables = new List<IUpdateable>()
+                m_objects = new List<TileObject>()
             };
 
             TileManager.LoadDefinitions();
@@ -110,7 +110,7 @@ namespace ColonyZ.Models.Map
         {
             for (var i = Characters.Count - 1; i >= 0; i--) Characters[i].Update();
 
-            for (var i = Updateables.Count - 1; i >= 0; i--) Updateables[i].Update();
+            for (var i = m_objects.Count - 1; i >= 0; i--) m_objects[i].Update();
 
             for (var i = Items.Count - 1; i >= 0; i--) Items[i].Update();
 
@@ -279,6 +279,42 @@ namespace ColonyZ.Models.Map
 
         #endregion
 
+        /// <summary>
+        ///     Adds the given object to the world.
+        /// </summary>
+        /// <param name="_object"></param>
+        public void AddObject(TileObject _object)
+        {
+            if (_object == null)
+            {
+                Debug.LogError("Attempted to add null object to world.");
+                return;
+            }
+
+            m_objects.Add(_object);
+        }
+
+        /// <summary>
+        ///     Removes given object from the world.
+        /// </summary>
+        /// <param name="_object"></param>
+        public void RemoveObject(TileObject _object)
+        {
+            if (_object == null)
+            {
+                Debug.LogError("Attempted to remove a null object from the world.");
+                return;
+            }
+
+            if (!m_objects.Contains(_object))
+            {
+                Debug.LogError("Attempted to remove an object that was not yet added to the world.");
+                return;
+            }
+
+            m_objects.Remove(_object);
+        }
+        
         /// <summary>
         ///     Spawns a new character entity in the world.
         /// </summary>

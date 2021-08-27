@@ -144,7 +144,7 @@ namespace ColonyZ.Models.Map.Tiles
                 t.onTileChanged?.Invoke(t);
             }
             
-            World.Instance.Objects.Add(_object);
+            World.Instance.AddObject(_object);
 
             if (_markDirty)
             {
@@ -163,7 +163,7 @@ namespace ColonyZ.Models.Map.Tiles
         {
             if (!HasObject) return;
 
-            World.Instance.Objects.Remove(Object);
+            World.Instance.RemoveObject(Object);
 
             var width = ObjectRotationUtil.GetRotatedObjectWidth(Object);
             var height = ObjectRotationUtil.GetRotatedObjectHeight(Object);

@@ -3,7 +3,7 @@ using ColonyZ.Models.TimeSystem;
 
 namespace ColonyZ.Models.Map.Tiles.Objects
 {
-    public class DoorObject : TileObject, IUpdateable
+    public class DoorObject : TileObject
     {
         public bool IsOpen { get; private set; }
 
@@ -67,7 +67,7 @@ namespace ColonyZ.Models.Map.Tiles.Objects
             }
         }
 
-        public void Update()
+        public override void Update()
         {
             if (isOpening)
             {
