@@ -17,7 +17,6 @@ using ColonyZ.Models.Map.Zones;
 using ColonyZ.Models.Saving;
 using ColonyZ.Models.Sprites;
 using ColonyZ.Models.TimeSystem;
-using ColonyZ.Utils;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
@@ -44,8 +43,6 @@ namespace ColonyZ.Controllers
         [SerializeField] private GameObject itemEntityPrefab;
         [SerializeField] private GameObject livingEntityPrefab;
 
-        [SerializeField] private Material objectsMaterial;
-
         [SerializeField] private WorldSizeTypes.WorldSize worldSize = WorldSizeTypes.MEDIUM;
 
         [Header("World Gen Noise Settings")] 
@@ -63,8 +60,6 @@ namespace ColonyZ.Controllers
 
         private Dictionary<ItemEntity, GameObject> itemEntityObjects;
         private Dictionary<LivingEntity, GameObject> livingEntityObjects;
-        private Dictionary<Tile, GameObject> tileObjectGameObjects;
-        private Dictionary<Tile, SpriteRenderer> tileObjectRenderers;
 
         private WorldRenderer worldRenderer;
         private SaveGameHandler saveGameHandler;
@@ -73,10 +68,8 @@ namespace ColonyZ.Controllers
         private void Awake()
         {
             _transform = transform;
-            tileObjectRenderers = new Dictionary<Tile, SpriteRenderer>();
             livingEntityObjects = new Dictionary<LivingEntity, GameObject>();
             itemEntityObjects = new Dictionary<ItemEntity, GameObject>();
-            tileObjectGameObjects = new Dictionary<Tile, GameObject>();
 
             dataLoader.Load();
 
@@ -213,39 +206,6 @@ namespace ColonyZ.Controllers
         }
 
         /// <summary>
-        ///     Forces an update to a tiles surrounding tiles sprites.
-        /// </summary>
-        /// <param name="_tile"></param>
-        private void UpdateTileNeighbourSprites(Tile _tile)
-        {
-            foreach (var tile in _tile.Neighbours)
-            {
-                if (tile.HasObject && !tile.Object.ObjectData.Foliage && tile == tile.Object.OriginTile)
-                {
-                    tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Creates the game object for a tile object, and adds it the renderer map.
-        /// </summary>
-        /// <param name="_tile"></param>
-        private void CreateTileObject(Tile _tile)
-        {
-            var object_GO = new GameObject("Tile Object");
-            tileObjectGameObjects.Add(_tile, object_GO);
-
-            var object_SR = object_GO.AddComponent<SpriteRenderer>();
-            object_SR.sharedMaterial = objectsMaterial;
-
-            object_GO.transform.position = new Vector2(_tile.X, _tile.Y);
-            object_GO.transform.SetParent(_transform);
-
-            tileObjectRenderers.Add(_tile, object_SR);
-        }
-
-        /// <summary>
         ///     Event for when a tile has been modified. E.g. a wall removed etc.
         /// </summary>
         /// <param name="_tile"></param>
@@ -254,26 +214,38 @@ namespace ColonyZ.Controllers
             if (_tile == null)
                 return;
 
-            if (!tileObjectRenderers.ContainsKey(_tile))
-                CreateTileObject(_tile);
+            // var spriteRenderer = tileObjectRenderers[_tile];
+            // if (_tile.HasObject && !_tile.Object.ObjectData.Foliage && _tile == _tile.Object.OriginTile)
+            // {
+            //     spriteRenderer.sprite = SpriteCache.GetSprite(_tile.Object);
+            //     spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
+            //     tileObjectGameObjects[_tile].transform.rotation = 
+            //         ObjectRotationUtil.GetQuaternion(_tile.Object.ObjectRotation);
+            //     tileObjectGameObjects[_tile].transform.position = 
+            //         _tile.Position + ObjectRotationUtil.GetObjectRotationPositionOffset(_tile.Object.ObjectData,
+            //             _tile.Object.ObjectRotation);
+            // }
+            // else
+            // {
+            //     spriteRenderer.sprite = null;
+            // }
 
-            var spriteRenderer = tileObjectRenderers[_tile];
-            if (_tile.HasObject && !_tile.Object.ObjectData.Foliage && _tile == _tile.Object.OriginTile)
-            {
-                spriteRenderer.sprite = SpriteCache.GetSprite(_tile.Object);
-                spriteRenderer.sortingOrder = _tile.Object.GetSortingOrder();
-                tileObjectGameObjects[_tile].transform.rotation = 
-                    ObjectRotationUtil.GetQuaternion(_tile.Object.ObjectRotation);
-                tileObjectGameObjects[_tile].transform.position = 
-                    _tile.Position + ObjectRotationUtil.GetObjectRotationPositionOffset(_tile.Object.ObjectData,
-                        _tile.Object.ObjectRotation);
-            }
-            else
-            {
-                spriteRenderer.sprite = null;
-            }
-
-            UpdateTileNeighbourSprites(_tile);
+            //UpdateTileNeighbourSprites(_tile);
+        }
+        
+        /// <summary>
+        ///     Forces an update to a tiles surrounding tiles sprites.
+        /// </summary>
+        /// <param name="_tile"></param>
+        private void UpdateTileNeighbourSprites(Tile _tile)
+        {
+            // foreach (var tile in _tile.Neighbours)
+            // {
+            //     if (tile.HasObject && !tile.Object.ObjectData.Foliage && tile == tile.Object.OriginTile)
+            //     {
+            //         tileObjectRenderers[tile].sprite = SpriteCache.GetSprite(tile.Object);
+            //     }
+            // }
         }
 
         /// <summary>
