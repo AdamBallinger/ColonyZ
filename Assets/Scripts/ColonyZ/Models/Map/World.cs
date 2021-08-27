@@ -42,8 +42,6 @@ namespace ColonyZ.Models.Map
         public List<ItemEntity> Items { get; private set; }
 
         public List<TileObject> Objects { get; private set; }
-        
-        public List<TileObject> Foliage { get; private set; }
 
         public WorldGenerator WorldGenerator { get; private set; }
         
@@ -65,6 +63,8 @@ namespace ColonyZ.Models.Map
         public event Action<Entity> onEntityRemoved;
         
         private Tile[] Tiles { get; set; }
+        
+        private List<IUpdateable> Updateables { get; set; }
 
         private World()
         {
@@ -88,7 +88,7 @@ namespace ColonyZ.Models.Map
                 Characters = new List<LivingEntity>(),
                 Items = new List<ItemEntity>(),
                 Objects = new List<TileObject>(),
-                Foliage = new List<TileObject>()
+                Updateables = new List<IUpdateable>()
             };
 
             TileManager.LoadDefinitions();
@@ -110,7 +110,7 @@ namespace ColonyZ.Models.Map
         {
             for (var i = Characters.Count - 1; i >= 0; i--) Characters[i].Update();
 
-            for (var i = Objects.Count - 1; i >= 0; i--) Objects[i].Update();
+            for (var i = Updateables.Count - 1; i >= 0; i--) Updateables[i].Update();
 
             for (var i = Items.Count - 1; i >= 0; i--) Items[i].Update();
 
