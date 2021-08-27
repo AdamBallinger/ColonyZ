@@ -34,9 +34,9 @@ namespace ColonyZ.Controllers.Render
                     Debug.LogError("Attempted to render a none foliage object with FoliageRenderer. Skipping object.");
                     continue;
                 }
-                
-                var size = foliage.ObjectData.SpriteData.Sprites[0].rect.size / 32;
 
+                var size = foliage.ObjectData.SpriteData.Sprites[0].rect.size / 32;
+            
                 if (!meshes.TryGetValue(size, out var mesh))
                 {
                     var pivot = foliage.ObjectData.SpriteData.Sprites[0].bounds.center;
@@ -44,7 +44,7 @@ namespace ColonyZ.Controllers.Render
                     mesh = meshes[size];
                 }
 
-                Graphics.DrawMesh(mesh, foliage.OriginTile.Position, Quaternion.identity, foliageMaterial, 0);
+                Graphics.DrawMesh(mesh, foliage.OriginTile.Position, Quaternion.identity, foliageMaterial, 1);
             }
         }
     }
