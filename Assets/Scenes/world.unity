@@ -5971,6 +5971,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 77fb2935cf5419c41adb70d082d2bf6a, type: 2}
   - {fileID: 11400000, guid: dd23dd6735acff240884eadcfc41c593, type: 2}
   - {fileID: 11400000, guid: 58fb8e244d4ba2f48a9d3da52a6538e4, type: 2}
+  - {fileID: 11400000, guid: 2e64921abebc3384c95f8b63b0b4d258, type: 2}
   - {fileID: 11400000, guid: db6d46a439ecfec41ae74fd681fda36d, type: 2}
   - {fileID: 11400000, guid: e674f1081b5a50a49bbfb9ae4235c56b, type: 2}
   - {fileID: 11400000, guid: 289571ce5787f2a4b95b25685d526fa1, type: 2}
@@ -5980,6 +5981,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3549e8c1def32c5409b851eeff18f9d3, type: 2}
   - {fileID: 11400000, guid: 296fee5b83f7e2243982665ea64306a6, type: 2}
   - {fileID: 11400000, guid: dd0b244d09aa09648aff41e72399ab14, type: 2}
+  - {fileID: 11400000, guid: c69070f026fc5b94789530d4590cfcd2, type: 2}
   - {fileID: 11400000, guid: c4402c530296e7d4298ca16fa4c68315, type: 2}
   - {fileID: 11400000, guid: 5fcd96af566056742aa9f4f909899b92, type: 2}
   - {fileID: 11400000, guid: be985ecf6cdee224badde935d471d424, type: 2}
@@ -7957,7 +7959,7 @@ MonoBehaviour:
   shouldSave: 0
   shouldLoad: 0
   initialCharacterCount: 0
-  treeSpawnChance: 3
+  treeSpawnChance: 10
   globalLight: {fileID: 1665810043}
   globalLightCurve:
     serializedVersion: 2
