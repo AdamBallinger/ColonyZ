@@ -43,7 +43,7 @@ namespace ColonyZ.Controllers.Render
             // offset centre by -0.5f since sprites pivot from centre.
             var meshPivot = new Vector2(Width / 2.0f - 0.5f, Height / 2.0f - 0.5f);
 
-            meshFilter.mesh = MeshUtils.CreateQuad("World Mesh", Width, Height, meshPivot);
+            meshFilter.mesh = MeshUtils.CreateQuad("World Quad", Width, Height, meshPivot);
             meshRenderer.material.mainTexture = GenerateMapTexture();
             meshRenderer.material.SetInt("WorldWidth", Width);
             meshRenderer.material.SetInt("WorldHeight", Height);
@@ -62,7 +62,8 @@ namespace ColonyZ.Controllers.Render
             {
                 var index = x * Width + y;
                 var tileIndex = World.Instance.GetTileAt(x, y).TileDefinition.TextureIndex / 255.0f;
-                colors[index] = new Color(tileIndex, 0, 0);
+                var maskIndex = 0 / 255.0f;
+                colors[index] = new Color(tileIndex, maskIndex, 0);
             }
 
             mapTexture.SetPixels(colors);

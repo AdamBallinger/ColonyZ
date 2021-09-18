@@ -1784,7 +1784,7 @@ Camera:
   m_GameObject: {fileID: 348584756}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.1102941, g: 0.1102941, b: 0.1102941, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -2513,7 +2513,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 740356066}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5000, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 348584761}
@@ -6563,7 +6563,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &1608150600
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7959,7 +7959,7 @@ MonoBehaviour:
   shouldSave: 0
   shouldLoad: 0
   initialCharacterCount: 0
-  treeSpawnChance: 10
+  treeSpawnChance: 0
   globalLight: {fileID: 1665810043}
   globalLightCurve:
     serializedVersion: 2
@@ -8026,10 +8026,10 @@ MonoBehaviour:
   livingEntityPrefab: {fileID: 1549636176341354, guid: b86b46628d40f1a429a0068dcff8f033,
     type: 3}
   worldSize:
-    <Name>k__BackingField: Huge
-    <Width>k__BackingField: 320
-    <Height>k__BackingField: 320
-  enableWorldGen: 1
+    <Name>k__BackingField: Mini
+    <Width>k__BackingField: 16
+    <Height>k__BackingField: 16
+  enableWorldGen: 0
   overrideSeed: 1
   seed: 42736
   octaves: 4
@@ -8745,7 +8745,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraMoveSpeed: 2.5
   cameraPivot: {fileID: 740356067}
-  maxZoom: 5
+  maxZoom: 2
   minZoom: 70
   zoomSpeed: 65
 --- !u!114 &1999893020

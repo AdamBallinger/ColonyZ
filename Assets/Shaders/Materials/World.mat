@@ -20,6 +20,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Mask:
+        m_Texture: {fileID: 2800000, guid: 6adaec220c5e082459c1c9fcbe08fcbc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - TilesTex:
         m_Texture: {fileID: 2800000, guid: 9bbcd84b4d335b64292d0a64f27c8d72, type: 3}
         m_Scale: {x: 1, y: 1}
