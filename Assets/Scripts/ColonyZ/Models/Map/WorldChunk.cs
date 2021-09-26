@@ -9,7 +9,7 @@ namespace ColonyZ.Models.Map
 
         public int Y { get; }
 
-        public HashSet<Tile> Tiles { get; }
+        public List<Tile> Tiles { get; }
 
         /// <summary>
         ///     Determines if the chunk has been modified this frame and should be rebuilt at the end.
@@ -20,7 +20,7 @@ namespace ColonyZ.Models.Map
         {
             X = _x;
             Y = _y;
-            Tiles = new HashSet<Tile>();
+            Tiles = new List<Tile>();
             IsDirty = false;
         }
 

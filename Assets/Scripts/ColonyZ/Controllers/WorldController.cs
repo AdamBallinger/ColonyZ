@@ -22,7 +22,6 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 namespace ColonyZ.Controllers
 {
-    [RequireComponent(typeof(WorldRenderer))]
     public class WorldController : MonoBehaviour
     {
         private Transform _transform;
@@ -73,8 +72,6 @@ namespace ColonyZ.Controllers
 
             dataLoader.Load();
 
-            worldRenderer = GetComponent<WorldRenderer>();
-
             // This is only needed when starting the game from the world scene.
             if (WorldLoadSettings.LOAD_TYPE != WorldLoadType.Load &&
                 WorldLoadSettings.WORLD_SIZE.Name == null)
@@ -122,11 +119,12 @@ namespace ColonyZ.Controllers
             World.Instance.onEntitySpawn += OnEntitySpawn;
             World.Instance.onEntityRemoved += OnEntityRemoved;
 
+            worldRenderer = new WorldRenderer();
+
             FindObjectOfType<ZoneOverlayManager>().Init();
 
-            worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
-
             var treeData = TileObjectDataCache.GetData<GatherableObjectData>("Tree");
+            var grassData = TileObjectDataCache.GetData<GatherableObjectData>("Grass");
             
             foreach (var tile in World.Instance)
             {
@@ -156,7 +154,7 @@ namespace ColonyZ.Controllers
                         var rand = Random.Range(1, 100);
                         if (rand <= treeSpawnChance)
                         {
-                            tile.SetObject(ObjectFactories.ResourceFactory.GetObject(treeData), false);
+                            tile.SetObject(ObjectFactories.ResourceFactory.GetObject(rand == 1 ? grassData : treeData), false);
                         }
                     }
                 }
@@ -179,6 +177,8 @@ namespace ColonyZ.Controllers
             TimeManager.Instance.Update();
             JobManager.Instance.Update();
             World.Instance.Update();
+            
+            worldRenderer.RenderSections();
 
             globalLight.intensity = globalLightCurve.Evaluate(TimeManager.Instance.DayProgress);
 
@@ -230,7 +230,7 @@ namespace ColonyZ.Controllers
             //     spriteRenderer.sprite = null;
             // }
 
-            //UpdateTileNeighbourSprites(_tile);
+            UpdateTileNeighbourSprites(_tile);
         }
         
         /// <summary>
@@ -254,7 +254,7 @@ namespace ColonyZ.Controllers
         /// <param name="_tile"></param>
         private void OnTileDefinitionChanged(Tile _tile)
         {
-            worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
+            //worldRenderer.GenerateWorldMesh(worldSize.Width, worldSize.Height);
         }
 
         /// <summary>

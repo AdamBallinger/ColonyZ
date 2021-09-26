@@ -155,12 +155,10 @@ namespace ColonyZ.Models.Map
         public void RebuildDirty()
         {
             var shouldNotify = false;
-            var count = 0;
             foreach (var chunk in Chunks)
             {
                 if (chunk.IsDirty)
                 {
-                    count++;
                     shouldNotify = true;
                     RegionManager.Instance.UpdateChunk(chunk);
                     chunk.SetDirty(false);

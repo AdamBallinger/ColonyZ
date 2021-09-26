@@ -34,7 +34,6 @@ namespace ColonyZ.Controllers.Render
                 
                 var pivot = data.SpriteData.Sprites[0].bounds.center;
                 var size = data.SpriteData.Sprites[0].rect.size / 32;
-                //Debug.Log(data.ObjectName + " : " + data.SpriteData.Sprites[0].rect);
                 meshes.Add(data, MeshUtils.CreateQuad("Quad", (int)size.x, (int)size.y, pivot));
                 var mpb = new MaterialPropertyBlock();
                 mpb.SetTexture("_MainTex", SpriteCache.GetSprite(data.SpriteData.SpriteGroup, 0).texture);
