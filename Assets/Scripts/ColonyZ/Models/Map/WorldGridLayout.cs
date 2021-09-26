@@ -179,10 +179,7 @@ namespace ColonyZ.Models.Map
             if (Chunks.Count > 0) return;
 
             var chunksWidth = world.Width / CHUNK_SIZE;
-            chunksWidth += world.Width / chunksWidth;
-
             var chunksHeight = world.Height / CHUNK_SIZE;
-            chunksHeight += world.Height / chunksHeight;
 
             for (var cy = 0; cy < chunksHeight; cy++)
             {
