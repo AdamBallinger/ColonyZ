@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using ColonyZ.Models.Map;
 using ColonyZ.Models.Map.Rendering;
-using UnityEngine;
 
 namespace ColonyZ.Controllers.Render
 {
@@ -12,7 +11,11 @@ namespace ColonyZ.Controllers.Render
         public WorldRenderer()
         {
             sections = new List<WorldSection>(World.Instance.WorldGrid.Chunks.Count);
-            Debug.Log($"Created world renderer with {sections.Capacity} section capacity.");
+
+            foreach (var chunk in World.Instance.WorldGrid.Chunks)
+            {
+                sections.Add(new WorldSection(chunk));
+            }
         }
 
         public void RenderSections()

@@ -156,7 +156,8 @@ namespace ColonyZ.Models.Map.Tiles
                 if (!Zone.CanContainObjects) Zone.RemoveTile(this);
             }
 
-            onTileChanged?.Invoke(this);
+            // TODO: IS THIS NEEDED?
+            //onTileChanged?.Invoke(this);
         }
 
         public void RemoveObject(bool _markDirty = true)
@@ -184,7 +185,8 @@ namespace ColonyZ.Models.Map.Tiles
                 World.Instance.WorldGrid.SetDirty(this, true);
             }
 
-            onTileChanged?.Invoke(this);
+            // TODO: IS THIS NEEDED?
+            //onTileChanged?.Invoke(this);
         }
 
         public void MarkDirty()

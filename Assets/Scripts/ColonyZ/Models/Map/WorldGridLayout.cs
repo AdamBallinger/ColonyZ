@@ -199,7 +199,7 @@ namespace ColonyZ.Models.Map
                             }
                         }
                     }
-
+                    
                     Chunks.Add(chunk);
                 }
             }
